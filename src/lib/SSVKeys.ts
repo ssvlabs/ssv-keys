@@ -1,0 +1,105 @@
+import Web3 from 'web3';
+import { encode } from 'js-base64';
+import EthereumKeyStore from 'eth2-keystore-js';
+import Threshold, { IShares, ISharesKeyPairs } from '../lib/Threshold';
+import Encryption, { EncryptShare } from '../lib/Encryption/Encryption';
+
+export class SSVKeys {
+  private web3 = new Web3();
+
+  static OPERATOR_FORMAT_BASE64 = 'base64';
+
+  /**
+   * Extract private key from keystore data using keystore password.
+   * Generally can be used in browsers when the keystore data has been provided by browser.
+   * @param data
+   * @param password
+   */
+  async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
+    try {
+      try {
+        // Try to json parse the data before
+        data = JSON.parse(data);
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+
+      const keyStore = new EthereumKeyStore(data);
+      return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
+    } catch (error: any) {
+      console.error(error);
+      return error;
+    }
+  }
+
+  /**
+   * Build threshold using private key for number of participants and failed participants.
+   * TODO: make it possible to choose how many fails can be in threshold
+   * @param privateKey
+   */
+  async createThreshold(privateKey: string): Promise<ISharesKeyPairs> {
+    try {
+      const threshold: Threshold = new Threshold();
+      return threshold.create(privateKey);
+    } catch (error: any) {
+      console.error(error);
+      return error;
+    }
+  }
+
+  /**
+   * Encrypt operators shares using operators public keys.
+   * @param operatorsPublicKeys
+   * @param shares
+   * @param operatorFormat
+   */
+  async encryptShares(operatorsPublicKeys: string[], shares: IShares[],
+                      operatorFormat = SSVKeys.OPERATOR_FORMAT_BASE64): Promise<EncryptShare[]> {
+    try {
+      const decodedOperators = operatorsPublicKeys.map((operator: string) => {
+        operator = atob(operator);
+        return operatorFormat == SSVKeys.OPERATOR_FORMAT_BASE64
+          ? String(encode(operator)) : operator;
+      });
+      return new Encryption(decodedOperators, shares).encrypt();
+    } catch (error: any) {
+      console.error(error);
+      return error;
+    }
+  }
+
+  /**
+   * Encode with Web3 eth abi method any fields of shares array required for transaction.
+   * @param encryptedShares
+   * @param field
+   */
+  abiEncode(encryptedShares: EncryptShare[], field: string): string[] {
+    return encryptedShares.map((share: EncryptShare) => {
+      return this.web3.eth.abi.encodeParameter('string', Object(share)[field]);
+    });
+  }
+
+  /**
+   * Having keystore private key build final transaction payload for list of operators.
+   *
+   * Example:
+   *
+   *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
+   *    const encryptedShares = await ssvKeys.encryptShares(operatorsPublicKeys, shares);
+   *    await ssvKeys.buildPayload(privateKey, encryptedShares)
+   *
+   * @param privateKey
+   * @param encryptedShares
+   */
+  async buildPayload(privateKey: string, encryptedShares: EncryptShare[]): Promise<any[]> {
+    const threshold: ISharesKeyPairs = await this.createThreshold(privateKey);
+    const operatorsPublicKey: string[] = this.abiEncode(encryptedShares, 'operatorPublicKey');
+    const sharePublicKey: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
+    const sharePrivateKey: string[] = this.abiEncode(encryptedShares, 'privateKey');
+    return [
+      threshold.validatorPublicKey,
+      operatorsPublicKey,
+      sharePublicKey,
+      sharePrivateKey,
+    ];
+  }
+}

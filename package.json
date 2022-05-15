@@ -1,0 +1,75 @@
+{
+  "name": "ssv-keys",
+  "version": "1.0.0",
+  "description": "Library to work with keystore file, with private key to get shares and to build final payload for transaction in SSV Network.",
+  "author": "SSV.Network",
+  "repository": "https://github.com/bloxapp/ssv-keys",
+  "license": "MIT",
+  "keywords": [
+    "ssv",
+    "ssv.network",
+    "keystore",
+    "shares"
+  ],
+  "main": "./dist/tsc/main.js",
+  "types": "./dist/tsc/main.d.ts",
+  "bin": {
+    "ssv-keys": "./dist/tsc/cli.js"
+  },
+  "scripts": {
+    "dev:cli": "ts-node src/cli.ts",
+    "cli": "node ./dist/tsc/cli.js",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "test": "jest",
+    "clean": "rm -rf dist build package",
+    "ts-node": "ts-node",
+    "docs": "typedoc --entryPoints src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "build-all": "yarn clean && yarn build && yarn esbuild",
+    "esbuild": "node ./esbuild.js"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@types/argparse": "^2.0.10",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^15.14.9",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "esbuild": "^0.14.38",
+    "esbuild-node-externals": "^1.4.1",
+    "eslint": "^7.32.0",
+    "husky": "^7.0.4",
+    "jest": "^26.6.3",
+    "jest-environment-jsdom": "^26.6.2",
+    "jest-environment-node": "^26.6.2",
+    "jest-environment-uint8array": "^1.0.0",
+    "jest-watch-typeahead": "0.6.5",
+    "jsdom": "^16.5.3",
+    "jsdom-global": "^3.0.2",
+    "ts-jest": "^26.5.6",
+    "ts-node": "^9.1.1",
+    "typedoc": "^0.22.15",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "assert": "^2.0.0",
+    "bls-eth-wasm": "^1.0.4",
+    "bls-signatures": "^0.2.5",
+    "crypto": "^1.0.1",
+    "electron": "^18.2.2",
+    "eth2-keystore-js": "^1.0.8",
+    "ethereumjs-util": "^7.0.10",
+    "ethereumjs-wallet": "^1.0.1",
+    "events": "^3.3.0",
+    "js-base64": "^3.7.2",
+    "jsencrypt": "^3.2.1",
+    "scrypt-js": "^3.0.1",
+    "stream": "^0.0.2"
+  },
+  "licenses": [
+    {
+      "MIT": "SEE LICENSE IN LICENCE FILE"
+    }
+  ]
+}
