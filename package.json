@@ -23,7 +23,7 @@
     "test": "jest",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
-    "docs": "typedoc --entryPoints src/main.ts",
+    "docs": "typedoc",
     "build": "tsc -p tsconfig.json",
     "build-all": "yarn clean && yarn build && yarn esbuild",
     "esbuild": "node ./esbuild.js"

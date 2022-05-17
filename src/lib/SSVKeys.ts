@@ -1,13 +1,20 @@
 import Web3 from 'web3';
 import { encode } from 'js-base64';
 import EthereumKeyStore from 'eth2-keystore-js';
-import Threshold, { IShares, ISharesKeyPairs } from '../lib/Threshold';
-import Encryption, { EncryptShare } from '../lib/Encryption/Encryption';
+import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
+import Encryption, { EncryptShare } from './Encryption/Encryption';
 
 export class SSVKeys {
-  private web3 = new Web3();
-
   static OPERATOR_FORMAT_BASE64 = 'base64';
+
+  protected web3Instances: any = {};
+
+  getWeb3(nodeUrl = process.env.NODE_URL || ''): Web3 {
+    if (!this.web3Instances[nodeUrl]) {
+      this.web3Instances[nodeUrl] = new Web3(String(nodeUrl || ''))
+    }
+    return this.web3Instances[nodeUrl];
+  }
 
   /**
    * Extract private key from keystore data using keystore password.
@@ -74,7 +81,7 @@ export class SSVKeys {
    */
   abiEncode(encryptedShares: EncryptShare[], field: string): string[] {
     return encryptedShares.map((share: EncryptShare) => {
-      return this.web3.eth.abi.encodeParameter('string', Object(share)[field]);
+      return this.getWeb3().eth.abi.encodeParameter('string', Object(share)[field]);
     });
   }
 

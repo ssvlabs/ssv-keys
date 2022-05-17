@@ -15,7 +15,7 @@ export interface ActionOptions {
 }
 
 export class BaseAction {
-  protected ssvKeys = new SSVKeys();
+  public ssvKeys: any = new SSVKeys();
   protected args: Namespace = {};
 
   setArgs(args: Namespace): BaseAction {
