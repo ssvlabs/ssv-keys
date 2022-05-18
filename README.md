@@ -11,7 +11,7 @@ If you want to test it as developer:
 ```bash
 git clone https://github.com/bloxapp/ssv-keys.git
 cd ssv-keys
-yarn
+yarn install
 yarn cli --help
 ```
 

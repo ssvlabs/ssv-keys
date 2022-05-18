@@ -65,7 +65,8 @@
     "js-base64": "^3.7.2",
     "jsencrypt": "^3.2.1",
     "scrypt-js": "^3.0.1",
-    "stream": "^0.0.2"
+    "stream": "^0.0.2",
+    "web3": "^1.7.3"
   },
   "licenses": [
     {
