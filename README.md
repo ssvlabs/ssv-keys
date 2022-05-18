@@ -79,7 +79,7 @@ yarn dev:cli transaction --private-key=... --shares=./shares.json --output=./pay
 #### Step 4: Building final transaction V2
 
 ```bash
-yarn dev:cli transaction_v2 --private-key=... --shares=./shares.json --output=./payload_v2.txt
+yarn dev:cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload_v2.txt
 ```
 
 ## Development
