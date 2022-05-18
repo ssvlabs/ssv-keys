@@ -72,9 +72,7 @@ export class BuildTransactionV2Action extends BaseAction {
     const explainedPayload = '' +
       '\n[\n' +
       `\n\t validator public key   ➡️   ${payload[0]}\n` +
-      '\n\t operators IDs          ➡️   array[\n' +
-      payload[1].map((operatorId: number) => `\n\t                                   ${operatorId}\n`).join('') +
-      '                                 ]\n' +
+      `\n\t operators IDs          ➡️   array${payload[1]}\n` +
       '\n\t share public keys      ➡️   array[\n' +
       payload[2].map((publicKey: string, index: number) => `\n\t                                   [${index}]: ${publicKey}\n`).join('') +
       '                                 ]\n' +
