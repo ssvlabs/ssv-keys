@@ -4,7 +4,7 @@ export declare class BaseCommand extends ArgumentParser {
      * List of all supported command actions.
      * @protected
      */
-    protected actions: any;
+    protected actions: any[];
     protected actionParsers: any;
     protected subParserOptions: {
         title: string;

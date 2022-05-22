@@ -45,7 +45,8 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const threshold = yield this.ssvKeys.createThreshold(this.args.private_key);
+            const { private_key: privateKey } = this.args;
+            const threshold = yield this.ssvKeys.createThreshold(privateKey);
             const shares = yield this.ssvKeys.encryptShares(this.args.operators.split(','), threshold.shares);
             const sharesJson = JSON.stringify(shares, null, '  ');
             let sharesMessage = `Shares: \n${sharesJson}`;

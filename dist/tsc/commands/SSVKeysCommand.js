@@ -16,12 +16,12 @@ class SSVKeysCommand extends BaseCommand_1.BaseCommand {
          * List of all supported command actions.
          * @protected
          */
-        this.actions = {
-            [PrivateKeyAction_1.PrivateKeyAction.options.action]: PrivateKeyAction_1.PrivateKeyAction,
-            [BuildSharesAction_1.BuildSharesAction.options.action]: BuildSharesAction_1.BuildSharesAction,
-            [BuildTransactionAction_1.BuildTransactionAction.options.action]: BuildTransactionAction_1.BuildTransactionAction,
-            [BuildTransactionV2Action_1.BuildTransactionV2Action.options.action]: BuildTransactionV2Action_1.BuildTransactionV2Action,
-        };
+        this.actions = [
+            PrivateKeyAction_1.PrivateKeyAction,
+            BuildSharesAction_1.BuildSharesAction,
+            BuildTransactionAction_1.BuildTransactionAction,
+            BuildTransactionV2Action_1.BuildTransactionV2Action,
+        ];
         this.subParserOptions.help += 'Example: "ssv-keys decrypt --help" or "ssv-keys dec --help"';
     }
 }

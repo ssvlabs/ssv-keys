@@ -10,7 +10,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
          * List of all supported command actions.
          * @protected
          */
-        this.actions = {};
+        this.actions = [];
         this.actionParsers = {};
         this.subParserOptions = {
             title: 'Actions',
@@ -23,8 +23,8 @@ class BaseCommand extends argparse_1.ArgumentParser {
      */
     addActionsSubParsers() {
         this.subParsers = this.add_subparsers(this.subParserOptions);
-        for (const action of Object.keys(this.actions)) {
-            const actionOptions = this.actions[action].options;
+        for (const action of this.actions) {
+            const actionOptions = action.options;
             const actionParser = this.subParsers.add_parser(actionOptions.action, {
                 aliases: [actionOptions.shortAction]
             });
@@ -33,11 +33,11 @@ class BaseCommand extends argparse_1.ArgumentParser {
             }
             actionParser.set_defaults({
                 func: (args) => {
-                    const executable = new this.actions[actionOptions.action];
+                    const executable = new action();
                     return executable.setArgs(args).execute();
                 },
             });
-            this.actionParsers[action] = actionParser;
+            this.actionParsers[actionOptions.action] = actionParser;
         }
         return this;
     }

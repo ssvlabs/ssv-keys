@@ -42,8 +42,9 @@ class BuildTransactionAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const shares = yield (0, helpers_1.readFile)(this.args.shares, true);
-            const payload = yield this.ssvKeys.buildPayload(this.args.private_key, shares);
+            const { shares, private_key: privateKey } = this.args;
+            const encryptedShares = yield (0, helpers_1.readFile)(shares, true);
+            const payload = yield this.ssvKeys.buildPayload(privateKey, encryptedShares);
             const explainedPayload = '' +
                 '\n[\n' +
                 `\n\t validator public key   ➡️   ${payload[0]}\n` +

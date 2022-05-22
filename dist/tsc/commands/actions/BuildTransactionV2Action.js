@@ -66,14 +66,13 @@ class BuildTransactionV2Action extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const shares = yield (0, helpers_1.readFile)(this.args.shares, true);
-            const payload = yield this.ssvKeys.buildPayloadV2(this.args.private_key, this.args.operators_ids.split(','), shares, this.args.token_amount_gwei);
+            const { shares, private_key: privateKey, operators_ids: operatorsIds, token_amount_gwei: tokenAmount } = this.args;
+            const encryptedShares = yield (0, helpers_1.readFile)(shares, true);
+            const payload = yield this.ssvKeys.buildPayloadV2(privateKey, operatorsIds.split(','), encryptedShares, tokenAmount);
             const explainedPayload = '' +
                 '\n[\n' +
                 `\n\t validator public key   ➡️   ${payload[0]}\n` +
-                '\n\t operators IDs          ➡️   array[\n' +
-                payload[1].map((operatorId) => `\n\t                                   ${operatorId}\n`).join('') +
-                '                                 ]\n' +
+                `\n\t operators IDs          ➡️   array${payload[1]}\n` +
                 '\n\t share public keys      ➡️   array[\n' +
                 payload[2].map((publicKey, index) => `\n\t                                   [${index}]: ${publicKey}\n`).join('') +
                 '                                 ]\n' +

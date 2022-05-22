@@ -27,7 +27,7 @@
     "build": "tsc -p tsconfig.json",
     "build-all": "yarn clean && yarn build && yarn esbuild",
     "esbuild": "node ./esbuild.js",
-    "pre-commit": "yarn test && yarn build-all"
+    "pre-commit": "yarn build-all && yarn test && git add ."
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

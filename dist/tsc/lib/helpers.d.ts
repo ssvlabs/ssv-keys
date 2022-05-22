@@ -5,7 +5,7 @@
  */
 export declare const readFile: (filePath: string, json?: boolean) => Promise<any>;
 /**
- * Read file contents and return json data from it.
+ * Write file contents.
  * @param filePath
  * @param data
  */
