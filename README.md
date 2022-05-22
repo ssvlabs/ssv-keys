@@ -172,6 +172,23 @@ To run TypeScript example:
 yarn start:ts
 ```
 
+### Browser project (web application)
+
+Go to example folder and install all dependencies
+
+```bash
+cd examples/browser
+yarn install
+```
+
+Start web app:
+
+```bash
+yarn start
+```
+
+Open developer console to see how it works in a browser environment.
+
 ## TODO
 
 * Make it possible to use specific number of signers and fails in shares generation, use four by default.
