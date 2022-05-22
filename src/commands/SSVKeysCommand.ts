@@ -2,7 +2,6 @@ import { BaseCommand } from './BaseCommand';
 import { PrivateKeyAction } from './actions/PrivateKeyAction';
 import { BuildSharesAction } from './actions/BuildSharesAction';
 import { BuildTransactionAction } from './actions/BuildTransactionAction';
-import { BuildTransactionV2Action } from './actions/BuildTransactionV2Action';
 
 export class SSVKeysCommand extends BaseCommand {
   /**
@@ -13,7 +12,6 @@ export class SSVKeysCommand extends BaseCommand {
     PrivateKeyAction,
     BuildSharesAction,
     BuildTransactionAction,
-    BuildTransactionV2Action,
   ]
 
   /**

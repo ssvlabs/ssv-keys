@@ -3,11 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EthereumKeyStore = exports.Encryption = exports.Threshold = exports.SSVNetworkContract = exports.SSVKeysV2 = exports.SSVKeys = void 0;
+exports.EthereumKeyStore = exports.Encryption = exports.Threshold = exports.SSVNetworkContract = exports.SSVKeys = void 0;
 var SSVKeys_1 = require("./lib/SSVKeys");
 Object.defineProperty(exports, "SSVKeys", { enumerable: true, get: function () { return SSVKeys_1.SSVKeys; } });
-var SSVKeysV2_1 = require("./lib/SSVKeysV2");
-Object.defineProperty(exports, "SSVKeysV2", { enumerable: true, get: function () { return SSVKeysV2_1.SSVKeysV2; } });
 var SSVNetworkContract_1 = require("./lib/SSVNetworkContract");
 Object.defineProperty(exports, "SSVNetworkContract", { enumerable: true, get: function () { return SSVNetworkContract_1.SSVNetworkContract; } });
 var Threshold_1 = require("./lib/Threshold/Threshold");

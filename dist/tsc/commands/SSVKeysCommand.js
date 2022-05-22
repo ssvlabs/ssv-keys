@@ -5,7 +5,6 @@ const BaseCommand_1 = require("./BaseCommand");
 const PrivateKeyAction_1 = require("./actions/PrivateKeyAction");
 const BuildSharesAction_1 = require("./actions/BuildSharesAction");
 const BuildTransactionAction_1 = require("./actions/BuildTransactionAction");
-const BuildTransactionV2Action_1 = require("./actions/BuildTransactionV2Action");
 class SSVKeysCommand extends BaseCommand_1.BaseCommand {
     /**
      * Add more specific help.
@@ -20,7 +19,6 @@ class SSVKeysCommand extends BaseCommand_1.BaseCommand {
             PrivateKeyAction_1.PrivateKeyAction,
             BuildSharesAction_1.BuildSharesAction,
             BuildTransactionAction_1.BuildTransactionAction,
-            BuildTransactionV2Action_1.BuildTransactionV2Action,
         ];
         this.subParserOptions.help += 'Example: "ssv-keys decrypt --help" or "ssv-keys dec --help"';
     }
