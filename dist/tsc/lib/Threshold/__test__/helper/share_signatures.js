@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sharesSignatures = void 0;
 const tslib_1 = require("tslib");
-const bls = require('bls-eth-wasm/browser/bls');
+const bls = require('bls-eth-wasm/browser');
 const Threshold_1 = tslib_1.__importDefault(require("../../../Threshold"));
 const sharesSignatures = (privateKey, message, threshold) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     return new Threshold_1.default().create(privateKey).then((response) => {

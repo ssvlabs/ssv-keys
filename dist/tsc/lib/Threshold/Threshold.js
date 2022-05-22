@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const bls = require('bls-eth-wasm/browser/bls');
+const bls = require('bls-eth-wasm/browser');
 /**
  * Building threshold for
  * Example of usage:

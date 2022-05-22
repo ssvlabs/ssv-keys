@@ -45,33 +45,23 @@ If you want to use it as part of your project:
 yarn add https://github.com/bloxapp/ssv-keys.git
 ```
 
-If you want to install CLI globally in your system:
-
-```bash
-yarn add -g https://github.com/bloxapp/ssv-keys.git
-ssv-keys --help
-```
-
 ## Running CLI
 
-Let's assume in all examples that you installed package globally.
-In such case all examples will be with `ssv-keys ...` executable.
-
-But if for instance you cloned all the repo with `git clone`, executable
-will be `yarn cli ...` or `yarn dev:cli ...`
+For regular CLI usage you will be running command as: `yarn cli ...`.
+Under the hood it will use `ts-node` to run TypeScript files.
 
 ### Help
 
 Help about available actions:
 
 ```bash
-ssv-keys --help
+yarn cli --help
 ```
 
 Help about specific action:
 
 ```bash
-ssv-keys <action> --help
+yarn cli <action> --help
 ```
 
 Follow instructions in help of how to get private key,
@@ -85,25 +75,25 @@ transaction V2.
 #### Step 1: Getting private key
 
 ```bash
-yarn dev:cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest
+yarn cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest
 ```
 
 #### Step 2: Building shares for validators
 
 ```bash
-yarn dev:cli shares --private-key=... -op=...,...,...,... --output=./shares.json
+yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 ```
 
 #### Step 3: Building final transaction
 
 ```bash
-yarn dev:cli transaction --private-key=... --shares=./shares.json --output=./payload.txt
+yarn cli transaction --private-key=... --shares=./shares.json --output=./payload.txt
 ```
 
 #### Step 4: Building final transaction V2
 
 ```bash
-yarn dev:cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload_v2.txt
+yarn cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload_v2.txt
 ```
 
 ## Development
@@ -111,7 +101,7 @@ yarn dev:cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-am
 ### Run CLI as TypeScript executable
 
 ```bash
-yarn dev:cli ...
+yarn cli ...
 ```
 
 ### Run CLI as JavaScript compiled executable
@@ -156,6 +146,14 @@ Build everything
 
 ```bash
 yarn build-all
+```
+
+## Integration in your projects
+
+### Install dependency
+
+```bash
+yarn add https://github.com/bloxapp/ssv-keys.git
 ```
 
 ## TODO

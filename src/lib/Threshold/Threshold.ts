@@ -1,5 +1,5 @@
 import { SecretKeyType } from 'bls-eth-wasm';
-const bls = require('bls-eth-wasm/browser/bls');
+const bls = require('bls-eth-wasm/browser');
 
 export interface IShares {
     privateKey: string,
