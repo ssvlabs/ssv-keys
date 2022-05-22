@@ -5,7 +5,7 @@ export class BaseCommand extends ArgumentParser {
    * List of all supported command actions.
    * @protected
    */
-  protected actions: any = {}
+  protected actions: any[] = [];
 
   protected actionParsers: any = {}
 
@@ -26,8 +26,8 @@ export class BaseCommand extends ArgumentParser {
    */
   addActionsSubParsers(): ArgumentParser {
     this.subParsers = this.add_subparsers(this.subParserOptions);
-    for (const action of Object.keys(this.actions)) {
-      const actionOptions = this.actions[action].options;
+    for (const action of this.actions) {
+      const actionOptions = action.options;
       const actionParser: ArgumentParser = this.subParsers.add_parser(
         actionOptions.action,
         {
@@ -39,11 +39,11 @@ export class BaseCommand extends ArgumentParser {
       }
       actionParser.set_defaults({
         func: (args: any) => {
-          const executable = new this.actions[actionOptions.action];
+          const executable = new action();
           return executable.setArgs(args).execute();
         },
       });
-      this.actionParsers[action] = actionParser;
+      this.actionParsers[actionOptions.action] = actionParser;
     }
     return this;
   }

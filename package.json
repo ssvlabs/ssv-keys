@@ -26,7 +26,8 @@
     "docs": "typedoc",
     "build": "tsc -p tsconfig.json",
     "build-all": "yarn clean && yarn build && yarn esbuild",
-    "esbuild": "node ./esbuild.js"
+    "esbuild": "node ./esbuild.js",
+    "pre-commit": "yarn test && yarn build-all"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

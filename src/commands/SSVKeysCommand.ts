@@ -9,12 +9,12 @@ export class SSVKeysCommand extends BaseCommand {
    * List of all supported command actions.
    * @protected
    */
-  protected actions = {
-    [PrivateKeyAction.options.action]: PrivateKeyAction,
-    [BuildSharesAction.options.action]: BuildSharesAction,
-    [BuildTransactionAction.options.action]: BuildTransactionAction,
-    [BuildTransactionV2Action.options.action]: BuildTransactionV2Action,
-  }
+  protected actions = [
+    PrivateKeyAction,
+    BuildSharesAction,
+    BuildTransactionAction,
+    BuildTransactionV2Action,
+  ]
 
   /**
    * Add more specific help.

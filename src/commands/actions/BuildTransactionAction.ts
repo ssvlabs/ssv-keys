@@ -40,8 +40,9 @@ export class BuildTransactionAction extends BaseAction {
    * Decrypt and return private key.
    */
   async execute(): Promise<any> {
-    const shares: EncryptShare[] = await readFile(this.args.shares, true);
-    const payload = await this.ssvKeys.buildPayload(this.args.private_key, shares);
+    const { shares, private_key : privateKey } = this.args;
+    const encryptedShares: EncryptShare[] = await readFile(shares, true);
+    const payload = await this.ssvKeys.buildPayload(privateKey, encryptedShares);
     const explainedPayload = '' +
       '\n[\n' +
       `\n\t validator public key   ➡️   ${payload[0]}\n` +

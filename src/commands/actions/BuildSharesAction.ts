@@ -43,7 +43,8 @@ export class BuildSharesAction extends BaseAction {
    * Decrypt and return private key.
    */
   async execute(): Promise<any> {
-    const threshold: ISharesKeyPairs = await this.ssvKeys.createThreshold(this.args.private_key);
+    const { private_key : privateKey } = this.args;
+    const threshold: ISharesKeyPairs = await this.ssvKeys.createThreshold(privateKey);
     const shares = await this.ssvKeys.encryptShares(this.args.operators.split(','), threshold.shares);
     const sharesJson = JSON.stringify(shares, null, '  ');
     let sharesMessage = `Shares: \n${sharesJson}`;

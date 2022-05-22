@@ -62,12 +62,18 @@ export class BuildTransactionV2Action extends BaseAction {
    * Decrypt and return private key.
    */
   async execute(): Promise<any> {
-    const shares: EncryptShare[] = await readFile(this.args.shares, true);
-    const payload = await this.ssvKeys.buildPayloadV2(
-      this.args.private_key,
-      this.args.operators_ids.split(','),
+    const {
       shares,
-      this.args.token_amount_gwei
+      private_key : privateKey,
+      operators_ids : operatorsIds,
+      token_amount_gwei: tokenAmount
+    } = this.args;
+    const encryptedShares: EncryptShare[] = await readFile(shares, true);
+    const payload = await this.ssvKeys.buildPayloadV2(
+      privateKey,
+      operatorsIds.split(','),
+      encryptedShares,
+      tokenAmount
     );
     const explainedPayload = '' +
       '\n[\n' +
