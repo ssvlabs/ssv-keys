@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 let index;
 try {
     window.crypto;
-    index = require('jsencrypt');
+    index = require('jsencrypt').JSEncrypt;
 }
 catch (_a) {
     index = require('node-jsencrypt');
