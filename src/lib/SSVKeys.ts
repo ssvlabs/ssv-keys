@@ -1,3 +1,4 @@
+import atob from 'atob';
 import Web3 from 'web3';
 import { encode } from 'js-base64';
 import EthereumKeyStore from 'eth2-keystore-js';

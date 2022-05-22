@@ -1,4 +1,4 @@
-const bls = require('bls-eth-wasm/browser');
+import bls from '../../BLS';
 import { Shares, sharesSignatures } from './helper/share_signatures';
 
 describe('Check Threshold creation', () => {

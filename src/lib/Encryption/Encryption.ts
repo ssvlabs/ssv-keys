@@ -1,5 +1,5 @@
-import JSEncrypt from 'jsencrypt';
 import { decode } from 'js-base64';
+import JSEncrypt from '../JSEncrypt';
 import { IShares } from '../Threshold';
 
 export interface EncryptShare {

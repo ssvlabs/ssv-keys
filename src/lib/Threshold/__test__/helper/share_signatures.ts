@@ -1,4 +1,4 @@
-const bls = require('bls-eth-wasm/browser');
+import bls from '../../../BLS';
 import Threshold, { IShares } from '../../../Threshold';
 
 export interface Shares {

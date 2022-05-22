@@ -35,6 +35,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@types/argparse": "^2.0.10",
+    "@types/atob": "^2.1.2",
+    "@types/btoa": "^1.2.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^15.14.9",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -58,8 +60,10 @@
   "dependencies": {
     "argparse": "^2.0.1",
     "assert": "^2.0.0",
+    "atob": "^2.1.2",
     "bls-eth-wasm": "^1.0.4",
     "bls-signatures": "^0.2.5",
+    "btoa": "^1.2.1",
     "crypto": "^1.0.1",
     "eth2-keystore-js": "^1.0.8",
     "ethereumjs-util": "^7.0.10",
@@ -67,6 +71,7 @@
     "events": "^3.3.0",
     "js-base64": "^3.7.2",
     "jsencrypt": "^3.2.1",
+    "node-jsencrypt": "^1.0.0",
     "scrypt-js": "^3.0.1",
     "stream": "^0.0.2",
     "web3": "^1.7.3"

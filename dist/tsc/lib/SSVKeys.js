@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSVKeys = void 0;
 const tslib_1 = require("tslib");
+const atob_1 = tslib_1.__importDefault(require("atob"));
 const web3_1 = tslib_1.__importDefault(require("web3"));
 const js_base64_1 = require("js-base64");
 const eth2_keystore_js_1 = tslib_1.__importDefault(require("eth2-keystore-js"));
@@ -68,7 +69,7 @@ class SSVKeys {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
                 const decodedOperators = operatorsPublicKeys.map((operator) => {
-                    operator = atob(operator);
+                    operator = (0, atob_1.default)(operator);
                     return operatorFormat == SSVKeys.OPERATOR_FORMAT_BASE64
                         ? String((0, js_base64_1.encode)(operator)) : operator;
                 });

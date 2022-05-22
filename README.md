@@ -156,6 +156,32 @@ yarn build-all
 yarn add https://github.com/bloxapp/ssv-keys.git
 ```
 
+If you want to run examples in console you will need additional libraries:
+ - `jsdom`
+ - `jsdom-global`
+ - `crypto`
+
+and then start your example file with these lines:
+
+```javascript
+#!/usr/bin/env node
+'use strict';
+
+require('jsdom-global/register');
+const nodeCrypto = require('crypto');
+
+window.crypto = {
+  getRandomValues: function(buffer) {
+    return nodeCrypto.randomFillSync(buffer);
+  }
+};
+```
+
+It will create global window object available in Node environment.
+This approach takes place only because `ssv-keys` project doesn't compile separately browser and node versions of libraries.
+Instead, it uses only browser version assuming that most of the projects using `ssv-keys` will be web applications,
+and if you need CLI - you can simply use our CLI. But yet it is still possible to write your own CLIs.
+
 ## TODO
 
 * Make it possible to use specific number of signers and fails in shares generation, use four by default.

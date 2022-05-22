@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const bls = require('bls-eth-wasm/browser');
+const BLS_1 = tslib_1.__importDefault(require("../BLS"));
 /**
  * Building threshold for
  * Example of usage:
@@ -28,18 +28,18 @@ class Threshold {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 try {
-                    bls.init(bls.BLS12_381)
+                    BLS_1.default.init(BLS_1.default.BLS12_381)
                         .then(() => {
                         const msk = [];
                         const mpk = [];
                         // Master key Polynomial
-                        this.validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
+                        this.validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
                         this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
                         msk.push(this.validatorPrivateKey);
                         mpk.push(this.validatorPublicKey);
                         // Construct poly
                         for (let i = 1; i < thresholdNumber; i += 1) {
-                            const sk = new bls.SecretKey();
+                            const sk = new BLS_1.default.SecretKey();
                             sk.setByCSPRNG();
                             msk.push(sk);
                             const pk = sk.getPublicKey();
@@ -47,11 +47,11 @@ class Threshold {
                         }
                         // Evaluate shares - starting from 1 because 0 is master key
                         for (let i = 1; i <= sharesNumber; i += 1) {
-                            const id = new bls.Id();
+                            const id = new BLS_1.default.Id();
                             id.setInt(i);
-                            const shareSecretKey = new bls.SecretKey();
+                            const shareSecretKey = new BLS_1.default.SecretKey();
                             shareSecretKey.share(msk, id);
-                            const sharePublicKey = new bls.PublicKey();
+                            const sharePublicKey = new BLS_1.default.PublicKey();
                             sharePublicKey.share(mpk, id);
                             this.validatorShares.push({
                                 privateKey: `0x${shareSecretKey.serializeToHexStr()}`,

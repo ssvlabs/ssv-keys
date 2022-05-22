@@ -8,7 +8,7 @@ const options = {
   entryPoints: [
     "src/main.ts"
   ],
-  platform: 'node',
+  platform: 'browser',
   minify: true,
   bundle: true,
   outfile: "dist/esbuild/main.js",

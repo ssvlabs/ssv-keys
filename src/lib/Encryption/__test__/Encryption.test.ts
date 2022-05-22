@@ -1,4 +1,4 @@
-import JSEncrypt from 'jsencrypt';
+import JSEncrypt from '../../JSEncrypt';
 import Threshold, { ISharesKeyPairs } from '../../Threshold';
 import { operatorPrivateKey, operatorPublicKey } from './RsaKeys';
 import Encryption, { EncryptShare } from '../../Encryption/Encryption';
