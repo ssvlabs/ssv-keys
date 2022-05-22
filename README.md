@@ -87,13 +87,7 @@ yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 #### Step 3: Building final transaction
 
 ```bash
-yarn cli transaction --private-key=... --shares=./shares.json --output=./payload.txt
-```
-
-#### Step 4: Building final transaction V2
-
-```bash
-yarn cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload_v2.txt
+yarn cli transaction --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload.txt
 ```
 
 ## Development
@@ -101,7 +95,7 @@ yarn cli transaction_v2 --operators-ids=1,2,3,4 --private-key=... --token-amount
 ### Run CLI as TypeScript executable
 
 ```bash
-yarn cli ...
+yarn dev:cli ...
 ```
 
 ### Run CLI as JavaScript compiled executable
@@ -119,7 +113,7 @@ yarn lint
 ### Testing
 
 ```bash
-  yarn test
+yarn test
 ```
 
 In watch mode during development

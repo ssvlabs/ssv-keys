@@ -32,16 +32,18 @@ export declare class SSVKeys {
      */
     abiEncode(encryptedShares: EncryptShare[], field: string): string[];
     /**
-     * Having keystore private key build final transaction payload for list of operators.
+     * Having keystore private key build final transaction payload for list of operators IDs from contract.
      *
      * Example:
      *
      *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
      *    const encryptedShares = await ssvKeys.encryptShares(operatorsPublicKeys, shares);
-     *    await ssvKeys.buildPayload(privateKey, encryptedShares)
+     *    await ssvKeys.buildPayloadV2(...)
      *
      * @param privateKey
+     * @param operatorsIds
      * @param encryptedShares
+     * @param tokenAmountGwei
      */
-    buildPayload(privateKey: string, encryptedShares: EncryptShare[]): Promise<any[]>;
+    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], tokenAmountGwei: number): Promise<any[]>;
 }
