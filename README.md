@@ -1,5 +1,29 @@
 # SSV Keys
 
+![GitHub](https://img.shields.io/github/license/bloxapp/ssv-keys)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bloxapp/ssv-keys/Lint%20and%20test)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/bloxapp/ssv-keys)
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/bloxapp/ssv-keys)
+![GitHub contributors](https://img.shields.io/github/contributors/bloxapp/ssv-keys)
+![GitHub last commit](https://img.shields.io/github/last-commit/bloxapp/ssv-keys)
+
+![GitHub package.json dynamic](https://img.shields.io/github/package-json/keywords/bloxapp/ssv-keys)
+![GitHub package.json dynamic](https://img.shields.io/github/package-json/author/bloxapp/ssv-keys)
+
+![Discord](https://img.shields.io/discord/723834989506068561?style=for-the-badge&label=Ask%20for%20support&logo=discord&logoColor=white)
+
+Important dependencies:
+
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/web3?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/bls-eth-wasm?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/bls-signatures?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/eth2-keystore-js?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/ethereumjs-util?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/ethereumjs-wallet?style=social)
+
+---
+
 Library and CLI to work with ETH keystore file, decrypt private key from it using password,
 use that private key to get shares for operators and to build final payload for transaction
 to use it in SSV Network.

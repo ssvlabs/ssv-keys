@@ -1,6 +1,6 @@
 {
   "name": "ssv-keys",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Library to work with keystore file, with private key to get shares and to build final payload for transaction in SSV Network.",
   "author": "SSV.Network",
   "repository": "https://github.com/bloxapp/ssv-keys",
@@ -15,6 +15,9 @@
   "types": "./dist/tsc/main.d.ts",
   "bin": {
     "ssv-keys": "./dist/tsc/cli.js"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "scripts": {
     "dev:cli": "ts-node src/cli.ts",
@@ -58,7 +61,6 @@
     "bls-eth-wasm": "^1.0.4",
     "bls-signatures": "^0.2.5",
     "crypto": "^1.0.1",
-    "electron": "^18.2.2",
     "eth2-keystore-js": "^1.0.8",
     "ethereumjs-util": "^7.0.10",
     "ethereumjs-wallet": "^1.0.1",
