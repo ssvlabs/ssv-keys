@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: [ Windows ] Build native executable
+      - name: Build native executable
         if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.ref, 'refs/tags/v') }}
         run: yarn install --network-timeout 1000000 && yarn package-linux
         env:
