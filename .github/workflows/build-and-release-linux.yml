@@ -1,11 +1,6 @@
 name: Release for Linux
 
-on:
-  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
-  workflow_run:
-    workflows: [Lint and test]
-    types:
-      - completed
+on: [push, pull_request]
 
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
@@ -24,10 +19,17 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Node.js, NPM and Yarn
-        if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
+      - run: yarn install
+      - run: yarn add -D esbuild
+      - run: yarn test
+      - run: yarn lint
+      - run: yarn build-all
+      - run: yarn cli --help
+      - run: yarn dev:cli --help
 
       - name: Build native executable
         if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.ref, 'refs/tags/v') }}
