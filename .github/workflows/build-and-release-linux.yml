@@ -1,4 +1,4 @@
-name: Build/release
+name: Release for Linux
 
 on: push
 
@@ -6,12 +6,12 @@ env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:
-  release:
+  release_linux:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
 
     steps:
       - name: Check out Git repository
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: [Windows] Build native executable
+      - name: [ Windows ] Build native executable
         if: ${{ startsWith(matrix.os, 'ubuntu') && startsWith(github.ref, 'refs/tags/v') }}
         run: yarn install --network-timeout 1000000 && yarn package-linux
         env:
