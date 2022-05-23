@@ -8,7 +8,6 @@ env:
 jobs:
   release_linux:
     runs-on: ${{ matrix.os }}
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     strategy:
       matrix:
