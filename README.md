@@ -24,13 +24,15 @@ Important dependencies:
 
 ---
 
-Library and CLI to work with ETH keystore file, decrypt private key from it using password,
-use that private key to get shares for operators and to build final payload for transaction
-to use it in SSV Network.
+Library and CLI to work with the ETH keystore file:
+1. Parse the private key using the keystore password,
+2. Use the private key to get shares for operators 
+3. Build the payload for the transaction
+
 
 ## Installation
 
-If you want to test it as developer:
+Developer use:
 
 ```bash
 git clone https://github.com/bloxapp/ssv-keys.git
@@ -39,66 +41,72 @@ yarn install
 yarn cli --help
 ```
 
-If you want to use it as part of your project:
+Use in your project:
 
 ```bash
 yarn add https://github.com/bloxapp/ssv-keys.git
 ```
 
-## Running CLI
+## Running the CLI
 
-For regular CLI usage you will be running command as: `yarn cli ...`.
-Under the hood it will use `ts-node` to run TypeScript files.
+- For regular CLI usage you will be running the command as: `yarn cli ...`
+- Under the hood it will use `ts-node` to run the relevant TypeScript files.
 
 ### Help
 
-Help about available actions:
+Help on available actions:
 
 ```bash
 yarn cli --help
 ```
 
-Help about specific action:
+Help on a specific action:
 
 ```bash
 yarn cli <action> --help
 ```
 
-Follow instructions in help of how to get private key,
-how to generate shares and dump everything into the file
-and then use dumped data to build final transaction and
-transaction V2.
-
 
 ### Example
 
-#### Step 1: Getting private key
-
+#### Step 1: Fetch the private key:
+**Input parameters:**
+- keystore = path to keystore jSON file
+- password = keystore password
 ```bash
 yarn cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest
 ```
+**Output:**  private key
 
-#### Step 2: Building shares for validators
-
+#### Step 2: Building the shares for the validator:
+**Input parameters:**
+- private-key = private key output from step 1
+- op = 4 public operator keys (comma seperated)
+- Output = shares json file location
 ```bash
 yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 ```
+**Output:** shares json
 
-#### Step 3: Building final transaction
-
+#### Step 3: Build and ouput the transaction payload:
+**Input parameters:**
+- private-key = private key output from step 1
+- shares = path to shares json file
+- ouput = transaction payload text file location
 ```bash
 yarn cli transaction --private-key=... --shares=./shares.json --output=./payload.txt
 ```
+**Output:**  Transaction payload
 
 ## Development
 
-### Run CLI as TypeScript executable
+### Run the CLI as a TypeScript executable:
 
 ```bash
 yarn dev:cli ...
 ```
 
-### Run CLI as JavaScript compiled executable
+### Run the CLI as a JavaScript compiled executable:
 
 ```bash
 yarn cli ...
@@ -146,21 +154,20 @@ yarn build-all
 
 ### Node Project
 
-Example of NodeJS project contains all code snippets to get private key, build share and final transaction.
-Simply follow these instructions.
+To run an example of a NodeJS project containing all the code snippets to get a private key, build the share and transaction payload, simply follow these instructions!
 
 ```bash
 cd examples/node
 yarn install
 ```
 
-To run JavaScript example:
+To run a JavaScript example:
 
 ```bash
 yarn start:js
 ```
 
-To run TypeScript example:
+To run a TypeScript example:
 
 ```bash
 yarn start:ts
@@ -168,24 +175,24 @@ yarn start:ts
 
 ### Browser project (web application)
 
-Go to example folder and install all dependencies
+Go to the example folder and then install all the dependencies:
 
 ```bash
 cd examples/browser
 yarn install
 ```
 
-Start web app:
+Start the web app:
 
 ```bash
 yarn start
 ```
 
-Open developer console to see how it works in a browser environment.
+Open the developer console to see how it works in a browser environment.
 
 ## TODO
 
-* Make it possible to use specific number of signers and fails in shares generation, use four by default.
+* Make it possible to use a specific number of signers (Currently with a default of 4).
   Read: [From Crash to Byzantine Consensus with 2f + 1 Processes](https://www.gsd.inesc-id.pt/~mpc/pubs/bc2f+1.pdf)
 
 ## Authors
