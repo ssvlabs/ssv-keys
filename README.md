@@ -71,8 +71,8 @@ yarn cli <action> --help
 
 #### Step 1: Fetch the private key:
 **Input parameters:**
-keystore = path to keystore jSON file
-password = keystore password
+- keystore = path to keystore jSON file
+- password = keystore password
 ```bash
 yarn cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest
 ```
@@ -80,9 +80,9 @@ yarn cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.jso
 
 #### Step 2: Building the shares for the validator:
 **Input parameters:**
-private-key = private key output from step 1
-op = 4 public operator keys (comma seperated)
-Output = shares json file location
+- private-key = private key output from step 1
+- op = 4 public operator keys (comma seperated)
+- Output = shares json file location
 ```bash
 yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 ```
@@ -90,9 +90,9 @@ yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 
 #### Step 3: Build and ouput the transaction payload:
 **Input parameters:**
-private-key = private key output from step 1
-shares = path to shares json file
-ouput = transaction payload text file location
+- private-key = private key output from step 1
+- shares = path to shares json file
+- ouput = transaction payload text file location
 ```bash
 yarn cli transaction --private-key=... --shares=./shares.json --output=./payload.txt
 ```
@@ -154,7 +154,7 @@ yarn build-all
 
 ### Node Project
 
-To run an example of a NodeJS project containing all code snippets to get private key, build share and final transaction, simply follow these instructions!
+To run an example of a NodeJS project containing all the code snippets to get a private key, build the share and transaction payload, simply follow these instructions!
 
 ```bash
 cd examples/node
