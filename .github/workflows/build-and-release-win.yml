@@ -1,4 +1,4 @@
-name: Release for Linux
+name: Release for Windows
 
 on: [ push, pull_request ]
 
