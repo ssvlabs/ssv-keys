@@ -105,7 +105,7 @@ yarn cli <action> --help
 
 **Input parameters:**
 
-- keystore = path to keystore jSON file
+- keystore = path to keystore json file
 - password = keystore password
 
 ```bash
