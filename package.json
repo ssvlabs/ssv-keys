@@ -31,8 +31,8 @@
     "build-all": "yarn clean && yarn build && yarn esbuild",
     "esbuild": "node ./esbuild.js",
     "pre-commit": "yarn test && yarn lint",
-    "package-linux": "pkg dist/tsc/cli.js --targets node14-linux-x64 --output bin/linux/ssv-keys.linux --compress GZip",
-    "package-macos": "pkg dist/tsc/cli.js --targets node14-macos-x64 --output bin/macos/ssv-keys.macos --compress GZip",
+    "package-linux": "pkg dist/tsc/cli.js --targets node14-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
+    "package-macos": "pkg dist/tsc/cli.js --targets node14-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
     "package-win": "pkg dist/tsc/cli.js --targets node14-win-x64 --output bin/win/ssv-keys.exe --compress GZip",
     "package-all": "yarn package-linux && yarn package-macos && yarn package-win"
   },
