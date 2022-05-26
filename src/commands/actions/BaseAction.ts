@@ -27,7 +27,11 @@ export class BaseAction {
     throw Error('Should implement "execute"')
   }
 
-  static get options(): ActionOptions {
-    throw Error('Should implement "options"');
+  static get options(): any {
+    throw Error('Should implement static "options"');
+  }
+
+  get options(): any {
+    return BaseAction.options;
   }
 }

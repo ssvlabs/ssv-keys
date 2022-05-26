@@ -1,9 +1,9 @@
+import { BaseAction } from './BaseAction';
 import { readFile, writeFile } from '../../lib/helpers';
-import { ActionOptions, BaseAction } from './BaseAction';
 import { EncryptShare } from '../../lib/Encryption/Encryption';
 
 export class BuildTransactionAction extends BaseAction {
-  static get options(): ActionOptions {
+  static get options(): any {
     return {
       action: 'transaction',
       shortAction: 'tr',
@@ -12,7 +12,7 @@ export class BuildTransactionAction extends BaseAction {
           arg1: '-sh',
           arg2: '--shares',
           options: {
-            help: 'File path to shares JSON dumped before. '
+            help: 'File path to shares JSON dumped before'
           }
         },
         {
@@ -22,6 +22,11 @@ export class BuildTransactionAction extends BaseAction {
             type: String,
             required: true,
             help: 'Private key which you get using keystore and password'
+          },
+          interactive: {
+            options: {
+              type: 'password',
+            }
           }
         },
         {

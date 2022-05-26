@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BuildSharesAction = void 0;
 const tslib_1 = require("tslib");
-const helpers_1 = require("../../lib/helpers");
+const js_base64_1 = require("js-base64");
 const BaseAction_1 = require("./BaseAction");
+const helpers_1 = require("../../lib/helpers");
 class BuildSharesAction extends BaseAction_1.BaseAction {
     static get options() {
         return {
@@ -18,6 +19,29 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                         required: true,
                         help: 'Comma-separated list of base64 operator keys. ' +
                             'Require at least 4 operators'
+                    },
+                    interactive: {
+                        repeat: 4,
+                        options: {
+                            type: 'text',
+                            message: 'Operator base64 encoded public key',
+                            /**
+                             * Basic (not deep) validation of RSA key
+                             * @param operator
+                             */
+                            validate: (operator) => {
+                                try {
+                                    const decodedOperator = (0, js_base64_1.decode)(operator);
+                                    if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
+                                        throw Error('Not valid RSA key');
+                                    }
+                                    return true;
+                                }
+                                catch (e) {
+                                    return 'Only valid base64 string is allowed';
+                                }
+                            }
+                        }
                     }
                 },
                 {
@@ -27,6 +51,11 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                         type: String,
                         required: true,
                         help: 'Private key which you get using keystore and password'
+                    },
+                    interactive: {
+                        options: {
+                            type: 'password',
+                        }
                     }
                 },
                 {
@@ -35,6 +64,11 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                     options: {
                         type: String,
                         help: 'Write result as JSON to specified file'
+                    },
+                    interactive: {
+                        options: {
+                            type: 'text',
+                        }
                     }
                 }
             ],

@@ -21,6 +21,8 @@
   },
   "scripts": {
     "dev:cli": "ts-node src/cli.ts",
+    "dev:icli": "ts-node src/cli-interactive.ts",
+    "icli": "node ./dist/tsc/cli-interactive.js",
     "cli": "node ./dist/tsc/cli.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
@@ -30,10 +32,10 @@
     "build": "tsc -p tsconfig.json",
     "build-all": "yarn clean && yarn build && yarn esbuild",
     "esbuild": "node ./esbuild.js",
-    "pre-commit": "yarn test && yarn lint",
-    "package-linux": "pkg dist/tsc/cli.js --targets node14-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
-    "package-macos": "pkg dist/tsc/cli.js --targets node14-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
-    "package-win": "pkg dist/tsc/cli.js --targets node14-win-x64 --output bin/win/ssv-keys.exe --compress GZip",
+    "pre-commit": "yarn test && yarn lint && yarn build-all",
+    "package-linux": "pkg dist/tsc/cli-interactive.js --targets node14-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
+    "package-macos": "pkg dist/tsc/cli-interactive.js --targets node14-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
+    "package-win": "pkg dist/tsc/cli-interactive.js --targets node14-win-x64 --output bin/win/ssv-keys.exe --compress GZip",
     "package-all": "yarn package-linux && yarn package-macos && yarn package-win"
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "@types/btoa": "^1.2.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^15.14.9",
+    "@types/prompts": "^2.0.14",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "esbuild": "^0.14.38",
@@ -56,11 +59,11 @@
     "jest-watch-typeahead": "0.6.5",
     "jsdom": "^16.5.3",
     "jsdom-global": "^3.0.2",
+    "pkg": "^5.7.0",
     "ts-jest": "^26.5.6",
     "ts-node": "^9.1.1",
     "typedoc": "^0.22.15",
-    "typescript": "^4.6.4",
-    "pkg": "^5.7.0"
+    "typescript": "^4.6.4"
   },
   "dependencies": {
     "argparse": "^2.0.1",
@@ -77,6 +80,7 @@
     "js-base64": "^3.7.2",
     "jsencrypt": "^3.2.1",
     "node-jsencrypt": "^1.0.0",
+    "prompts": "^2.4.2",
     "scrypt-js": "^3.0.1",
     "stream": "^0.0.2",
     "web3": "^1.7.3"

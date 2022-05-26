@@ -1,6 +1,6 @@
-import { ActionOptions, BaseAction } from './BaseAction';
+import { BaseAction } from './BaseAction';
 export declare class BuildSharesAction extends BaseAction {
-    static get options(): ActionOptions;
+    static get options(): any;
     /**
      * Decrypt and return private key.
      */

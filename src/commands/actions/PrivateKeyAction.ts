@@ -1,8 +1,8 @@
 import { readFile } from '../../lib/helpers';
-import { ActionOptions, BaseAction } from './BaseAction';
+import { BaseAction } from './BaseAction';
 
 export class PrivateKeyAction extends BaseAction {
-  static get options(): ActionOptions {
+  static get options(): any {
     return {
       action: 'decrypt',
       shortAction: 'dec',
@@ -14,6 +14,11 @@ export class PrivateKeyAction extends BaseAction {
             required: true,
             type: String,
             help: 'Keystore file path'
+          },
+          interactive: {
+            options: {
+              type: 'text',
+            }
           }
         },
         {
@@ -23,6 +28,11 @@ export class PrivateKeyAction extends BaseAction {
             required: true,
             type: String,
             help: 'Password for keystore'
+          },
+          interactive: {
+            options: {
+              type: 'password',
+            }
           }
         }
       ],
