@@ -103,7 +103,7 @@ export class BaseCommand extends ArgumentParser {
             for (let i = 1; i <= repeats; i++) {
               promptOptions.message = `${message}: ${i} from ${repeats}`;
               const response = await prompts(promptOptions);
-              if (argument.required && !response[promptOptions.name]) {
+              if (argument.options.required && !response[promptOptions.name]) {
                 process.exit(1);
               }
               multi.push(response[promptOptions.name]);
@@ -111,7 +111,7 @@ export class BaseCommand extends ArgumentParser {
             process.argv.push(`${argument.arg2}=${multi.join(',')}`);
           } else {
             const response = await prompts(promptOptions);
-            if (argument.required && !response[promptOptions.name]) {
+            if (argument.options.required && !response[promptOptions.name]) {
               process.exit(1);
             }
             process.argv.push(`${argument.arg2}=${response[promptOptions.name]}`);
