@@ -132,12 +132,12 @@ yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 **Input parameters:**
 - operators-ids = 4 comma seperated operator ids (should match 4 the operators used in step 2)
 - private-key = private key output from step 1
-- token-amount-gwei = amount of gwei to charge per a block
+- token-amount = amount of wei to charge per a block
 - shares = path to shares json file
 - output = transaction payload text file location
 
 ```bash
-yarn cli transaction --operators-ids=1,2,3,4 --private-key=... --token-amount-gwei=1234567890 --shares=./shares.json --output=./payload.txt
+yarn cli transaction --operators-ids=1,2,3,4 --private-key=... --token-amount=1234567890 --shares=./shares.json --output=./payload.txt
 ```
 
 **Output:**  Transaction payload

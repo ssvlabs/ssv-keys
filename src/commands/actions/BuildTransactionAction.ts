@@ -12,6 +12,7 @@ export class BuildTransactionAction extends BaseAction {
           arg1: '-sh',
           arg2: '--shares',
           options: {
+            required: true,
             help: 'File path to shares JSON dumped before'
           }
         },
@@ -36,16 +37,34 @@ export class BuildTransactionAction extends BaseAction {
             type: String,
             required: true,
             help: 'Comma-separated list of operators IDs from the contract'
+          },
+          interactive: {
+            repeat: 4,
+            options: {
+              type: 'number',
+              message: 'Operator ID from the contract',
+              validate: (operatorId: number) => {
+                return !(Number.isInteger(operatorId) && operatorId > 0) ? 'Operator ID should be integer number' : true;
+              }
+            }
           }
         },
         {
           arg1: '-tag',
-          arg2: '--token-amount-gwei',
+          arg2: '--token-amount',
           options: {
             type: String,
             required: true,
-            help: 'Token amount fee required for this transaction in Gwei. ' +
+            help: 'Token amount fee required for this transaction in Wei. ' +
                   'Calculated as: totalFee := allOperatorsFee + networkYearlyFees + liquidationCollateral. '
+          },
+          interactive: {
+            options: {
+              type: 'number',
+              validate: (tokenAmount: any) => {
+                return !(Number.isInteger(tokenAmount) && tokenAmount > 0) ? 'Token amount should be integer number' : true;
+              }
+            }
           }
         },
         {
@@ -68,7 +87,7 @@ export class BuildTransactionAction extends BaseAction {
       shares,
       private_key : privateKey,
       operators_ids : operatorsIds,
-      token_amount_gwei: tokenAmount
+      token_amount: tokenAmount
     } = this.args;
     const encryptedShares: EncryptShare[] = await readFile(shares, true);
     const payload = await this.ssvKeys.buildPayload(
@@ -96,7 +115,7 @@ export class BuildTransactionAction extends BaseAction {
                     '\n\toperators IDs                ➡️   array[<operator ID>,         ..., <operator ID>]\n' +
                     '\n\tsharePublicKeys              ➡️   array[<share public key>,    ..., <share public key>]\n' +
                     '\n\tsharePrivateKeys             ➡️   array[<share private key>,   ..., <share private key>]\n' +
-                    '\n\ttoken amount                 ➡️   number in Gwei\n' +
+                    '\n\ttoken amount                 ➡️   number in Wei\n' +
                     '\n]\n\n' +
                     '\n--------------------------------------------------------------------------------\n' +
                     `\n✳️  Transaction explained payload data: \n${explainedPayload}\n` +
