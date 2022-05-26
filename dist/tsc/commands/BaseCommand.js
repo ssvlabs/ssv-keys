@@ -88,7 +88,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                             for (let i = 1; i <= repeats; i++) {
                                 promptOptions.message = `${message}: ${i} from ${repeats}`;
                                 const response = yield (0, prompts_1.default)(promptOptions);
-                                if (argument.required && !response[promptOptions.name]) {
+                                if (argument.options.required && !response[promptOptions.name]) {
                                     process.exit(1);
                                 }
                                 multi.push(response[promptOptions.name]);
@@ -97,7 +97,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                         }
                         else {
                             const response = yield (0, prompts_1.default)(promptOptions);
-                            if (argument.required && !response[promptOptions.name]) {
+                            if (argument.options.required && !response[promptOptions.name]) {
                                 process.exit(1);
                             }
                             process.argv.push(`${argument.arg2}=${response[promptOptions.name]}`);
