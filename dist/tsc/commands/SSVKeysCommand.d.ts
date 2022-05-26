@@ -9,5 +9,5 @@ export declare class SSVKeysCommand extends BaseCommand {
     /**
      * Add more specific help.
      */
-    constructor();
+    constructor(interactive?: boolean, options?: undefined);
 }

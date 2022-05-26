@@ -17,8 +17,8 @@ export class SSVKeysCommand extends BaseCommand {
   /**
    * Add more specific help.
    */
-  constructor() {
-    super();
+  constructor(interactive= false, options = undefined) {
+    super(interactive, options);
     this.subParserOptions.help += 'Example: "ssv-keys decrypt --help" or "ssv-keys dec --help"'
   }
 }

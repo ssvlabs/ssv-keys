@@ -1,9 +1,10 @@
+import { decode } from 'js-base64';
+import { BaseAction } from './BaseAction';
 import { writeFile } from '../../lib/helpers';
 import { ISharesKeyPairs } from '../../lib/Threshold';
-import { ActionOptions, BaseAction } from './BaseAction';
 
 export class BuildSharesAction extends BaseAction {
-  static get options(): ActionOptions {
+  static get options(): any {
     return {
       action: 'shares',
       shortAction: 'sh',
@@ -16,6 +17,28 @@ export class BuildSharesAction extends BaseAction {
             required: true,
             help: 'Comma-separated list of base64 operator keys. ' +
                   'Require at least 4 operators'
+          },
+          interactive: {
+            repeat: 4,
+            options: {
+              type: 'text',
+              message: 'Operator base64 encoded public key',
+              /**
+               * Basic (not deep) validation of RSA key
+               * @param operator
+               */
+              validate: (operator: string) => {
+                try {
+                  const decodedOperator = decode(operator);
+                  if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
+                    throw Error('Not valid RSA key');
+                  }
+                  return true;
+                } catch (e) {
+                  return 'Only valid base64 string is allowed';
+                }
+              }
+            }
           }
         },
         {
@@ -25,6 +48,11 @@ export class BuildSharesAction extends BaseAction {
             type: String,
             required: true,
             help: 'Private key which you get using keystore and password'
+          },
+          interactive: {
+            options: {
+              type: 'password',
+            }
           }
         },
         {
@@ -33,6 +61,11 @@ export class BuildSharesAction extends BaseAction {
           options: {
             type: String,
             help: 'Write result as JSON to specified file'
+          },
+          interactive: {
+            options: {
+              type: 'text',
+            }
           }
         }
       ],

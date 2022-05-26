@@ -9,8 +9,8 @@ class SSVKeysCommand extends BaseCommand_1.BaseCommand {
     /**
      * Add more specific help.
      */
-    constructor() {
-        super();
+    constructor(interactive = false, options = undefined) {
+        super(interactive, options);
         /**
          * List of all supported command actions.
          * @protected

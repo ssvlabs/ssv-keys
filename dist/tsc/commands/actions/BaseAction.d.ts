@@ -14,5 +14,6 @@ export declare class BaseAction {
     protected args: Namespace;
     setArgs(args: Namespace): BaseAction;
     execute(): Promise<any>;
-    static get options(): ActionOptions;
+    static get options(): any;
+    get options(): any;
 }

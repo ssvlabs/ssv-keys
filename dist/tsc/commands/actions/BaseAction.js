@@ -18,7 +18,10 @@ class BaseAction {
         });
     }
     static get options() {
-        throw Error('Should implement "options"');
+        throw Error('Should implement static "options"');
+    }
+    get options() {
+        return BaseAction.options;
     }
 }
 exports.BaseAction = BaseAction;

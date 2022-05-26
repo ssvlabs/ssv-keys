@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BuildTransactionAction = void 0;
 const tslib_1 = require("tslib");
-const helpers_1 = require("../../lib/helpers");
 const BaseAction_1 = require("./BaseAction");
+const helpers_1 = require("../../lib/helpers");
 class BuildTransactionAction extends BaseAction_1.BaseAction {
     static get options() {
         return {
@@ -14,7 +14,7 @@ class BuildTransactionAction extends BaseAction_1.BaseAction {
                     arg1: '-sh',
                     arg2: '--shares',
                     options: {
-                        help: 'File path to shares JSON dumped before. '
+                        help: 'File path to shares JSON dumped before'
                     }
                 },
                 {
@@ -24,6 +24,11 @@ class BuildTransactionAction extends BaseAction_1.BaseAction {
                         type: String,
                         required: true,
                         help: 'Private key which you get using keystore and password'
+                    },
+                    interactive: {
+                        options: {
+                            type: 'password',
+                        }
                     }
                 },
                 {

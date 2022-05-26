@@ -17,6 +17,11 @@ class PrivateKeyAction extends BaseAction_1.BaseAction {
                         required: true,
                         type: String,
                         help: 'Keystore file path'
+                    },
+                    interactive: {
+                        options: {
+                            type: 'text',
+                        }
                     }
                 },
                 {
@@ -26,6 +31,11 @@ class PrivateKeyAction extends BaseAction_1.BaseAction {
                         required: true,
                         type: String,
                         help: 'Password for keystore'
+                    },
+                    interactive: {
+                        options: {
+                            type: 'password',
+                        }
                     }
                 }
             ],
