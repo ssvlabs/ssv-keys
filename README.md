@@ -132,7 +132,7 @@ yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 **Input parameters:**
 - operators-ids = 4 comma seperated operator ids (should match 4 the operators used in step 2)
 - private-key = private key output from step 1
-- token-amount = amount of wei to charge per a block
+- token-amount = yearly fee in wei
 - shares = path to shares json file
 - output = transaction payload text file location
 
