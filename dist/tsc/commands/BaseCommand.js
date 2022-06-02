@@ -58,7 +58,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                 name: 'action',
                 message: `Select action`,
                 choices: this.actions.map((action) => {
-                    return { title: action.options.action, value: action.options.action };
+                    return { title: action.options.description, value: action.options.action };
                 }),
             });
             return response.action;

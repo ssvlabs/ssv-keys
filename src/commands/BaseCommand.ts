@@ -69,7 +69,7 @@ export class BaseCommand extends ArgumentParser {
       name: 'action',
       message: `Select action`,
       choices: this.actions.map((action: BaseAction) => {
-        return { title: action.options.action, value: action.options.action };
+        return { title: action.options.description, value: action.options.action };
       }),
     });
     return response.action;

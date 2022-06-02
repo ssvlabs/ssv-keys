@@ -8,18 +8,24 @@ const operators = require('./operators.json');
 const keystorePassword = 'testtest';
 
 async function main() {
-  // Decrypt private key
+  // Step 1: read keystore from file
   const keyStore = new EthereumKeyStore(JSON.stringify(keystore));
+
+  // Step 2: get private key from keystore using keystore password
   const privateKey = await keyStore.getPrivateKey(keystorePassword);
   console.debug('Private Key: ' + privateKey);
 
-  // Build shares
+  // Step 3: Build shares
   const thresholdInstance = new Threshold();
   const threshold = await thresholdInstance.create(privateKey);
-  const shares = new Encryption(operators, threshold.shares).encrypt();
+  let shares = new Encryption(operators, threshold.shares).encrypt();
+  shares = shares.map((share: EncryptShare) => {
+    share.operatorPublicKey = encode(share.operatorPublicKey);
+    return share;
+  });
   console.debug('Shares :' + JSON.stringify(shares, null, '  '));
 
-  // Build payload
+  // Step 4: Build payload
   const web3 = new Web3();
   const operatorsPublicKeys = operators.map((operator: string) => web3.eth.abi.encodeParameter('string', encode(operator)));
   const sharePublicKeys = shares.map((share: EncryptShare) => share.publicKey);

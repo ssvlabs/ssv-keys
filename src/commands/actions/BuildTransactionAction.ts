@@ -1,27 +1,41 @@
+import colors from 'colors/safe';
+import { encode } from 'js-base64';
 import { BaseAction } from './BaseAction';
-import { readFile, writeFile } from '../../lib/helpers';
+import { ISharesKeyPairs } from '../../lib/Threshold';
+import { fileExistsValidator } from './validators/file';
+import { operatorValidator } from './validators/operator';
 import { EncryptShare } from '../../lib/Encryption/Encryption';
+import { getFilePath, readFile, writeFile } from '../../lib/helpers';
 
 export class BuildTransactionAction extends BaseAction {
   static get options(): any {
     return {
       action: 'transaction',
       shortAction: 'tr',
+      description: 'Build shares for list of operators using private key from keystore. Then build final transaction using those shares.',
       arguments: [
         {
-          arg1: '-sh',
-          arg2: '--shares',
+          arg1: '-ks',
+          arg2: '--keystore',
           options: {
-            help: 'File path to shares JSON dumped before'
+            required: true,
+            type: String,
+            help: 'Provide your keystore file path'
+          },
+          interactive: {
+            options: {
+              type: 'text',
+              validate: fileExistsValidator,
+            }
           }
         },
         {
-          arg1: '-pk',
-          arg2: '--private-key',
+          arg1: '-ps',
+          arg2: '--password',
           options: {
-            type: String,
             required: true,
-            help: 'Private key which you get using keystore and password'
+            type: String,
+            help: 'Enter password for keystore to decrypt it and get private key'
           },
           interactive: {
             options: {
@@ -30,13 +44,22 @@ export class BuildTransactionAction extends BaseAction {
           }
         },
         {
-          arg1: '-o',
-          arg2: '--output',
+          arg1: '-op',
+          arg2: '--operators',
           options: {
             type: String,
-            help: 'Write explained result into text file if necessary'
+            required: true,
+            help: 'Comma-separated list of base64 operator keys. Require at least 4 operators'
+          },
+          interactive: {
+            repeat: 4,
+            options: {
+              type: 'text',
+              message: 'Operator base64 encoded public key',
+              validate: operatorValidator
+            }
           }
-        }
+        },
       ],
     }
   }
@@ -45,9 +68,24 @@ export class BuildTransactionAction extends BaseAction {
    * Decrypt and return private key.
    */
   async execute(): Promise<any> {
-    const { shares, private_key : privateKey } = this.args;
-    const encryptedShares: EncryptShare[] = await readFile(shares, true);
-    const payload = await this.ssvKeys.buildPayload(privateKey, encryptedShares);
+    const { keystore, password } = this.args;
+
+    // Step 1: read keystore file
+    const data = await readFile(String(keystore).trim());
+
+    // Step 2: decrypt keystore file and get private key
+    const privateKey = await this.ssvKeys.getPrivateKeyFromKeystoreData(data, password);
+
+    // Step 3: build shares in raw format
+    const threshold: ISharesKeyPairs = await this.ssvKeys.createThreshold(privateKey);
+    let shares = await this.ssvKeys.encryptShares(this.args.operators.split(','), threshold.shares);
+    shares = shares.map((share: EncryptShare) => {
+      share.operatorPublicKey = encode(share.operatorPublicKey);
+      return share;
+    });
+
+    // Step 4: build payload using encrypted shares
+    const payload = await this.ssvKeys.buildPayload(privateKey, shares);
     const explainedPayload = '' +
       '\n[\n' +
       `\n\t validator public key   ➡️   ${payload[0]}\n` +
@@ -62,6 +100,7 @@ export class BuildTransactionAction extends BaseAction {
       '                                 ]\n' +
       '\n]\n';
 
+    const payloadFilePath = await getFilePath('payload');
     const message = '✳️  Transaction payload have the following structure encoded as ABI Params: \n' +
                     '\n[\n' +
                     '\n\tthreshold.validatorPublicKey ➡️   String\n' +
@@ -72,10 +111,9 @@ export class BuildTransactionAction extends BaseAction {
                     '\n--------------------------------------------------------------------------------\n' +
                     `\n✳️  Transaction explained payload data: \n${explainedPayload}\n` +
                     '\n--------------------------------------------------------------------------------\n' +
-                    `\n✳️  Transaction raw payload data: \n\n${payload}`;
-    if (this.args.output) {
-      await writeFile(this.args.output, message);
-    }
-    return message;
+                    `\n✳️  Transaction raw payload data: \n\n${payload}\n`;
+
+    await writeFile(payloadFilePath, message);
+    return message + `\nTransaction details dumped to file: ${colors.bgYellow(colors.black(payloadFilePath))}\n`;
   }
 }
