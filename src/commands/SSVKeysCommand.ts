@@ -1,5 +1,5 @@
 import { BaseCommand } from './BaseCommand';
-import { PrivateKeyAction } from './actions/PrivateKeyAction';
+// import { PrivateKeyAction } from './actions/PrivateKeyAction';
 import { BuildSharesAction } from './actions/BuildSharesAction';
 import { BuildTransactionAction } from './actions/BuildTransactionAction';
 
@@ -9,7 +9,7 @@ export class SSVKeysCommand extends BaseCommand {
    * @protected
    */
   protected actions = [
-    PrivateKeyAction,
+    // PrivateKeyAction,
     BuildSharesAction,
     BuildTransactionAction,
   ]
