@@ -33,12 +33,20 @@ async function main() {
   const operatorsPublicKeys = operators.map((operator: string) => web3.eth.abi.encodeParameter('string', encode(operator)));
   const sharePublicKeys = shares.map((share: EncryptShare) => share.publicKey);
   const sharePrivateKeys = shares.map((share: EncryptShare) => web3.eth.abi.encodeParameter('string', share.privateKey));
-  console.debug('Web3 Transaction: ', [
+
+  // TODO: Get operator IDs from the contract!
+  const operatorsIds = [123, 456, 789, 777];
+  // TODO: Calculate final token amount in Wei according to calculation rules
+  const tokenAmount = web3.utils.toBN(123456789).toString();
+
+  return [
     threshold.validatorPublicKey,
+    `[${operatorsIds.join(',')}]`,
     operatorsPublicKeys,
     sharePublicKeys,
     sharePrivateKeys,
-  ]);
+    tokenAmount,
+  ];
 }
 
 main();

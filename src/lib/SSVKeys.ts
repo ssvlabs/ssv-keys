@@ -101,9 +101,9 @@ export class SSVKeys {
    * @param tokenAmount
    */
   async buildPayload(privateKey: string,
-                       operatorsIds: number[],
-                       encryptedShares: EncryptShare[],
-                       tokenAmount: number
+                     operatorsIds: number[],
+                     encryptedShares: EncryptShare[],
+                     tokenAmount: number | string
   ): Promise<any[]> {
     const threshold: ISharesKeyPairs = await this.createThreshold(privateKey);
     const sharePublicKey: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);

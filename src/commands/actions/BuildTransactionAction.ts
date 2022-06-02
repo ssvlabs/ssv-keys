@@ -1,3 +1,4 @@
+import Web3 from 'web3';
 import colors from 'colors/safe';
 import { encode } from 'js-base64';
 import { BaseAction } from './BaseAction';
@@ -6,6 +7,8 @@ import { fileExistsValidator } from './validators/file';
 import { operatorValidator } from './validators/operator';
 import { EncryptShare } from '../../lib/Encryption/Encryption';
 import { getFilePath, readFile, writeFile } from '../../lib/helpers';
+
+const web3 = new Web3();
 
 export class BuildTransactionAction extends BaseAction {
   static get options(): any {
@@ -90,9 +93,14 @@ export class BuildTransactionAction extends BaseAction {
           },
           interactive: {
             options: {
-              type: 'number',
-              validate: (tokenAmount: any) => {
-                return !(Number.isInteger(tokenAmount) && tokenAmount > 0) ? 'Token amount should be integer number' : true;
+              type: 'text',
+              validate: (tokenAmount: string) => {
+                try {
+                  web3.utils.toBN(tokenAmount).toString();
+                  return true;
+                } catch (e) {
+                  return 'Token amount should be positive big number in Wei';
+                }
               }
             }
           }
@@ -132,7 +140,7 @@ export class BuildTransactionAction extends BaseAction {
       operatorsIds.split(','),
       shares,
       tokenAmount
-    );
+  );
 
     const explainedPayload = '' +
       '\n[\n' +

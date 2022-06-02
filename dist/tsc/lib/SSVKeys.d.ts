@@ -45,5 +45,5 @@ export declare class SSVKeys {
      * @param encryptedShares
      * @param tokenAmount
      */
-    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], tokenAmount: number): Promise<any[]>;
+    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], tokenAmount: number | string): Promise<any[]>;
 }
