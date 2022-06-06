@@ -16,7 +16,7 @@ class KeystorePasswordValidator {
             if (!password.trim().length) {
                 return 'Password is empty';
             }
-            const errorMessage = 'Can not decode private key from keystore file using this password';
+            const errorMessage = 'Checking password';
             try {
                 let dots = 1;
                 process.stdout.write('\r' + String(' ').repeat(250));
