@@ -16,16 +16,18 @@ export class KeystorePasswordValidator {
     const errorMessage = 'Invalid password';
     try {
       let dots = 1;
+      const message = `\rChecking password`
       process.stdout.write('\r' + String(' ').repeat(250));
+      process.stdout.write(`\r${message}`);
       const messageInterval = setInterval(() => {
-        const message = `\rChecking password` +
+        const progressMessage = `\r${message}` +
           `${String('.').repeat(dots)}${String(' ').repeat(30 - dots)}`;
-        process.stdout.write(message);
+        process.stdout.write(progressMessage);
         dots += 1;
         if (dots > 3) {
           dots = 1;
         }
-      }, 500);
+      }, 1000);
 
       const data = await readFile(this.keystoreFilePath);
       const keyStore = new EthereumKeyStore(data);
