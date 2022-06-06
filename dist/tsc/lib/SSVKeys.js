@@ -89,30 +89,28 @@ class SSVKeys {
         });
     }
     /**
-     * Having keystore private key build final transaction payload for list of operators IDs from contract.
+     * Having keystore private key build final transaction payload for list of operators.
      *
      * Example:
      *
      *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
      *    const encryptedShares = await ssvKeys.encryptShares(operatorsPublicKeys, shares);
-     *    await ssvKeys.buildPayloadV2(...)
+     *    await ssvKeys.buildPayload(privateKey, encryptedShares)
      *
      * @param privateKey
-     * @param operatorsIds
      * @param encryptedShares
-     * @param tokenAmount
      */
-    buildPayload(privateKey, operatorsIds, encryptedShares, tokenAmount) {
+    buildPayload(privateKey, encryptedShares) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const threshold = yield this.createThreshold(privateKey);
+            const operatorsPublicKey = this.abiEncode(encryptedShares, 'operatorPublicKey');
             const sharePublicKey = encryptedShares.map((share) => share.publicKey);
             const sharePrivateKey = this.abiEncode(encryptedShares, 'privateKey');
             return [
                 threshold.validatorPublicKey,
-                `[${operatorsIds.join(',')}]`,
+                operatorsPublicKey,
                 sharePublicKey,
                 sharePrivateKey,
-                tokenAmount,
             ];
         });
     }
