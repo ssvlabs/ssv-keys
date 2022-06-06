@@ -16,7 +16,7 @@ class KeystorePasswordValidator {
             if (!password.trim().length) {
                 return 'Password is empty';
             }
-            const errorMessage = 'Checking password';
+            const errorMessage = 'Invalid password';
             try {
                 let dots = 1;
                 process.stdout.write('\r' + String(' ').repeat(250));
