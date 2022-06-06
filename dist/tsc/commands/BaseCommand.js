@@ -87,7 +87,8 @@ class BaseCommand extends argparse_1.ArgumentParser {
                             const repeats = argument.interactive.repeat;
                             for (let i = 1; i <= repeats; i++) {
                                 promptOptions.message = `${message}: ${i} from ${repeats}`;
-                                const response = yield (0, prompts_1.default)(promptOptions);
+                                const onSubmit = argument.interactive.onSubmit;
+                                const response = yield (0, prompts_1.default)(promptOptions, { onSubmit });
                                 if (argument.options.required && !response[promptOptions.name]) {
                                     process.exit(1);
                                 }

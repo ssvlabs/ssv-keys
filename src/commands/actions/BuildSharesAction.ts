@@ -1,11 +1,14 @@
 import colors from 'colors/safe';
 import { encode } from 'js-base64';
+import EthereumKeyStore from 'eth2-keystore-js';
 import { BaseAction } from './BaseAction';
 import { ISharesKeyPairs } from '../../lib/Threshold';
 import { fileExistsValidator } from './validators/file';
 import { operatorValidator } from './validators/operator';
 import { EncryptShare } from '../../lib/Encryption/Encryption';
 import { writeFile, readFile, getFilePath } from '../../lib/helpers';
+
+let keystoreFilePath = '';
 
 export class BuildSharesAction extends BaseAction {
   static get options(): any {
@@ -25,7 +28,13 @@ export class BuildSharesAction extends BaseAction {
           interactive: {
             options: {
               type: 'text',
-              validate: fileExistsValidator,
+              validate: (filePath: string): boolean | string => {
+                const isValid = fileExistsValidator(filePath);
+                if (isValid === true) {
+                  keystoreFilePath = String(filePath).trim();
+                }
+                return isValid;
+              },
             }
           }
         },
@@ -40,6 +49,20 @@ export class BuildSharesAction extends BaseAction {
           interactive: {
             options: {
               type: 'password',
+              validate: async (password: string) => {
+                const errorMessage = 'Can not decode private key from keystore file using this password';
+                try {
+                  const data = await readFile(keystoreFilePath);
+                  const keyStore = new EthereumKeyStore(data);
+                  const privateKey = await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
+                  return privateKey ? true : errorMessage;
+                } catch (e) {
+                  if (e instanceof Error) {
+                    return e.message;
+                  }
+                  return errorMessage;
+                }
+              }
             }
           }
         },

@@ -34,7 +34,6 @@ export class SSVKeys {
       const keyStore = new EthereumKeyStore(data);
       return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
     } catch (error: any) {
-      console.error(error);
       return error;
     }
   }
@@ -49,7 +48,6 @@ export class SSVKeys {
       const threshold: Threshold = new Threshold();
       return threshold.create(privateKey);
     } catch (error: any) {
-      console.error(error);
       return error;
     }
   }
@@ -70,7 +68,6 @@ export class SSVKeys {
       });
       return new Encryption(decodedOperators, shares).encrypt();
     } catch (error: any) {
-      console.error(error);
       return error;
     }
   }
