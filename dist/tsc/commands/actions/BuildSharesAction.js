@@ -4,12 +4,12 @@ exports.BuildSharesAction = void 0;
 const tslib_1 = require("tslib");
 const safe_1 = tslib_1.__importDefault(require("colors/safe"));
 const js_base64_1 = require("js-base64");
-const eth2_keystore_js_1 = tslib_1.__importDefault(require("eth2-keystore-js"));
 const BaseAction_1 = require("./BaseAction");
 const file_1 = require("./validators/file");
 const operator_1 = require("./validators/operator");
 const helpers_1 = require("../../lib/helpers");
-let keystoreFilePath = '';
+const keystore_password_1 = require("./validators/keystore-password");
+const keystorePasswordValidator = new keystore_password_1.KeystorePasswordValidator();
 class BuildSharesAction extends BaseAction_1.BaseAction {
     static get options() {
         return {
@@ -23,7 +23,7 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                     options: {
                         required: true,
                         type: String,
-                        help: 'Provide your keystore file path'
+                        help: 'Keystore file path'
                     },
                     interactive: {
                         options: {
@@ -31,7 +31,7 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                             validate: (filePath) => {
                                 const isValid = (0, file_1.fileExistsValidator)(filePath);
                                 if (isValid === true) {
-                                    keystoreFilePath = String(filePath).trim();
+                                    keystorePasswordValidator.setKeystoreFilePath(String(filePath).trim());
                                 }
                                 return isValid;
                             },
@@ -44,26 +44,14 @@ class BuildSharesAction extends BaseAction_1.BaseAction {
                     options: {
                         required: true,
                         type: String,
-                        help: 'Enter password for keystore to decrypt it and get private key'
+                        help: 'Password for keystore to decrypt it and get private key'
                     },
                     interactive: {
                         options: {
                             type: 'password',
-                            validate: (password) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                                const errorMessage = 'Can not decode private key from keystore file using this password';
-                                try {
-                                    const data = yield (0, helpers_1.readFile)(keystoreFilePath);
-                                    const keyStore = new eth2_keystore_js_1.default(data);
-                                    const privateKey = yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
-                                    return privateKey ? true : errorMessage;
-                                }
-                                catch (e) {
-                                    if (e instanceof Error) {
-                                        return e.message;
-                                    }
-                                    return errorMessage;
-                                }
-                            })
+                            validate: (password) => {
+                                return keystorePasswordValidator.validatePassword(password);
+                            },
                         }
                     }
                 },

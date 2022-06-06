@@ -85,40 +85,112 @@ export class BaseCommand extends ArgumentParser {
     selectedAction || process.exit(1);
     process.argv.push(selectedAction);
 
-    // Ask for all action arguments
-    for (const action of this.actions) {
-      if (action.options.action === selectedAction) {
-        const actionOptions = action.options;
-        for (const argument of actionOptions.arguments) {
-          const message = argument.interactive?.options?.message || argument.options.help;
-          const promptOptions = {
-            ...argument.interactive?.options || {},
-            type: argument.interactive?.options?.type || 'text',
-            name: argument.interactive?.options?.name || argument.arg2,
-            message,
-          };
-          if (argument.interactive?.repeat || 0 > 1) {
-            const multi = [];
-            const repeats = argument.interactive.repeat;
-            for (let i = 1; i <= repeats; i++) {
-              promptOptions.message = `${message}: ${i} from ${repeats}`;
-              const onSubmit = argument.interactive.onSubmit;
-              const response = await prompts(promptOptions, { onSubmit });
-              if (argument.options.required && !response[promptOptions.name]) {
-                process.exit(1);
-              }
-              multi.push(response[promptOptions.name]);
+    const processedArguments: any = {};
+    const actionArguments = this.getArgumentsForAction(selectedAction);
+    for (const argument of actionArguments) {
+      const multi: any = {};
+      const repeats = argument.interactive?.repeat || 1;
+      const promptOptions = this.getPromptOptions(argument);
+      if (processedArguments[promptOptions.name]) {
+        continue;
+      }
+      processedArguments[promptOptions.name] = true;
+      const message = promptOptions.message;
+      const extraOptions = { onSubmit: promptOptions.onSubmit };
+
+      for (let i = 1; i <= repeats; i++) {
+        promptOptions.message = repeats > 1 ? `${message}: ${i} from ${repeats}` : message;
+        const response = await prompts(promptOptions, extraOptions);
+        this.assertRequired(argument, response[promptOptions.name]);
+        multi[promptOptions.name] = multi[promptOptions.name] || [];
+        multi[promptOptions.name].push(response[promptOptions.name]);
+
+        // Processing "repeatWith".
+        // For cases when some parameters are relative to each other and should be
+        // asked from user in a relative way.
+        if (repeats > 1 && argument.interactive?.repeatWith) {
+          for (const extraArgumentName of argument.interactive.repeatWith) {
+            const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
+            if (!extraArgument) {
+              continue;
             }
-            process.argv.push(`${argument.arg2}=${multi.join(',')}`);
-          } else {
-            const response = await prompts(promptOptions);
-            if (argument.options.required && !response[promptOptions.name]) {
-              process.exit(1);
+            // Build extra argument options
+            const extraArgumentPromptOptions = this.getPromptOptions(extraArgument);
+            if (processedArguments[extraArgumentPromptOptions.name]
+              && processedArguments[extraArgumentPromptOptions.name] === repeats) {
+              continue;
             }
-            process.argv.push(`${argument.arg2}=${response[promptOptions.name]}`);
+            const extraArgumentMessage = extraArgumentPromptOptions.message;
+            const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
+            extraArgumentPromptOptions.message = `${extraArgumentMessage}: ${i} from ${repeats}`;
+
+            // Prompt extra argument
+            const response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
+            this.assertRequired(extraArgument, response[extraArgumentPromptOptions.name]);
+            multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
+            multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
+            processedArguments[extraArgumentPromptOptions.name] = processedArguments[extraArgumentPromptOptions.name] || 0;
+            processedArguments[extraArgumentPromptOptions.name] += 1;
           }
         }
       }
+      for (const argumentName of Object.keys(multi)) {
+        process.argv.push(`${argumentName}=${multi[argumentName].join(',')}`);
+      }
+    }
+  }
+
+  /**
+   * Find argument in list of arguments by its arg2 value.
+   * @param extraArgumentName
+   * @param actionArguments
+   */
+  findArgumentByName(extraArgumentName: string, actionArguments: any[]): any {
+    for (const argument of actionArguments) {
+      if (extraArgumentName === argument.arg2) {
+        return argument;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Returns list of arguments for selected user action
+   * @param userAction
+   */
+  getArgumentsForAction(userAction: string): any {
+    for (const action of this.actions) {
+      if (action.options.action === userAction) {
+        return action.options.arguments;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Compile final prompt options
+   * @param argument
+   */
+  getPromptOptions(argument: any): any {
+    const message = argument.interactive?.options?.message || argument.options.help;
+    return {
+      ...argument.interactive?.options || {},
+      type: argument.interactive?.options?.type || 'text',
+      name: argument.arg2,
+      message,
+      onSubmit: argument.interactive.onSubmit || undefined,
+    };
+  }
+
+  /**
+   * If argument is required but value didn't provide by user - exit process with error code.
+   * @param argument
+   * @param value
+   */
+  assertRequired(argument: any, value: any) {
+    if (argument.options.required && !value) {
+      console.error(`Parameter is required: ${argument.interactive?.options?.message || argument.options.help}`);
+      process.exit(1);
     }
   }
 

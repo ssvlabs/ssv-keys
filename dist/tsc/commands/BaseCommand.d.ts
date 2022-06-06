@@ -35,5 +35,27 @@ export declare class BaseCommand extends ArgumentParser {
      * Populate process.argv with user input.
      */
     executeInteractive(): Promise<any>;
+    /**
+     * Find argument in list of arguments by its arg2 value.
+     * @param extraArgumentName
+     * @param actionArguments
+     */
+    findArgumentByName(extraArgumentName: string, actionArguments: any[]): any;
+    /**
+     * Returns list of arguments for selected user action
+     * @param userAction
+     */
+    getArgumentsForAction(userAction: string): any;
+    /**
+     * Compile final prompt options
+     * @param argument
+     */
+    getPromptOptions(argument: any): any;
+    /**
+     * If argument is required but value didn't provide by user - exit process with error code.
+     * @param argument
+     * @param value
+     */
+    assertRequired(argument: any, value: any): void;
     execute(): Promise<void>;
 }

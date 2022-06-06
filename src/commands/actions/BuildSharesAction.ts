@@ -1,14 +1,14 @@
 import colors from 'colors/safe';
 import { encode } from 'js-base64';
-import EthereumKeyStore from 'eth2-keystore-js';
 import { BaseAction } from './BaseAction';
 import { ISharesKeyPairs } from '../../lib/Threshold';
 import { fileExistsValidator } from './validators/file';
 import { operatorValidator } from './validators/operator';
 import { EncryptShare } from '../../lib/Encryption/Encryption';
 import { writeFile, readFile, getFilePath } from '../../lib/helpers';
+import { KeystorePasswordValidator } from './validators/keystore-password';
 
-let keystoreFilePath = '';
+const keystorePasswordValidator = new KeystorePasswordValidator();
 
 export class BuildSharesAction extends BaseAction {
   static get options(): any {
@@ -23,7 +23,7 @@ export class BuildSharesAction extends BaseAction {
           options: {
             required: true,
             type: String,
-            help: 'Provide your keystore file path'
+            help: 'Keystore file path'
           },
           interactive: {
             options: {
@@ -31,7 +31,7 @@ export class BuildSharesAction extends BaseAction {
               validate: (filePath: string): boolean | string => {
                 const isValid = fileExistsValidator(filePath);
                 if (isValid === true) {
-                  keystoreFilePath = String(filePath).trim();
+                  keystorePasswordValidator.setKeystoreFilePath(String(filePath).trim());
                 }
                 return isValid;
               },
@@ -44,25 +44,14 @@ export class BuildSharesAction extends BaseAction {
           options: {
             required: true,
             type: String,
-            help: 'Enter password for keystore to decrypt it and get private key'
+            help: 'Password for keystore to decrypt it and get private key'
           },
           interactive: {
             options: {
               type: 'password',
-              validate: async (password: string) => {
-                const errorMessage = 'Can not decode private key from keystore file using this password';
-                try {
-                  const data = await readFile(keystoreFilePath);
-                  const keyStore = new EthereumKeyStore(data);
-                  const privateKey = await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
-                  return privateKey ? true : errorMessage;
-                } catch (e) {
-                  if (e instanceof Error) {
-                    return e.message;
-                  }
-                  return errorMessage;
-                }
-              }
+              validate: (password: string) => {
+                return keystorePasswordValidator.validatePassword(password);
+              },
             }
           }
         },
