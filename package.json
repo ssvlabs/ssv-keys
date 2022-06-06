@@ -74,6 +74,7 @@
     "btoa": "^1.2.1",
     "colors": "^1.4.0",
     "crypto": "^1.0.1",
+    "minimist": "^1.2.6",
     "eth2-keystore-js": "^1.0.8",
     "ethereumjs-util": "^7.0.10",
     "ethereumjs-wallet": "^1.0.1",

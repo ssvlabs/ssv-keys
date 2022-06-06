@@ -37,7 +37,6 @@ class SSVKeys {
                 return yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
             }
             catch (error) {
-                console.error(error);
                 return error;
             }
         });
@@ -54,7 +53,6 @@ class SSVKeys {
                 return threshold.create(privateKey);
             }
             catch (error) {
-                console.error(error);
                 return error;
             }
         });
@@ -76,7 +74,6 @@ class SSVKeys {
                 return new Encryption_1.default(decodedOperators, shares).encrypt();
             }
             catch (error) {
-                console.error(error);
                 return error;
             }
         });
