@@ -40,7 +40,7 @@ Once you have installed NodeJS, follow instructions:
 ```bash
 git clone https://github.com/bloxapp/ssv-keys.git
 cd ssv-keys
-install yarn
+npm install -g yarn
 yarn install
 yarn cli --help
 ```
