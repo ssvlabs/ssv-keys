@@ -80,32 +80,36 @@ yarn cli <action> --help
 
 ### Example
 
-#### Step 1: Fetch the private key:
+#### Step 1: Build the shares:
 
 **Input parameters:**
 
-- keystore = path to keystore json file
-- password = keystore password
+- keystore (ks) = Path to keystore json file
+- password (ps) = Keystore password
+- operators (op) = Comma-separated list of the operator keys
+- optput-format (of) = Format of the result (abi or raw)
 
 ```bash
-yarn cli decrypt --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest
+yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=0x123,0x234,0x345,0x456 --output-format=raw
 ```
 
-**Output:**  private key
+**Output:**  Shares and path to file holding the shares
 
-#### Step 2: Building the shares for the validator:
+#### Step 2: Build the transaction payload:
 
 **Input parameters:**
 
-- private-key = private key output from step 1
-- op = 4 public operator keys (comma seperated)
-- Output = shares json file location
--
+- keystore (ks) = Path to keystore json file
+- password (ps) = Keystore password
+- operators (op) = Comma-separated list of the operator keys
+- operator-ids (oid) = Comma-separated list of the operator ids (same sequence as operators)
+- token-amount (ta) = Token amount fee required for this transaction in Wei
+
 ```bash
 yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 ```
 
-**Output:** shares json
+**Output:** Transaction payload and path to file holding the transaction payload
 
 #### Step 3: Build and ouput the transaction payload:
 **Input parameters:**
@@ -120,6 +124,46 @@ yarn cli transaction --operators-ids=1,2,3,4 --private-key=... --token-amount=12
 ```
 
 **Output:**  Transaction payload
+
+## Integration in your projects
+
+### Node Project
+
+To run an example of a NodeJS project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
+
+```bash
+cd examples/node
+yarn install
+```
+
+To run a JavaScript example:
+
+```bash
+yarn start:js
+```
+
+To run a TypeScript example:
+
+```bash
+yarn start:ts
+```
+
+### Browser project (web application)
+
+Go to the example folder and then install all the dependencies:
+
+```bash
+cd examples/browser
+yarn install
+```
+
+Start the web app:
+
+```bash
+yarn start
+```
+
+Open the developer console to see how it works in a browser environment.
 
 ## Development
 
@@ -172,46 +216,6 @@ Build everything
 ```bash
 yarn build-all
 ```
-
-## Integration in your projects
-
-### Node Project
-
-To run an example of a NodeJS project containing all the code snippets to get a private key, build the share and transaction payload, simply follow these instructions!
-
-```bash
-cd examples/node
-yarn install
-```
-
-To run a JavaScript example:
-
-```bash
-yarn start:js
-```
-
-To run a TypeScript example:
-
-```bash
-yarn start:ts
-```
-
-### Browser project (web application)
-
-Go to the example folder and then install all the dependencies:
-
-```bash
-cd examples/browser
-yarn install
-```
-
-Start the web app:
-
-```bash
-yarn start
-```
-
-Open the developer console to see how it works in a browser environment.
 
 ## TODO
 
