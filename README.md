@@ -25,55 +25,26 @@ Important dependencies:
 ---
 
 Library and CLI to work with the ETH keystore file:
-1. Parse the private key using the keystore password,
+1. Parse the private key using the keystore password
 2. Use the private key to get shares for operators
 3. Build the payload for the transaction
 
+### Running an Executable (recommended route)
 
-## Installation
+If you want to run a compiled version (easier option then CLI)
 
-This installation requires NodeJS on your machine.
-You can download it [here](https://nodejs.org/en/download/).
-
-Once you have installed NodeJS, follow instructions:
-
-```bash
-git clone https://github.com/bloxapp/ssv-keys.git
-cd ssv-keys
-npm install -g yarn
-yarn install
-yarn cli --help
-```
-
-Use in your project:
-
-```bash
-yarn add https://github.com/bloxapp/ssv-keys.git
-```
-
-## Running the CLI
-
-### Running from repository
-
-- For regular CLI usage you will be running the command as: `yarn cli ...`
-- Follow [installation](#Installation) instructions.
-
-### Running from releases
-
-If you want to run compiled native variant of CLI for your operating system.
-
-1. Go to releases section: https://github.com/bloxapp/ssv-keys/releases
-2. Select latest release for specific version of CLI: `vX.Y.Z-v1` - for the first version of the contract, `vX.Y.Z-v2` - for second etc.
+1. Go to the releases section: https://github.com/bloxapp/ssv-keys/releases
+2. Select the latest release for the specific version of the CLI: `vX.Y.Z-v1` - for the first version of the contract, `vX.Y.Z-v2` - for second etc.
    Example: `v0.0.1-v1` or `v0.0.1-v2`.
-3. Download native executable for your operating system:
+3. Download the native executable for your operating system:
    * `ssv-keys-lin` - for Ubuntu Linux
    * `ssv-keys-mac` - for MacOS
    * `ssv-keys.exe` - for Windows
-4. Open terminal and change directory to where you downloaded executable. For instance, on MacOS you can:
+4. Open terminal and change the directory to where you downloaded the executable. For instance, on MacOS you can:
    ```bash
    cd ~/Downloads
    ```
-5. Make sure that executable can be run:
+5. (Mac and Linux) Make sure that the executable has permissions to run by running:
    ```bash
    chmod 777 ./ssv-keys-mac
    ```
@@ -81,9 +52,16 @@ If you want to run compiled native variant of CLI for your operating system.
    ```bash
    ./ssv-keys-mac
    ```
-7. If operating system prevents you from running executable and you still want to do it, open it from
-   standard file manager (Finder in case of MacOS), right click on it, and use `Open` menu. Then click `Open` button
-   when will be asked in a prompt. Go back to console and try to run it again.
+7. If your operating system prevents you from running the executable you can open it from the file manager (Finder in case of MacOS), right click on it, and click the `Open` menu. Once open click the `Open` or `allow` button when you are asked to do so. After this go back to the console and try to run it again.
+
+## Running from the CLI
+
+### Running from repository
+
+- For regular CLI usage you will be running the command as: `yarn cli ...`
+- Follow [installation](#Installation) instructions.
+
+
 
 ### Help
 
