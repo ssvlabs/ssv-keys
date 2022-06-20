@@ -5,10 +5,12 @@ import { EncryptShare } from 'ssv-keys/src/lib/Encryption/Encryption';
 
 const keystore = require('./test.keystore.json');
 const operators = require('./operators.json');
+const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 
 async function main() {
   // Step 1: read keystore from file
+
   const keyStore = new EthereumKeyStore(JSON.stringify(keystore));
 
   // Step 2: get private key from keystore using keystore password
@@ -32,13 +34,13 @@ async function main() {
   const sharePrivateKeys = shares.map((share: EncryptShare) => web3.eth.abi.encodeParameter('string', share.privateKey));
 
   // TODO: Get operator IDs from the contract!
-  const operatorsIds = [123, 456, 789, 777];
+
   // TODO: Calculate final token amount in Wei according to calculation rules
   const tokenAmount = web3.utils.toBN(123456789).toString();
 
   return [
     threshold.validatorPublicKey,
-    `[${operatorsIds.join(',')}]`,
+    `[${operatorIds.join(',')}]`,
     operatorsPublicKeys,
     sharePublicKeys,
     sharePrivateKeys,
