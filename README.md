@@ -111,20 +111,6 @@ yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
 
 **Output:** Transaction payload and path to file holding the transaction payload
 
-#### Step 3: Build and ouput the transaction payload:
-**Input parameters:**
-- operators-ids = 4 comma seperated operator ids (should match 4 the operators used in step 2)
-- private-key = private key output from step 1
-- token-amount = yearly fee in wei
-- shares = path to shares json file
-- output = transaction payload text file location
-
-```bash
-yarn cli transaction --operators-ids=1,2,3,4 --private-key=... --token-amount=1234567890 --shares=./shares.json --output=./payload.txt
-```
-
-**Output:**  Transaction payload
-
 ## Integration in your projects
 
 ### Node Project
