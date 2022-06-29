@@ -56,6 +56,21 @@ If you want to run a compiled version (easier option then CLI)
 
 ## Option 2: Running from the CLI
 
+### Installation
+
+This installation requires NodeJS on your machine.
+You can download it [here](https://nodejs.org/en/download/).
+
+Once you have installed NodeJS, follow instructions:
+
+```bash
+git clone https://github.com/bloxapp/ssv-keys.git
+cd ssv-keys
+npm install -g yarn
+yarn install
+yarn cli --help
+```
+
 ### Running from repository
 
 - For regular CLI usage you will be running the command as: `yarn cli ...`
