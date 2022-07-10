@@ -55,7 +55,7 @@ export class BuildTransactionAction extends BuildSharesAction {
       shares,
     } = await this.dispatch();
 
-    const { ssv_amount: ssvAmount } = this.args;
+    const { ssv_token_amount: ssvAmount } = this.args;
 
     // Step 4: build payload using encrypted shares
     const payload = await this.ssvKeys.buildPayload(
