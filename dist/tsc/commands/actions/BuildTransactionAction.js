@@ -28,7 +28,7 @@ class BuildTransactionAction extends BuildSharesAction_1.BuildSharesAction {
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const { privateKey, operatorsIds, shares, } = yield this.dispatch();
-            const { ssv_amount: ssvAmount } = this.args;
+            const { ssv_token_amount: ssvAmount } = this.args;
             // Step 4: build payload using encrypted shares
             const payload = yield this.ssvKeys.buildPayload(privateKey, operatorsIds, shares, ssvAmount);
             const explainedPayload = '' +
