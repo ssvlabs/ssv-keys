@@ -30,20 +30,20 @@ async function main() {
   const web3 = new Web3();
   const operatorsPublicKeys = operators.map((operator) => web3.eth.abi.encodeParameter('string', encode(operator)));
   const sharePublicKeys = shares.map((share) => share.publicKey);
-  const sharePrivateKeys = shares.map((share) => web3.eth.abi.encodeParameter('string', share.privateKey));
+  const shareEncrypted = shares.map((share) => web3.eth.abi.encodeParameter('string', share.privateKey));
 
   // TODO: Get operator IDs from the contract!
   const operatorsIds = [123, 456, 789, 777];
-  // TODO: Calculate final token amount in Wei according to calculation rules
-  const tokenAmount = web3.utils.toBN(123456789).toString();
+  // TODO: Calculate final ssv amount in Wei according to calculation rules
+  const ssvAmount = web3.utils.toBN(123456789).toString();
 
   return [
     threshold.validatorPublicKey,
     `[${operatorsIds.join(',')}]`,
     operatorsPublicKeys,
     sharePublicKeys,
-    sharePrivateKeys,
-    tokenAmount,
+    shareEncrypted,
+    ssvAmount,
   ];
 }
 

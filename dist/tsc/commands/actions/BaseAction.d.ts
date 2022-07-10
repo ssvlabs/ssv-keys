@@ -16,4 +16,14 @@ export declare class BaseAction {
     execute(): Promise<any>;
     static get options(): any;
     get options(): any;
+    /**
+     * Pre-execution method which can be run before execution logic.
+     */
+    preExecute(): void;
+    /**
+     * Pre-options reading method which can be run before the logic where options read happened.
+     * Should also return options which can be changed.
+     * @param options
+     */
+    preOptions(options: any): Promise<any>;
 }

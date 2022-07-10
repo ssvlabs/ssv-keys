@@ -8,24 +8,29 @@ export interface ISharesKeyPairs {
     validatorPublicKey: string;
     shares: IShares[];
 }
+export declare class ThresholdInvalidOperatorsLengthError extends Error {
+    operators: number[];
+    constructor(operators: number[], message: string);
+}
+export declare class ThresholdInvalidOperatorIdError extends Error {
+    operator: any;
+    constructor(operator: any, message: string);
+}
 /**
- * Building threshold for
- * Example of usage:
- *
- *  const threshold: Threshold = new Threshold();
- *  threshold.create('45df68ab75bb7ed1063b7615298e81c1ca1b0c362ef2e93937b7bba9d7c43a94').then((s) => {
- *    console.log(s);
- *  });
+ * Building threshold for list of operator IDs
  */
 declare class Threshold {
     protected validatorPublicKey: any;
     protected validatorPrivateKey: any;
-    protected validatorShares: Array<any>;
-    static get DEFAULT_SHARES_NUMBER(): number;
+    protected shares: Array<any>;
     static get DEFAULT_THRESHOLD_NUMBER(): number;
     /**
+     * Receives list of operators IDs.
+     *  len(operator IDs) := 3 * F + 1
+     *
+     * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    create(privateKey: string, sharesNumber?: number, thresholdNumber?: number): Promise<ISharesKeyPairs>;
+    create(privateKey: string, operators: number[]): Promise<ISharesKeyPairs>;
 }
 export default Threshold;

@@ -40,13 +40,13 @@ export class SSVKeys {
 
   /**
    * Build threshold using private key for number of participants and failed participants.
-   * TODO: make it possible to choose how many fails can be in threshold
    * @param privateKey
+   * @param operators
    */
-  async createThreshold(privateKey: string): Promise<ISharesKeyPairs> {
+  async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
     try {
       const threshold: Threshold = new Threshold();
-      return threshold.create(privateKey);
+      return threshold.create(privateKey, operators);
     } catch (error: any) {
       return error;
     }
@@ -95,14 +95,14 @@ export class SSVKeys {
    * @param privateKey
    * @param operatorsIds
    * @param encryptedShares
-   * @param tokenAmount
+   * @param ssvAmount
    */
   async buildPayload(privateKey: string,
                      operatorsIds: number[],
                      encryptedShares: EncryptShare[],
-                     tokenAmount: number | string
+                     ssvAmount: number | string
   ): Promise<any[]> {
-    const threshold: ISharesKeyPairs = await this.createThreshold(privateKey);
+    const threshold: ISharesKeyPairs = await this.createThreshold(privateKey, operatorsIds);
     const sharePublicKey: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
     const sharePrivateKey: string[] = this.abiEncode(encryptedShares, 'privateKey');
     return [
@@ -110,7 +110,7 @@ export class SSVKeys {
       `[${operatorsIds.join(',')}]`,
       sharePublicKey,
       sharePrivateKey,
-      tokenAmount,
+      ssvAmount,
     ];
   }
 }

@@ -1,4 +1,4 @@
-import { decode, encode } from 'js-base64';
+import {decode, encode} from 'js-base64';
 import JSEncrypt from '../JSEncrypt';
 import { IShares } from '../Threshold';
 
@@ -21,15 +21,8 @@ export default class Encryption {
     private readonly operators: string[];
     private readonly shares: IShares[];
 
-    RAW_OPERATOR_PUBLIC_KEY_SIGNATURE = RegExp(/------BEGIN RSA PUBLIC KEY-----/, 'gmi');
-
     constructor(operators: string[], shares: IShares[]) {
-        this.operators = operators.map((publicKey: string) => {
-          if (this.RAW_OPERATOR_PUBLIC_KEY_SIGNATURE.test(publicKey)) {
-            return publicKey;
-          }
-          return decode(publicKey);
-        });
+        this.operators = operators;
         this.shares = shares;
     }
 
@@ -38,7 +31,11 @@ export default class Encryption {
         Object.keys(this.operators).forEach((operator: any) => {
             const encrypt = new JSEncrypt({});
             try {
-              encrypt.setPublicKey(this.operators[operator]);
+              try {
+                encrypt.setPublicKey(this.operators[operator]);
+              } catch (e) {
+                encrypt.setPublicKey(decode(this.operators[operator]));
+              }
             } catch (error) {
               throw new InvalidOperatorKeyException(
                 {

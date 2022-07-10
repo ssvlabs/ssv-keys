@@ -14,10 +14,10 @@ export declare class SSVKeys {
     getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string>;
     /**
      * Build threshold using private key for number of participants and failed participants.
-     * TODO: make it possible to choose how many fails can be in threshold
      * @param privateKey
+     * @param operators
      */
-    createThreshold(privateKey: string): Promise<ISharesKeyPairs>;
+    createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs>;
     /**
      * Encrypt operators shares using operators public keys.
      * @param operatorsPublicKeys
@@ -43,7 +43,7 @@ export declare class SSVKeys {
      * @param privateKey
      * @param operatorsIds
      * @param encryptedShares
-     * @param tokenAmount
+     * @param ssvAmount
      */
-    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], tokenAmount: number | string): Promise<any[]>;
+    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: number | string): Promise<any[]>;
 }

@@ -4,4 +4,4 @@ export interface Shares {
     signatures: any[];
     ids: any[];
 }
-export declare const sharesSignatures: (privateKey: string, message: string, threshold: boolean) => Promise<Shares>;
+export declare const sharesSignatures: (privateKey: string, operators: number[], message: string, threshold: boolean) => Promise<Shares>;

@@ -23,6 +23,22 @@ class BaseAction {
     get options() {
         return BaseAction.options;
     }
+    /**
+     * Pre-execution method which can be run before execution logic.
+     */
+    preExecute() {
+        return;
+    }
+    /**
+     * Pre-options reading method which can be run before the logic where options read happened.
+     * Should also return options which can be changed.
+     * @param options
+     */
+    preOptions(options) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            return options;
+        });
+    }
 }
 exports.BaseAction = BaseAction;
 //# sourceMappingURL=BaseAction.js.map

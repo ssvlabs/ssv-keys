@@ -102,10 +102,10 @@ yarn cli <action> --help
 - keystore (ks) = Path to keystore json file
 - password (ps) = Keystore password
 - operators (op) = Comma-separated list of the operator keys
-- optput-format (of) = Format of the result (abi or raw)
+- output-format (of) = Format of the result (abi or raw)
 
 ```bash
-yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=0x123,0x234,0x345,0x456 --output-format=raw
+yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=...,...,... --output-format=raw
 ```
 
 **Output:**  Shares and path to file holding the shares
@@ -118,7 +118,7 @@ yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json
 - password (ps) = Keystore password
 - operators (op) = Comma-separated list of the operator keys
 - operator-ids (oid) = Comma-separated list of the operator ids (same sequence as operators)
-- token-amount (ta) = Token amount fee required for this transaction in Wei
+- ssv-amount (ssv) = SSV Token amount fee required for this transaction in Wei
 
 ```bash
 yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
