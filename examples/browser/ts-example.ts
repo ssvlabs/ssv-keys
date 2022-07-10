@@ -19,7 +19,7 @@ async function main() {
 
   // Step 3: Build shares
   const thresholdInstance = new Threshold();
-  const threshold = await thresholdInstance.create(privateKey);
+  const threshold = await thresholdInstance.create(privateKey, operatorIds);
   let shares = new Encryption(operators, threshold.shares).encrypt();
   shares = shares.map((share: EncryptShare) => {
     share.operatorPublicKey = encode(share.operatorPublicKey);

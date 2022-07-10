@@ -5,9 +5,10 @@ import Web3 from 'web3';
 import { encode } from 'js-base64';
 import { EthereumKeyStore, Encryption, Threshold } from 'ssv-keys';
 import { EncryptShare } from 'ssv-keys/src/lib/Encryption/Encryption';
-
 const keystore = require('./test.keystore.json');
 const operators = require('./operators.json');
+const operatorIds = require('./operatorIds.json');
+
 const keystorePassword = 'testtest';
 
 async function main() {
@@ -20,7 +21,7 @@ async function main() {
 
   // Step 3: Build shares
   const thresholdInstance = new Threshold();
-  const threshold = await thresholdInstance.create(privateKey);
+  const threshold = await thresholdInstance.create(privateKey, operatorIds);
   let shares = new Encryption(operators, threshold.shares).encrypt();
   shares = shares.map((share: EncryptShare) => {
     share.operatorPublicKey = encode(share.operatorPublicKey);
@@ -34,14 +35,12 @@ async function main() {
   const sharePublicKeys = shares.map((share: EncryptShare) => share.publicKey);
   const shareEncrypted = shares.map((share: EncryptShare) => web3.eth.abi.encodeParameter('string', share.privateKey));
 
-  // TODO: Get operator IDs from the contract!
-  const operatorsIds = [123, 456, 789, 777];
   // TODO: Calculate final ssv amount in Wei according to calculation rules
   const ssvAmount = web3.utils.toBN(123456789).toString();
 
   return [
     threshold.validatorPublicKey,
-    `[${operatorsIds.join(',')}]`,
+    `[${operatorIds.join(',')}]`,
     operatorsPublicKeys,
     sharePublicKeys,
     shareEncrypted,
