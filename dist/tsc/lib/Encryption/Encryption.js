@@ -13,7 +13,13 @@ class InvalidOperatorKeyException extends Error {
 exports.InvalidOperatorKeyException = InvalidOperatorKeyException;
 class Encryption {
     constructor(operators, shares) {
-        this.operators = operators;
+        this.RAW_OPERATOR_PUBLIC_KEY_SIGNATURE = RegExp(/------BEGIN RSA PUBLIC KEY-----/, 'gmi');
+        this.operators = operators.map((publicKey) => {
+            if (this.RAW_OPERATOR_PUBLIC_KEY_SIGNATURE.test(publicKey)) {
+                return publicKey;
+            }
+            return (0, js_base64_1.decode)(publicKey);
+        });
         this.shares = shares;
     }
     encrypt() {
@@ -21,12 +27,7 @@ class Encryption {
         Object.keys(this.operators).forEach((operator) => {
             const encrypt = new JSEncrypt_1.default({});
             try {
-                try {
-                    encrypt.setPublicKey(this.operators[operator]);
-                }
-                catch (e) {
-                    encrypt.setPublicKey((0, js_base64_1.decode)(this.operators[operator]));
-                }
+                encrypt.setPublicKey(this.operators[operator]);
             }
             catch (error) {
                 throw new InvalidOperatorKeyException({

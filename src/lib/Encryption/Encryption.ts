@@ -21,21 +21,24 @@ export default class Encryption {
     private readonly operators: string[];
     private readonly shares: IShares[];
 
-    constructor(operators: string[], shares: IShares[]) {
-        this.operators = operators;
-        this.shares = shares;
-    }
+  RAW_OPERATOR_PUBLIC_KEY_SIGNATURE = RegExp(/------BEGIN RSA PUBLIC KEY-----/, 'gmi');
+
+  constructor(operators: string[], shares: IShares[]) {
+    this.operators = operators.map((publicKey: string) => {
+      if (this.RAW_OPERATOR_PUBLIC_KEY_SIGNATURE.test(publicKey)) {
+        return publicKey;
+      }
+      return decode(publicKey);
+    });
+    this.shares = shares;
+  }
 
     encrypt(): EncryptShare[] {
         const encryptedShares: EncryptShare[] = [];
         Object.keys(this.operators).forEach((operator: any) => {
             const encrypt = new JSEncrypt({});
             try {
-              try {
-                encrypt.setPublicKey(this.operators[operator]);
-              } catch (e) {
-                encrypt.setPublicKey(decode(this.operators[operator]));
-              }
+              encrypt.setPublicKey(this.operators[operator]);
             } catch (error) {
               throw new InvalidOperatorKeyException(
                 {
