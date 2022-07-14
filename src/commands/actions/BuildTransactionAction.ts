@@ -72,7 +72,7 @@ export class BuildTransactionAction extends BuildSharesAction {
       '\n\t share public keys      ➡️   array[\n' +
       payload[2].map((publicKey: string, index: number) => `\n\t                                   [${index}]: ${publicKey}\n`).join('') +
       '                                 ]\n' +
-      '\n\t share private keys     ➡️   array[\n' +
+      '\n\t share encrypted        ➡️   array[\n' +
       payload[3].map((privateKey: string, index: number) => `\n\t                                   [${index}]: ${privateKey}\n`).join('') +
       '                                 ]\n' +
       `\n\t ssv amount             ➡️   ${payload[4]}\n` +
@@ -82,10 +82,10 @@ export class BuildTransactionAction extends BuildSharesAction {
     const message = '✳️  Transaction payload have the following structure encoded as ABI Params: \n' +
       '\n[\n' +
       '\n\tvalidatorPublicKey           ➡️   String\n' +
-      '\n\toperators IDs                ➡️   array[<operator ID>,         ..., <operator ID>]\n' +
+      '\n\toperatorsIDs                 ➡️   array[<operator ID>,         ..., <operator ID>]\n' +
       '\n\tsharePublicKeys              ➡️   array[<share public key>,    ..., <share public key>]\n' +
       '\n\tshareEncrypted               ➡️   array[<share private key>,   ..., <share private key>]\n' +
-      '\n\tssv amount                   ➡️   number in Wei\n' +
+      '\n\tssvAmount                    ➡️   number in Wei\n' +
       '\n]\n\n' +
       '\n--------------------------------------------------------------------------------\n' +
       `\n✳️  Transaction explained payload data: \n${explainedPayload}\n` +
