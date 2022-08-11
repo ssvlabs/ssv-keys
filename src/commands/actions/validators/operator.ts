@@ -18,7 +18,7 @@ export const operatorValidator = async (operator: string): Promise<string | bool
           base64: operator,
         },
         'Operator is not valid RSA Public Key',
-    );
+      );
     }
     return true;
   } catch (e) {

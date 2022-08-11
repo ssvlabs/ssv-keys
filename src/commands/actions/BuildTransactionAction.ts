@@ -1,9 +1,8 @@
-import Web3 from 'web3';
 import colors from 'colors/safe';
 import { BuildSharesAction } from './BuildSharesAction';
+import { KeyShares } from '../../lib/KeyShares/KeyShares';
 import { getFilePath, writeFile } from '../../lib/helpers';
-
-const web3 = new Web3();
+import { bigNumberValidator } from './validators/big-numbers';
 
 export class BuildTransactionAction extends BuildSharesAction {
   static SSV_AMOUNT_ARGUMENT = {
@@ -18,14 +17,7 @@ export class BuildTransactionAction extends BuildSharesAction {
     interactive: {
       options: {
         type: 'text',
-        validate: (tokenAmount: string) => {
-          try {
-            web3.utils.toBN(tokenAmount).toString();
-            return true;
-          } catch (e) {
-            return 'Token amount should be positive big number in Wei';
-          }
-        }
+        validate: bigNumberValidator
       }
     }
   };
@@ -53,6 +45,7 @@ export class BuildTransactionAction extends BuildSharesAction {
       privateKey,
       operatorsIds,
       shares,
+      operators,
     } = await this.dispatch();
 
     const { ssv_token_amount: ssvAmount } = this.args;
@@ -92,7 +85,26 @@ export class BuildTransactionAction extends BuildSharesAction {
       '\n--------------------------------------------------------------------------------\n' +
       `\n✳️  regiserValidator() Transaction raw payload data: \n\n${payload}\n`;
 
-    await writeFile(payloadFilePath, message);
-    return message + `\nTransaction details dumped to file: ${colors.bgYellow(colors.black(payloadFilePath))}\n`;
+    // Build keyshares file
+    const operatorsData: any = [];
+    operators.map((operator, index) => {
+      operatorsData.push({
+        id: operatorsIds[index],
+        publicKey: operator,
+      })
+    });
+    const ks = await KeyShares.fromData({
+      version: 'v2',
+      data: {
+        publicKey: payload[0],
+        operators: operatorsData,
+        shares: {
+          publicKeys: payload[2],
+          encryptedKeys: payload[3],
+        }
+      }
+    });
+    await writeFile(payloadFilePath, ks.toString());
+    return message + `\nSaved to file: ${colors.bgYellow(colors.black(payloadFilePath))}\n`;
   }
 }
