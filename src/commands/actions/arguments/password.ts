@@ -6,7 +6,7 @@ export default {
   options: {
     required: true,
     type: String,
-    help: 'Password for keystore to decrypt it and get private key'
+    help: 'Enter password for provided keystore file'
   },
   interactive: {
     options: {

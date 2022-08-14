@@ -13,7 +13,7 @@ export default {
   interactive: {
     options: {
       type: 'text',
-      message: 'Select output folder for keyshares file',
+      message: 'Please provide a target path to generate the output to',
       initial: `${path.join(os.homedir(), 'ssv-keys')}${path.sep}`
     }
   }

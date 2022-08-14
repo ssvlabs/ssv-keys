@@ -13,7 +13,7 @@ export default {
     repeat: 4,
     options: {
       type: 'text',
-      message: 'Operator base64 encoded public key',
+      message: 'Enter operator key for operator',
       validate: operatorValidator
     }
   }

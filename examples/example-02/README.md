@@ -2,11 +2,24 @@
 
 Example for building shares and final payload from raw data and saving keyshares file.
 Also read saved keshares file and validate its contents.
-It can be useful in a few scenarios:
+There is plenty of different possible scenarios for solo staker, staking provider and web developer.
+
+Some examples:
 
 ### Scenario #1
-1. Generate keyshares file with operators data
-2.
+1. Generate keyshares file with operators data in web app
+2. Use keyshares file offline to generate encrypted shares using your keystore file and build final payload
+3. Use final keyshares file with final payload data to make actual web3 transaction
+
+### Scenario #2
+1. Generate keyshares file with operators data in web app
+2. Use keyshares file offline to generate encrypted shares using your keystore file
+3. Build final payload in web app and send it to web3
+
+### Scenario #3
+1. Build keyshares structure with operators data and encrypted shares (or without it)
+2. Save keyshares contents in your database
+3. When necessary - use keyshares content to build final payload for web3
 
 ### Steps:
 

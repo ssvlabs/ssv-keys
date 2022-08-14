@@ -109,13 +109,13 @@ export class SSVKeys {
                      encryptedShares: EncryptShare[],
                      ssvAmount: number | string
   ): Promise<any[]> {
-    const sharePublicKey: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
-    const sharePrivateKey: string[] = this.abiEncode(encryptedShares, 'privateKey');
+    const sharePublicKeys: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
+    const sharePrivateKeys: string[] = this.abiEncode(encryptedShares, 'privateKey');
     return [
       validatorPublicKey,
       operatorsIds.join(','),
-      sharePublicKey,
-      sharePrivateKey,
+      sharePublicKeys,
+      sharePrivateKeys,
       ssvAmount,
     ];
   }

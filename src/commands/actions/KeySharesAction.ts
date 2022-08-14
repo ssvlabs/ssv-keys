@@ -104,7 +104,7 @@ export class KeySharesAction extends BaseAction {
     const keySharesFile = await KeyShares.fromData(keySharesData);
     const keySharesFilePath = await getFilePath('keyshares', outputFolder);
     await writeFile(keySharesFilePath, keySharesFile.toString());
-    return `\nSaved to keyshares file: ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;
+    return `\nKey distribution successful! Find your key shares file at ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;
   }
 
   /**

@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "js-base64": "^3.7.2",
-    "ssv-keys": "https://github.com/bloxapp/ssv-keys.git#5d9f330",
+    "ssv-keys": "https://github.com/bloxapp/ssv-keys.git#v2",
     "web3": "^1.7.4"
   },
   "devDependencies": {

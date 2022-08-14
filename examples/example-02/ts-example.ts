@@ -69,7 +69,9 @@ async function main() {
   payload = await ssvKeys.buildPayload(
     keySharesFile.data.publicKey,
     keySharesFile.data.operatorIds,
-    keySharesFile.data.shares.toEncryptShares(keySharesData.data.operatorPublicKeys),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    keySharesFile.data.shares.toEncryptedShares(keySharesFile.data.operatorPublicKeys),
     987654321,
   );
   keySharesFile.payload.explained = {

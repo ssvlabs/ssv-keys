@@ -13,7 +13,7 @@ export default {
     ],
     options: {
       type: 'number',
-      message: 'Operator ID from the contract',
+      message: 'Enter operator ID for operator',
       validate: (operatorId: number): boolean | string => {
         return !(Number.isInteger(operatorId) && operatorId > 0) ? 'Invalid operator ID format' : true;
       }

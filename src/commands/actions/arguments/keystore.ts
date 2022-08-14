@@ -12,7 +12,7 @@ export default {
   options: {
     required: true,
     type: String,
-    help: 'Valid keystore file path'
+    help: 'Provide validator keystore file path'
   },
   interactive: {
     options: {

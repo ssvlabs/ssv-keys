@@ -60,7 +60,7 @@ export class KeySharesKeysV2 {
    * Build encrypted shares that can be used for encryption flow.
    * @param operatorPublicKeys
    */
-  toEncryptShares(operatorPublicKeys: string[]): EncryptShare[] {
+  toEncryptedShares(operatorPublicKeys: string[]): EncryptShare[] {
     if (this.publicKeys.length !== this.encryptedKeys.length
       || this.publicKeys.length !== operatorPublicKeys.length
       || this.encryptedKeys.length !== operatorPublicKeys.length) {

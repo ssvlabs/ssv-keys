@@ -6,7 +6,7 @@ export default {
   options: {
     type: String,
     required: true,
-    help: 'Token amount fee required for this transaction in Wei. ' +
+    help: 'How much SSV would you like to deposit with the transaction(wei)? ' +
       'Calculated as: totalFee := allOperatorsFee + networkYearlyFees + liquidationCollateral. '
   },
   interactive: {
