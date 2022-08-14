@@ -3,4 +3,4 @@
 dist
 .parcel-cache
 yarn.lock
-data/keyshare-*
+data/*
