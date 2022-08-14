@@ -10,7 +10,6 @@ export interface ActionOptions {
     arguments: ActionArgument[];
 }
 export declare class BaseAction {
-    ssvKeys: any;
     protected args: Namespace;
     setArgs(args: Namespace): BaseAction;
     execute(): Promise<any>;

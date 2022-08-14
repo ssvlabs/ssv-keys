@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.KeystorePasswordValidator = void 0;
+exports.keystorePasswordValidator = exports.KeystorePasswordValidator = void 0;
 const tslib_1 = require("tslib");
 const eth2_keystore_js_1 = tslib_1.__importDefault(require("eth2-keystore-js"));
 const helpers_1 = require("../../../lib/helpers");
@@ -51,4 +51,5 @@ class KeystorePasswordValidator {
     }
 }
 exports.KeystorePasswordValidator = KeystorePasswordValidator;
+exports.keystorePasswordValidator = new KeystorePasswordValidator();
 //# sourceMappingURL=keystore-password.js.map

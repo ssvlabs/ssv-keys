@@ -7,9 +7,10 @@ const JSEncrypt_1 = tslib_1.__importDefault(require("../../../lib/JSEncrypt"));
 const Encryption_1 = require("../../../lib/Encryption/Encryption");
 const operatorValidator = (operator) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
+        const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
         const decodedOperator = (0, js_base64_1.decode)(operator);
         if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
-            throw Error('Only valid base64 string is allowed');
+            throw Error(errorMessage);
         }
         const encrypt = new JSEncrypt_1.default({});
         try {
@@ -19,7 +20,7 @@ const operatorValidator = (operator) => tslib_1.__awaiter(void 0, void 0, void 0
             throw new Encryption_1.InvalidOperatorKeyException({
                 rsa: decodedOperator,
                 base64: operator,
-            }, 'Operator is not valid RSA Public Key');
+            }, errorMessage);
         }
         return true;
     }

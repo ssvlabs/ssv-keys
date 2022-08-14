@@ -1,4 +1,10 @@
-import { IsString, ValidateNested, validateOrReject } from 'class-validator';
+import {
+  IsString,
+  IsDefined,
+  IsNotEmpty,
+  ValidateNested,
+  validateOrReject
+} from 'class-validator';
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
 
 export type KeySharesData = KeySharesDataV2;
@@ -7,20 +13,38 @@ export type KeySharesData = KeySharesDataV2;
  * Keyshares data interface.
  */
 export class KeyShares {
+  static VERSION_V2 = 'v2';
+
   @IsString()
+  @IsDefined()
+  @IsNotEmpty()
   public version: string;
 
   @ValidateNested()
   public data: KeySharesData;
 
+  @IsString()
+  public payload: string;
+
   /**
    * Receives as parameter already read and json parsed structure.
    * @param version
    * @param data
+   * @param payload
    */
-  constructor({ version, data }: { version: string, data: KeySharesData }) {
+  constructor({ version, data, payload }: { version: string, data: KeySharesData, payload?: string }) {
     this.version = version;
     this.data = data;
+    this.payload = payload || '';
+  }
+
+  /**
+   * Set final payload for web3 transaction.
+   * @param payload
+   */
+  setPayload(payload: string): KeyShares {
+    this.payload = payload;
+    return this;
   }
 
   /**
@@ -36,7 +60,7 @@ export class KeyShares {
     // Create keyshares data instance depending on version
     let keySharesDataInstance: KeySharesData;
     switch (data.version) {
-      case 'v2':
+      case KeyShares.VERSION_V2:
         keySharesDataInstance = new KeySharesDataV2(data.data);
         break;
       default:
@@ -47,6 +71,7 @@ export class KeyShares {
     const keyShares = new KeyShares({
       version: data.version,
       data: keySharesDataInstance,
+      payload: data.payload || '',
     });
 
     // Validate classes and structures
@@ -71,6 +96,7 @@ export class KeyShares {
     return JSON.stringify({
       version: this.version,
       data: this.data,
+      payload: this.payload || '',
       createdAt: new Date().toISOString()
     }, null, '  ');
   }

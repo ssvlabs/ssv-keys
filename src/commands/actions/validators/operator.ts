@@ -4,9 +4,10 @@ import { InvalidOperatorKeyException } from '../../../lib/Encryption/Encryption'
 
 export const operatorValidator = async (operator: string): Promise<string | boolean> => {
   try {
+    const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
     const decodedOperator = decode(operator);
     if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
-      throw Error('Only valid base64 string is allowed');
+      throw Error(errorMessage);
     }
     const encrypt = new JSEncrypt({});
     try {
@@ -17,7 +18,7 @@ export const operatorValidator = async (operator: string): Promise<string | bool
           rsa: decodedOperator,
           base64: operator,
         },
-        'Operator is not valid RSA Public Key',
+        errorMessage,
       );
     }
     return true;

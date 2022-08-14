@@ -46,3 +46,5 @@ export class KeystorePasswordValidator {
     }
   }
 }
+
+export const keystorePasswordValidator = new KeystorePasswordValidator();

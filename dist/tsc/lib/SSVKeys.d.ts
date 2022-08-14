@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { IShares, ISharesKeyPairs } from './Threshold';
 import { EncryptShare } from './Encryption/Encryption';
 export declare class SSVKeys {
-    static OPERATOR_FORMAT_BASE64: string;
+    static SHARES_FORMAT_ABI: string;
     protected web3Instances: any;
     getWeb3(nodeUrl?: string): Web3;
     /**
@@ -22,9 +22,9 @@ export declare class SSVKeys {
      * Encrypt operators shares using operators public keys.
      * @param operatorsPublicKeys
      * @param shares
-     * @param operatorFormat
+     * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys: string[], shares: IShares[], operatorFormat?: string): Promise<EncryptShare[]>;
+    encryptShares(operatorsPublicKeys: string[], shares: IShares[], sharesFormat?: string): Promise<EncryptShare[]>;
     /**
      * Encode with Web3 eth abi method any fields of shares array required for transaction.
      * @param encryptedShares
@@ -37,13 +37,13 @@ export declare class SSVKeys {
      * Example:
      *
      *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
-     *    const encryptedShares = await ssvKeys.encryptShares(operatorsPublicKeys, shares);
-     *    await ssvKeys.buildPayloadV2(...)
+     *    const encryptedShares = await ssvKeys.encryptShares(...);
+     *    await ssvKeys.buildPayload(...)
      *
-     * @param privateKey
+     * @param validatorPublicKey
      * @param operatorsIds
      * @param encryptedShares
      * @param ssvAmount
      */
-    buildPayload(privateKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: number | string): Promise<any[]>;
+    buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: number | string): Promise<any[]>;
 }

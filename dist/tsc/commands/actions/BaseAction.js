@@ -2,10 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseAction = void 0;
 const tslib_1 = require("tslib");
-const SSVKeys_1 = require("../../lib/SSVKeys");
 class BaseAction {
     constructor() {
-        this.ssvKeys = new SSVKeys_1.SSVKeys();
         this.args = {};
     }
     setArgs(args) {

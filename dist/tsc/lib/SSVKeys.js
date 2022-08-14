@@ -61,17 +61,21 @@ class SSVKeys {
      * Encrypt operators shares using operators public keys.
      * @param operatorsPublicKeys
      * @param shares
-     * @param operatorFormat
+     * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys, shares, operatorFormat = SSVKeys.OPERATOR_FORMAT_BASE64) {
+    encryptShares(operatorsPublicKeys, shares, sharesFormat = '') {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const decodedOperators = operatorsPublicKeys.map((operator) => {
-                    operator = (0, atob_1.default)(operator);
-                    return operatorFormat == SSVKeys.OPERATOR_FORMAT_BASE64
-                        ? String((0, js_base64_1.encode)(operator)) : operator;
+                const decodedOperators = operatorsPublicKeys.map((operator) => String((0, js_base64_1.encode)((0, atob_1.default)(operator))));
+                const encryptedShares = new Encryption_1.default(decodedOperators, shares).encrypt();
+                return encryptedShares.map((share) => {
+                    share.operatorPublicKey = (0, js_base64_1.encode)(share.operatorPublicKey);
+                    if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
+                        share.operatorPublicKey = this.getWeb3().eth.abi.encodeParameter('string', share.operatorPublicKey);
+                        share.privateKey = this.getWeb3().eth.abi.encodeParameter('string', share.privateKey);
+                    }
+                    return share;
                 });
-                return new Encryption_1.default(decodedOperators, shares).encrypt();
             }
             catch (error) {
                 return error;
@@ -85,7 +89,11 @@ class SSVKeys {
      */
     abiEncode(encryptedShares, field) {
         return encryptedShares.map((share) => {
-            return this.getWeb3().eth.abi.encodeParameter('string', Object(share)[field]);
+            const value = Object(share)[field];
+            if (String(value).startsWith('0x')) {
+                return value;
+            }
+            return this.getWeb3().eth.abi.encodeParameter('string', value);
         });
     }
     /**
@@ -94,22 +102,21 @@ class SSVKeys {
      * Example:
      *
      *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
-     *    const encryptedShares = await ssvKeys.encryptShares(operatorsPublicKeys, shares);
-     *    await ssvKeys.buildPayloadV2(...)
+     *    const encryptedShares = await ssvKeys.encryptShares(...);
+     *    await ssvKeys.buildPayload(...)
      *
-     * @param privateKey
+     * @param validatorPublicKey
      * @param operatorsIds
      * @param encryptedShares
      * @param ssvAmount
      */
-    buildPayload(privateKey, operatorsIds, encryptedShares, ssvAmount) {
+    buildPayload(validatorPublicKey, operatorsIds, encryptedShares, ssvAmount) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const threshold = yield this.createThreshold(privateKey, operatorsIds);
             const sharePublicKey = encryptedShares.map((share) => share.publicKey);
             const sharePrivateKey = this.abiEncode(encryptedShares, 'privateKey');
             return [
-                threshold.validatorPublicKey,
-                `[${operatorsIds.join(',')}]`,
+                validatorPublicKey,
+                operatorsIds.join(','),
                 sharePublicKey,
                 sharePrivateKey,
                 ssvAmount,
@@ -118,5 +125,5 @@ class SSVKeys {
     }
 }
 exports.SSVKeys = SSVKeys;
-SSVKeys.OPERATOR_FORMAT_BASE64 = 'base64';
+SSVKeys.SHARES_FORMAT_ABI = 'abi';
 //# sourceMappingURL=SSVKeys.js.map

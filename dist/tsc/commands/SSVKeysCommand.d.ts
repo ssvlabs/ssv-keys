@@ -1,11 +1,11 @@
 import { BaseCommand } from './BaseCommand';
-import { BuildSharesAction } from './actions/BuildSharesAction';
+import { KeySharesAction } from './actions/KeySharesAction';
 export declare class SSVKeysCommand extends BaseCommand {
     /**
      * List of all supported command actions.
      * @protected
      */
-    protected actions: (typeof BuildSharesAction)[];
+    protected actions: (typeof KeySharesAction)[];
     /**
      * Add more specific help.
      */

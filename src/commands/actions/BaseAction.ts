@@ -1,5 +1,4 @@
 import { ArgumentOptions, Namespace } from 'argparse';
-import { SSVKeys } from '../../lib/SSVKeys';
 
 
 export interface ActionArgument {
@@ -15,7 +14,6 @@ export interface ActionOptions {
 }
 
 export class BaseAction {
-  public ssvKeys: any = new SSVKeys();
   protected args: Namespace = {};
 
   setArgs(args: Namespace): BaseAction {

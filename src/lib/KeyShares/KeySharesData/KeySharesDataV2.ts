@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { decode } from 'js-base64';
 import {
   IsArray,
   MinLength,
@@ -149,10 +150,14 @@ export class KeySharesDataV2 {
     let encryptedKeyWithError = '';
     try {
       this.sharesEncryptedKeys.map(encryptedKey => {
-        if (encryptedKey.startsWith('0x')) {
-          encryptedKeyWithError = encryptedKey;
-          web3.eth.abi.decodeParameter('string', encryptedKey);
+        let key: any = encryptedKey;
+        // If the key is ABI encoded - decode it.
+        if (key.startsWith('0x')) {
+          encryptedKeyWithError = key;
+          key = web3.eth.abi.decodeParameter('string', encryptedKey);
         }
+        // ABI decoded key then should be a valid base 64 string
+        decode(String(key));
       });
     } catch (e) {
       throw Error(`Can not ABI decode shares encrypted key: ${encryptedKeyWithError}. Error: ${String(e)}`);

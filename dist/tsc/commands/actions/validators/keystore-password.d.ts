@@ -3,3 +3,4 @@ export declare class KeystorePasswordValidator {
     setKeystoreFilePath(filePath: string): void;
     validatePassword(password: string): Promise<boolean | string>;
 }
+export declare const keystorePasswordValidator: KeystorePasswordValidator;

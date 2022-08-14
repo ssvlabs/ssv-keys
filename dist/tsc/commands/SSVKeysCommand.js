@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSVKeysCommand = void 0;
 const BaseCommand_1 = require("./BaseCommand");
-// import { PrivateKeyAction } from './actions/PrivateKeyAction';
-const BuildSharesAction_1 = require("./actions/BuildSharesAction");
-const BuildTransactionAction_1 = require("./actions/BuildTransactionAction");
+const KeySharesAction_1 = require("./actions/KeySharesAction");
 class SSVKeysCommand extends BaseCommand_1.BaseCommand {
     /**
      * Add more specific help.
@@ -16,11 +14,9 @@ class SSVKeysCommand extends BaseCommand_1.BaseCommand {
          * @protected
          */
         this.actions = [
-            // PrivateKeyAction,
-            BuildSharesAction_1.BuildSharesAction,
-            BuildTransactionAction_1.BuildTransactionAction,
+            KeySharesAction_1.KeySharesAction,
         ];
-        this.subParserOptions.help += 'Example: "ssv-keys decrypt --help" or "ssv-keys dec --help"';
+        this.subParserOptions.help += 'Example: "ssv-keys key-shares --help" or "ssv-keys ksh --help"';
     }
 }
 exports.SSVKeysCommand = SSVKeysCommand;
