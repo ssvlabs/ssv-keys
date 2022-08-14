@@ -9,6 +9,7 @@ import {
   ValidateNested, IsOptional
 } from 'class-validator';
 import bls from '../../BLS';
+import { EncryptShare } from '../../Encryption/Encryption';
 import { operatorValidator } from '../../../commands/actions/validators/operator';
 
 const web3 = new Web3();
@@ -53,6 +54,30 @@ export class KeySharesKeysV2 {
   constructor(publicKeys: string[], encryptedKeys: string[]) {
     this.publicKeys = publicKeys;
     this.encryptedKeys = encryptedKeys;
+  }
+
+  /**
+   * Build encrypted shares that can be used for encryption flow.
+   * @param operatorPublicKeys
+   */
+  toEncryptShares(operatorPublicKeys: string[]): EncryptShare[] {
+    if (this.publicKeys.length !== this.encryptedKeys.length
+      || this.publicKeys.length !== operatorPublicKeys.length
+      || this.encryptedKeys.length !== operatorPublicKeys.length) {
+      throw Error('Operator public keys and shares public/encrypted keys length does not match.');
+    }
+    const encryptedShares: EncryptShare[] = [];
+    for (let i = 0; i < operatorPublicKeys.length; i += 1) {
+      const operatorPublicKey = operatorPublicKeys[i];
+      const privateKey = this.encryptedKeys[i];
+      const publicKey = this.publicKeys[i];
+      encryptedShares.push({
+        operatorPublicKey,
+        privateKey,
+        publicKey,
+      });
+    }
+    return encryptedShares;
   }
 }
 

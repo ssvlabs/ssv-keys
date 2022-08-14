@@ -1,14 +1,24 @@
-## Example for building shares and final payload from raw data and saving keyshares file
+## Example 02
+
+Example for building shares and final payload from raw data and saving keyshares file.
+Also read saved keshares file and validate its contents.
+It can be useful in a few scenarios:
+
+### Scenario #1
+1. Generate keyshares file with operators data
+2.
 
 ### Steps:
 
 #### Step 1: Read operators data and keystore file
 
 ```javascript
-import { ISharesKeyPairs, SSVKeys } from 'ssv-keys';
+import * as path from 'path';
+import { promises as fsp } from 'fs';
+import { SSVKeys, KeyShares } from 'ssv-keys';
 
-const keystore = require('./test.keystore.json');
 const operators = require('./operators.json');
+const keystore = require('./test.keystore.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 ```
@@ -36,5 +46,47 @@ const payload = await ssvKeys.buildPayload(
   shares,
   123456789,
 );
-console.log(payload);
+```
+
+#### Step 5. Build keyshares file raw data
+
+```javascript
+const keySharesData = {
+  version: 'v2',
+  data: {
+    publicKey: threshold.validatorPublicKey,
+    operators: operators.map((operator: any, index: string | number) => ({
+      id: operatorIds[index],
+      publicKey: operator,
+    })),
+    shares: {
+      publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
+      encryptedKeys: shares.map((share: { privateKey: any; }) => share.privateKey),
+    },
+  },
+  payload: {
+    explained: {
+      validatorPublicKey: payload[0],
+      operatorIds: payload[1],
+      sharePublicKeys: payload[2],
+      sharePrivateKey: payload[3],
+      ssvAmount: payload[4],
+    },
+    raw: payload.join(','),
+  },
+};
+```
+
+#### Step 6: Build keyshares file from raw data (should validate data automatically)
+
+```javascript
+const keySharesFile = await KeyShares.fromData(keySharesData);
+const keySharesFilePath = path.join(process.cwd(), 'data');
+```
+
+#### Step 7: Save validated keyshares into file
+
+```javascript
+const filePath = `${keySharesFilePath}${path.sep}keyshares.json`;
+await fsp.writeFile(filePath, keySharesFile.toString(), { encoding: 'utf-8' });
 ```
