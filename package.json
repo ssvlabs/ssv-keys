@@ -14,7 +14,7 @@
   "main": "./dist/tsc/main.js",
   "types": "./dist/tsc/main.d.ts",
   "bin": {
-    "ssv-keys": "./dist/tsc/cli.js"
+    "ssv-keys": "./dist/tsc/src/cli.js"
   },
   "engines": {
     "node": ">=12"
@@ -22,8 +22,8 @@
   "scripts": {
     "dev:cli": "ts-node src/cli.ts",
     "dev:icli": "ts-node src/cli-interactive.ts",
-    "icli": "node ./dist/tsc/cli-interactive.js",
-    "cli": "node ./dist/tsc/cli.js",
+    "icli": "node ./dist/tsc/src/cli-interactive.js",
+    "cli": "node ./dist/tsc/src/cli.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "clean": "rm -rf dist build package",
