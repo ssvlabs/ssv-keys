@@ -11,8 +11,8 @@
     "keystore",
     "shares"
   ],
-  "main": "./dist/tsc/main.js",
-  "types": "./dist/tsc/main.d.ts",
+  "main": "./dist/tsc/src/main.js",
+  "types": "./dist/tsc/src/main.d.ts",
   "bin": {
     "ssv-keys": "./dist/tsc/src/cli.js"
   },
