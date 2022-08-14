@@ -10,6 +10,8 @@ export class SSVKeysCommand extends BaseCommand {
     KeySharesAction,
   ]
 
+  protected useAction = 'key-shares';
+
   /**
    * Add more specific help.
    */

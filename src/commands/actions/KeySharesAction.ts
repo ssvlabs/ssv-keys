@@ -78,7 +78,8 @@ export class KeySharesAction extends BaseAction {
         publicKey: operator,
       })
     });
-    const keySharesFile = await KeyShares.fromData({
+
+    const keySharesData = {
       version: 'v2',
       data: {
         publicKey: threshold.validatorPublicKey,
@@ -88,8 +89,19 @@ export class KeySharesAction extends BaseAction {
           encryptedKeys: shares.map(share => share.privateKey),
         },
       },
-      payload: payload.join(','),
-    });
+      payload: {
+        explained: {
+          validatorPublicKey: payload[0],
+          operatorIds: payload[1],
+          sharePublicKeys: payload[2],
+          sharePrivateKey: payload[3],
+          ssvAmount: payload[4],
+        },
+        raw: payload.join(','),
+      },
+    };
+
+    const keySharesFile = await KeyShares.fromData(keySharesData);
     const keySharesFilePath = await getFilePath('keyshares', outputFolder);
     await writeFile(keySharesFilePath, keySharesFile.toString());
     return `\nSaved to keyshares file: ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;

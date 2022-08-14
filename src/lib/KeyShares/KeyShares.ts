@@ -6,8 +6,10 @@ import {
   validateOrReject
 } from 'class-validator';
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
+import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
 
 export type KeySharesData = KeySharesDataV2;
+export type KeySharesPayload = KeySharesPayloadV2;
 
 /**
  * Keyshares data interface.
@@ -23,8 +25,8 @@ export class KeyShares {
   @ValidateNested()
   public data: KeySharesData;
 
-  @IsString()
-  public payload: string;
+  @ValidateNested()
+  public payload: KeySharesPayload;
 
   /**
    * Receives as parameter already read and json parsed structure.
@@ -32,18 +34,29 @@ export class KeyShares {
    * @param data
    * @param payload
    */
-  constructor({ version, data, payload }: { version: string, data: KeySharesData, payload?: string }) {
+  constructor({ version, data, payload }: { version: string, data: KeySharesData, payload: KeySharesPayload }) {
     this.version = version;
     this.data = data;
-    this.payload = payload || '';
+    this.payload = payload;
   }
 
   /**
-   * Set final payload for web3 transaction.
+   * Set final payload for web3 transaction and validate it.
    * @param payload
    */
-  setPayload(payload: string): KeyShares {
+  async setPayload(payload: KeySharesPayload): Promise<KeyShares> {
     this.payload = payload;
+    await this.payload.validate();
+    return this;
+  }
+
+  /**
+   * Set new data and validate it.
+   * @param data
+   */
+  async setData(data: KeySharesData): Promise<KeyShares> {
+    this.data = data;
+    await this.data.validate();
     return this;
   }
 
@@ -59,9 +72,11 @@ export class KeyShares {
 
     // Create keyshares data instance depending on version
     let keySharesDataInstance: KeySharesData;
+    let keySharesPayloadInstance: KeySharesPayload;
     switch (data.version) {
       case KeyShares.VERSION_V2:
-        keySharesDataInstance = new KeySharesDataV2(data.data);
+        keySharesDataInstance = new KeySharesDataV2(data.data || {});
+        keySharesPayloadInstance = new KeySharesPayloadV2(data.payload || {});
         break;
       default:
         throw Error(`Keyshares version is not supported: ${data.version}`);
@@ -71,7 +86,7 @@ export class KeyShares {
     const keyShares = new KeyShares({
       version: data.version,
       data: keySharesDataInstance,
-      payload: data.payload || '',
+      payload: keySharesPayloadInstance,
     });
 
     // Validate classes and structures
@@ -86,6 +101,13 @@ export class KeyShares {
       throw Error(`Keyshares data did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
     }
 
+    // Deeper validation of payload if exists
+    try {
+      await keyShares.payload.validate();
+    } catch (errors: any) {
+      throw Error(`Keyshares payload did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
+    }
+
     return keyShares;
   }
 
@@ -96,7 +118,7 @@ export class KeyShares {
     return JSON.stringify({
       version: this.version,
       data: this.data,
-      payload: this.payload || '',
+      payload: this.payload,
       createdAt: new Date().toISOString()
     }, null, '  ');
   }

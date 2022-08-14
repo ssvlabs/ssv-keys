@@ -6,7 +6,7 @@ import {
   IsInt,
   IsString,
   Length,
-  ValidateNested
+  ValidateNested, IsOptional
 } from 'class-validator';
 import bls from '../../BLS';
 import { operatorValidator } from '../../../commands/actions/validators/operator';
@@ -78,8 +78,9 @@ export class KeySharesDataV2 {
   @ValidateNested()
   public operators: OperatorV2[];
 
+  @IsOptional()
   @ValidateNested()
-  public shares: KeySharesKeysV2;
+  public shares?: KeySharesKeysV2 | null;
 
   constructor(data: IKeySharesParamsV2) {
     this.publicKey = data.publicKey;
@@ -92,15 +93,15 @@ export class KeySharesDataV2 {
   /**
    * Get the list of shares public keys.
    */
-  get sharesPublicKeys(): string[] {
-    return this.shares.publicKeys;
+  get sharesPublicKeys(): string[] | null {
+    return this.shares?.publicKeys || null;
   }
 
   /**
    * Get the list of encrypted shares.
    */
-  get sharesEncryptedKeys(): string[] {
-    return this.shares.encryptedKeys;
+  get sharesEncryptedKeys(): string[] | null {
+    return this.shares?.encryptedKeys || null;
   }
 
   /**
@@ -132,6 +133,9 @@ export class KeySharesDataV2 {
    * Try to BLS deserialize shares public keys.
    */
   async validateSharesPublicKeys(): Promise<any> {
+    if (!this.sharesPublicKeys?.length) {
+      return;
+    }
     let publicKeyWithError = '';
     try {
       for (const publicKey of this.sharesPublicKeys) {
@@ -147,6 +151,9 @@ export class KeySharesDataV2 {
    * If shares encrypted keys are ABI encoded - try to decode them.
    */
   async validateSharesEncryptedKeys(): Promise<any> {
+    if (!this.sharesEncryptedKeys?.length) {
+      return;
+    }
     let encryptedKeyWithError = '';
     try {
       this.sharesEncryptedKeys.map(encryptedKey => {
@@ -168,6 +175,9 @@ export class KeySharesDataV2 {
    * Check that counts are consistent.
    */
   async validateCounts(): Promise<any> {
+    if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
+      return;
+    }
     if (this.operatorIds.length !== this.sharesEncryptedKeys.length
       || this.operatorIds.length !== this.sharesPublicKeys.length
       || this.operatorIds.length !== this.operatorPublicKeys.length) {

@@ -23,6 +23,7 @@ export class BaseCommand extends ArgumentParser {
    */
   protected subParsers: SubParser | undefined;
   protected interactive = false;
+  protected useAction: string | undefined;
 
   /**
    * @param interactive if the command should be interactive instead of classic CLI
@@ -64,6 +65,10 @@ export class BaseCommand extends ArgumentParser {
    * Interactively ask user for action
    */
   async askAction(): Promise<string> {
+    // Skip asking action
+    if (this.useAction) {
+      return this.useAction;
+    }
     const response = await prompts({
       type: 'select',
       name: 'action',
@@ -205,6 +210,10 @@ export class BaseCommand extends ArgumentParser {
     this.addActionsSubParsers();
     // Execute action
     const args = this.parse_args();
+    if (!args.func) {
+      this.print_help();
+      return;
+    }
     return args.func(args);
   }
 }
