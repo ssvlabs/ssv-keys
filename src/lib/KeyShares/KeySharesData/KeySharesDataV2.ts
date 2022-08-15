@@ -1,188 +1,112 @@
-import Web3 from 'web3';
-import { decode } from 'js-base64';
+import _ from 'underscore';
 import {
-  IsArray,
-  MinLength,
-  IsInt,
   IsString,
   Length,
   ValidateNested, IsOptional
 } from 'class-validator';
 import bls from '../../BLS';
-import { operatorValidator } from '../../../commands/actions/validators/operator';
+import { IKeySharesData } from './IKeySharesData';
+import { OperatorDataV2 } from './OperatorDataV2';
+import { KeySharesKeysV2 } from './KeySharesKeysV2';
 
-const web3 = new Web3();
 
-// ---------------------------------------------------------------
-// Structure interfaces
-// ---------------------------------------------------------------
-
-export interface IOperatorV2 {
-  id: number,
-  publicKey: string
-}
-
-export interface ISharesV2 {
-  publicKeys: string[],
-  encryptedKeys: string[]
-}
-
-export interface IKeySharesParamsV2 {
-  operators?: IOperatorV2[],
-  shares?: ISharesV2,
-  publicKey?: string,
-}
-
-// ---------------------------------------------------------------
-// Structure classes
-// ---------------------------------------------------------------
-
-export class KeySharesKeysV2 {
-  @IsArray()
-  @MinLength(98, {
-    each: true,
-  })
-  publicKeys: string[];
-
-  @IsArray()
-  @MinLength(98, {
-    each: true,
-  })
-  encryptedKeys: string[];
-
-  constructor(publicKeys: string[], encryptedKeys: string[]) {
-    this.publicKeys = publicKeys;
-    this.encryptedKeys = encryptedKeys;
-  }
-}
-
-export class OperatorV2 {
-  @IsInt()
-  public id: number;
-
-  @IsString()
-  @MinLength(98)
-  public publicKey: string;
-
-  constructor(id: number, publicKey: string) {
-    this.id = id;
-    this.publicKey = publicKey;
-  }
-}
-
-export class KeySharesDataV2 {
+export class KeySharesDataV2 implements IKeySharesData {
+  @IsOptional()
   @IsString()
   @Length(98, 98)
-  public publicKey?: string;
+  public publicKey?: string | null = null;
 
-  @ValidateNested()
-  public operators?: OperatorV2[];
+  @IsOptional()
+  @ValidateNested({ each: true })
+  public operators?: OperatorDataV2[] | null = null;
 
   @IsOptional()
   @ValidateNested()
-  public shares?: KeySharesKeysV2 | null;
+  public shares?: KeySharesKeysV2 | null = null;
 
-  constructor(data: IKeySharesParamsV2) {
+  setData(data: any) {
     if (data.publicKey) {
       this.publicKey = data.publicKey;
     }
     if (data.operators) {
       this.operators = data.operators.map(
-        (operator) => new OperatorV2(operator.id, operator.publicKey)
+        (operator: { id: any; publicKey: any; }) => {
+          const operatorData = new OperatorDataV2();
+          operatorData.setData(operator);
+          return operatorData;
+        }
       );
     }
     if (data.shares) {
-      this.shares = new KeySharesKeysV2(data.shares.publicKeys, data.shares.encryptedKeys);
+      const sharesInstance = new KeySharesKeysV2();
+      if (_.isArray(data.shares)) {
+        sharesInstance.setData({
+          publicKeys: data.shares.map((share: { publicKey: string; }) => share.publicKey),
+          encryptedKeys: data.shares.map((share: { privateKey: string; }) => share.privateKey),
+        });
+      } else {
+        sharesInstance.setData(data.shares);
+      }
+      this.shares = sharesInstance;
     }
+  }
+
+  /**
+   * Do all possible validations.
+   */
+  async validate(): Promise<any> {
+    await bls.init(bls.BLS12_381);
+    await this.validateCounts();
+    await this.shares?.validate();
+    await this.validatePublicKey();
+    await this.validateOperators();
   }
 
   /**
    * Get the list of shares public keys.
    */
-  get sharesPublicKeys(): string[] | null {
-    return this.shares?.publicKeys || null;
+  get sharesPublicKeys(): string[] {
+    return this.shares?.publicKeys || [];
   }
 
   /**
    * Get the list of encrypted shares.
    */
-  get sharesEncryptedKeys(): string[] | null {
-    return this.shares?.encryptedKeys || null;
+  get sharesEncryptedKeys(): string[] {
+    return this.shares?.encryptedKeys || [];
   }
 
   /**
    * Get the list of operators IDs.
    */
-  get operatorIds(): number[] | null {
+  get operatorIds(): number[] {
     if (!this.operators?.length) {
-      return null;
+      return [];
     }
-    return this.operators.map(operator => operator.id);
+    return this.operators.map(operator => parseInt(String(operator.id), 10));
   }
 
   /**
    * Get the list of operators public keys.
    */
-  get operatorPublicKeys(): string[] | null {
+  get operatorPublicKeys(): string[] {
     if (!this.operators?.length) {
-      return null;
+      return [];
     }
-    return this.operators.map(operator => operator.publicKey);
+    return this.operators.map(operator => String(operator.publicKey));
   }
 
   /**
    * Try to BLS deserialize validator public key.
    */
-  async validateValidatorPublicKey(): Promise<any> {
+  async validatePublicKey(): Promise<any> {
     if (!this.publicKey) {
       return;
     }
     try {
-      bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
+      await bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
     } catch (e) {
       throw Error(`Can not BLS deserialize validator public key: ${this.publicKey}. Error: ${String(e)}`);
-    }
-  }
-
-  /**
-   * Try to BLS deserialize shares public keys.
-   */
-  async validateSharesPublicKeys(): Promise<any> {
-    if (!this.sharesPublicKeys?.length) {
-      return;
-    }
-    let publicKeyWithError = '';
-    try {
-      for (const publicKey of this.sharesPublicKeys) {
-        publicKeyWithError = publicKey;
-        bls.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
-      }
-    } catch (e) {
-      throw Error(`Can not BLS deserialize shares public key: ${publicKeyWithError}. Error: ${String(e)}`);
-    }
-  }
-
-  /**
-   * If shares encrypted keys are ABI encoded - try to decode them.
-   */
-  async validateSharesEncryptedKeys(): Promise<any> {
-    if (!this.sharesEncryptedKeys?.length) {
-      return;
-    }
-    let encryptedKeyWithError = '';
-    try {
-      this.sharesEncryptedKeys.map(encryptedKey => {
-        let key: any = encryptedKey;
-        // If the key is ABI encoded - decode it.
-        if (key.startsWith('0x')) {
-          encryptedKeyWithError = key;
-          key = web3.eth.abi.decodeParameter('string', encryptedKey);
-        }
-        // ABI decoded key then should be a valid base 64 string
-        decode(String(key));
-      });
-    } catch (e) {
-      throw Error(`Can not ABI decode shares encrypted key: ${encryptedKeyWithError}. Error: ${String(e)}`);
     }
   }
 
@@ -193,36 +117,19 @@ export class KeySharesDataV2 {
     if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
       return;
     }
-    if (this.operatorIds?.length !== this.sharesEncryptedKeys.length
-      || this.operatorIds?.length !== this.sharesPublicKeys.length
-      || this.operatorIds?.length !== this.operatorPublicKeys?.length) {
+    if (this.operatorIds.length !== this.sharesEncryptedKeys.length
+      || this.operatorIds.length !== this.sharesPublicKeys.length
+      || this.operatorIds.length !== this.operatorPublicKeys.length) {
       throw Error('Length of operators and shares should be equal.');
     }
   }
 
   /**
-   * Go over operator public keys and try to check if they are:
-   * 1) valid base 64 strings
-   * 2) when base 64 decoded - valid RSA public key
+   * Validate all operators
    */
-  async validateOperatorsPublicKeys(): Promise<any> {
-    for (const operatorPublicKey of this.operatorPublicKeys || []) {
-      const result = await operatorValidator(operatorPublicKey);
-      if (result !== true) {
-        throw Error(String(result));
-      }
+  async validateOperators(): Promise<any> {
+    for (const operator of this.operators || []) {
+      await operator.validate();
     }
-  }
-
-  /**
-   * Do all possible validations.
-   */
-  async validate(): Promise<any> {
-    await bls.init(bls.BLS12_381);
-    await this.validateCounts();
-    await this.validateSharesPublicKeys();
-    await this.validateValidatorPublicKey();
-    await this.validateSharesEncryptedKeys();
-    await this.validateOperatorsPublicKeys();
   }
 }

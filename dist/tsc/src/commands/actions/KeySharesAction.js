@@ -39,74 +39,31 @@ class KeySharesAction extends BaseAction_1.BaseAction {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const { keystore, password, output_folder: outputFolder, ssv_token_amount: ssvAmount, } = this.args;
             let { operators_ids: operatorIds, operators_keys: operatorKeys, } = this.args;
+            // Prepare data
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));
-            const { payload, threshold, shares } = yield this.encryptShares(keystore, password, operatorIds, operatorKeys, ssvAmount);
-            // Build keyshares file
-            const operatorsData = [];
-            operatorKeys.map((operator, index) => {
-                operatorsData.push({
+            const keystoreData = yield (0, helpers_1.readFile)(String(keystore).trim());
+            // Initialize SSVKeys SDK
+            const ssvKeys = new SSVKeys_1.SSVKeys();
+            const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
+            // Build shares from operator IDs and public keys
+            const shares = yield ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
+            // Now save to key shares file encrypted shares and validator public key
+            const keyShares = yield KeyShares_1.KeyShares.fromData({ version: 'v2' });
+            yield keyShares.setData({
+                operators: operatorKeys.map((operator, index) => ({
                     id: operatorIds[index],
                     publicKey: operator,
-                });
-            });
-            const keySharesData = {
-                version: 'v2',
-                data: {
-                    publicKey: threshold.validatorPublicKey,
-                    operators: operatorsData,
-                    shares: {
-                        publicKeys: shares.map(share => share.publicKey),
-                        encryptedKeys: shares.map(share => share.privateKey),
-                    },
-                },
-                payload: {
-                    readable: {
-                        validatorPublicKey: payload[KeyShares_1.KeyShares.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
-                        operatorIds: payload[KeyShares_1.KeyShares.PAYLOAD_INDEX_OPERATOR_IDS],
-                        sharePublicKeys: payload[KeyShares_1.KeyShares.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
-                        sharePrivateKey: payload[KeyShares_1.KeyShares.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-                        ssvAmount: payload[KeyShares_1.KeyShares.PAYLOAD_INDEX_SSV_AMOUNT],
-                    },
-                    raw: payload.join(','),
-                },
-            };
-            const keySharesFile = yield KeyShares_1.KeyShares.fromData(keySharesData);
-            const keySharesFilePath = yield (0, helpers_1.getFilePath)('keyshares', outputFolder.trim());
-            yield (0, helpers_1.writeFile)(keySharesFilePath, keySharesFile.toString());
-            return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;
-        });
-    }
-    /**
-     * Encrypt shares and return all information that can be useful.
-     * @param keystore
-     * @param password
-     * @param operatorIds
-     * @param operatorPublicKeys
-     * @param ssvAmount
-     */
-    encryptShares(keystore, password, operatorIds, operatorPublicKeys, ssvAmount) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            // Step 1: read keystore file
-            const data = yield (0, helpers_1.readFile)(String(keystore).trim());
-            // Step 2: decrypt private key using keystore file and password
-            const ssvKeys = new SSVKeys_1.SSVKeys();
-            const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(data, password);
-            // Step 3: Build shares from operator IDs and public keys
-            const threshold = yield ssvKeys.createThreshold(privateKey, operatorIds);
-            const shares = yield ssvKeys.encryptShares(operatorPublicKeys, threshold.shares);
-            // Step 4: Build final web3 transaction payload
-            const payload = yield ssvKeys.buildPayload(threshold.validatorPublicKey, operatorIds, shares, ssvAmount);
-            return {
-                privateKey,
-                keystore,
-                password,
-                operatorIds,
-                operatorPublicKeys,
+                })),
+                publicKey: ssvKeys.getValidatorPublicKey(),
                 shares,
-                threshold,
-                payload,
-            };
+            });
+            // Build payload and save it in key shares file
+            const payload = yield ssvKeys.buildPayload(ssvKeys.getValidatorPublicKey(), operatorIds, shares, ssvAmount);
+            yield keyShares.setPayload(payload);
+            const keySharesFilePath = yield (0, helpers_1.getFilePath)('keyshares', outputFolder.trim());
+            yield (0, helpers_1.writeFile)(keySharesFilePath, keyShares.toString());
+            return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;
         });
     }
 }

@@ -2,18 +2,26 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
-const underscore_1 = tslib_1.__importDefault(require("underscore"));
 const class_validator_1 = require("class-validator");
 const KeySharesDataV2_1 = require("./KeySharesData/KeySharesDataV2");
 const KeySharesPayloadV2_1 = require("./KeySharesData/KeySharesPayloadV2");
 /**
- * Keyshares data interface.
+ * Key shares file data interface.
  */
 class KeyShares {
     /**
      * @param version
      */
     constructor({ version }) {
+        // Versions of deeper structures
+        this.byVersion = {
+            'payload': {
+                [KeyShares.VERSION_V2]: KeySharesPayloadV2_1.KeySharesPayloadV2,
+            },
+            'data': {
+                [KeyShares.VERSION_V2]: KeySharesDataV2_1.KeySharesDataV2,
+            }
+        };
         this.version = version;
     }
     /**
@@ -22,28 +30,22 @@ class KeyShares {
      */
     setPayload(payload) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (payload) {
-                this.payload = this.usePayload(payload, this.version);
-                yield this.validatePayload();
-            }
+            yield this.usePayload(payload, this.version);
             return this;
         });
     }
     /**
      * Set new data and validate it.
-     * @param data KeySharesData
+     * @param data
      */
     setData(data) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (data) {
-                this.data = this.useData(data, this.version);
-                yield this.validateData();
-            }
+            yield this.useData(data, this.version);
             return this;
         });
     }
     /**
-     * Instantiate keyshare from raw data as string or object.
+     * Instantiate key shares from raw data as string or object.
      * @param data
      */
     static fromData(data) {
@@ -55,35 +57,37 @@ class KeyShares {
             const keyShares = new KeyShares({ version: data.version });
             yield keyShares.setData(data.data);
             yield keyShares.setPayload(data.payload);
-            yield keyShares.validate();
             return keyShares;
         });
     }
     /**
-     * Get final data converted from raw data.
+     * Set payload as new or existing instance and update its internal data.
      * @param payload
      * @param version
      */
     usePayload(payload, version) {
-        if (underscore_1.default.isArray(payload)) {
-            payload = {
-                readable: {
-                    validatorPublicKey: payload[KeyShares.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
-                    operatorIds: payload[KeyShares.PAYLOAD_INDEX_OPERATOR_IDS],
-                    sharePublicKeys: payload[KeyShares.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
-                    sharePrivateKey: payload[KeyShares.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-                    ssvAmount: payload[KeyShares.PAYLOAD_INDEX_SSV_AMOUNT],
-                },
-                raw: payload.join(','),
-            };
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            this.payload = this.payload || this.getByVersion('payload', version);
+            if (this.payload) {
+                yield this.payload.setData(payload);
+                yield this.validate();
+            }
+        });
+    }
+    /**
+     * Get entity by version.
+     * @param entity
+     * @param version
+     * @private
+     */
+    getByVersion(entity, version) {
+        if (!this.byVersion[entity]) {
+            throw Error(`"${entity}" is unknown entity`);
         }
-        payload = Object.assign(Object.assign({}, JSON.parse(JSON.stringify(this.payload || {}))), JSON.parse(JSON.stringify(payload || {})));
-        switch (version) {
-            case KeyShares.VERSION_V2:
-                return new KeySharesPayloadV2_1.KeySharesPayloadV2(payload);
-            default:
-                throw Error(`Keyshares version is not supported: ${version}`);
+        if (!this.byVersion[entity][version]) {
+            throw Error(`"${entity}" is not supported in version of key shares: ${version}`);
         }
+        return new this.byVersion[entity][version]();
     }
     /**
      * Get final data converted from raw data.
@@ -91,64 +95,34 @@ class KeyShares {
      * @param version
      */
     useData(data, version) {
-        data = Object.assign(Object.assign({}, JSON.parse(JSON.stringify(this.data || {}))), JSON.parse(JSON.stringify(data || {})));
-        if (underscore_1.default.isArray(data.shares)) {
-            data.shares = {
-                publicKeys: data.shares.map((share) => share.publicKey),
-                encryptedKeys: data.shares.map((share) => share.privateKey),
-            };
-        }
-        switch (version) {
-            case KeyShares.VERSION_V2:
-                return new KeySharesDataV2_1.KeySharesDataV2(data);
-            default:
-                throw Error(`Keyshares version is not supported: ${version}`);
-        }
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (!data) {
+                return;
+            }
+            this.data = this.data || this.getByVersion('data', version);
+            if (this.data) {
+                yield this.data.setData(data);
+                yield this.validate();
+            }
+        });
     }
     /**
      * Validate everything
      */
     validate() {
+        var _a, _b;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Validate classes and structures
             yield (0, class_validator_1.validateOrReject)(this).catch(errors => {
-                throw Error(`Keyshares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
+                throw Error(`Key shares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
             });
             // Validate data and payload
-            yield this.validateData();
-            yield this.validatePayload();
+            yield ((_a = this.payload) === null || _a === void 0 ? void 0 : _a.validate());
+            yield ((_b = this.data) === null || _b === void 0 ? void 0 : _b.validate());
         });
     }
     /**
-     * Validate payload
-     */
-    validatePayload() {
-        var _a;
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield ((_a = this.payload) === null || _a === void 0 ? void 0 : _a.validate());
-            }
-            catch (errors) {
-                throw Error(`Keyshares payload did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
-            }
-        });
-    }
-    /**
-     * Validate data
-     */
-    validateData() {
-        var _a;
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                yield ((_a = this.data) === null || _a === void 0 ? void 0 : _a.validate());
-            }
-            catch (errors) {
-                throw Error(`Keyshares data did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
-            }
-        });
-    }
-    /**
-     * Stringify keyshare to be ready for saving in file.
+     * Stringify key shares to be ready for saving in file.
      */
     toString() {
         return JSON.stringify({
@@ -160,20 +134,17 @@ class KeyShares {
     }
 }
 KeyShares.VERSION_V2 = 'v2';
-KeyShares.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
-KeyShares.PAYLOAD_INDEX_OPERATOR_IDS = 1;
-KeyShares.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS = 2;
-KeyShares.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS = 3;
-KeyShares.PAYLOAD_INDEX_SSV_AMOUNT = 4;
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsDefined)(),
     (0, class_validator_1.IsNotEmpty)()
 ], KeyShares.prototype, "version", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
 ], KeyShares.prototype, "data", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
 ], KeyShares.prototype, "payload", void 0);
 exports.KeyShares = KeyShares;

@@ -1,8 +1,8 @@
-import _ from 'underscore';
 import {
   IsString,
   IsDefined,
   IsNotEmpty,
+  IsOptional,
   ValidateNested,
   validateOrReject
 } from 'class-validator';
@@ -13,26 +13,33 @@ export type KeySharesData = KeySharesDataV2;
 export type KeySharesPayload = KeySharesPayloadV2;
 
 /**
- * Keyshares data interface.
+ * Key shares file data interface.
  */
 export class KeyShares {
   static VERSION_V2 = 'v2';
-  static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
-  static PAYLOAD_INDEX_OPERATOR_IDS = 1;
-  static PAYLOAD_INDEX_SHARE_PUBLIC_KEYS = 2;
-  static PAYLOAD_INDEX_SHARE_PRIVATE_KEYS = 3;
-  static PAYLOAD_INDEX_SSV_AMOUNT = 4;
+
+  // Versions of deeper structures
+  private byVersion: any = {
+    'payload': {
+      [KeyShares.VERSION_V2]: KeySharesPayloadV2,
+    },
+    'data': {
+      [KeyShares.VERSION_V2]: KeySharesDataV2,
+    }
+  }
 
   @IsString()
   @IsDefined()
   @IsNotEmpty()
   public version: string;
 
+  @IsOptional()
   @ValidateNested()
-  public data?: KeySharesData | undefined;
+  public data?: KeySharesData | null;
 
+  @IsOptional()
   @ValidateNested()
-  public payload?: KeySharesPayload | undefined;
+  public payload?: KeySharesPayload | null;
 
   /**
    * @param version
@@ -46,27 +53,21 @@ export class KeyShares {
    * @param payload
    */
   async setPayload(payload: any): Promise<KeyShares> {
-    if (payload) {
-      this.payload = this.usePayload(payload, this.version);
-      await this.validatePayload();
-    }
+    await this.usePayload(payload, this.version);
     return this;
   }
 
   /**
    * Set new data and validate it.
-   * @param data KeySharesData
+   * @param data
    */
   async setData(data: any): Promise<KeyShares> {
-    if (data) {
-      this.data = this.useData(data, this.version);
-      await this.validateData();
-    }
+    await this.useData(data, this.version);
     return this;
   }
 
   /**
-   * Instantiate keyshare from raw data as string or object.
+   * Instantiate key shares from raw data as string or object.
    * @param data
    */
   static async fromData(data: string | any): Promise<KeyShares> {
@@ -77,38 +78,36 @@ export class KeyShares {
     const keyShares = new KeyShares({ version: data.version });
     await keyShares.setData(data.data);
     await keyShares.setPayload(data.payload);
-    await keyShares.validate();
     return keyShares;
   }
 
   /**
-   * Get final data converted from raw data.
+   * Set payload as new or existing instance and update its internal data.
    * @param payload
    * @param version
    */
-  usePayload(payload: any, version: string) {
-    if (_.isArray(payload)) {
-      payload = {
-        readable: {
-          validatorPublicKey: payload[KeyShares.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
-          operatorIds: payload[KeyShares.PAYLOAD_INDEX_OPERATOR_IDS],
-          sharePublicKeys: payload[KeyShares.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
-          sharePrivateKey: payload[KeyShares.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-          ssvAmount: payload[KeyShares.PAYLOAD_INDEX_SSV_AMOUNT],
-        },
-        raw: payload.join(','),
-      };
+  async usePayload(payload: any, version: string): Promise<any> {
+    this.payload = this.payload || this.getByVersion('payload', version);
+    if (this.payload) {
+      await this.payload.setData(payload);
+      await this.validate();
     }
-    payload = {
-      ...JSON.parse(JSON.stringify(this.payload || {})),
-      ...JSON.parse(JSON.stringify(payload || {})),
-    };
-    switch (version) {
-      case KeyShares.VERSION_V2:
-        return new KeySharesPayloadV2(payload);
-      default:
-        throw Error(`Keyshares version is not supported: ${version}`);
+  }
+
+  /**
+   * Get entity by version.
+   * @param entity
+   * @param version
+   * @private
+   */
+  private getByVersion(entity: string, version: string): any {
+    if (!this.byVersion[entity]) {
+      throw Error(`"${entity}" is unknown entity`);
     }
+    if (!this.byVersion[entity][version]) {
+      throw Error(`"${entity}" is not supported in version of key shares: ${version}`);
+    }
+    return new this.byVersion[entity][version]();
   }
 
   /**
@@ -116,63 +115,33 @@ export class KeyShares {
    * @param data
    * @param version
    */
-  useData(data: any, version: string) {
-    data = {
-      ...JSON.parse(JSON.stringify(this.data || {})),
-      ...JSON.parse(JSON.stringify(data || {})),
-    };
-    if (_.isArray(data.shares)) {
-      data.shares = {
-        publicKeys: data.shares.map((share: { publicKey: string; }) => share.publicKey),
-        encryptedKeys: data.shares.map((share: { privateKey: string; }) => share.privateKey),
-      }
+  async useData(data: any, version: string): Promise<any> {
+    if (!data) {
+      return;
     }
-    switch (version) {
-      case KeyShares.VERSION_V2:
-        return new KeySharesDataV2(data);
-      default:
-        throw Error(`Keyshares version is not supported: ${version}`);
+    this.data = this.data || this.getByVersion('data', version);
+    if (this.data) {
+      await this.data.setData(data);
+      await this.validate();
     }
   }
 
   /**
    * Validate everything
    */
-  async validate() {
+  async validate(): Promise<any> {
     // Validate classes and structures
     await validateOrReject(this).catch(errors => {
-      throw Error(`Keyshares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
+      throw Error(`Key shares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
     });
 
     // Validate data and payload
-    await this.validateData();
-    await this.validatePayload();
+    await this.payload?.validate();
+    await this.data?.validate();
   }
 
   /**
-   * Validate payload
-   */
-  async validatePayload() {
-    try {
-      await this.payload?.validate();
-    } catch (errors: any) {
-      throw Error(`Keyshares payload did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
-    }
-  }
-
-  /**
-   * Validate data
-   */
-  async validateData() {
-    try {
-      await this.data?.validate();
-    } catch (errors: any) {
-      throw Error(`Keyshares data did not pass validation. Errors: ${errors.message || errors.stack || errors.trace || String(errors)}`);
-    }
-  }
-
-  /**
-   * Stringify keyshare to be ready for saving in file.
+   * Stringify key shares to be ready for saving in file.
    */
   toString(): string {
     return JSON.stringify({
