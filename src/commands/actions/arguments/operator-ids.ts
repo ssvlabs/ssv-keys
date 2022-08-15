@@ -1,3 +1,5 @@
+const uniqueOperatorIds: any = {};
+
 export default {
   arg1: '-oid',
   arg2: '--operators-ids',
@@ -13,9 +15,16 @@ export default {
     ],
     options: {
       type: 'number',
-      message: 'Enter operator ID for operator',
+      message: 'Enter operator ID for {{index}} operator',
       validate: (operatorId: number): boolean | string => {
-        return !(Number.isInteger(operatorId) && operatorId > 0) ? 'Invalid operator ID format' : true;
+        if (uniqueOperatorIds[operatorId]) {
+          return 'This operator ID already used';
+        }
+        const returnValue = !(Number.isInteger(operatorId) && operatorId > 0) ? 'Invalid operator ID format' : true;
+        if (returnValue === true) {
+          uniqueOperatorIds[operatorId] = true;
+        }
+        return returnValue;
       }
     }
   }

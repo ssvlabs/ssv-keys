@@ -2,14 +2,28 @@ import atob from 'atob';
 import Web3 from 'web3';
 import { encode } from 'js-base64';
 import EthereumKeyStore from 'eth2-keystore-js';
+import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
 
+
+/**
+ * SSVKeys class provides high-level methods to easily work with entire flow:
+ *  - getting private key from keystore file using password
+ *  - creating shares threshold
+ *  - creating final shares
+ *  - building final payload which is ready to be used in web3 transaction
+ */
 export class SSVKeys {
   static SHARES_FORMAT_ABI = 'abi';
 
   protected web3Instances: any = {};
+  protected threshold: ISharesKeyPairs | undefined;
 
+  /**
+   * Getting instance of web3
+   * @param nodeUrl
+   */
   getWeb3(nodeUrl = process.env.NODE_URL || ''): Web3 {
     if (!this.web3Instances[nodeUrl]) {
       this.web3Instances[nodeUrl] = new Web3(String(nodeUrl || ''))
@@ -46,7 +60,8 @@ export class SSVKeys {
   async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
     try {
       const threshold: Threshold = new Threshold();
-      return threshold.create(privateKey, operators);
+      this.threshold = await threshold.create(privateKey, operators);
+      return this.threshold;
     } catch (error: any) {
       return error;
     }
@@ -76,13 +91,38 @@ export class SSVKeys {
   }
 
   /**
+   * Build shares from private key, operator IDs and public keys
+   * @param privateKey
+   * @param operatorIds
+   * @param operatorPublicKeys
+   */
+  async buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]> {
+    const threshold = await this.createThreshold(privateKey, operatorIds);
+    return this.encryptShares(operatorPublicKeys, threshold.shares);
+  }
+
+  /**
+   * Getting threshold if it has been created before.
+   */
+  getThreshold()  {
+    return this.threshold;
+  }
+
+  /**
+   * Getting public key of validator
+   */
+  getValidatorPublicKey(): string {
+    return this.getThreshold()?.validatorPublicKey || '';
+  }
+
+  /**
    * Encode with Web3 eth abi method any fields of shares array required for transaction.
    * @param encryptedShares
    * @param field
    */
-  abiEncode(encryptedShares: EncryptShare[], field: string): string[] {
-    return encryptedShares.map((share: EncryptShare) => {
-      const value = Object(share)[field];
+  abiEncode(encryptedShares: any[], field?: string): string[] {
+    return encryptedShares.map(share => {
+      const value = field ? Object(share)[field] : share;
       if (String(value).startsWith('0x')) {
         return value;
       }
@@ -91,24 +131,16 @@ export class SSVKeys {
   }
 
   /**
-   * Having keystore private key build final transaction payload for list of operators IDs from contract.
-   *
-   * Example:
-   *
-   *    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreFile(keystoreFilePath, keystorePassword);
-   *    const encryptedShares = await ssvKeys.encryptShares(...);
-   *    await ssvKeys.buildPayload(...)
-   *
+   * Build payload from encrypted shares, validator public key and operator IDs
    * @param validatorPublicKey
    * @param operatorsIds
    * @param encryptedShares
    * @param ssvAmount
    */
-  async buildPayload(validatorPublicKey: string,
-                     operatorsIds: number[],
-                     encryptedShares: EncryptShare[],
-                     ssvAmount: number | string
-  ): Promise<any[]> {
+  buildPayload(validatorPublicKey: string,
+               operatorsIds: number[],
+               encryptedShares: EncryptShare[],
+               ssvAmount: string | number): any {
     const sharePublicKeys: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
     const sharePrivateKeys: string[] = this.abiEncode(encryptedShares, 'privateKey');
     return [
@@ -117,6 +149,36 @@ export class SSVKeys {
       sharePublicKeys,
       sharePrivateKeys,
       ssvAmount,
+    ];
+  }
+
+  /**
+   * Build payload from keyshares file with operators and shares details inside.
+   * If ssv amount is not provided - it will be taken from keyshares file if exist there or set to 0.
+   * @param keyShares
+   * @param ssvAmount
+   */
+  buildPayloadFromKeyShares(keyShares: KeyShares, ssvAmount?: string | number): any {
+    const publicKeys = keyShares.data?.shares?.publicKeys || [];
+    const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
+    const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
+
+    if (publicKeys.length !== encryptedKeys.length
+      || publicKeys.length !== operatorPublicKeys.length
+      || encryptedKeys.length !== operatorPublicKeys.length
+      || !encryptedKeys.length
+      || !operatorPublicKeys.length
+      || !publicKeys.length
+    ) {
+      throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
+    }
+
+    return [
+      keyShares.data?.publicKey,
+      keyShares.data?.operatorIds?.join(',') || '',
+      publicKeys,
+      this.abiEncode(encryptedKeys),
+      ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     ];
   }
 }

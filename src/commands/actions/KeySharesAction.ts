@@ -28,7 +28,7 @@ export type EncryptedSharesResult = {
  * Command to build keyshares from user input.
  */
 export class KeySharesAction extends BaseAction {
-  static get options(): any {
+  static override get options(): any {
     return {
       action: 'key-shares',
       shortAction: 'ksh',
@@ -47,7 +47,7 @@ export class KeySharesAction extends BaseAction {
   /**
    * Decrypt and return private key.
    */
-  async execute(): Promise<any> {
+  override async execute(): Promise<any> {
     const {
       keystore,
       password,
@@ -90,19 +90,19 @@ export class KeySharesAction extends BaseAction {
         },
       },
       payload: {
-        explained: {
-          validatorPublicKey: payload[0],
-          operatorIds: payload[1],
-          sharePublicKeys: payload[2],
-          sharePrivateKey: payload[3],
-          ssvAmount: payload[4],
+        readable: {
+          validatorPublicKey: payload[KeyShares.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
+          operatorIds: payload[KeyShares.PAYLOAD_INDEX_OPERATOR_IDS],
+          sharePublicKeys: payload[KeyShares.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
+          sharePrivateKey: payload[KeyShares.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
+          ssvAmount: payload[KeyShares.PAYLOAD_INDEX_SSV_AMOUNT],
         },
         raw: payload.join(','),
       },
     };
 
     const keySharesFile = await KeyShares.fromData(keySharesData);
-    const keySharesFilePath = await getFilePath('keyshares', outputFolder);
+    const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());
     await writeFile(keySharesFilePath, keySharesFile.toString());
     return `\nKey distribution successful! Find your key shares file at ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;
   }

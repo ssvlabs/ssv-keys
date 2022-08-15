@@ -2,6 +2,21 @@ import prompts from 'prompts';
 import { ArgumentParser, SubParser } from 'argparse';
 import { BaseAction } from './actions/BaseAction';
 
+const ordinalSuffixOf = (i: number): string => {
+  const j = i % 10,
+        k = i % 100;
+  if (j == 1 && k != 11) {
+    return i + "st";
+  }
+  if (j == 2 && k != 12) {
+    return i + "nd";
+  }
+  if (j == 3 && k != 13) {
+    return i + "rd";
+  }
+  return i + "th";
+};
+
 export class BaseCommand extends ArgumentParser {
   /**
    * List of all supported command actions.
@@ -104,7 +119,11 @@ export class BaseCommand extends ArgumentParser {
       const extraOptions = { onSubmit: promptOptions.onSubmit };
 
       for (let i = 1; i <= repeats; i++) {
-        promptOptions.message = repeats > 1 ? `${message}: ${i} from ${repeats}` : message;
+        if (repeats > 1) {
+          promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(i)}`);
+        } else {
+          promptOptions.message = message;
+        }
         const response = await prompts(promptOptions, extraOptions);
         this.assertRequired(argument, response[promptOptions.name]);
         multi[promptOptions.name] = multi[promptOptions.name] || [];
@@ -127,7 +146,11 @@ export class BaseCommand extends ArgumentParser {
             }
             const extraArgumentMessage = extraArgumentPromptOptions.message;
             const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
-            extraArgumentPromptOptions.message = `${extraArgumentMessage}: ${i} from ${repeats}`;
+            if (repeats > 1) {
+              extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(i)}`);
+            } else {
+              extraArgumentPromptOptions.message = message;
+            }
 
             // Prompt extra argument
             const response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);

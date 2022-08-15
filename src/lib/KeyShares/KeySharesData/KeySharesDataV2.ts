@@ -9,7 +9,6 @@ import {
   ValidateNested, IsOptional
 } from 'class-validator';
 import bls from '../../BLS';
-import { EncryptShare } from '../../Encryption/Encryption';
 import { operatorValidator } from '../../../commands/actions/validators/operator';
 
 const web3 = new Web3();
@@ -29,9 +28,9 @@ export interface ISharesV2 {
 }
 
 export interface IKeySharesParamsV2 {
-  operators: IOperatorV2[],
-  shares: ISharesV2,
-  publicKey: string,
+  operators?: IOperatorV2[],
+  shares?: ISharesV2,
+  publicKey?: string,
 }
 
 // ---------------------------------------------------------------
@@ -55,30 +54,6 @@ export class KeySharesKeysV2 {
     this.publicKeys = publicKeys;
     this.encryptedKeys = encryptedKeys;
   }
-
-  /**
-   * Build encrypted shares that can be used for encryption flow.
-   * @param operatorPublicKeys
-   */
-  toEncryptedShares(operatorPublicKeys: string[]): EncryptShare[] {
-    if (this.publicKeys.length !== this.encryptedKeys.length
-      || this.publicKeys.length !== operatorPublicKeys.length
-      || this.encryptedKeys.length !== operatorPublicKeys.length) {
-      throw Error('Operator public keys and shares public/encrypted keys length does not match.');
-    }
-    const encryptedShares: EncryptShare[] = [];
-    for (let i = 0; i < operatorPublicKeys.length; i += 1) {
-      const operatorPublicKey = operatorPublicKeys[i];
-      const privateKey = this.encryptedKeys[i];
-      const publicKey = this.publicKeys[i];
-      encryptedShares.push({
-        operatorPublicKey,
-        privateKey,
-        publicKey,
-      });
-    }
-    return encryptedShares;
-  }
 }
 
 export class OperatorV2 {
@@ -98,21 +73,27 @@ export class OperatorV2 {
 export class KeySharesDataV2 {
   @IsString()
   @Length(98, 98)
-  public publicKey: string;
+  public publicKey?: string;
 
   @ValidateNested()
-  public operators: OperatorV2[];
+  public operators?: OperatorV2[];
 
   @IsOptional()
   @ValidateNested()
   public shares?: KeySharesKeysV2 | null;
 
   constructor(data: IKeySharesParamsV2) {
-    this.publicKey = data.publicKey;
-    this.operators = data.operators.map(
-      (operator) => new OperatorV2(operator.id, operator.publicKey)
-    );
-    this.shares = new KeySharesKeysV2(data.shares.publicKeys, data.shares.encryptedKeys);
+    if (data.publicKey) {
+      this.publicKey = data.publicKey;
+    }
+    if (data.operators) {
+      this.operators = data.operators.map(
+        (operator) => new OperatorV2(operator.id, operator.publicKey)
+      );
+    }
+    if (data.shares) {
+      this.shares = new KeySharesKeysV2(data.shares.publicKeys, data.shares.encryptedKeys);
+    }
   }
 
   /**
@@ -132,14 +113,20 @@ export class KeySharesDataV2 {
   /**
    * Get the list of operators IDs.
    */
-  get operatorIds(): number[] {
+  get operatorIds(): number[] | null {
+    if (!this.operators?.length) {
+      return null;
+    }
     return this.operators.map(operator => operator.id);
   }
 
   /**
    * Get the list of operators public keys.
    */
-  get operatorPublicKeys(): string[] {
+  get operatorPublicKeys(): string[] | null {
+    if (!this.operators?.length) {
+      return null;
+    }
     return this.operators.map(operator => operator.publicKey);
   }
 
@@ -147,6 +134,9 @@ export class KeySharesDataV2 {
    * Try to BLS deserialize validator public key.
    */
   async validateValidatorPublicKey(): Promise<any> {
+    if (!this.publicKey) {
+      return;
+    }
     try {
       bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
     } catch (e) {
@@ -203,9 +193,9 @@ export class KeySharesDataV2 {
     if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
       return;
     }
-    if (this.operatorIds.length !== this.sharesEncryptedKeys.length
-      || this.operatorIds.length !== this.sharesPublicKeys.length
-      || this.operatorIds.length !== this.operatorPublicKeys.length) {
+    if (this.operatorIds?.length !== this.sharesEncryptedKeys.length
+      || this.operatorIds?.length !== this.sharesPublicKeys.length
+      || this.operatorIds?.length !== this.operatorPublicKeys?.length) {
       throw Error('Length of operators and shares should be equal.');
     }
   }
@@ -216,7 +206,7 @@ export class KeySharesDataV2 {
    * 2) when base 64 decoded - valid RSA public key
    */
   async validateOperatorsPublicKeys(): Promise<any> {
-    for (const operatorPublicKey of this.operatorPublicKeys) {
+    for (const operatorPublicKey of this.operatorPublicKeys || []) {
       const result = await operatorValidator(operatorPublicKey);
       if (result !== true) {
         throw Error(String(result));

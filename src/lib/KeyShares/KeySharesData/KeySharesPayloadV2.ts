@@ -5,7 +5,7 @@ import { IsString, IsObject } from 'class-validator';
 // ---------------------------------------------------------------
 
 export interface IKeySharesPayloadV2 {
-  explained?: any,
+  readable?: any,
   raw?: string
 }
 
@@ -15,14 +15,14 @@ export interface IKeySharesPayloadV2 {
 
 export class KeySharesPayloadV2 {
   @IsObject()
-  public explained: any = {};
+  public readable: any = {};
 
   @IsString()
   public raw = '';
 
 
   constructor(data: IKeySharesPayloadV2) {
-    this.explained = data.explained || {};
+    this.readable = data.readable || {};
     this.raw = data.raw || '';
   }
 

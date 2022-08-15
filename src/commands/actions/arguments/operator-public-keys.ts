@@ -1,5 +1,7 @@
 import { operatorValidator } from '../validators/operator';
 
+const uniqueOperators: any = {};
+
 export default {
   arg1: '-ok',
   arg2: '--operators-keys',
@@ -13,8 +15,17 @@ export default {
     repeat: 4,
     options: {
       type: 'text',
-      message: 'Enter operator key for operator',
-      validate: operatorValidator
+      message: 'Enter operator key for {{index}} operator',
+      validate: async (value: string) => {
+        if (uniqueOperators[value]) {
+          return 'This operator already used';
+        }
+        const returnValue = await operatorValidator(value);
+        if (returnValue === true) {
+          uniqueOperators[value] = true;
+        }
+        return returnValue;
+      }
     }
   }
 };
