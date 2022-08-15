@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-// import { SSVKeys, KeyShares } from 'ssv-keys';
-import { SSVKeys, KeyShares } from '../../src/main';
+import { SSVKeys, KeyShares } from 'ssv-keys';
 
 const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
