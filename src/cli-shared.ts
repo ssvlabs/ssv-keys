@@ -18,7 +18,7 @@ export default async function main(interactive: boolean): Promise<any> {
   const message = await FigletMessage(messageText);
   if (message) {
     console.log(' ----------------------------------------------------------------------');
-    console.log(` ${message || messageText}`);
+    console.log(`${message || messageText}`);
     console.log(' ----------------------------------------------------------------------');
     for (const str of String(pkg.description).match(/.{1,67}/g) || []) {
       console.log(` ${str}`);

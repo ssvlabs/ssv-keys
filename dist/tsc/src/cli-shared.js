@@ -20,7 +20,7 @@ function main(interactive) {
         const message = yield FigletMessage(messageText);
         if (message) {
             console.log(' ----------------------------------------------------------------------');
-            console.log(` ${message || messageText}`);
+            console.log(`${message || messageText}`);
             console.log(' ----------------------------------------------------------------------');
             for (const str of String(package_json_1.default.description).match(/.{1,67}/g) || []) {
                 console.log(` ${str}`);
