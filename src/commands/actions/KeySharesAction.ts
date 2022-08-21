@@ -1,6 +1,7 @@
 import colors from 'colors/safe';
 import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
+import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
 import ssvAmountArgument from './arguments/ssv-amount';
 import { KeyShares } from '../../lib/KeyShares/KeyShares';
@@ -49,7 +50,8 @@ export class KeySharesAction extends BaseAction {
     // Prepare data
     operatorKeys = operatorKeys.split(',');
     operatorIds = operatorIds.split(',').map((o: string) => parseInt(o, 10));
-    const keystoreData = await readFile(String(keystore).trim());
+    const keystoreFilePath = sanitizePath(String(keystore).trim());
+    const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
     const ssvKeys = new SSVKeys();
