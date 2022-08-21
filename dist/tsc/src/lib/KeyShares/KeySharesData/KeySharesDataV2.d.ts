@@ -38,4 +38,8 @@ export declare class KeySharesDataV2 implements IKeySharesData {
      * Validate all operators
      */
     validateOperators(): Promise<any>;
+    /**
+     * Do not allow to use duplicated operator IDs and public keys.
+     */
+    validateDuplicates(): Promise<void>;
 }
