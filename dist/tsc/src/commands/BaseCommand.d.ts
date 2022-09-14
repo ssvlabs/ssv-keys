@@ -32,6 +32,12 @@ export declare class BaseCommand extends ArgumentParser {
      */
     askAction(): Promise<string>;
     /**
+     * Pre-fill all values from arguments of executable
+     * @param selectedAction
+     * @param clearProcessArgs
+     */
+    prefillFromArguments(selectedAction: string, clearProcessArgs?: boolean): Record<string, any>;
+    /**
      * Interactively ask user for action to execute, and it's arguments.
      * Populate process.argv with user input.
      */
@@ -47,6 +53,12 @@ export declare class BaseCommand extends ArgumentParser {
      * @param userAction
      */
     getArgumentsForAction(userAction: string): any;
+    /**
+     * Make an argument name useful for the flow
+     * @param arg
+     * @protected
+     */
+    protected sanitizeArgument(arg: string): string;
     /**
      * Compile final prompt options
      * @param argument

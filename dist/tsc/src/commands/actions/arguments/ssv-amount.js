@@ -7,8 +7,7 @@ exports.default = {
     options: {
         type: String,
         required: true,
-        help: 'How much SSV would you like to deposit with the transaction(wei). ' +
-            'Calculated as: totalFee := allOperatorsFee + networkYearlyFees + liquidationCollateral. '
+        help: 'How much SSV would you like to deposit with the transaction(wei)?'
     },
     interactive: {
         options: {

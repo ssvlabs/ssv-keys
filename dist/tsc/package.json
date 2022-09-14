@@ -1,6 +1,6 @@
 {
     "name": "ssv-keys",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Library to work with keystore file, with private key to get shares and to build final payload for transaction in SSV Network.",
     "author": "SSV.Network",
     "repository": "https://github.com/bloxapp/ssv-keys",
@@ -68,6 +68,7 @@
     "dependencies": {
         "@types/figlet": "^1.5.4",
         "@types/underscore": "^1.11.4",
+        "@types/yargs": "^17.0.12",
         "argparse": "^2.0.1",
         "assert": "^2.0.0",
         "atob": "^2.1.2",
@@ -87,11 +88,12 @@
         "minimist": "^1.2.6",
         "moment": "^2.29.3",
         "node-jsencrypt": "^1.0.0",
-        "prompts": "^2.4.2",
+        "prompts": "https://github.com/meshin-blox/prompts.git",
         "scrypt-js": "^3.0.1",
         "stream": "^0.0.2",
         "underscore": "^1.13.4",
-        "web3": "1.7.3"
+        "web3": "1.7.3",
+        "yargs": "^17.5.1"
     },
     "licenses": [
         {
