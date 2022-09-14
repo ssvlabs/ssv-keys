@@ -38,6 +38,14 @@ export declare class BaseCommand extends ArgumentParser {
      */
     prefillFromArguments(selectedAction: string, clearProcessArgs?: boolean): Record<string, any>;
     /**
+     * Pre-fill prompts from array data on specific index
+     * @param dataIndex
+     * @param argument
+     * @param promptOptions
+     * @param preFilledValues
+     */
+    prefillFromArrayData(dataIndex: number, argument: any, promptOptions: any, preFilledValues: Record<string, any>): void;
+    /**
      * Interactively ask user for action to execute, and it's arguments.
      * Populate process.argv with user input.
      */

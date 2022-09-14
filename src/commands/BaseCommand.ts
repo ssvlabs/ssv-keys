@@ -126,6 +126,28 @@ export class BaseCommand extends ArgumentParser {
   }
 
   /**
+   * Pre-fill prompts from array data on specific index
+   * @param dataIndex
+   * @param argument
+   * @param promptOptions
+   * @param preFilledValues
+   */
+  prefillFromArrayData(dataIndex: number, argument: any, promptOptions: any, preFilledValues: Record<string, any>) {
+    let preFilledValue = preFilledValues[promptOptions.name].split(',')[dataIndex];
+    if (argument.interactive.options.type === 'number') {
+      preFilledValue = parseFloat(preFilledValue);
+      if (String(preFilledValue).endsWith('.0')) {
+        preFilledValue = parseInt(String(preFilledValue), 10);
+      }
+    }
+    const override = {
+      ...preFilledValues,
+      [promptOptions.name]: preFilledValue
+    };
+    prompts.override(override);
+  }
+
+  /**
    * Interactively ask user for action to execute, and it's arguments.
    * Populate process.argv with user input.
    */
@@ -152,18 +174,7 @@ export class BaseCommand extends ArgumentParser {
         if (repeats > 1) {
           // Build pre-filled value for parent repeat
           if (preFilledValues[promptOptions.name]) {
-            let preFilledValue = preFilledValues[promptOptions.name].split(',')[i];
-            if (argument.interactive.options.type === 'number') {
-              preFilledValue = parseFloat(preFilledValue);
-              if (String(preFilledValue).endsWith('.0')) {
-                preFilledValue = parseInt(String(preFilledValue), 10);
-              }
-            }
-            const override = {
-              ...preFilledValues,
-              [promptOptions.name]: preFilledValue
-            };
-            prompts.override(override);
+            this.prefillFromArrayData(i, argument, promptOptions, preFilledValues);
           }
           promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
         } else {
@@ -194,18 +205,7 @@ export class BaseCommand extends ArgumentParser {
             if (repeats > 1) {
               // Build pre-filled value for child repeat
               if (preFilledValues[extraArgumentPromptOptions.name]) {
-                let preFilledValue = preFilledValues[extraArgumentPromptOptions.name].split(',')[i];
-                if (extraArgument.interactive.options.type === 'number') {
-                  preFilledValue = parseFloat(preFilledValue);
-                  if (String(preFilledValue).endsWith('.0')) {
-                    preFilledValue = parseInt(String(preFilledValue), 10);
-                  }
-                }
-                const override = {
-                  ...preFilledValues,
-                  [extraArgumentPromptOptions.name]: preFilledValue,
-                };
-                prompts.override(override);
+                this.prefillFromArrayData(i, extraArgument, extraArgumentPromptOptions, preFilledValues);
               }
               extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
             } else {
