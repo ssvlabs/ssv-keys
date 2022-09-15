@@ -72,11 +72,5 @@ export declare class BaseCommand extends ArgumentParser {
      * @param argument
      */
     getPromptOptions(argument: any): any;
-    /**
-     * If argument is required but value didn't provide by user - exit process with error code.
-     * @param argument
-     * @param value
-     */
-    assertRequired(argument: any, value: any): void;
     execute(): Promise<void>;
 }

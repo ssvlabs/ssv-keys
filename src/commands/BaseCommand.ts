@@ -180,8 +180,14 @@ export class BaseCommand extends ArgumentParser {
         } else {
           promptOptions.message = message;
         }
-        const response = await prompts(promptOptions, extraOptions);
-        this.assertRequired(argument, response[promptOptions.name]);
+        let response: Record<string, any> = {};
+        response = await prompts(promptOptions, extraOptions);
+        while (argument.options?.required && !response[promptOptions.name]) {
+          if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+            process.exit(1);
+          }
+          response = await prompts(promptOptions, extraOptions);
+        }
         multi[promptOptions.name] = multi[promptOptions.name] || [];
         multi[promptOptions.name].push(response[promptOptions.name]);
 
@@ -213,8 +219,14 @@ export class BaseCommand extends ArgumentParser {
             }
 
             // Prompt extra argument
-            const response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
-            this.assertRequired(extraArgument, response[extraArgumentPromptOptions.name]);
+            let response: Record<string, any> = {};
+            response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
+            while (extraArgumentPromptOptions.options?.required && !response[extraArgumentPromptOptions.name]) {
+              if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                process.exit(1);
+              }
+              response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
+            }
             multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
             multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
             processedArguments[extraArgumentPromptOptions.name] = processedArguments[extraArgumentPromptOptions.name] || 0;
@@ -280,17 +292,6 @@ export class BaseCommand extends ArgumentParser {
       message,
       onSubmit: argument.interactive.onSubmit || undefined,
     };
-  }
-
-  /**
-   * If argument is required but value didn't provide by user - exit process with error code.
-   * @param argument
-   * @param value
-   */
-  assertRequired(argument: any, value: any) {
-    if (argument.options.required && !value) {
-      process.exit(1);
-    }
   }
 
   async execute(): Promise<void> {

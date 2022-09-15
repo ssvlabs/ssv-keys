@@ -13,6 +13,9 @@ exports.default = {
         options: {
             type: 'text',
             validate: (value) => {
+                if (!String(value).trim().length) {
+                    return 'Invalid ssv amount';
+                }
                 return (0, big_numbers_1.bigNumberValidator)(value, 'Invalid ssv amount');
             }
         }

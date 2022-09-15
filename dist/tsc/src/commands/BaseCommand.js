@@ -133,7 +133,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b;
+        var _a, _b, _c, _d;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
@@ -163,14 +163,20 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     else {
                         promptOptions.message = message;
                     }
-                    const response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    this.assertRequired(argument, response[promptOptions.name]);
+                    let response = {};
+                    response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+                    while (((_b = argument.options) === null || _b === void 0 ? void 0 : _b.required) && !response[promptOptions.name]) {
+                        if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                            process.exit(1);
+                        }
+                        response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+                    }
                     multi[promptOptions.name] = multi[promptOptions.name] || [];
                     multi[promptOptions.name].push(response[promptOptions.name]);
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
-                    if (repeats > 1 && ((_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeatWith)) {
+                    if (repeats > 1 && ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.repeatWith)) {
                         for (const extraArgumentName of argument.interactive.repeatWith) {
                             const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
                             if (!extraArgument) {
@@ -195,8 +201,14 @@ class BaseCommand extends argparse_1.ArgumentParser {
                                 extraArgumentPromptOptions.message = message;
                             }
                             // Prompt extra argument
-                            const response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                            this.assertRequired(extraArgument, response[extraArgumentPromptOptions.name]);
+                            let response = {};
+                            response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                            while (((_d = extraArgumentPromptOptions.options) === null || _d === void 0 ? void 0 : _d.required) && !response[extraArgumentPromptOptions.name]) {
+                                if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                                    process.exit(1);
+                                }
+                                response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                            }
                             multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
                             multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
                             processedArguments[extraArgumentPromptOptions.name] = processedArguments[extraArgumentPromptOptions.name] || 0;
@@ -254,16 +266,6 @@ class BaseCommand extends argparse_1.ArgumentParser {
         var _a, _b, _c, _d, _e;
         const message = ((_b = (_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.options) === null || _b === void 0 ? void 0 : _b.message) || argument.options.help;
         return Object.assign(Object.assign({}, ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.options) || {}), { type: ((_e = (_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.options) === null || _e === void 0 ? void 0 : _e.type) || 'text', name: this.sanitizeArgument(argument.arg2), message, onSubmit: argument.interactive.onSubmit || undefined });
-    }
-    /**
-     * If argument is required but value didn't provide by user - exit process with error code.
-     * @param argument
-     * @param value
-     */
-    assertRequired(argument, value) {
-        if (argument.options.required && !value) {
-            process.exit(1);
-        }
     }
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
