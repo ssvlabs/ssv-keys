@@ -32,6 +32,20 @@ export declare class BaseCommand extends ArgumentParser {
      */
     askAction(): Promise<string>;
     /**
+     * Pre-fill all values from arguments of executable
+     * @param selectedAction
+     * @param clearProcessArgs
+     */
+    prefillFromArguments(selectedAction: string, clearProcessArgs?: boolean): Record<string, any>;
+    /**
+     * Pre-fill prompts from array data on specific index
+     * @param dataIndex
+     * @param argument
+     * @param promptOptions
+     * @param preFilledValues
+     */
+    prefillFromArrayData(dataIndex: number, argument: any, promptOptions: any, preFilledValues: Record<string, any>): void;
+    /**
      * Interactively ask user for action to execute, and it's arguments.
      * Populate process.argv with user input.
      */
@@ -48,15 +62,15 @@ export declare class BaseCommand extends ArgumentParser {
      */
     getArgumentsForAction(userAction: string): any;
     /**
+     * Make an argument name useful for the flow
+     * @param arg
+     * @protected
+     */
+    protected sanitizeArgument(arg: string): string;
+    /**
      * Compile final prompt options
      * @param argument
      */
     getPromptOptions(argument: any): any;
-    /**
-     * If argument is required but value didn't provide by user - exit process with error code.
-     * @param argument
-     * @param value
-     */
-    assertRequired(argument: any, value: any): void;
     execute(): Promise<void>;
 }

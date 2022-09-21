@@ -8,6 +8,12 @@ import bls from '../../BLS';
 import { IKeySharesData } from './IKeySharesData';
 import { OperatorDataV2 } from './OperatorDataV2';
 import { KeySharesKeysV2 } from './KeySharesKeysV2';
+import {
+  DuplicatedOperatorIdError,
+  DuplicatedOperatorPublicKeyError,
+  OperatorsWithSharesCountsMismatchError
+} from './exceptions/operator';
+import { BLSDeserializeError } from './exceptions/bls';
 
 
 export class KeySharesDataV2 implements IKeySharesData {
@@ -55,6 +61,7 @@ export class KeySharesDataV2 implements IKeySharesData {
    * Do all possible validations.
    */
   async validate(): Promise<any> {
+    await this.validateDuplicates();
     await bls.init(bls.BLS12_381);
     await this.validateCounts();
     await this.shares?.validate();
@@ -106,7 +113,10 @@ export class KeySharesDataV2 implements IKeySharesData {
     try {
       await bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
     } catch (e) {
-      throw Error(`Can not BLS deserialize validator public key: ${this.publicKey}. Error: ${String(e)}`);
+      throw new BLSDeserializeError(
+        this.publicKey,
+        `Can not BLS deserialize validator public key`
+      );
     }
   }
 
@@ -120,7 +130,11 @@ export class KeySharesDataV2 implements IKeySharesData {
     if (this.operatorIds.length !== this.sharesEncryptedKeys.length
       || this.operatorIds.length !== this.sharesPublicKeys.length
       || this.operatorIds.length !== this.operatorPublicKeys.length) {
-      throw Error('Length of operators and shares should be equal.');
+      throw new OperatorsWithSharesCountsMismatchError(
+        this.operators || [],
+        this.shares,
+        'Length of operators and shares should be equal.',
+      );
     }
   }
 
@@ -130,6 +144,31 @@ export class KeySharesDataV2 implements IKeySharesData {
   async validateOperators(): Promise<any> {
     for (const operator of this.operators || []) {
       await operator.validate();
+    }
+  }
+
+  /**
+   * Do not allow to use duplicated operator IDs and public keys.
+   */
+  async validateDuplicates() {
+    const operatorIds: any = {},
+      operatorPublicKeys: any = {};
+    for (const operator of this.operators || []) {
+      if (operatorIds[String(operator.id)] === true) {
+        throw new DuplicatedOperatorIdError(
+          operator,
+          `Operator ID already exists`
+        );
+      }
+      operatorIds[String(operator.id)] = true;
+
+      if (operatorPublicKeys[String(operator.publicKey)] === true) {
+        throw new DuplicatedOperatorPublicKeyError(
+          operator,
+          `Operator public key already exists`
+        );
+      }
+      operatorPublicKeys[String(operator.publicKey)] = true;
     }
   }
 }

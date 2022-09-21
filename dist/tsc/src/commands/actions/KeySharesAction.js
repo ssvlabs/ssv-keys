@@ -5,6 +5,7 @@ const tslib_1 = require("tslib");
 const safe_1 = tslib_1.__importDefault(require("colors/safe"));
 const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
+const file_1 = require("./validators/file");
 const keystore_1 = tslib_1.__importDefault(require("./arguments/keystore"));
 const ssv_amount_1 = tslib_1.__importDefault(require("./arguments/ssv-amount"));
 const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
@@ -42,7 +43,8 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             // Prepare data
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));
-            const keystoreData = yield (0, helpers_1.readFile)(String(keystore).trim());
+            const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
+            const keystoreData = yield (0, helpers_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
             const ssvKeys = new SSVKeys_1.SSVKeys();
             const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);

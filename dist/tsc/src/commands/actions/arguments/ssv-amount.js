@@ -7,13 +7,15 @@ exports.default = {
     options: {
         type: String,
         required: true,
-        help: 'How much SSV would you like to deposit with the transaction(wei). ' +
-            'Calculated as: totalFee := allOperatorsFee + networkYearlyFees + liquidationCollateral. '
+        help: 'How much SSV would you like to deposit with the transaction(wei)?'
     },
     interactive: {
         options: {
             type: 'text',
             validate: (value) => {
+                if (!String(value).trim().length) {
+                    return 'Invalid ssv amount';
+                }
                 return (0, big_numbers_1.bigNumberValidator)(value, 'Invalid ssv amount');
             }
         }

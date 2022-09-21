@@ -7,15 +7,15 @@ const argparse_1 = require("argparse");
 const ordinalSuffixOf = (i) => {
     const j = i % 10, k = i % 100;
     if (j == 1 && k != 11) {
-        return i + "st";
+        return i + 'st';
     }
     if (j == 2 && k != 12) {
-        return i + "nd";
+        return i + 'nd';
     }
     if (j == 3 && k != 13) {
-        return i + "rd";
+        return i + 'rd';
     }
-    return i + "th";
+    return i + 'th';
 };
 class BaseCommand extends argparse_1.ArgumentParser {
     /**
@@ -82,15 +82,63 @@ class BaseCommand extends argparse_1.ArgumentParser {
         });
     }
     /**
+     * Pre-fill all values from arguments of executable
+     * @param selectedAction
+     * @param clearProcessArgs
+     */
+    prefillFromArguments(selectedAction, clearProcessArgs) {
+        const actionArguments = this.getArgumentsForAction(selectedAction);
+        const parser = new argparse_1.ArgumentParser();
+        const [, args] = parser.parse_known_args();
+        const parsedArgs = {};
+        for (const arg of args) {
+            const argData = arg.split('=');
+            // Find short arg1 and replace with long arg2
+            for (const argument of actionArguments) {
+                if (argData[0] === argument.arg1) {
+                    argData[0] = argument.arg2;
+                    break;
+                }
+            }
+            const argumentName = this.sanitizeArgument(argData[0]);
+            parsedArgs[argumentName] = String(argData[1]).trim();
+        }
+        parsedArgs['action'] = selectedAction;
+        prompts_1.default.override(parsedArgs);
+        if (clearProcessArgs) {
+            process.argv = [process.argv[0], process.argv[1]];
+        }
+        return parsedArgs;
+    }
+    /**
+     * Pre-fill prompts from array data on specific index
+     * @param dataIndex
+     * @param argument
+     * @param promptOptions
+     * @param preFilledValues
+     */
+    prefillFromArrayData(dataIndex, argument, promptOptions, preFilledValues) {
+        let preFilledValue = preFilledValues[promptOptions.name].split(',')[dataIndex];
+        if (argument.interactive.options.type === 'number') {
+            preFilledValue = parseFloat(preFilledValue);
+            if (String(preFilledValue).endsWith('.0')) {
+                preFilledValue = parseInt(String(preFilledValue), 10);
+            }
+        }
+        const override = Object.assign(Object.assign({}, preFilledValues), { [promptOptions.name]: preFilledValue });
+        prompts_1.default.override(override);
+    }
+    /**
      * Interactively ask user for action to execute, and it's arguments.
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b;
+        var _a, _b, _c, _d;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
             selectedAction || process.exit(1);
+            const preFilledValues = this.prefillFromArguments(selectedAction, true);
             process.argv.push(selectedAction);
             const processedArguments = {};
             const actionArguments = this.getArgumentsForAction(selectedAction);
@@ -104,21 +152,31 @@ class BaseCommand extends argparse_1.ArgumentParser {
                 processedArguments[promptOptions.name] = true;
                 const message = promptOptions.message;
                 const extraOptions = { onSubmit: promptOptions.onSubmit };
-                for (let i = 1; i <= repeats; i++) {
+                for (let i = 0; i < repeats; i++) {
                     if (repeats > 1) {
-                        promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(i)}`);
+                        // Build pre-filled value for parent repeat
+                        if (preFilledValues[promptOptions.name]) {
+                            this.prefillFromArrayData(i, argument, promptOptions, preFilledValues);
+                        }
+                        promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
                     }
                     else {
                         promptOptions.message = message;
                     }
-                    const response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    this.assertRequired(argument, response[promptOptions.name]);
+                    let response = {};
+                    response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+                    while (((_b = argument.options) === null || _b === void 0 ? void 0 : _b.required) && !response[promptOptions.name]) {
+                        if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                            process.exit(1);
+                        }
+                        response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+                    }
                     multi[promptOptions.name] = multi[promptOptions.name] || [];
                     multi[promptOptions.name].push(response[promptOptions.name]);
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
-                    if (repeats > 1 && ((_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeatWith)) {
+                    if (repeats > 1 && ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.repeatWith)) {
                         for (const extraArgumentName of argument.interactive.repeatWith) {
                             const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
                             if (!extraArgument) {
@@ -133,14 +191,24 @@ class BaseCommand extends argparse_1.ArgumentParser {
                             const extraArgumentMessage = extraArgumentPromptOptions.message;
                             const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
                             if (repeats > 1) {
-                                extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(i)}`);
+                                // Build pre-filled value for child repeat
+                                if (preFilledValues[extraArgumentPromptOptions.name]) {
+                                    this.prefillFromArrayData(i, extraArgument, extraArgumentPromptOptions, preFilledValues);
+                                }
+                                extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
                             }
                             else {
                                 extraArgumentPromptOptions.message = message;
                             }
                             // Prompt extra argument
-                            const response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                            this.assertRequired(extraArgument, response[extraArgumentPromptOptions.name]);
+                            let response = {};
+                            response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                            while (((_d = extraArgumentPromptOptions.options) === null || _d === void 0 ? void 0 : _d.required) && !response[extraArgumentPromptOptions.name]) {
+                                if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                                    process.exit(1);
+                                }
+                                response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                            }
                             multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
                             multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
                             processedArguments[extraArgumentPromptOptions.name] = processedArguments[extraArgumentPromptOptions.name] || 0;
@@ -149,7 +217,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     }
                 }
                 for (const argumentName of Object.keys(multi)) {
-                    process.argv.push(`${argumentName}=${multi[argumentName].join(',')}`);
+                    process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
                 }
             }
         });
@@ -180,25 +248,24 @@ class BaseCommand extends argparse_1.ArgumentParser {
         return null;
     }
     /**
+     * Make an argument name useful for the flow
+     * @param arg
+     * @protected
+     */
+    sanitizeArgument(arg) {
+        return arg
+            .replace(/^(--)/gi, '')
+            .replace(/(-)/gi, '_')
+            .trim();
+    }
+    /**
      * Compile final prompt options
      * @param argument
      */
     getPromptOptions(argument) {
         var _a, _b, _c, _d, _e;
         const message = ((_b = (_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.options) === null || _b === void 0 ? void 0 : _b.message) || argument.options.help;
-        return Object.assign(Object.assign({}, ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.options) || {}), { type: ((_e = (_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.options) === null || _e === void 0 ? void 0 : _e.type) || 'text', name: argument.arg2, message, onSubmit: argument.interactive.onSubmit || undefined });
-    }
-    /**
-     * If argument is required but value didn't provide by user - exit process with error code.
-     * @param argument
-     * @param value
-     */
-    assertRequired(argument, value) {
-        var _a, _b;
-        if (argument.options.required && !value) {
-            console.error(`Parameter is required: ${((_b = (_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.options) === null || _b === void 0 ? void 0 : _b.message) || argument.options.help}`);
-            process.exit(1);
-        }
+        return Object.assign(Object.assign({}, ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.options) || {}), { type: ((_e = (_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.options) === null || _e === void 0 ? void 0 : _e.type) || 'text', name: this.sanitizeArgument(argument.arg2), message, onSubmit: argument.interactive.onSubmit || undefined });
     }
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
