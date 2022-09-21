@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict';
-import { SSVKeysCommand } from './commands/SSVKeysCommand';
+import main from './cli-shared';
 
-const command = new SSVKeysCommand();
-command.execute().then(console.debug).catch(console.error);
+void main(false);

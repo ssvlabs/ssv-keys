@@ -8,8 +8,8 @@ export interface Shares {
     ids: any[],
 }
 
-export const sharesSignatures = async (privateKey: string, message: string, threshold: boolean): Promise<Shares> => {
-     return new Threshold().create(privateKey).then((response) => {
+export const sharesSignatures = async (privateKey: string, operators: number[], message: string, threshold: boolean): Promise<Shares> => {
+     return new Threshold().create(privateKey, operators).then((response) => {
         const validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
         const validatorPublicKey = validatorPrivateKey.getPublicKey();
         const signatures: any[] = [];

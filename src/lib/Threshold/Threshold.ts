@@ -13,32 +13,64 @@ export interface ISharesKeyPairs {
     shares: IShares[]
 }
 
+export class ThresholdInvalidOperatorsLengthError extends Error {
+  public operators: number[];
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  constructor(operators: number[], message: string) {
+    super(message);
+    this.operators = operators;
+  }
+}
+
+export class ThresholdInvalidOperatorIdError extends Error {
+  public operator: any;
+
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  constructor(operator: any, message: string) {
+    super(message);
+    this.operator = operator;
+  }
+}
+
 /**
- * Building threshold for
- * Example of usage:
- *
- *  const threshold: Threshold = new Threshold();
- *  threshold.create('45df68ab75bb7ed1063b7615298e81c1ca1b0c362ef2e93937b7bba9d7c43a94').then((s) => {
- *    console.log(s);
- *  });
+ * Building threshold for list of operator IDs
  */
 class Threshold {
     protected validatorPublicKey: any;
     protected validatorPrivateKey: any;
-    protected validatorShares: Array<any> = [];
-
-    static get DEFAULT_SHARES_NUMBER(): number {
-      return 4;
-    }
+    protected shares: Array<any> = [];
 
     static get DEFAULT_THRESHOLD_NUMBER(): number {
       return 3;
     }
 
     /**
+     * Receives list of operators IDs.
+     *  len(operator IDs) := 3 * F + 1
+     *
+     * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    async create(privateKey: string, sharesNumber=Threshold.DEFAULT_SHARES_NUMBER, thresholdNumber=Threshold.DEFAULT_THRESHOLD_NUMBER): Promise<ISharesKeyPairs> {
+    async create(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
+        // Validation
+        operators.map(operator => {
+          if (!Number.isInteger(operator)) {
+            throw new ThresholdInvalidOperatorIdError(
+              operator,
+              `Operator must be integer. Got: ${String(operator)}`
+            );
+          }
+        });
+
+        const F = (operators.length - 1) / 3;
+        if (!Number.isInteger(F)) {
+          throw new ThresholdInvalidOperatorsLengthError(
+            operators,
+            'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ'
+          );
+        }
+
         return new Promise((resolve, reject) => {
             try {
                 bls.init(bls.BLS12_381)
@@ -54,7 +86,7 @@ class Threshold {
                         mpk.push(this.validatorPublicKey);
 
                         // Construct poly
-                        for (let i = 1; i < thresholdNumber; i += 1) {
+                        for (let i = 1; i < operators.length - F; i += 1) {
                             const sk: SecretKeyType = new bls.SecretKey();
                             sk.setByCSPRNG();
                             msk.push(sk);
@@ -63,16 +95,16 @@ class Threshold {
                         }
 
                         // Evaluate shares - starting from 1 because 0 is master key
-                        for (let i = 1; i <= sharesNumber; i += 1) {
+                        for (const operatorId of operators) {
                             const id = new bls.Id();
-                            id.setInt(i);
+                            id.setInt(operatorId);
                             const shareSecretKey = new bls.SecretKey();
                             shareSecretKey.share(msk, id);
 
                             const sharePublicKey = new bls.PublicKey();
                             sharePublicKey.share(mpk, id);
 
-                            this.validatorShares.push({
+                            this.shares.push({
                                 privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
                                 publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
                                 id,
@@ -82,7 +114,7 @@ class Threshold {
                         const response: ISharesKeyPairs = {
                             validatorPrivateKey: `0x${this.validatorPrivateKey.serializeToHexStr()}`,
                             validatorPublicKey: `0x${this.validatorPublicKey.serializeToHexStr()}`,
-                            shares: this.validatorShares,
+                            shares: this.shares,
                         };
                         resolve(response);
                     });

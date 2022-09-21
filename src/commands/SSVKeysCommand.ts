@@ -1,7 +1,5 @@
 import { BaseCommand } from './BaseCommand';
-// import { PrivateKeyAction } from './actions/PrivateKeyAction';
-import { BuildSharesAction } from './actions/BuildSharesAction';
-import { BuildTransactionAction } from './actions/BuildTransactionAction';
+import { KeySharesAction } from './actions/KeySharesAction';
 
 export class SSVKeysCommand extends BaseCommand {
   /**
@@ -9,16 +7,16 @@ export class SSVKeysCommand extends BaseCommand {
    * @protected
    */
   protected actions = [
-    // PrivateKeyAction,
-    BuildSharesAction,
-    BuildTransactionAction,
+    KeySharesAction,
   ]
+
+  protected useAction = 'key-shares';
 
   /**
    * Add more specific help.
    */
   constructor(interactive= false, options = undefined) {
     super(interactive, options);
-    this.subParserOptions.help += 'Example: "ssv-keys decrypt --help" or "ssv-keys dec --help"'
+    this.subParserOptions.help += 'Example: "ssv-keys key-shares --help" or "ssv-keys ksh --help"'
   }
 }

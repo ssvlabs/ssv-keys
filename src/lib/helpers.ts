@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import * as os from 'os';
-import { promises as fsp } from 'fs';
 import moment from 'moment';
+import { promises as fsp } from 'fs';
 
 /**
  * Read file contents and return json data from it.
@@ -26,26 +25,24 @@ export const writeFile = async (filePath: string, data: string): Promise<any> =>
   });
 }
 
-const ssvDir = `${path.join(os.homedir(), '.ssv', 'keys')}${path.sep}`;
-
 /**
  * Create SSV keys directory to work in scope of in user home directory
  */
-export const createSSVDir = async (): Promise<any> => {
-  return fsp.mkdir(ssvDir, { recursive: true });
+export const createSSVDir = async (outputFolder: string): Promise<any> => {
+  return fsp.mkdir(outputFolder, { recursive: true });
 }
 
 /**
  * Get SSV keys directory to work in scope of in user home directory.
- * Create it before, if it doesn't exists.
+ * Create it before, if it doesn't exist.
  */
-export const getSSVDir = async (): Promise<string> => {
-  if (!fs.existsSync(ssvDir)) {
-    await createSSVDir();
+export const getSSVDir = async (outputFolder: string): Promise<string> => {
+  if (!fs.existsSync(outputFolder)) {
+    await createSSVDir(outputFolder);
   }
-  return ssvDir;
+  return outputFolder.endsWith(path.sep) ? outputFolder : `${outputFolder}${path.sep}`;
 }
 
-export const getFilePath = async (name: string, withTime = true): Promise<string> => {
-  return `${await getSSVDir()}${name}${withTime ? '-' + moment().format('YYYYMMDD_hhmmss') : ''}.json`;
+export const getFilePath = async (name: string, outputFolder: string, withTime = true): Promise<string> => {
+  return `${await getSSVDir(outputFolder)}${name}${withTime ? '-' + moment().format('YYYYMMDD_hhmmss') : ''}.json`;
 }
