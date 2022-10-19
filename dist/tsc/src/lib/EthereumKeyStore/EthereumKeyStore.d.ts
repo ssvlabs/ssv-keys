@@ -55,7 +55,7 @@ declare class EthereumKeyStore {
      * Receive key store data from string or parsed JSON
      * @param keyStoreData
      */
-    constructor(keyStoreData: string | never);
+    constructor(keyStoreData: any);
     getPublicKey(): string;
     /**
      * Decrypt private key using user password

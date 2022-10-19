@@ -38,12 +38,6 @@ class SSVKeys {
     getPrivateKeyFromKeystoreData(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                try {
-                    // Try to json parse the data before
-                    data = JSON.parse(data);
-                    // eslint-disable-next-line no-empty
-                }
-                catch (e) { }
                 const keyStore = new EthereumKeyStore_1.default(data);
                 return yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
             }

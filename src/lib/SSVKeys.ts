@@ -39,12 +39,6 @@ export class SSVKeys {
    */
   async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
     try {
-      try {
-        // Try to json parse the data before
-        data = JSON.parse(data);
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
       const keyStore = new EthereumKeyStore(data);
       return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
     } catch (error: any) {

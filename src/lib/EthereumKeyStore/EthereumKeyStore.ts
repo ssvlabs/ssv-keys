@@ -58,11 +58,15 @@ class EthereumKeyStore {
    * Receive key store data from string or parsed JSON
    * @param keyStoreData
    */
-  constructor(keyStoreData: string | never) {
+  constructor(keyStoreData: any) {
     if (!keyStoreData) {
       throw new Error('Key store data should be JSON or string');
     }
-    this.keyStoreData = JSON.parse(String(keyStoreData));
+    if (typeof keyStoreData === 'string') {
+      this.keyStoreData = JSON.parse(keyStoreData);
+    } else {
+      this.keyStoreData = keyStoreData;
+    }
     if (!this.keyStoreData.version) {
       throw new Error('Invalid keystore file');
     }
