@@ -5,8 +5,8 @@ const tslib_1 = require("tslib");
 const atob_1 = tslib_1.__importDefault(require("atob"));
 const web3_1 = tslib_1.__importDefault(require("web3"));
 const js_base64_1 = require("js-base64");
-const eth2_keystore_js_1 = tslib_1.__importDefault(require("eth2-keystore-js"));
 const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
+const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
@@ -44,7 +44,7 @@ class SSVKeys {
                     // eslint-disable-next-line no-empty
                 }
                 catch (e) { }
-                const keyStore = new eth2_keystore_js_1.default(data);
+                const keyStore = new EthereumKeyStore_1.default(data);
                 return yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
             }
             catch (error) {

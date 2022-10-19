@@ -1,9 +1,9 @@
 import atob from 'atob';
 import Web3 from 'web3';
 import { encode } from 'js-base64';
-import EthereumKeyStore from 'eth2-keystore-js';
 import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
+import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
 
 
