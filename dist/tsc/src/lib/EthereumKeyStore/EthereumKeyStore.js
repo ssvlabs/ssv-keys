@@ -97,7 +97,7 @@ class EthereumKeyStore {
             let kdfParams;
             if (json.crypto.kdf.function === 'scrypt') {
                 kdfParams = json.crypto.kdf.params;
-                derivedKey = yield (0, scrypt_js_1.scrypt)(Buffer.from(password), Buffer.from(kdfParams.salt, 'hex'), kdfParams.n, kdfParams.r, kdfParams.p, kdfParams.dklen);
+                derivedKey = (0, scrypt_js_1.syncScrypt)(Buffer.from(password), Buffer.from(kdfParams.salt, 'hex'), kdfParams.n, kdfParams.r, kdfParams.p, kdfParams.dklen);
             }
             else if (json.crypto.kdf.function === 'pbkdf2') {
                 kdfParams = json.crypto.kdf.params;

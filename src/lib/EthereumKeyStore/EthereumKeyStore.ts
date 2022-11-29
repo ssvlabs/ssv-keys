@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { scrypt } from 'scrypt-js';
+import { syncScrypt } from 'scrypt-js';
 import Wallet from 'ethereumjs-wallet';
 import { keccak256, sha256 } from 'ethereumjs-util';
 
@@ -133,7 +133,7 @@ class EthereumKeyStore {
     let kdfParams: any;
     if (json.crypto.kdf.function === 'scrypt') {
       kdfParams = json.crypto.kdf.params;
-      derivedKey = await scrypt(
+      derivedKey = syncScrypt(
         Buffer.from(password),
         Buffer.from(kdfParams.salt, 'hex'),
         kdfParams.n,
