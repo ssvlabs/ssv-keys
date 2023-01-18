@@ -26,11 +26,11 @@ export class OperatorDataV3 implements IOperatorData {
   /**
    * Validate operator ID and public key
    */
-  async validate(): Promise<any> {
+  validate(): void {
     if (!Number.isInteger(this.id)) {
       throw Error('Operator ID should be integer');
     }
-    const result = await operatorValidator(this.publicKey || '');
+    const result = operatorValidator(this.publicKey || '');
     if (result !== true) {
       throw Error(String(result));
     }

@@ -2,7 +2,7 @@ import { decode } from 'js-base64';
 import JSEncrypt from '../../../lib/JSEncrypt';
 import { InvalidOperatorKeyException } from '../../../lib/Encryption/Encryption';
 
-export const operatorValidator = async (operator: string): Promise<string | boolean> => {
+export const operatorValidator = (operator: string): string | boolean => {
   try {
     const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
     const decodedOperator = decode(operator);

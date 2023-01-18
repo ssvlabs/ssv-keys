@@ -1,6 +1,8 @@
 import _ from 'underscore';
+
 import { IsString, IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
+import { EncryptShare } from '../../Encryption/Encryption';
 
 /**
  * Key Shares Payload v2.
@@ -18,6 +20,16 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   @IsOptional()
   @IsString()
   public raw?: string | null = null;
+
+  build(data: any): any {
+    return [
+      data.validatorPublicKey,
+      data.operatorsIds.join(','),
+      data.encryptedShares.map((share: EncryptShare) => share.publicKey),
+      data.encryptedShares.map((share: EncryptShare) => share.privateKey),
+      data.ssvAmount,
+    ];
+  }
 
   /**
    * Setting data in array or object format or cleaning it up.
@@ -70,7 +82,7 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
     };
   }
 
-  async validate(): Promise<any> {
+  validate(): any {
     // Find out how final payload can be validated.
   }
 }

@@ -60,13 +60,13 @@ export class KeySharesDataV3 implements IKeySharesData {
   /**
    * Do all possible validations.
    */
-  async validate(): Promise<any> {
-    await this.validateDuplicates();
-    await bls.init(bls.BLS12_381);
-    await this.validateCounts();
-    await this.shares?.validate();
-    await this.validatePublicKey();
-    await this.validateOperators();
+  validate(): void {
+    this.validateDuplicates();
+    bls.init(bls.BLS12_381);
+    this.validateCounts();
+    this.shares?.validate();
+    this.validatePublicKey();
+    this.validateOperators();
   }
 
   /**
@@ -106,12 +106,12 @@ export class KeySharesDataV3 implements IKeySharesData {
   /**
    * Try to BLS deserialize validator public key.
    */
-  async validatePublicKey(): Promise<any> {
+  validatePublicKey(): void {
     if (!this.publicKey) {
       return;
     }
     try {
-      await bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
+      bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
     } catch (e) {
       throw new BLSDeserializeError(
         this.publicKey,
@@ -123,7 +123,7 @@ export class KeySharesDataV3 implements IKeySharesData {
   /**
    * Check that counts are consistent.
    */
-  async validateCounts(): Promise<any> {
+  validateCounts(): void {
     if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
       return;
     }
@@ -141,16 +141,16 @@ export class KeySharesDataV3 implements IKeySharesData {
   /**
    * Validate all operators
    */
-  async validateOperators(): Promise<any> {
+  validateOperators(): void {
     for (const operator of this.operators || []) {
-      await operator.validate();
+      operator.validate();
     }
   }
 
   /**
    * Do not allow to use duplicated operator IDs and public keys.
    */
-  async validateDuplicates() {
+  validateDuplicates(): void {
     const operatorIds: any = {},
       operatorPublicKeys: any = {};
     for (const operator of this.operators || []) {

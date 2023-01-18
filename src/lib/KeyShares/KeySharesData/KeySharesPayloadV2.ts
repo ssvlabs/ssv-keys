@@ -1,6 +1,9 @@
 import _ from 'underscore';
+import * as helpers from '../../helpers';
+
 import { IsString, IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
+import { EncryptShare } from '../../Encryption/Encryption';
 
 /**
  * Key Shares Payload v2.
@@ -19,6 +22,16 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
   @IsOptional()
   @IsString()
   public raw?: string | null = null;
+
+  build(data: any): any {
+    return [
+      data.validatorPublicKey,
+      data.operatorsIds.join(','),
+      data.encryptedShares.map((share: EncryptShare) => share.publicKey),
+      helpers.abiEncode(data.encryptedShares, 'privateKey'),
+      data.ssvAmount,
+    ];
+  }
 
   /**
    * Setting data in array or object format or cleaning it up.

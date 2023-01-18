@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
-  validateOrReject
+  // validateOrReject
 } from 'class-validator';
 
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
@@ -42,59 +42,59 @@ export class KeyShares {
 
   @IsOptional()
   @ValidateNested()
-  public data?: KeySharesData | null;
+  public data: KeySharesData;
 
   @IsOptional()
   @ValidateNested()
-  public payload?: KeySharesPayload | null;
+  public payload: KeySharesPayload;
 
   /**
    * @param version
    */
   constructor({ version }: { version: string }) {
     this.version = version;
+    this.data = this.getByVersion('data', version);
+    this.payload = this.getByVersion('payload', version);
   }
 
-  async init(data: string | any): Promise<void> {
+  init(data: string | any): KeyShares {
     // Parse json
     if (typeof data === 'string') {
       data = JSON.parse(data);
     }
-    await this.setData(data.data);
-    await this.setPayload(data.payload);
+    this.setData(data.data);
+    return this;
   }
 
   /**
    * Set final payload for web3 transaction and validate it.
    * @param payload
    */
-  async setPayload(payload: any): Promise<KeyShares> {
+  generateContractPayload(data: any): void {
+    /*
+    validatorPublicKey: string,
+    operatorsIds: number[],
+    encryptedShares: EncryptShare[],
+    ssvAmount: string | number): Promise<KeyShares> {
+      this.payload = this.payload || this.getByVersion('payload', this.version);
+      if (this.payload) {
+        await this.payload.setData(payload);
+        await this.validate();
+      }
+
     await this.usePayload(payload, this.version);
     return this;
+    */
+    const payloadData = this.payload.build(data);
+    this.payload?.setData(payloadData);
   }
 
   /**
    * Set new data and validate it.
    * @param data
    */
-  async setData(data: any): Promise<KeyShares> {
-    await this.useData(data, this.version);
-    return this;
-  }
-
-  /**
-   * Instantiate key shares from raw data as string or object.
-   * @param data
-   */
-  async fromData(data: string | any): Promise<KeyShares> {
-    // Parse json
-    if (typeof data === 'string') {
-      data = JSON.parse(data);
-    }
-    const keyShares = new KeyShares({ version: data.version });
-    await keyShares.setData(data.data);
-    await keyShares.setPayload(data.payload);
-    return keyShares;
+  setData(data: any) {
+    this.useData(data);
   }
 
   /**
@@ -102,11 +102,10 @@ export class KeyShares {
    * @param payload
    * @param version
    */
-  async usePayload(payload: any, version: string): Promise<any> {
-    this.payload = this.payload || this.getByVersion('payload', version);
+  usePayload(payload: any): void {
     if (this.payload) {
-      await this.payload.setData(payload);
-      await this.validate();
+      this.payload.setData(payload);
+      this.validate();
     }
   }
 
@@ -131,29 +130,21 @@ export class KeyShares {
    * @param data
    * @param version
    */
-  async useData(data: any, version: string): Promise<any> {
+  useData(data: any): void {
     if (!data) {
       return;
     }
-    this.data = this.data || this.getByVersion('data', version);
-    if (this.data) {
-      await this.data.setData(data);
-      await this.validate();
-    }
+    this.data.setData(data);
+    this.validate();
   }
 
   /**
    * Validate everything
    */
-  async validate(): Promise<any> {
-    // Validate classes and structures
-    await validateOrReject(this).catch(errors => {
-      throw Error(`Key shares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
-    });
-
+  validate(): void {
     // Validate data and payload
-    await this.payload?.validate();
-    await this.data?.validate();
+    this.payload?.validate();
+    this.data?.validate();
   }
 
   /**

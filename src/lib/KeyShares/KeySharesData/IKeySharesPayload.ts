@@ -10,6 +10,12 @@ export interface IKeySharesPayload {
   raw?: string | null;
 
   /**
+   * Build payload data.
+   * @param data
+   */
+  build(data: any): any;
+
+  /**
    * Set payload data.
    * @param data
    */
