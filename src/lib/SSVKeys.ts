@@ -20,6 +20,12 @@ export class SSVKeys {
   protected web3Instances: any = {};
   protected threshold: ISharesKeyPairs | undefined;
 
+  public keySharesInstance: KeyShares;
+
+  constructor(version: string) {
+    this.keySharesInstance = new KeyShares({ version });
+  }
+
   /**
    * Getting instance of web3
    * @param nodeUrl
@@ -136,7 +142,7 @@ export class SSVKeys {
                encryptedShares: EncryptShare[],
                ssvAmount: string | number): any {
     const sharePublicKeys: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
-    const sharePrivateKeys: string[] = this.abiEncode(encryptedShares, 'privateKey');
+    const sharePrivateKeys: string[] = encryptedShares.map(item => item['privateKey']); // this.abiEncode(encryptedShares, 'privateKey');
     return [
       validatorPublicKey,
       operatorsIds.join(','),
@@ -171,7 +177,7 @@ export class SSVKeys {
       keyShares.data?.publicKey,
       keyShares.data?.operatorIds?.join(',') || '',
       publicKeys,
-      this.abiEncode(encryptedKeys),
+      encryptedKeys, // this.abiEncode(encryptedKeys),
       ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     ];
   }

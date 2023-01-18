@@ -6,25 +6,32 @@ import {
   ValidateNested,
   validateOrReject
 } from 'class-validator';
+
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
 import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
 
-export type KeySharesData = KeySharesDataV2;
-export type KeySharesPayload = KeySharesPayloadV2;
+import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
+import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
+
+export type KeySharesData = KeySharesDataV3;
+export type KeySharesPayload = KeySharesPayloadV3;
 
 /**
  * Key shares file data interface.
  */
 export class KeyShares {
   static VERSION_V2 = 'v2';
+  static VERSION_V3 = 'v3';
 
   // Versions of deeper structures
   private byVersion: any = {
     'payload': {
       [KeyShares.VERSION_V2]: KeySharesPayloadV2,
+      [KeyShares.VERSION_V3]: KeySharesPayloadV3,
     },
     'data': {
       [KeyShares.VERSION_V2]: KeySharesDataV2,
+      [KeyShares.VERSION_V3]: KeySharesDataV3,
     }
   }
 
@@ -46,6 +53,15 @@ export class KeyShares {
    */
   constructor({ version }: { version: string }) {
     this.version = version;
+  }
+
+  async init(data: string | any): Promise<void> {
+    // Parse json
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    await this.setData(data.data);
+    await this.setPayload(data.payload);
   }
 
   /**
@@ -70,7 +86,7 @@ export class KeyShares {
    * Instantiate key shares from raw data as string or object.
    * @param data
    */
-  static async fromData(data: string | any): Promise<KeyShares> {
+  async fromData(data: string | any): Promise<KeyShares> {
     // Parse json
     if (typeof data === 'string') {
       data = JSON.parse(data);
