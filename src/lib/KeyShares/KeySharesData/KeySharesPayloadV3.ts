@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import * as ethers from 'ethers';
 
 import { IsString, IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
@@ -21,12 +22,44 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   @IsString()
   public raw?: string | null = null;
 
+  private decodeRSAShares(arr: string[]) {
+    return arr.map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
+  }
+
+  private sharesToBytes(publicKeys: string[], privateKeys: string[]): string {
+    const encryptedShares = this.decodeRSAShares(privateKeys);
+    const arrayPublicKeys = new Uint8Array([
+        ...ethers.utils.arrayify(publicKeys[0]),
+        ...ethers.utils.arrayify(publicKeys[1]),
+        ...ethers.utils.arrayify(publicKeys[2]),
+        ...ethers.utils.arrayify(publicKeys[3]),
+    ]);
+
+    const arrayEncryptedShares = new Uint8Array([
+        ...ethers.utils.arrayify(encryptedShares[0]),
+        ...ethers.utils.arrayify(encryptedShares[1]),
+        ...ethers.utils.arrayify(encryptedShares[2]),
+        ...ethers.utils.arrayify(encryptedShares[3]),
+    ]);
+
+    // public keys hex encoded
+    const pkHex = ethers.utils.hexlify(arrayPublicKeys);
+    // length of the public keys (hex), hex encoded
+    const pkHexLength = String(pkHex.length.toString(16)).padStart(4, '0');
+
+    // join arrays
+    const pkPsBytes = Buffer.concat([arrayPublicKeys, arrayEncryptedShares]);
+
+    // add length of the public keys at the beginning
+    // this is the variable that is sent to the contract as bytes, prefixed with 0x
+    return pkHexLength + pkPsBytes.toString('hex');
+  }
+
   build(data: any): any {
     return [
       data.validatorPublicKey,
       data.operatorsIds.join(','),
-      data.encryptedShares.map((share: EncryptShare) => share.publicKey),
-      data.encryptedShares.map((share: EncryptShare) => share.privateKey),
+      this.sharesToBytes(data.encryptedShares.map((share: EncryptShare) => share.publicKey), data.encryptedShares.map((share: EncryptShare) => share.privateKey)),
       data.ssvAmount,
     ];
   }
