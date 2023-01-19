@@ -51,7 +51,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Keystore password is required' });
   }
 
-  const ssvKeys = new SSVKeys();
+  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
   const shares = await ssvKeys.buildShares(privateKey, operator_ids, operator_keys);
   const payload = await ssvKeys.buildPayload(
@@ -61,7 +61,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     123456789,
   );
 
-  await KeyShares.fromData({
+  const keyShares = ssvKeys.keySharesInstance.init({
     version: 'v2',
     data: {
       operators: operator_keys.map((operator, index) => ({
@@ -72,10 +72,9 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       shares,
     },
     payload,
-  }).then((keyShares) => {
-    console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
-    res.json(JSON.parse(keyShares.toString()));
   });
+  console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
+  res.json(JSON.parse(keyShares.toString()));
 });
 
 app.listen(port, () => {

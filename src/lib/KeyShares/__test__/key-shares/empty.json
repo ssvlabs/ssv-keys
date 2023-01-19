@@ -1,6 +1,10 @@
 {
   "version": "v2",
-  "data": null,
+  "data": {
+    "publicKey": null,
+    "operators": null,
+    "shares": null
+  },
   "payload": {
     "readable": null,
     "raw": null
