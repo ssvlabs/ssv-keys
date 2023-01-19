@@ -28,19 +28,8 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
 
   private sharesToBytes(publicKeys: string[], privateKeys: string[]): string {
     const encryptedShares = this.decodeRSAShares(privateKeys);
-    const arrayPublicKeys = new Uint8Array([
-        ...ethers.utils.arrayify(publicKeys[0]),
-        ...ethers.utils.arrayify(publicKeys[1]),
-        ...ethers.utils.arrayify(publicKeys[2]),
-        ...ethers.utils.arrayify(publicKeys[3]),
-    ]);
-
-    const arrayEncryptedShares = new Uint8Array([
-        ...ethers.utils.arrayify(encryptedShares[0]),
-        ...ethers.utils.arrayify(encryptedShares[1]),
-        ...ethers.utils.arrayify(encryptedShares[2]),
-        ...ethers.utils.arrayify(encryptedShares[3]),
-    ]);
+    const arrayPublicKeys = new Uint8Array(publicKeys.map(pk => [...ethers.utils.arrayify(pk)]).flat());
+    const arrayEncryptedShares = new Uint8Array(encryptedShares.map(sh => [...ethers.utils.arrayify(sh)]).flat());
 
     // public keys hex encoded
     const pkHex = ethers.utils.hexlify(arrayPublicKeys);
@@ -52,7 +41,7 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
 
     // add length of the public keys at the beginning
     // this is the variable that is sent to the contract as bytes, prefixed with 0x
-    return pkHexLength + pkPsBytes.toString('hex');
+    return `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
   }
 
   build(data: any): any {
