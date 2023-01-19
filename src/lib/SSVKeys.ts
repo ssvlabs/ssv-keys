@@ -4,7 +4,7 @@ import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
-import * as helpers from './helpers';
+import { web3 } from './helpers/web3.helper';
 
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
@@ -78,8 +78,8 @@ export class SSVKeys {
       return encryptedShares.map((share: EncryptShare) => {
         share.operatorPublicKey = encode(share.operatorPublicKey);
         if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-          share.operatorPublicKey = helpers.web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
-          share.privateKey = helpers.web3.eth.abi.encodeParameter('string', share.privateKey);
+          share.operatorPublicKey = web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
+          share.privateKey = web3.eth.abi.encodeParameter('string', share.privateKey);
         }
         return share;
       });

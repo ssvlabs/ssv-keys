@@ -8,7 +8,7 @@ const KeyShares_1 = require("./KeyShares/KeyShares");
 const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
 const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
-const helpers = tslib_1.__importStar(require("./helpers"));
+const web3_helper_1 = require("./helpers/web3.helper");
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -73,8 +73,8 @@ class SSVKeys {
                 return encryptedShares.map((share) => {
                     share.operatorPublicKey = (0, js_base64_1.encode)(share.operatorPublicKey);
                     if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-                        share.operatorPublicKey = helpers.web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
-                        share.privateKey = helpers.web3.eth.abi.encodeParameter('string', share.privateKey);
+                        share.operatorPublicKey = web3_helper_1.web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
+                        share.privateKey = web3_helper_1.web3.eth.abi.encodeParameter('string', share.privateKey);
                     }
                     return share;
                 });

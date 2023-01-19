@@ -1,5 +1,5 @@
 import EthereumKeyStore from 'eth2-keystore-js';
-import { readFile } from '../../../lib/helpers';
+import { readFile } from '../../../lib/helpers/file.helper';
 
 
 export class KeystorePasswordValidator {

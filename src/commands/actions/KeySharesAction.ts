@@ -7,7 +7,7 @@ import ssvAmountArgument from './arguments/ssv-amount';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
 import outputFolderArgument from './arguments/output-folder';
-import { getFilePath, readFile, writeFile } from '../../lib/helpers';
+import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
 
 /**

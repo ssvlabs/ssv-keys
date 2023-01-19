@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import * as helpers from '../../helpers';
+import { abiEncode } from '../../helpers/web3.helper';
 
 import { IsString, IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
@@ -28,7 +28,7 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
       data.validatorPublicKey,
       data.operatorsIds.join(','),
       data.encryptedShares.map((share: EncryptShare) => share.publicKey),
-      helpers.abiEncode(data.encryptedShares, 'privateKey'),
+      abiEncode(data.encryptedShares, 'privateKey'),
       data.ssvAmount,
     ];
   }

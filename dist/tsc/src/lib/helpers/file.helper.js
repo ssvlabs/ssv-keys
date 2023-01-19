@@ -1,13 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.abiEncode = exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = exports.web3 = void 0;
+exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
 const moment_1 = tslib_1.__importDefault(require("moment"));
-const web3_1 = tslib_1.__importDefault(require("web3"));
 const fs_2 = require("fs");
-exports.web3 = new web3_1.default();
 /**
  * Read file contents and return json data from it.
  * @param filePath
@@ -52,19 +50,4 @@ const getFilePath = (name, outputFolder, withTime = true) => tslib_1.__awaiter(v
     return `${yield (0, exports.getSSVDir)(outputFolder)}${name}${withTime ? '-' + (0, moment_1.default)().format('YYYYMMDD_hhmmss') : ''}.json`;
 });
 exports.getFilePath = getFilePath;
-/**
- * Encode with Web3 eth abi method any fields of shares array required for transaction.
- * @param encryptedShares
- * @param field
- */
-const abiEncode = (encryptedShares, field) => {
-    return encryptedShares.map(share => {
-        const value = field ? Object(share)[field] : share;
-        if (String(value).startsWith('0x')) {
-            return value;
-        }
-        return exports.web3.eth.abi.encodeParameter('string', value);
-    });
-};
-exports.abiEncode = abiEncode;
-//# sourceMappingURL=helpers.js.map
+//# sourceMappingURL=file.helper.js.map

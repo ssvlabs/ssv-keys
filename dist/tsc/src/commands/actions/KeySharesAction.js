@@ -11,7 +11,7 @@ const ssv_amount_1 = tslib_1.__importDefault(require("./arguments/ssv-amount"));
 const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids"));
 const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
-const helpers_1 = require("../../lib/helpers");
+const file_helper_1 = require("../../lib/helpers/file.helper");
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
 /**
  * Command to build keyshares from user input.
@@ -43,7 +43,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
-            const keystoreData = yield (0, helpers_1.readFile)(keystoreFilePath);
+            const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
             const ssvKeys = new SSVKeys_1.SSVKeys(SSVKeys_1.SSVKeys.VERSION.V2);
             const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
@@ -61,8 +61,8 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             });
             // Build payload and save it in key shares file
             yield ssvKeys.buildPayload(ssvKeys.getValidatorPublicKey(), operatorIds, shares, ssvAmount);
-            const keySharesFilePath = yield (0, helpers_1.getFilePath)('keyshares', outputFolder.trim());
-            yield (0, helpers_1.writeFile)(keySharesFilePath, ssvKeys.keySharesInstance.toString());
+            const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
+            yield (0, file_helper_1.writeFile)(keySharesFilePath, ssvKeys.keySharesInstance.toString());
             return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;
         });
     }

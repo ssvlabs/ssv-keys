@@ -1,10 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
-import Web3 from 'web3';
 import { promises as fsp } from 'fs';
-
-export const web3 = new Web3();
 
 /**
  * Read file contents and return json data from it.
@@ -48,19 +45,4 @@ export const getSSVDir = async (outputFolder: string): Promise<string> => {
 
 export const getFilePath = async (name: string, outputFolder: string, withTime = true): Promise<string> => {
   return `${await getSSVDir(outputFolder)}${name}${withTime ? '-' + moment().format('YYYYMMDD_hhmmss') : ''}.json`;
-}
-
-/**
- * Encode with Web3 eth abi method any fields of shares array required for transaction.
- * @param encryptedShares
- * @param field
- */
-export const abiEncode = (encryptedShares: any[], field?: string): string[] => {
-  return encryptedShares.map(share => {
-    const value = field ? Object(share)[field] : share;
-    if (String(value).startsWith('0x')) {
-      return value;
-    }
-    return web3.eth.abi.encodeParameter('string', value);
-  });
 }
