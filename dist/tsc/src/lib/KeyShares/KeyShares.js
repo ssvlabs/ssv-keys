@@ -89,7 +89,11 @@ class KeyShares {
         // Validate data and payload
         (_a = this.payload) === null || _a === void 0 ? void 0 : _a.validate();
         (_b = this.data) === null || _b === void 0 ? void 0 : _b.validate();
-        return (0, class_validator_1.validateOrReject)(this).then().catch((err) => { throw Error(err); });
+        (0, class_validator_1.validateOrReject)(this)
+            .then()
+            .catch((err) => {
+            throw Error(err);
+        });
     }
     /**
      * Stringify key shares to be ready for saving in file.

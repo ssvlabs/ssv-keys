@@ -119,7 +119,11 @@ export class KeyShares {
     // Validate data and payload
     this.payload?.validate();
     this.data?.validate();
-    return validateOrReject(this).then().catch((err) => { throw Error(err) });
+    validateOrReject(this)
+      .then()
+      .catch((err) => {
+        throw Error(err)
+      });
   }
 
   /**
