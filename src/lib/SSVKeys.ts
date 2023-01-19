@@ -120,24 +120,15 @@ export class SSVKeys {
    * @param encryptedShares
    * @param ssvAmount
    */
-  buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): void {
+  buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
     this.keySharesInstance.generateContractPayload({
       validatorPublicKey,
       operatorsIds,
       encryptedShares,
       ssvAmount
     });
-    /*
-    const sharePublicKeys: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
-    const sharePrivateKeys: string[] = encryptedShares.map(item => item['privateKey']); // this.abiEncode(encryptedShares, 'privateKey');
-    return [
-      validatorPublicKey,
-      operatorsIds.join(','),
-      sharePublicKeys,
-      sharePrivateKeys,
-      ssvAmount,
-    ];
-    */
+
+    return this.keySharesInstance.payload;
   }
 
   /**
@@ -146,7 +137,7 @@ export class SSVKeys {
    * @param keyShares
    * @param ssvAmount
    */
-  buildPayloadFromKeyShares(keyShares: KeyShares, ssvAmount?: string | number): void {
+  buildPayloadFromKeyShares(keyShares: KeyShares, ssvAmount?: string | number): any {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
     const validatorPublicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
@@ -171,28 +162,6 @@ export class SSVKeys {
       ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     });
 
-    /*
-    const publicKeys = keyShares.data?.shares?.publicKeys || [];
-    const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
-    const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
-
-    if (publicKeys.length !== encryptedKeys.length
-      || publicKeys.length !== operatorPublicKeys.length
-      || encryptedKeys.length !== operatorPublicKeys.length
-      || !encryptedKeys.length
-      || !operatorPublicKeys.length
-      || !publicKeys.length
-    ) {
-      throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
-    }
-
-    return [
-      keyShares.data?.publicKey,
-      keyShares.data?.operatorIds?.join(',') || '',
-      publicKeys,
-      encryptedKeys, // this.abiEncode(encryptedKeys),
-      ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
-    ];
-    */
+    return this.keySharesInstance.payload;
   }
 }

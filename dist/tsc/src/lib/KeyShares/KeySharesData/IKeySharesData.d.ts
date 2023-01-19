@@ -5,5 +5,5 @@ export interface IKeySharesData {
     operators?: IOperatorData[] | null;
     shares?: IKeySharesKeys | null;
     setData(data: any): any;
-    validate(): Promise<any>;
+    validate(): void;
 }

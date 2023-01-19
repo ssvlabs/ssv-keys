@@ -2,14 +2,15 @@ import { IKeySharesPayload } from './IKeySharesPayload';
 /**
  * Key Shares Payload v2.
  */
-export declare class KeySharesPayloadV2 implements IKeySharesPayload {
+export declare class KeySharesPayloadV3 implements IKeySharesPayload {
     static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY: number;
     static PAYLOAD_INDEX_OPERATOR_IDS: number;
-    static PAYLOAD_INDEX_SHARE_PUBLIC_KEYS: number;
-    static PAYLOAD_INDEX_SHARE_PRIVATE_KEYS: number;
+    static PAYLOAD_INDEX_SHARES_KEYS: number;
     static PAYLOAD_INDEX_SSV_AMOUNT: number;
     readable?: any;
     raw?: string | null;
+    private decodeRSAShares;
+    private sharesToBytes;
     build(data: any): any;
     /**
      * Setting data in array or object format or cleaning it up.
@@ -26,5 +27,5 @@ export declare class KeySharesPayloadV2 implements IKeySharesPayload {
      * @param payload
      */
     toReadable(payload: any[]): any;
-    validate(): Promise<any>;
+    validate(): any;
 }

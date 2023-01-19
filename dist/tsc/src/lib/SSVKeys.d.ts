@@ -1,4 +1,3 @@
-import Web3 from 'web3';
 import { KeyShares } from './KeyShares/KeyShares';
 import { IShares, ISharesKeyPairs } from './Threshold';
 import { EncryptShare } from './Encryption/Encryption';
@@ -11,13 +10,15 @@ import { EncryptShare } from './Encryption/Encryption';
  */
 export declare class SSVKeys {
     static SHARES_FORMAT_ABI: string;
+    static VERSION: {
+        V2: string;
+        V3: string;
+    };
+    protected version: string;
     protected web3Instances: any;
     protected threshold: ISharesKeyPairs | undefined;
-    /**
-     * Getting instance of web3
-     * @param nodeUrl
-     */
-    getWeb3(nodeUrl?: string): Web3;
+    keySharesInstance: KeyShares;
+    constructor(ver: string);
     /**
      * Extract private key from keystore data using keystore password.
      * Generally can be used in browsers when the keystore data has been provided by browser.
@@ -53,12 +54,6 @@ export declare class SSVKeys {
      * Getting public key of validator
      */
     getValidatorPublicKey(): string;
-    /**
-     * Encode with Web3 eth abi method any fields of shares array required for transaction.
-     * @param encryptedShares
-     * @param field
-     */
-    abiEncode(encryptedShares: any[], field?: string): string[];
     /**
      * Build payload from encrypted shares, validator public key and operator IDs
      * @param validatorPublicKey

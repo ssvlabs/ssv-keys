@@ -1,3 +1,5 @@
+import Web3 from 'web3';
+export declare const web3: Web3;
 /**
  * Read file contents and return json data from it.
  * @param filePath
@@ -20,3 +22,9 @@ export declare const createSSVDir: (outputFolder: string) => Promise<any>;
  */
 export declare const getSSVDir: (outputFolder: string) => Promise<string>;
 export declare const getFilePath: (name: string, outputFolder: string, withTime?: boolean) => Promise<string>;
+/**
+ * Encode with Web3 eth abi method any fields of shares array required for transaction.
+ * @param encryptedShares
+ * @param field
+ */
+export declare const abiEncode: (encryptedShares: any[], field?: string) => string[];

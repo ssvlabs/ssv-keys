@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesPayloadV2 = void 0;
 const tslib_1 = require("tslib");
 const underscore_1 = tslib_1.__importDefault(require("underscore"));
+const helpers = tslib_1.__importStar(require("../../helpers"));
 const class_validator_1 = require("class-validator");
 /**
  * Key Shares Payload v2.
@@ -11,6 +12,15 @@ class KeySharesPayloadV2 {
     constructor() {
         this.readable = null;
         this.raw = null;
+    }
+    build(data) {
+        return [
+            data.validatorPublicKey,
+            data.operatorsIds.join(','),
+            data.encryptedShares.map((share) => share.publicKey),
+            helpers.abiEncode(data.encryptedShares, 'privateKey'),
+            data.ssvAmount,
+        ];
     }
     /**
      * Setting data in array or object format or cleaning it up.

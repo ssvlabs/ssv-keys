@@ -1,43 +1,40 @@
-import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
-import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
-export declare type KeySharesData = KeySharesDataV2;
-export declare type KeySharesPayload = KeySharesPayloadV2;
+import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
+import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
+export declare type KeySharesData = KeySharesDataV3;
+export declare type KeySharesPayload = KeySharesPayloadV3;
 /**
  * Key shares file data interface.
  */
 export declare class KeyShares {
     static VERSION_V2: string;
+    static VERSION_V3: string;
     private byVersion;
     version: string;
-    data?: KeySharesData | null;
-    payload?: KeySharesPayload | null;
+    data: KeySharesData;
+    payload: KeySharesPayload;
     /**
      * @param version
      */
     constructor({ version }: {
         version: string;
     });
+    init(data: string | any): KeyShares;
     /**
      * Set final payload for web3 transaction and validate it.
      * @param payload
      */
-    setPayload(payload: any): Promise<KeyShares>;
+    generateContractPayload(data: any): void;
     /**
      * Set new data and validate it.
      * @param data
      */
-    setData(data: any): Promise<KeyShares>;
-    /**
-     * Instantiate key shares from raw data as string or object.
-     * @param data
-     */
-    static fromData(data: string | any): Promise<KeyShares>;
+    setData(data: any): void;
     /**
      * Set payload as new or existing instance and update its internal data.
      * @param payload
      * @param version
      */
-    usePayload(payload: any, version: string): Promise<any>;
+    usePayload(payload: any): void;
     /**
      * Get entity by version.
      * @param entity
@@ -50,11 +47,11 @@ export declare class KeyShares {
      * @param data
      * @param version
      */
-    useData(data: any, version: string): Promise<any>;
+    useData(data: any): void;
     /**
      * Validate everything
      */
-    validate(): Promise<any>;
+    validate(): void;
     /**
      * Stringify key shares to be ready for saving in file.
      */
