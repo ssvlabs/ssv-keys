@@ -45,7 +45,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
-            const ssvKeys = new SSVKeys_1.SSVKeys(SSVKeys_1.SSVKeys.VERSION.V2);
+            const ssvKeys = new SSVKeys_1.SSVKeys(SSVKeys_1.SSVKeys.VERSION.V3);
             const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
             // Build shares from operator IDs and public keys
             const shares = yield ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);

@@ -19,7 +19,7 @@ const STEPS = {
 
 function UserFlow() {
   // Initialize SSVKeys SDK
-  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
 
   // States
   const [ssvAmount, ] = useState(Math.round(Math.random() * 100000000));

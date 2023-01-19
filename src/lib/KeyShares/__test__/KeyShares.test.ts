@@ -6,7 +6,7 @@ let ssvKeys: SSVKeys;
 
 describe('KeyShares', () => {
   beforeAll(async () => {
-    ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+    ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
   });
 
   it('Should create empty data with version', async () => {

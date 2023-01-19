@@ -53,7 +53,7 @@ export class KeySharesAction extends BaseAction {
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
-    const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+    const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
     const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
 
     // Build shares from operator IDs and public keys
