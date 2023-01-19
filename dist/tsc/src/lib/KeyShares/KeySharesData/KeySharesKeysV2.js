@@ -27,50 +27,44 @@ class KeySharesKeysV2 {
      * Validation of all data.
      */
     validate() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield this.validatePublicKeys();
-            yield this.validateEncryptedKeys();
-        });
+        this.validatePublicKeys();
+        this.validateEncryptedKeys();
     }
     /**
      * If shares encrypted keys are ABI encoded - try to decode them.
      */
     validateEncryptedKeys() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            let encryptedKeyWithError = '';
-            try {
-                (this.encryptedKeys || []).map(encryptedKey => {
-                    let key = encryptedKey;
-                    // If the key is ABI encoded - decode it.
-                    if (key.startsWith('0x')) {
-                        encryptedKeyWithError = key;
-                        key = web3.eth.abi.decodeParameter('string', encryptedKey);
-                    }
-                    // ABI decoded key then should be a valid base 64 string
-                    (0, js_base64_1.decode)(String(key));
-                });
-            }
-            catch (e) {
-                throw Error(`Can not ABI decode shares encrypted key: ${encryptedKeyWithError}. Error: ${String(e)}`);
-            }
-        });
+        let encryptedKeyWithError = '';
+        try {
+            (this.encryptedKeys || []).map(encryptedKey => {
+                let key = encryptedKey;
+                // If the key is ABI encoded - decode it.
+                if (key.startsWith('0x')) {
+                    encryptedKeyWithError = key;
+                    key = web3.eth.abi.decodeParameter('string', encryptedKey);
+                }
+                // ABI decoded key then should be a valid base 64 string
+                (0, js_base64_1.decode)(String(key));
+            });
+        }
+        catch (e) {
+            throw Error(`Can not ABI decode shares encrypted key: ${encryptedKeyWithError}. Error: ${String(e)}`);
+        }
     }
     /**
      * Try to BLS deserialize shares public keys.
      */
     validatePublicKeys() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            let publicKeyWithError = '';
-            try {
-                for (const publicKey of this.publicKeys || []) {
-                    publicKeyWithError = publicKey;
-                    yield BLS_1.default.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
-                }
+        let publicKeyWithError = '';
+        try {
+            for (const publicKey of this.publicKeys || []) {
+                publicKeyWithError = publicKey;
+                BLS_1.default.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
             }
-            catch (e) {
-                throw Error(`Can not BLS deserialize shares public key: ${publicKeyWithError}. Error: ${String(e)}`);
-            }
-        });
+        }
+        catch (e) {
+            throw Error(`Can not BLS deserialize shares public key: ${publicKeyWithError}. Error: ${String(e)}`);
+        }
     }
     /**
      * Validate that the data is the array of strings.

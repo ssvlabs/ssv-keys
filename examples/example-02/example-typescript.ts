@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-import { SSVKeys } from 'ssv-keys';
+import { SSVKeys } from '../../src/main';
 
 const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -19,7 +19,6 @@ async function main() {
   // 0. Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
-
   // 1. Save it with version only and with no any data.
   await fsp.writeFile(getKeySharesFilePath(1), ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
 
@@ -54,7 +53,6 @@ async function main() {
   );
   // await ssvKeys.keySharesInstance.setPayload(payload);
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
-
 
   // Build payload with a new ssv amount and from saved on previous steps key shares data
   const keySharesWithoutPayload = await ssvKeys.keySharesInstance.init(String(await fsp.readFile(getKeySharesFilePath(3))));

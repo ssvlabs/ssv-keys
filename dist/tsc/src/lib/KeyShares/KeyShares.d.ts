@@ -30,12 +30,6 @@ export declare class KeyShares {
      */
     setData(data: any): void;
     /**
-     * Set payload as new or existing instance and update its internal data.
-     * @param payload
-     * @param version
-     */
-    usePayload(payload: any): void;
-    /**
      * Get entity by version.
      * @param entity
      * @param version
@@ -51,7 +45,7 @@ export declare class KeyShares {
     /**
      * Validate everything
      */
-    validate(): void;
+    validate(): any;
     /**
      * Stringify key shares to be ready for saving in file.
      */

@@ -10,15 +10,15 @@ export declare class KeySharesKeysV3 implements IKeySharesKeys {
     /**
      * Validation of all data.
      */
-    validate(): Promise<void>;
+    validate(): void;
     /**
      * If shares encrypted keys are ABI encoded - try to decode them.
      */
-    validateEncryptedKeys(): Promise<any>;
+    validateEncryptedKeys(): void;
     /**
      * Try to BLS deserialize shares public keys.
      */
-    validatePublicKeys(): Promise<any>;
+    validatePublicKeys(): void;
     /**
      * Validate that the data is the array of strings.
      * @param data

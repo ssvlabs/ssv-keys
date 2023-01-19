@@ -38,15 +38,15 @@ export class KeySharesKeysV3 implements IKeySharesKeys {
   /**
    * Validation of all data.
    */
-  async validate() {
-    await this.validatePublicKeys();
-    await this.validateEncryptedKeys();
+  validate(): void {
+    this.validatePublicKeys();
+    this.validateEncryptedKeys();
   }
 
   /**
    * If shares encrypted keys are ABI encoded - try to decode them.
    */
-  async validateEncryptedKeys(): Promise<any> {
+  validateEncryptedKeys(): void {
     let encryptedKeyWithError = '';
     try {
       (this.encryptedKeys || []).map(encryptedKey => {
@@ -67,12 +67,12 @@ export class KeySharesKeysV3 implements IKeySharesKeys {
   /**
    * Try to BLS deserialize shares public keys.
    */
-  async validatePublicKeys(): Promise<any> {
+  validatePublicKeys(): void {
     let publicKeyWithError = '';
     try {
       for (const publicKey of this.publicKeys || []) {
         publicKeyWithError = publicKey;
-        await bls.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
+        bls.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
       }
     } catch (e) {
       throw Error(`Can not BLS deserialize shares public key: ${publicKeyWithError}. Error: ${String(e)}`);

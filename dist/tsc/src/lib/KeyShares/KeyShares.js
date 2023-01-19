@@ -44,20 +44,6 @@ class KeyShares {
      */
     generateContractPayload(data) {
         var _a;
-        /*
-        validatorPublicKey: string,
-        operatorsIds: number[],
-        encryptedShares: EncryptShare[],
-        ssvAmount: string | number): Promise<KeyShares> {
-          this.payload = this.payload || this.getByVersion('payload', this.version);
-          if (this.payload) {
-            await this.payload.setData(payload);
-            await this.validate();
-          }
-    
-        await this.usePayload(payload, this.version);
-        return this;
-        */
         const payloadData = this.payload.build(data);
         (_a = this.payload) === null || _a === void 0 ? void 0 : _a.setData(payloadData);
     }
@@ -67,17 +53,6 @@ class KeyShares {
      */
     setData(data) {
         this.useData(data);
-    }
-    /**
-     * Set payload as new or existing instance and update its internal data.
-     * @param payload
-     * @param version
-     */
-    usePayload(payload) {
-        if (this.payload) {
-            this.payload.setData(payload);
-            this.validate();
-        }
     }
     /**
      * Get entity by version.
@@ -114,6 +89,7 @@ class KeyShares {
         // Validate data and payload
         (_a = this.payload) === null || _a === void 0 ? void 0 : _a.validate();
         (_b = this.data) === null || _b === void 0 ? void 0 : _b.validate();
+        return (0, class_validator_1.validateOrReject)(this).then().catch((err) => { throw Error(err); });
     }
     /**
      * Stringify key shares to be ready for saving in file.

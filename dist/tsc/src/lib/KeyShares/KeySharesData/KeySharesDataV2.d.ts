@@ -29,17 +29,17 @@ export declare class KeySharesDataV2 implements IKeySharesData {
     /**
      * Try to BLS deserialize validator public key.
      */
-    validatePublicKey(): Promise<any>;
+    validatePublicKey(): void;
     /**
      * Check that counts are consistent.
      */
-    validateCounts(): Promise<any>;
+    validateCounts(): void;
     /**
      * Validate all operators
      */
-    validateOperators(): Promise<any>;
+    validateOperators(): void;
     /**
      * Do not allow to use duplicated operator IDs and public keys.
      */
-    validateDuplicates(): Promise<void>;
+    validateDuplicates(): void;
 }

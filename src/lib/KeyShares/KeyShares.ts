@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
-  // validateOrReject
+  validateOrReject
 } from 'class-validator';
 
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
@@ -71,20 +71,6 @@ export class KeyShares {
    * @param payload
    */
   generateContractPayload(data: any): void {
-    /*
-    validatorPublicKey: string,
-    operatorsIds: number[],
-    encryptedShares: EncryptShare[],
-    ssvAmount: string | number): Promise<KeyShares> {
-      this.payload = this.payload || this.getByVersion('payload', this.version);
-      if (this.payload) {
-        await this.payload.setData(payload);
-        await this.validate();
-      }
-
-    await this.usePayload(payload, this.version);
-    return this;
-    */
     const payloadData = this.payload.build(data);
     this.payload?.setData(payloadData);
   }
@@ -95,18 +81,6 @@ export class KeyShares {
    */
   setData(data: any) {
     this.useData(data);
-  }
-
-  /**
-   * Set payload as new or existing instance and update its internal data.
-   * @param payload
-   * @param version
-   */
-  usePayload(payload: any): void {
-    if (this.payload) {
-      this.payload.setData(payload);
-      this.validate();
-    }
   }
 
   /**
@@ -141,10 +115,11 @@ export class KeyShares {
   /**
    * Validate everything
    */
-  validate(): void {
+  validate(): any {
     // Validate data and payload
     this.payload?.validate();
     this.data?.validate();
+    return validateOrReject(this).then().catch((err) => { throw Error(err) });
   }
 
   /**
