@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-import { SSVKeys } from '../../src/main';
+import { SSVKeys } from 'ssv-keys';
 
 const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -51,13 +51,11 @@ async function main() {
     shares,
     123456789,
   );
-  // await ssvKeys.keySharesInstance.setPayload(payload);
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
 
   // Build payload with a new ssv amount and from saved on previous steps key shares data
   const keySharesWithoutPayload = await ssvKeys.keySharesInstance.init(String(await fsp.readFile(getKeySharesFilePath(3))));
   ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload, 987654321);
-  // await ssvKeys.keySharesInstance.setPayload(payload2);
 
   // Save new key shares file with new ssv amount
   await fsp.writeFile(getKeySharesFilePath(5), ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
