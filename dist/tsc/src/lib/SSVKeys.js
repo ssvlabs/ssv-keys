@@ -88,7 +88,6 @@ class SSVKeys {
     buildShares(privateKey, operatorIds, operatorPublicKeys) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const threshold = yield this.createThreshold(privateKey, operatorIds);
-            console.log("?????", threshold);
             return this.encryptShares(operatorPublicKeys, threshold.shares);
         });
     }
@@ -113,13 +112,12 @@ class SSVKeys {
      * @param ssvAmount
      */
     buildPayload(validatorPublicKey, operatorsIds, encryptedShares, ssvAmount) {
-        this.keyShares.generateContractPayload({
+        return this.keyShares.generateContractPayload({
             validatorPublicKey,
             operatorsIds,
             encryptedShares,
             ssvAmount
         });
-        return this.keyShares.payload;
     }
     /**
      * Build payload from keyshares file with operators and shares details inside.
@@ -141,7 +139,7 @@ class SSVKeys {
             || !publicKeys.length) {
             throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
         }
-        this.keyShares.generateContractPayload({
+        return this.keyShares.generateContractPayload({
             validatorPublicKey,
             operatorsIds: (_h = (_g = keyShares.data) === null || _g === void 0 ? void 0 : _g.operators) === null || _h === void 0 ? void 0 : _h.map((item) => item.id),
             encryptedShares: publicKeys.map((item, index) => ({
@@ -150,7 +148,6 @@ class SSVKeys {
             })),
             ssvAmount: ssvAmount || ((_k = (_j = keyShares.payload) === null || _j === void 0 ? void 0 : _j.readable) === null || _k === void 0 ? void 0 : _k.ssvAmount) || 0,
         });
-        return this.keyShares.payload;
     }
 }
 exports.SSVKeys = SSVKeys;

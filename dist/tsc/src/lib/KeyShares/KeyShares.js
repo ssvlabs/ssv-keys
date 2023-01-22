@@ -38,6 +38,7 @@ class KeyShares {
         var _a;
         const payloadData = this.payload.build(data);
         (_a = this.payload) === null || _a === void 0 ? void 0 : _a.setData(payloadData);
+        return this.payload;
     }
     /**
      * Set new data and validate it.

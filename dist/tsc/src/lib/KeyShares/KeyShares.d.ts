@@ -22,7 +22,7 @@ export declare class KeyShares {
      * Set final payload for web3 transaction and validate it.
      * @param payload
      */
-    generateContractPayload(data: any): void;
+    generateContractPayload(data: any): KeySharesPayload;
     /**
      * Set new data and validate it.
      * @param data
