@@ -15,7 +15,7 @@ export class PublicKeyValidatorConstraint implements ValidatorConstraintInterfac
       bls.init(bls.BLS12_381);
       bls.deserializeHexStrToPublicKey(value.replace('0x', ''));
     } catch (e) {
-      throw new BLSDeserializeError( value, `Can not BLS deserialize validator public key`);
+      throw new BLSDeserializeError( value, 'Failed to BLS deserialize validator public key');
     }
     return true;
   }

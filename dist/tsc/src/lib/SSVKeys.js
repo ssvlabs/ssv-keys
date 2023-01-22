@@ -18,7 +18,6 @@ const web3_helper_1 = require("./helpers/web3.helper");
  */
 class SSVKeys {
     constructor(ver) {
-        this.web3Instances = {};
         if (!Object.values(SSVKeys.VERSION).includes(ver)) {
             throw Error('Version is not supported');
         }

@@ -6,9 +6,9 @@ const underscore_1 = tslib_1.__importDefault(require("underscore"));
 const class_validator_1 = require("class-validator");
 const OperatorDataV2_1 = require("./OperatorDataV2");
 const KeySharesKeysV2_1 = require("./KeySharesKeysV2");
-const operator_1 = require("./exceptions/operator");
 const operator_unique_1 = require("./validators/operator-unique");
 const public_key_1 = require("./validators/public-key");
+const match_1 = require("./validators/match");
 class KeySharesDataV2 {
     constructor() {
         this.publicKey = null;
@@ -46,7 +46,6 @@ class KeySharesDataV2 {
     validate() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             (0, class_validator_1.validateSync)(this);
-            this.validateCounts();
         });
     }
     /**
@@ -83,20 +82,6 @@ class KeySharesDataV2 {
         }
         return this.operators.map(operator => String(operator.publicKey));
     }
-    /**
-     * Check that counts are consistent.
-     */
-    validateCounts() {
-        var _a, _b;
-        if (!((_a = this.sharesEncryptedKeys) === null || _a === void 0 ? void 0 : _a.length) || !((_b = this.sharesPublicKeys) === null || _b === void 0 ? void 0 : _b.length)) {
-            return;
-        }
-        if (this.operatorIds.length !== this.sharesEncryptedKeys.length
-            || this.operatorIds.length !== this.sharesPublicKeys.length
-            || this.operatorIds.length !== this.operatorPublicKeys.length) {
-            throw new operator_1.OperatorsWithSharesCountsMismatchError(this.operators || [], this.shares, 'Length of operators and shares should be equal.');
-        }
-    }
 }
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
@@ -112,7 +97,7 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
-    (0, class_validator_1.ValidateIf)((object, value) => object.name === 'John')
+    (0, match_1.MatchLengthValidator)('operators', { message: 'Length of operators and shares should be equal.' })
 ], KeySharesDataV2.prototype, "shares", void 0);
 exports.KeySharesDataV2 = KeySharesDataV2;
 //# sourceMappingURL=KeySharesDataV2.js.map

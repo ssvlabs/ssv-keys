@@ -26,9 +26,9 @@ tslib_1.__decorate([
     (0, class_validator_1.IsInt)({ message: 'The operator id must be an integer' })
 ], OperatorDataV2.prototype, "id", void 0);
 tslib_1.__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Yhe operator public key is null' }),
-    (0, class_validator_1.IsDefined)({ message: 'Yhe operator public key is undefined' }),
-    (0, class_validator_1.IsString)({ message: 'Yhe operator public key must be a string' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'The operator public key is null' }),
+    (0, class_validator_1.IsDefined)({ message: 'The operator public key is undefined' }),
+    (0, class_validator_1.IsString)({ message: 'The operator public key must be a string' }),
     (0, operator_public_key_1.OpeatorPublicKeyValidator)()
 ], OperatorDataV2.prototype, "publicKey", void 0);
 exports.OperatorDataV2 = OperatorDataV2;

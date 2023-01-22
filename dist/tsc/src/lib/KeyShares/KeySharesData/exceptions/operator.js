@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OperatorsWithSharesCountsMismatchError = exports.DuplicatedOperatorPublicKeyError = exports.DuplicatedOperatorIdError = void 0;
+exports.OperatorPublicKeyError = exports.OperatorsCountsMismatchError = exports.DuplicatedOperatorPublicKeyError = exports.DuplicatedOperatorIdError = void 0;
 class DuplicatedOperatorIdError extends Error {
     constructor(operator, message) {
         super(message);
@@ -15,12 +15,19 @@ class DuplicatedOperatorPublicKeyError extends Error {
     }
 }
 exports.DuplicatedOperatorPublicKeyError = DuplicatedOperatorPublicKeyError;
-class OperatorsWithSharesCountsMismatchError extends Error {
-    constructor(operators, shares, message) {
+class OperatorsCountsMismatchError extends Error {
+    constructor(propertyListOne, propertyListTwo, message) {
         super(message);
-        this.operators = operators;
-        this.shares = shares;
+        this.listOne = propertyListOne;
+        this.listTwo = propertyListTwo;
     }
 }
-exports.OperatorsWithSharesCountsMismatchError = OperatorsWithSharesCountsMismatchError;
+exports.OperatorsCountsMismatchError = OperatorsCountsMismatchError;
+class OperatorPublicKeyError extends Error {
+    constructor(publicKey, message) {
+        super(message);
+        this.publicKey = publicKey;
+    }
+}
+exports.OperatorPublicKeyError = OperatorPublicKeyError;
 //# sourceMappingURL=operator.js.map

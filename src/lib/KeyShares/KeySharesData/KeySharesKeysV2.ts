@@ -1,12 +1,12 @@
-import Web3 from 'web3';
 import _ from 'underscore';
+import bls from '../../BLS';
+
 import { decode } from 'js-base64';
 import { IsArray, MinLength } from 'class-validator';
-import bls from '../../BLS';
 import { IKeySharesKeys } from './IKeySharesKeys';
 import { MatchLengthValidator } from './validators/match';
+import { web3 } from '../../helpers/web3.helper';
 
-const web3 = new Web3();
 
 export class KeySharesKeysV2 implements IKeySharesKeys {
   @IsArray()

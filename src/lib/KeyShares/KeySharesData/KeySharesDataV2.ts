@@ -5,16 +5,13 @@ import {
   ValidateNested,
   IsOptional,
   validateSync,
-  ValidateIf,
 } from 'class-validator';
 import { IKeySharesData } from './IKeySharesData';
 import { OperatorDataV2 } from './OperatorDataV2';
 import { KeySharesKeysV2 } from './KeySharesKeysV2';
-import {
-  OperatorsWithSharesCountsMismatchError
-} from './exceptions/operator';
 import { OpeatorsListValidator } from './validators/operator-unique';
 import { PublicKeyValidator } from './validators/public-key';
+import { MatchLengthValidator } from './validators/match';
 
 
 export class KeySharesDataV2 implements IKeySharesData {
@@ -31,7 +28,7 @@ export class KeySharesDataV2 implements IKeySharesData {
 
   @IsOptional()
   @ValidateNested()
-  @ValidateIf((object, value) => object.name === 'John')
+  @MatchLengthValidator('operators', { message: 'Length of operators and shares should be equal.'})
   public shares?: KeySharesKeysV2 | null = null;
 
   setData(data: any) {
@@ -66,7 +63,6 @@ export class KeySharesDataV2 implements IKeySharesData {
    */
   async validate(): Promise<any> {
     validateSync(this);
-    this.validateCounts();
   }
 
   /**
@@ -101,23 +97,5 @@ export class KeySharesDataV2 implements IKeySharesData {
       return [];
     }
     return this.operators.map(operator => String(operator.publicKey));
-  }
-
-  /**
-   * Check that counts are consistent.
-   */
-  validateCounts(): void {
-    if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
-      return;
-    }
-    if (this.operatorIds.length !== this.sharesEncryptedKeys.length
-      || this.operatorIds.length !== this.sharesPublicKeys.length
-      || this.operatorIds.length !== this.operatorPublicKeys.length) {
-      throw new OperatorsWithSharesCountsMismatchError(
-        this.operators || [],
-        this.shares,
-        'Length of operators and shares should be equal.',
-      );
-    }
   }
 }

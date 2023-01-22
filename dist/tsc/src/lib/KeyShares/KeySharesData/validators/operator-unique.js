@@ -6,9 +6,6 @@ const class_validator_1 = require("class-validator");
 const operator_1 = require("../exceptions/operator");
 let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
     validate(operatorsList) {
-        if ((operatorsList || []).length !== [...new Set(operatorsList)].length) {
-            throw new Error('The list of operator ids contains duplicate entries.');
-        }
         const operatorIds = new Set(), operatorPublicKeys = new Set();
         for (const operator of operatorsList || []) {
             if (operatorIds.has(operator.id)) {

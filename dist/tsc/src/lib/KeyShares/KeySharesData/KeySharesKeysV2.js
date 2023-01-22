@@ -2,13 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesKeysV2 = void 0;
 const tslib_1 = require("tslib");
-const web3_1 = tslib_1.__importDefault(require("web3"));
 const underscore_1 = tslib_1.__importDefault(require("underscore"));
+const BLS_1 = tslib_1.__importDefault(require("../../BLS"));
 const js_base64_1 = require("js-base64");
 const class_validator_1 = require("class-validator");
-const BLS_1 = tslib_1.__importDefault(require("../../BLS"));
 const match_1 = require("./validators/match");
-const web3 = new web3_1.default();
+const web3_helper_1 = require("../../helpers/web3.helper");
 class KeySharesKeysV2 {
     /**
      * Set public and encrypted keys from data.
@@ -42,7 +41,7 @@ class KeySharesKeysV2 {
                 // If the key is ABI encoded - decode it.
                 if (key.startsWith('0x')) {
                     encryptedKeyWithError = key;
-                    key = web3.eth.abi.decodeParameter('string', encryptedKey);
+                    key = web3_helper_1.web3.eth.abi.decodeParameter('string', encryptedKey);
                 }
                 // ABI decoded key then should be a valid base 64 string
                 (0, js_base64_1.decode)(String(key));

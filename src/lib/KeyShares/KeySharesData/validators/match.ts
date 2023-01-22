@@ -5,13 +5,17 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
+import { OperatorsCountsMismatchError } from '../exceptions/operator';
 
 @ValidatorConstraint({ name: 'MatchLength', async: false })
 export class MatchLengthValidatorConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
-    const [relatedPropertyName] = args.constraints;
+    const [relatedPropertyName, customError] = args.constraints;
     const relatedLength = (args.object as any)[relatedPropertyName].length;
-    return relatedLength === value.length;
+    if (relatedLength !== value.length) {
+      throw new OperatorsCountsMismatchError((args.object as any)[relatedPropertyName], value, customError.message);
+    }
+    return true;
   }
 
   defaultMessage() {

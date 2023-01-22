@@ -15,7 +15,6 @@ export declare class SSVKeys {
         V3: string;
     };
     protected version: string;
-    protected web3Instances: any;
     protected threshold: ISharesKeyPairs | undefined;
     keySharesInstance: KeyShares;
     constructor(ver: string);

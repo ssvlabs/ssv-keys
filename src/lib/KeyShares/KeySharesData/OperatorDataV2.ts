@@ -8,9 +8,9 @@ export class OperatorDataV2 implements IOperatorData {
   @IsInt({ message: 'The operator id must be an integer'})
   public id: number | undefined;
 
-  @IsNotEmpty({ message: 'Yhe operator public key is null'})
-  @IsDefined({ message: 'Yhe operator public key is undefined'})
-  @IsString({ message: 'Yhe operator public key must be a string'})
+  @IsNotEmpty({ message: 'The operator public key is null'})
+  @IsDefined({ message: 'The operator public key is undefined'})
+  @IsString({ message: 'The operator public key must be a string'})
   @OpeatorPublicKeyValidator()
   public publicKey: string | undefined;
 

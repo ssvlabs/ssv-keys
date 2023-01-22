@@ -13,7 +13,7 @@ let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
             BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
         }
         catch (e) {
-            throw new bls_1.BLSDeserializeError(value, `Can not BLS deserialize validator public key`);
+            throw new bls_1.BLSDeserializeError(value, 'Failed to BLS deserialize validator public key');
         }
         return true;
     }

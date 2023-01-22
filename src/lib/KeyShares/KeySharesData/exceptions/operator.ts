@@ -1,5 +1,4 @@
 import { IOperatorData } from '../IOperatorData';
-import { IKeySharesKeys } from '../IKeySharesKeys';
 
 export class DuplicatedOperatorIdError extends Error {
   public operator: IOperatorData;
@@ -19,13 +18,22 @@ export class DuplicatedOperatorPublicKeyError extends Error {
   }
 }
 
-export class OperatorsWithSharesCountsMismatchError extends Error {
-  public operators: IOperatorData[];
-  public shares: IKeySharesKeys  | null | undefined;
+export class OperatorsCountsMismatchError extends Error {
+  public listOne: any[] | null | undefined;
+  public listTwo: any[] | null | undefined;
 
-  constructor(operators: IOperatorData[], shares: IKeySharesKeys  | null | undefined, message: string) {
+  constructor(propertyListOne: any[] | null | undefined, propertyListTwo: any[] | null | undefined, message: string) {
     super(message);
-    this.operators = operators;
-    this.shares = shares;
+    this.listOne = propertyListOne;
+    this.listTwo = propertyListTwo;
+  }
+}
+
+export class OperatorPublicKeyError extends Error {
+  public publicKey: string;
+
+  constructor(publicKey: string, message: string) {
+    super(message);
+    this.publicKey = publicKey;
   }
 }

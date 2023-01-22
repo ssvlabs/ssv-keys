@@ -21,7 +21,6 @@ export class SSVKeys {
   };
 
   protected version: string;
-  protected web3Instances: any = {};
   protected threshold: ISharesKeyPairs | undefined;
 
   public keySharesInstance: KeyShares;

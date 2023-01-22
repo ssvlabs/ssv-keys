@@ -9,10 +9,6 @@ import { DuplicatedOperatorIdError, DuplicatedOperatorPublicKeyError } from '../
 @ValidatorConstraint({ name: 'operatorsList', async: false })
 export class OpeatorsListValidatorConstraint implements ValidatorConstraintInterface {
   validate(operatorsList: any) {
-    if((operatorsList || []).length !== [...new Set(operatorsList)].length) {
-      throw new Error('The list of operator ids contains duplicate entries.');
-    }
-
     const operatorIds = new Set(), operatorPublicKeys = new Set();
     for (const operator of operatorsList || []) {
       if (operatorIds.has(operator.id)) {

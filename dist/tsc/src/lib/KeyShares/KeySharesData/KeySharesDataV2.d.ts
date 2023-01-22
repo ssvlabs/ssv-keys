@@ -26,8 +26,4 @@ export declare class KeySharesDataV2 implements IKeySharesData {
      * Get the list of operators public keys.
      */
     get operatorPublicKeys(): string[];
-    /**
-     * Check that counts are consistent.
-     */
-    validateCounts(): void;
 }
