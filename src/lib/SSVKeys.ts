@@ -45,8 +45,7 @@ export class SSVKeys {
    */
   async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
     try {
-      const keyStore = new EthereumKeyStore(data);
-      return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
+      return (new EthereumKeyStore(data)).getPrivateKey(password);
     } catch (error: any) {
       return error;
     }
@@ -58,13 +57,8 @@ export class SSVKeys {
    * @param operators
    */
   async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
-    try {
-      const threshold: Threshold = new Threshold();
-      this.threshold = await threshold.create(privateKey, operators);
-      return this.threshold;
-    } catch (error: any) {
-      return error;
-    }
+    this.threshold = await new Threshold().create(privateKey, operators);
+    return this.threshold;
   }
 
   /**
@@ -98,6 +92,7 @@ export class SSVKeys {
    */
   async buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]> {
     const threshold = await this.createThreshold(privateKey, operatorIds);
+    console.log("?????", threshold)
     return this.encryptShares(operatorPublicKeys, threshold.shares);
   }
 

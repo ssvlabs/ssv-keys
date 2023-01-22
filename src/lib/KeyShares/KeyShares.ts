@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
-  validateOrReject
+  validateSync
 } from 'class-validator';
 
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
@@ -98,14 +98,7 @@ export class KeyShares {
    * Validate everything
    */
   validate(): any {
-    // Validate data and payload
-    this.payload?.validate();
-    this.data?.validate();
-    validateOrReject(this)
-      .then()
-      .catch((err) => {
-        throw Error(err)
-      });
+    validateSync(this);
   }
 
   /**

@@ -12,8 +12,16 @@ export class MatchLengthValidatorConstraint implements ValidatorConstraintInterf
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName, customError] = args.constraints;
     const relatedLength = (args.object as any)[relatedPropertyName].length;
-    if (relatedLength !== value.length) {
-      throw new OperatorsCountsMismatchError((args.object as any)[relatedPropertyName], value, customError.message);
+    if (!Array.isArray(value)) {
+      Object.values(value).forEach((arr: any) => {
+        if (relatedLength !== arr.length) {
+          throw new OperatorsCountsMismatchError((args.object as any)[relatedPropertyName], value, customError.message);
+        }
+      })
+    } else {
+      if (relatedLength !== value.length) {
+        throw new OperatorsCountsMismatchError((args.object as any)[relatedPropertyName], value, customError.message);
+      }
     }
     return true;
   }
@@ -29,7 +37,7 @@ export function MatchLengthValidator(property: string, validationOptions?: Valid
       target: object.constructor,
       propertyName,
       options: validationOptions,
-      constraints: [property],
+      constraints: [property, validationOptions],
       validator: MatchLengthValidatorConstraint,
     });
   };

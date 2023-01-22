@@ -8,11 +8,11 @@ import {
 import { BLSDeserializeError } from '../exceptions/bls';
 
 /* Try to BLS deserialize validator public key. */
-@ValidatorConstraint({ name: 'publicKey', async: false })
+@ValidatorConstraint({ name: 'publicKey', async: true })
 export class PublicKeyValidatorConstraint implements ValidatorConstraintInterface {
-  validate(value: any) {
+  async validate(value: any) {
     try {
-      bls.init(bls.BLS12_381);
+      await bls.init(bls.BLS12_381);
       bls.deserializeHexStrToPublicKey(value.replace('0x', ''));
     } catch (e) {
       throw new BLSDeserializeError( value, 'Failed to BLS deserialize validator public key');

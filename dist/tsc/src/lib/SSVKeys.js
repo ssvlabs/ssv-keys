@@ -36,8 +36,7 @@ class SSVKeys {
     getPrivateKeyFromKeystoreData(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const keyStore = new EthereumKeyStore_1.default(data);
-                return yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
+                return (new EthereumKeyStore_1.default(data)).getPrivateKey(password);
             }
             catch (error) {
                 return error;
@@ -51,14 +50,8 @@ class SSVKeys {
      */
     createThreshold(privateKey, operators) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                const threshold = new Threshold_1.default();
-                this.threshold = yield threshold.create(privateKey, operators);
-                return this.threshold;
-            }
-            catch (error) {
-                return error;
-            }
+            this.threshold = yield new Threshold_1.default().create(privateKey, operators);
+            return this.threshold;
         });
     }
     /**
@@ -95,6 +88,7 @@ class SSVKeys {
     buildShares(privateKey, operatorIds, operatorPublicKeys) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const threshold = yield this.createThreshold(privateKey, operatorIds);
+            console.log("?????", threshold);
             return this.encryptShares(operatorPublicKeys, threshold.shares);
         });
     }

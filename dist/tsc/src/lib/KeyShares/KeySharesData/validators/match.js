@@ -8,8 +8,17 @@ let MatchLengthValidatorConstraint = class MatchLengthValidatorConstraint {
     validate(value, args) {
         const [relatedPropertyName, customError] = args.constraints;
         const relatedLength = args.object[relatedPropertyName].length;
-        if (relatedLength !== value.length) {
-            throw new operator_1.OperatorsCountsMismatchError(args.object[relatedPropertyName], value, customError.message);
+        if (!Array.isArray(value)) {
+            Object.values(value).forEach((arr) => {
+                if (relatedLength !== arr.length) {
+                    throw new operator_1.OperatorsCountsMismatchError(args.object[relatedPropertyName], value, customError.message);
+                }
+            });
+        }
+        else {
+            if (relatedLength !== value.length) {
+                throw new operator_1.OperatorsCountsMismatchError(args.object[relatedPropertyName], value, customError.message);
+            }
         }
         return true;
     }
@@ -27,7 +36,7 @@ function MatchLengthValidator(property, validationOptions) {
             target: object.constructor,
             propertyName,
             options: validationOptions,
-            constraints: [property],
+            constraints: [property, validationOptions],
             validator: MatchLengthValidatorConstraint,
         });
     };

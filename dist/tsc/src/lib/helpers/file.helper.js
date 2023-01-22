@@ -23,9 +23,7 @@ exports.readFile = readFile;
  * @param data
  */
 const writeFile = (filePath, data) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    return fs_2.promises.writeFile(filePath, data, { encoding: 'utf-8' }).then(() => {
-        return { filePath, data };
-    });
+    fs_2.promises.writeFile(filePath, data, { encoding: 'utf-8' });
 });
 exports.writeFile = writeFile;
 /**
