@@ -2,32 +2,36 @@ import _ from 'underscore';
 import {
   IsString,
   Length,
-  ValidateNested, IsOptional
+  ValidateNested,
+  IsOptional,
+  validateSync,
+  ValidateIf,
 } from 'class-validator';
-import bls from '../../BLS';
 import { IKeySharesData } from './IKeySharesData';
 import { OperatorDataV2 } from './OperatorDataV2';
 import { KeySharesKeysV2 } from './KeySharesKeysV2';
 import {
-  DuplicatedOperatorIdError,
-  DuplicatedOperatorPublicKeyError,
   OperatorsWithSharesCountsMismatchError
 } from './exceptions/operator';
-import { BLSDeserializeError } from './exceptions/bls';
+import { OpeatorsListValidator } from './validators/operator-unique';
+import { PublicKeyValidator } from './validators/public-key';
 
 
 export class KeySharesDataV2 implements IKeySharesData {
   @IsOptional()
   @IsString()
   @Length(98, 98)
+  @PublicKeyValidator()
   public publicKey?: string | null = null;
 
   @IsOptional()
   @ValidateNested({ each: true })
+  @OpeatorsListValidator()
   public operators?: OperatorDataV2[] | null = null;
 
   @IsOptional()
   @ValidateNested()
+  @ValidateIf((object, value) => object.name === 'John')
   public shares?: KeySharesKeysV2 | null = null;
 
   setData(data: any) {
@@ -61,12 +65,8 @@ export class KeySharesDataV2 implements IKeySharesData {
    * Do all possible validations.
    */
   async validate(): Promise<any> {
-    this.validateDuplicates();
-    bls.init(bls.BLS12_381);
+    validateSync(this);
     this.validateCounts();
-    this.shares?.validate();
-    this.validatePublicKey();
-    this.validateOperators();
   }
 
   /**
@@ -104,23 +104,6 @@ export class KeySharesDataV2 implements IKeySharesData {
   }
 
   /**
-   * Try to BLS deserialize validator public key.
-   */
-  validatePublicKey(): void {
-    if (!this.publicKey) {
-      return;
-    }
-    try {
-      bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
-    } catch (e) {
-      throw new BLSDeserializeError(
-        this.publicKey,
-        `Can not BLS deserialize validator public key`
-      );
-    }
-  }
-
-  /**
    * Check that counts are consistent.
    */
   validateCounts(): void {
@@ -135,40 +118,6 @@ export class KeySharesDataV2 implements IKeySharesData {
         this.shares,
         'Length of operators and shares should be equal.',
       );
-    }
-  }
-
-  /**
-   * Validate all operators
-   */
-  validateOperators(): void {
-    for (const operator of this.operators || []) {
-      operator.validate();
-    }
-  }
-
-  /**
-   * Do not allow to use duplicated operator IDs and public keys.
-   */
-  validateDuplicates() {
-    const operatorIds: any = {},
-      operatorPublicKeys: any = {};
-    for (const operator of this.operators || []) {
-      if (operatorIds[String(operator.id)] === true) {
-        throw new DuplicatedOperatorIdError(
-          operator,
-          `Operator ID already exists`
-        );
-      }
-      operatorIds[String(operator.id)] = true;
-
-      if (operatorPublicKeys[String(operator.publicKey)] === true) {
-        throw new DuplicatedOperatorPublicKeyError(
-          operator,
-          `Operator public key already exists`
-        );
-      }
-      operatorPublicKeys[String(operator.publicKey)] = true;
     }
   }
 }

@@ -10,6 +10,7 @@ const keystore_1 = tslib_1.__importDefault(require("./arguments/keystore"));
 const ssv_amount_1 = tslib_1.__importDefault(require("./arguments/ssv-amount"));
 const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids"));
 const password_1 = tslib_1.__importDefault(require("./arguments/password"));
+const key_shares_version_1 = tslib_1.__importDefault(require("./arguments/key-shares-version"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
 const file_helper_1 = require("../../lib/helpers/file.helper");
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
@@ -28,6 +29,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 operator_ids_1.default,
                 operator_public_keys_1.default,
                 ssv_amount_1.default,
+                key_shares_version_1.default,
                 output_folder_1.default,
             ],
         };
@@ -37,7 +39,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { keystore, password, output_folder: outputFolder, ssv_token_amount: ssvAmount, } = this.args;
+            const { keystore, password, output_folder: outputFolder, ssv_token_amount: ssvAmount, key_shares_version: keySharesVersion, } = this.args;
             let { operators_ids: operatorIds, operators_keys: operatorKeys, } = this.args;
             // Prepare data
             operatorKeys = operatorKeys.split(',');
@@ -45,12 +47,12 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
-            const ssvKeys = new SSVKeys_1.SSVKeys(SSVKeys_1.SSVKeys.VERSION.V3);
+            const ssvKeys = new SSVKeys_1.SSVKeys(`v${keySharesVersion}`);
             const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
             // Build shares from operator IDs and public keys
             const shares = yield ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
             // Now save to key shares file encrypted shares and validator public key
-            const keyShares = yield ssvKeys.keySharesInstance.init({});
+            const keyShares = yield ssvKeys.keyShares.fromJson({});
             yield keyShares.setData({
                 operators: operatorKeys.map((operator, index) => ({
                     id: operatorIds[index],
@@ -62,7 +64,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             // Build payload and save it in key shares file
             yield ssvKeys.buildPayload(ssvKeys.getValidatorPublicKey(), operatorIds, shares, ssvAmount);
             const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
-            yield (0, file_helper_1.writeFile)(keySharesFilePath, ssvKeys.keySharesInstance.toString());
+            yield (0, file_helper_1.writeFile)(keySharesFilePath, ssvKeys.keyShares.toJson());
             return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;
         });
     }

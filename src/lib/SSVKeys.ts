@@ -35,6 +35,9 @@ export class SSVKeys {
     this.keySharesInstance = new KeyShares({ version: this.version });
   }
 
+  get keyShares(): KeyShares {
+    return this.keySharesInstance;
+  }
   /**
    * Extract private key from keystore data using keystore password.
    * Generally can be used in browsers when the keystore data has been provided by browser.
@@ -121,14 +124,14 @@ export class SSVKeys {
    * @param ssvAmount
    */
   buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
-    this.keySharesInstance.generateContractPayload({
+    this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds,
       encryptedShares,
       ssvAmount
     });
 
-    return this.keySharesInstance.payload;
+    return this.keyShares.payload;
   }
 
   /**
@@ -152,7 +155,7 @@ export class SSVKeys {
     ) {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
-    this.keySharesInstance.generateContractPayload({
+    this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds: keyShares.data?.operators?.map((item: any) => item.id),
       encryptedShares: publicKeys.map((item: any, index: number) => ({
@@ -162,6 +165,6 @@ export class SSVKeys {
       ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     });
 
-    return this.keySharesInstance.payload;
+    return this.keyShares.payload;
   }
 }

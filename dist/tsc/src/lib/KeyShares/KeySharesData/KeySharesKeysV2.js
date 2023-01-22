@@ -7,6 +7,7 @@ const underscore_1 = tslib_1.__importDefault(require("underscore"));
 const js_base64_1 = require("js-base64");
 const class_validator_1 = require("class-validator");
 const BLS_1 = tslib_1.__importDefault(require("../../BLS"));
+const match_1 = require("./validators/match");
 const web3 = new web3_1.default();
 class KeySharesKeysV2 {
     /**
@@ -90,7 +91,8 @@ tslib_1.__decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.MinLength)(98, {
         each: true,
-    })
+    }),
+    (0, match_1.MatchLengthValidator)('publicKeys', { message: 'Length of encrypted and public keys should be equal.' })
 ], KeySharesKeysV2.prototype, "encryptedKeys", void 0);
 exports.KeySharesKeysV2 = KeySharesKeysV2;
 //# sourceMappingURL=KeySharesKeysV2.js.map

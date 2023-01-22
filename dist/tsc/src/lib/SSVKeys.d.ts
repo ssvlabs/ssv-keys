@@ -19,6 +19,7 @@ export declare class SSVKeys {
     protected threshold: ISharesKeyPairs | undefined;
     keySharesInstance: KeyShares;
     constructor(ver: string);
+    get keyShares(): KeyShares;
     /**
      * Extract private key from keystore data using keystore password.
      * Generally can be used in browsers when the keystore data has been provided by browser.

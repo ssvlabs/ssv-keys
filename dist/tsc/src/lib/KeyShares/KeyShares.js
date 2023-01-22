@@ -30,14 +30,6 @@ class KeyShares {
         this.data = this.getByVersion('data', version);
         this.payload = this.getByVersion('payload', version);
     }
-    init(data) {
-        // Parse json
-        if (typeof data === 'string') {
-            data = JSON.parse(data);
-        }
-        this.setData(data.data);
-        return this;
-    }
     /**
      * Set final payload for web3 transaction and validate it.
      * @param payload
@@ -52,7 +44,11 @@ class KeyShares {
      * @param data
      */
     setData(data) {
-        this.useData(data);
+        if (!data) {
+            return;
+        }
+        this.data.setData(data);
+        this.validate();
     }
     /**
      * Get entity by version.
@@ -70,18 +66,6 @@ class KeyShares {
         return new this.byVersion[entity][version]();
     }
     /**
-     * Get final data converted from raw data.
-     * @param data
-     * @param version
-     */
-    useData(data) {
-        if (!data) {
-            return;
-        }
-        this.data.setData(data);
-        this.validate();
-    }
-    /**
      * Validate everything
      */
     validate() {
@@ -96,9 +80,20 @@ class KeyShares {
         });
     }
     /**
+     * Initialise from JSON or object data.
+     */
+    fromJson(data) {
+        // Parse json
+        if (typeof data === 'string') {
+            data = JSON.parse(data);
+        }
+        this.setData(data.data);
+        return this;
+    }
+    /**
      * Stringify key shares to be ready for saving in file.
      */
-    toString() {
+    toJson() {
         return JSON.stringify({
             version: this.version,
             data: this.data || null,

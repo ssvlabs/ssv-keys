@@ -66,7 +66,7 @@ function UserFlow() {
     console.log('Payload ready');
 
     // Keyshares
-    const keyShares = ssvKeys.keySharesInstance.init({
+    const keyShares = ssvKeys.keyShares.fromJson({
       version: 'v2',
       data: {
         operators: operators.map((operator, index) => ({
@@ -78,7 +78,7 @@ function UserFlow() {
       },
       payload,
     });
-    setKeyShares(keyShares.toString());
+    setKeyShares(keyShares.toJson());
     console.log('KeyShares ready');
     setStep(STEPS.FINISH);
   };

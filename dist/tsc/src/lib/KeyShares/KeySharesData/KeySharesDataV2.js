@@ -4,11 +4,11 @@ exports.KeySharesDataV2 = void 0;
 const tslib_1 = require("tslib");
 const underscore_1 = tslib_1.__importDefault(require("underscore"));
 const class_validator_1 = require("class-validator");
-const BLS_1 = tslib_1.__importDefault(require("../../BLS"));
 const OperatorDataV2_1 = require("./OperatorDataV2");
 const KeySharesKeysV2_1 = require("./KeySharesKeysV2");
 const operator_1 = require("./exceptions/operator");
-const bls_1 = require("./exceptions/bls");
+const operator_unique_1 = require("./validators/operator-unique");
+const public_key_1 = require("./validators/public-key");
 class KeySharesDataV2 {
     constructor() {
         this.publicKey = null;
@@ -44,14 +44,9 @@ class KeySharesDataV2 {
      * Do all possible validations.
      */
     validate() {
-        var _a;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            this.validateDuplicates();
-            BLS_1.default.init(BLS_1.default.BLS12_381);
+            (0, class_validator_1.validateSync)(this);
             this.validateCounts();
-            (_a = this.shares) === null || _a === void 0 ? void 0 : _a.validate();
-            this.validatePublicKey();
-            this.validateOperators();
         });
     }
     /**
@@ -89,20 +84,6 @@ class KeySharesDataV2 {
         return this.operators.map(operator => String(operator.publicKey));
     }
     /**
-     * Try to BLS deserialize validator public key.
-     */
-    validatePublicKey() {
-        if (!this.publicKey) {
-            return;
-        }
-        try {
-            BLS_1.default.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
-        }
-        catch (e) {
-            throw new bls_1.BLSDeserializeError(this.publicKey, `Can not BLS deserialize validator public key`);
-        }
-    }
-    /**
      * Check that counts are consistent.
      */
     validateCounts() {
@@ -116,43 +97,22 @@ class KeySharesDataV2 {
             throw new operator_1.OperatorsWithSharesCountsMismatchError(this.operators || [], this.shares, 'Length of operators and shares should be equal.');
         }
     }
-    /**
-     * Validate all operators
-     */
-    validateOperators() {
-        for (const operator of this.operators || []) {
-            operator.validate();
-        }
-    }
-    /**
-     * Do not allow to use duplicated operator IDs and public keys.
-     */
-    validateDuplicates() {
-        const operatorIds = {}, operatorPublicKeys = {};
-        for (const operator of this.operators || []) {
-            if (operatorIds[String(operator.id)] === true) {
-                throw new operator_1.DuplicatedOperatorIdError(operator, `Operator ID already exists`);
-            }
-            operatorIds[String(operator.id)] = true;
-            if (operatorPublicKeys[String(operator.publicKey)] === true) {
-                throw new operator_1.DuplicatedOperatorPublicKeyError(operator, `Operator public key already exists`);
-            }
-            operatorPublicKeys[String(operator.publicKey)] = true;
-        }
-    }
 }
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Length)(98, 98)
+    (0, class_validator_1.Length)(98, 98),
+    (0, public_key_1.PublicKeyValidator)()
 ], KeySharesDataV2.prototype, "publicKey", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.ValidateNested)({ each: true })
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, operator_unique_1.OpeatorsListValidator)()
 ], KeySharesDataV2.prototype, "operators", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.ValidateNested)()
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_validator_1.ValidateIf)((object, value) => object.name === 'John')
 ], KeySharesDataV2.prototype, "shares", void 0);
 exports.KeySharesDataV2 = KeySharesDataV2;
 //# sourceMappingURL=KeySharesDataV2.js.map

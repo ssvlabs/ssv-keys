@@ -4,6 +4,7 @@ import { decode } from 'js-base64';
 import { IsArray, MinLength } from 'class-validator';
 import bls from '../../BLS';
 import { IKeySharesKeys } from './IKeySharesKeys';
+import { MatchLengthValidator } from './validators/match';
 
 const web3 = new Web3();
 
@@ -18,6 +19,7 @@ export class KeySharesKeysV2 implements IKeySharesKeys {
   @MinLength(98, {
     each: true,
   })
+  @MatchLengthValidator('publicKeys', { message: 'Length of encrypted and public keys should be equal.'})
   encryptedKeys: string[] | undefined;
 
   /**
@@ -93,3 +95,4 @@ export class KeySharesKeysV2 implements IKeySharesKeys {
     }
   }
 }
+

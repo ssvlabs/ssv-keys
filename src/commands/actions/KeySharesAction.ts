@@ -6,6 +6,7 @@ import keystoreArgument from './arguments/keystore';
 import ssvAmountArgument from './arguments/ssv-amount';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
+import keySharesVersionArgument from './arguments/key-shares-version';
 import outputFolderArgument from './arguments/output-folder';
 import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
@@ -25,6 +26,7 @@ export class KeySharesAction extends BaseAction {
         operatorIdsArgument,
         operatorPublicKeysArgument,
         ssvAmountArgument,
+        keySharesVersionArgument,
         outputFolderArgument,
       ],
     }
@@ -39,6 +41,7 @@ export class KeySharesAction extends BaseAction {
       password,
       output_folder: outputFolder,
       ssv_token_amount: ssvAmount,
+      key_shares_version: keySharesVersion,
     } = this.args;
 
     let {
@@ -53,14 +56,14 @@ export class KeySharesAction extends BaseAction {
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
-    const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+    const ssvKeys = new SSVKeys(`v${keySharesVersion}`);
     const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
 
     // Build shares from operator IDs and public keys
     const shares = await ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
 
     // Now save to key shares file encrypted shares and validator public key
-    const keyShares = await ssvKeys.keySharesInstance.init({});
+    const keyShares = await ssvKeys.keyShares.fromJson({});
     await keyShares.setData({
       operators: operatorKeys.map((operator: string, index: number) => ({
         id: operatorIds[index],
@@ -79,7 +82,7 @@ export class KeySharesAction extends BaseAction {
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());
-    await writeFile(keySharesFilePath, ssvKeys.keySharesInstance.toString());
+    await writeFile(keySharesFilePath, ssvKeys.keyShares.toJson());
     return `\nKey distribution successful! Find your key shares file at ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;
   }
 }

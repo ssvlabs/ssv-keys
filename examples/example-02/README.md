@@ -115,8 +115,8 @@ const keySharesData = {
 
 // Create SSVKeys instance using key shares data
 const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
-const keyShares = ssvKeys.keySharesInstance.init(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 #### Saving key shares file from separate data and payload
@@ -143,8 +143,8 @@ And at some point you saved it in a key shares file:
 
 ```javascript
 const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
-const keyShares = ssvKeys.keySharesInstance.init(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 Now this file contains only operators' data.
@@ -160,7 +160,7 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 You can save shares as following:
 
 ```javascript
-ssvKeys.keySharesInstance.setData({
+ssvKeys.keyShares.setData({
   ...keyShares.data,
   shares: {
     publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
@@ -172,7 +172,7 @@ ssvKeys.keySharesInstance.setData({
 And then you can save it again:
 
 ```javascript
-await fsp.writeFile('./keyshares.json', ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
+await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 Then if at some point you would need to build payload:
@@ -195,5 +195,5 @@ let payload = await ssvKeys.buildPayloadFromKeyShares(keyShares, 987654321);
 And save it back to key shares file:
 
 ```javascript
-await fsp.writeFile('./keyshares.json', ssvKeys.keySharesInstance.toString(), { encoding: 'utf-8' });
+await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 ```
