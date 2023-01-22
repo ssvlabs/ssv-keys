@@ -61,9 +61,11 @@ export class KeyShares {
    * Set final payload for web3 transaction and validate it.
    * @param payload
    */
-  generateContractPayload(data: any): void {
+  generateContractPayload(data: any): KeySharesPayload {
     const payloadData = this.payload.build(data);
     this.payload?.setData(payloadData);
+
+    return this.payload;
   }
 
   /**

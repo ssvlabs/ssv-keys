@@ -117,14 +117,12 @@ export class SSVKeys {
    * @param ssvAmount
    */
   buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
-    this.keyShares.generateContractPayload({
+    return this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds,
       encryptedShares,
       ssvAmount
     });
-
-    return this.keyShares.payload;
   }
 
   /**
@@ -148,7 +146,7 @@ export class SSVKeys {
     ) {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
-    this.keyShares.generateContractPayload({
+    return this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds: keyShares.data?.operators?.map((item: any) => item.id),
       encryptedShares: publicKeys.map((item: any, index: number) => ({
@@ -157,7 +155,5 @@ export class SSVKeys {
       })),
       ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     });
-
-    return this.keyShares.payload;
   }
 }
