@@ -45,7 +45,7 @@ async function main() {
   // environments, save data to keyshares file.
   // --------------------------------------------------------------------------
   // Step 1: Build keyshares object
-  const keyShares = await ssvKeys.keySharesInstance.init({
+  const keyShares = await ssvKeys.keyShares.fromJson({
     version: 'v2',
     data: {
       operators: operators.map((operator, index) => ({
@@ -59,7 +59,7 @@ async function main() {
   });
   // Step 2: Save to the file
   const filePath = getKeySharesFilePath();
-  await fsp.writeFile(filePath, keyShares.toString(), { encoding: 'utf-8' });
+  await fsp.writeFile(filePath, keyShares.toJson(), { encoding: 'utf-8' });
   console.log('See your keyshares file in ', filePath);
 
   // --------------------------------------------------------------------------
@@ -71,12 +71,12 @@ async function main() {
   // Useful in architecture with more dynamic project structure
   // when you can not include json file using `require`
   // --------------------------------------------------------------------------
-  const ks1 = await ssvKeys.keySharesInstance.init(String(await fsp.readFile(filePath)));
+  const ks1 = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(filePath)));
   console.log('Keyshares read as string: ', ks1);
   // --------------------------------------------------------------------------
   // Example 2: use keyshares json (node way)
   // --------------------------------------------------------------------------
-  const ks2 = await ssvKeys.keySharesInstance.init(require(filePath));
+  const ks2 = await ssvKeys.keyShares.fromJson(require(filePath));
   console.log('Keyshares read as json: ', ks2);
 
   // For more possible scenarios ideas look at complex example.

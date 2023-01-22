@@ -21,7 +21,6 @@ export class SSVKeys {
   };
 
   protected version: string;
-  protected web3Instances: any = {};
   protected threshold: ISharesKeyPairs | undefined;
 
   public keySharesInstance: KeyShares;
@@ -35,6 +34,9 @@ export class SSVKeys {
     this.keySharesInstance = new KeyShares({ version: this.version });
   }
 
+  get keyShares(): KeyShares {
+    return this.keySharesInstance;
+  }
   /**
    * Extract private key from keystore data using keystore password.
    * Generally can be used in browsers when the keystore data has been provided by browser.
@@ -43,8 +45,7 @@ export class SSVKeys {
    */
   async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
     try {
-      const keyStore = new EthereumKeyStore(data);
-      return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
+      return (new EthereumKeyStore(data)).getPrivateKey(password);
     } catch (error: any) {
       return error;
     }
@@ -56,13 +57,8 @@ export class SSVKeys {
    * @param operators
    */
   async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
-    try {
-      const threshold: Threshold = new Threshold();
-      this.threshold = await threshold.create(privateKey, operators);
-      return this.threshold;
-    } catch (error: any) {
-      return error;
-    }
+    this.threshold = await new Threshold().create(privateKey, operators);
+    return this.threshold;
   }
 
   /**
@@ -121,14 +117,12 @@ export class SSVKeys {
    * @param ssvAmount
    */
   buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
-    this.keySharesInstance.generateContractPayload({
+    return this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds,
       encryptedShares,
       ssvAmount
     });
-
-    return this.keySharesInstance.payload;
   }
 
   /**
@@ -152,7 +146,7 @@ export class SSVKeys {
     ) {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
-    this.keySharesInstance.generateContractPayload({
+    return this.keyShares.generateContractPayload({
       validatorPublicKey,
       operatorsIds: keyShares.data?.operators?.map((item: any) => item.id),
       encryptedShares: publicKeys.map((item: any, index: number) => ({
@@ -161,7 +155,5 @@ export class SSVKeys {
       })),
       ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     });
-
-    return this.keySharesInstance.payload;
   }
 }

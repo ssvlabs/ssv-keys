@@ -1,17 +1,17 @@
-import { IsDefined, IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsDefined, IsInt, IsNotEmpty, IsString, validateSync } from 'class-validator';
 import { IOperatorData } from './IOperatorData';
-import { operatorValidator } from '../../../commands/actions/validators/operator';
+import { OpeatorPublicKeyValidator } from './validators/operator-public-key';
 
 export class OperatorDataV2 implements IOperatorData {
-  @IsNotEmpty()
-  @IsDefined()
-  @IsInt()
+  @IsNotEmpty({ message: 'The operator id is null'})
+  @IsDefined({ message: 'The operator id is undefined'})
+  @IsInt({ message: 'The operator id must be an integer'})
   public id: number | undefined;
 
-  @IsNotEmpty()
-  @IsDefined()
-  @IsString()
-  @MinLength(98)
+  @IsNotEmpty({ message: 'The operator public key is null'})
+  @IsDefined({ message: 'The operator public key is undefined'})
+  @IsString({ message: 'The operator public key must be a string'})
+  @OpeatorPublicKeyValidator()
   public publicKey: string | undefined;
 
   setData(data: any): any {
@@ -27,12 +27,6 @@ export class OperatorDataV2 implements IOperatorData {
    * Validate operator ID and public key
    */
   validate(): void {
-    if (!Number.isInteger(this.id)) {
-      throw Error('Operator ID should be integer');
-    }
-    const result = operatorValidator(this.publicKey || '');
-    if (result !== true) {
-      throw Error(String(result));
-    }
+    validateSync(this);
   }
 }

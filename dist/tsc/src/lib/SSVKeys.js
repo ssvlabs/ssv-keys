@@ -18,12 +18,14 @@ const web3_helper_1 = require("./helpers/web3.helper");
  */
 class SSVKeys {
     constructor(ver) {
-        this.web3Instances = {};
         if (!Object.values(SSVKeys.VERSION).includes(ver)) {
             throw Error('Version is not supported');
         }
         this.version = ver;
         this.keySharesInstance = new KeyShares_1.KeyShares({ version: this.version });
+    }
+    get keyShares() {
+        return this.keySharesInstance;
     }
     /**
      * Extract private key from keystore data using keystore password.
@@ -34,8 +36,7 @@ class SSVKeys {
     getPrivateKeyFromKeystoreData(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                const keyStore = new EthereumKeyStore_1.default(data);
-                return yield keyStore.getPrivateKey(password).then((privateKey) => privateKey);
+                return (new EthereumKeyStore_1.default(data)).getPrivateKey(password);
             }
             catch (error) {
                 return error;
@@ -49,14 +50,8 @@ class SSVKeys {
      */
     createThreshold(privateKey, operators) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                const threshold = new Threshold_1.default();
-                this.threshold = yield threshold.create(privateKey, operators);
-                return this.threshold;
-            }
-            catch (error) {
-                return error;
-            }
+            this.threshold = yield new Threshold_1.default().create(privateKey, operators);
+            return this.threshold;
         });
     }
     /**
@@ -93,6 +88,7 @@ class SSVKeys {
     buildShares(privateKey, operatorIds, operatorPublicKeys) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const threshold = yield this.createThreshold(privateKey, operatorIds);
+            console.log("?????", threshold);
             return this.encryptShares(operatorPublicKeys, threshold.shares);
         });
     }
@@ -117,13 +113,13 @@ class SSVKeys {
      * @param ssvAmount
      */
     buildPayload(validatorPublicKey, operatorsIds, encryptedShares, ssvAmount) {
-        this.keySharesInstance.generateContractPayload({
+        this.keyShares.generateContractPayload({
             validatorPublicKey,
             operatorsIds,
             encryptedShares,
             ssvAmount
         });
-        return this.keySharesInstance.payload;
+        return this.keyShares.payload;
     }
     /**
      * Build payload from keyshares file with operators and shares details inside.
@@ -145,7 +141,7 @@ class SSVKeys {
             || !publicKeys.length) {
             throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
         }
-        this.keySharesInstance.generateContractPayload({
+        this.keyShares.generateContractPayload({
             validatorPublicKey,
             operatorsIds: (_h = (_g = keyShares.data) === null || _g === void 0 ? void 0 : _g.operators) === null || _h === void 0 ? void 0 : _h.map((item) => item.id),
             encryptedShares: publicKeys.map((item, index) => ({
@@ -154,7 +150,7 @@ class SSVKeys {
             })),
             ssvAmount: ssvAmount || ((_k = (_j = keyShares.payload) === null || _j === void 0 ? void 0 : _j.readable) === null || _k === void 0 ? void 0 : _k.ssvAmount) || 0,
         });
-        return this.keySharesInstance.payload;
+        return this.keyShares.payload;
     }
 }
 exports.SSVKeys = SSVKeys;

@@ -4,7 +4,7 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
-  validateOrReject
+  validateSync
 } from 'class-validator';
 
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
@@ -57,22 +57,15 @@ export class KeyShares {
     this.payload = this.getByVersion('payload', version);
   }
 
-  init(data: string | any): KeyShares {
-    // Parse json
-    if (typeof data === 'string') {
-      data = JSON.parse(data);
-    }
-    this.setData(data.data);
-    return this;
-  }
-
   /**
    * Set final payload for web3 transaction and validate it.
    * @param payload
    */
-  generateContractPayload(data: any): void {
+  generateContractPayload(data: any): KeySharesPayload {
     const payloadData = this.payload.build(data);
     this.payload?.setData(payloadData);
+
+    return this.payload;
   }
 
   /**
@@ -80,7 +73,11 @@ export class KeyShares {
    * @param data
    */
   setData(data: any) {
-    this.useData(data);
+    if (!data) {
+      return;
+    }
+    this.data.setData(data);
+    this.validate();
   }
 
   /**
@@ -100,36 +97,29 @@ export class KeyShares {
   }
 
   /**
-   * Get final data converted from raw data.
-   * @param data
-   * @param version
-   */
-  useData(data: any): void {
-    if (!data) {
-      return;
-    }
-    this.data.setData(data);
-    this.validate();
-  }
-
-  /**
    * Validate everything
    */
   validate(): any {
-    // Validate data and payload
-    this.payload?.validate();
-    this.data?.validate();
-    validateOrReject(this)
-      .then()
-      .catch((err) => {
-        throw Error(err)
-      });
+    validateSync(this);
   }
+
+  /**
+   * Initialise from JSON or object data.
+   */
+  fromJson(data: string | any): KeyShares {
+    // Parse json
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    this.setData(data.data);
+    return this;
+  }
+
 
   /**
    * Stringify key shares to be ready for saving in file.
    */
-  toString(): string {
+  toJson(): string {
     return JSON.stringify({
       version: this.version,
       data: this.data || null,

@@ -1,27 +1,3 @@
-import { IKeySharesKeys } from './IKeySharesKeys';
-export declare class KeySharesKeysV3 implements IKeySharesKeys {
-    publicKeys: string[] | undefined;
-    encryptedKeys: string[] | undefined;
-    /**
-     * Set public and encrypted keys from data.
-     * @param data
-     */
-    setData(data: any): void;
-    /**
-     * Validation of all data.
-     */
-    validate(): void;
-    /**
-     * If shares encrypted keys are ABI encoded - try to decode them.
-     */
-    validateEncryptedKeys(): void;
-    /**
-     * Try to BLS deserialize shares public keys.
-     */
-    validatePublicKeys(): void;
-    /**
-     * Validate that the data is the array of strings.
-     * @param data
-     */
-    validateArrayOfStrings(data: any): void;
+import { KeySharesKeysV2 } from './KeySharesKeysV2';
+export declare class KeySharesKeysV3 extends KeySharesKeysV2 {
 }

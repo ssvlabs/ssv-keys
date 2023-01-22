@@ -61,7 +61,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     123456789,
   );
 
-  const keyShares = ssvKeys.keySharesInstance.init({
+  const keyShares = ssvKeys.keyShares.fromJson({
     version: 'v2',
     data: {
       operators: operator_keys.map((operator, index) => ({
@@ -74,7 +74,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     payload,
   });
   console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
-  res.json(JSON.parse(keyShares.toString()));
+  res.json(JSON.parse(keyShares.toJson()));
 });
 
 app.listen(port, () => {

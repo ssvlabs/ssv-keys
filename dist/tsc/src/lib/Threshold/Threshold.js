@@ -48,51 +48,42 @@ class Threshold {
             if (!Number.isInteger(F)) {
                 throw new ThresholdInvalidOperatorsLengthError(operators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ');
             }
-            return new Promise((resolve, reject) => {
-                try {
-                    BLS_1.default.init(BLS_1.default.BLS12_381)
-                        .then(() => {
-                        const msk = [];
-                        const mpk = [];
-                        // Master key Polynomial
-                        this.validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
-                        this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
-                        msk.push(this.validatorPrivateKey);
-                        mpk.push(this.validatorPublicKey);
-                        // Construct poly
-                        for (let i = 1; i < operators.length - F; i += 1) {
-                            const sk = new BLS_1.default.SecretKey();
-                            sk.setByCSPRNG();
-                            msk.push(sk);
-                            const pk = sk.getPublicKey();
-                            mpk.push(pk);
-                        }
-                        // Evaluate shares - starting from 1 because 0 is master key
-                        for (const operatorId of operators) {
-                            const id = new BLS_1.default.Id();
-                            id.setInt(operatorId);
-                            const shareSecretKey = new BLS_1.default.SecretKey();
-                            shareSecretKey.share(msk, id);
-                            const sharePublicKey = new BLS_1.default.PublicKey();
-                            sharePublicKey.share(mpk, id);
-                            this.shares.push({
-                                privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
-                                publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
-                                id,
-                            });
-                        }
-                        const response = {
-                            validatorPrivateKey: `0x${this.validatorPrivateKey.serializeToHexStr()}`,
-                            validatorPublicKey: `0x${this.validatorPublicKey.serializeToHexStr()}`,
-                            shares: this.shares,
-                        };
-                        resolve(response);
-                    });
-                }
-                catch (error) {
-                    reject(error);
-                }
-            });
+            yield BLS_1.default.init(BLS_1.default.BLS12_381);
+            const msk = [];
+            const mpk = [];
+            // Master key Polynomial
+            this.validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
+            this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+            msk.push(this.validatorPrivateKey);
+            mpk.push(this.validatorPublicKey);
+            // Construct poly
+            for (let i = 1; i < operators.length - F; i += 1) {
+                const sk = new BLS_1.default.SecretKey();
+                sk.setByCSPRNG();
+                msk.push(sk);
+                const pk = sk.getPublicKey();
+                mpk.push(pk);
+            }
+            // Evaluate shares - starting from 1 because 0 is master key
+            for (const operatorId of operators) {
+                const id = new BLS_1.default.Id();
+                id.setInt(operatorId);
+                const shareSecretKey = new BLS_1.default.SecretKey();
+                shareSecretKey.share(msk, id);
+                const sharePublicKey = new BLS_1.default.PublicKey();
+                sharePublicKey.share(mpk, id);
+                this.shares.push({
+                    privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
+                    publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
+                    id,
+                });
+            }
+            const response = {
+                validatorPrivateKey: `0x${this.validatorPrivateKey.serializeToHexStr()}`,
+                validatorPublicKey: `0x${this.validatorPublicKey.serializeToHexStr()}`,
+                shares: this.shares,
+            };
+            return response;
         });
     }
 }

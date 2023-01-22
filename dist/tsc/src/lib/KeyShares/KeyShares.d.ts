@@ -18,7 +18,6 @@ export declare class KeyShares {
     constructor({ version }: {
         version: string;
     });
-    init(data: string | any): KeyShares;
     /**
      * Set final payload for web3 transaction and validate it.
      * @param payload
@@ -37,17 +36,15 @@ export declare class KeyShares {
      */
     private getByVersion;
     /**
-     * Get final data converted from raw data.
-     * @param data
-     * @param version
-     */
-    useData(data: any): void;
-    /**
      * Validate everything
      */
     validate(): any;
     /**
+     * Initialise from JSON or object data.
+     */
+    fromJson(data: string | any): KeyShares;
+    /**
      * Stringify key shares to be ready for saving in file.
      */
-    toString(): string;
+    toJson(): string;
 }

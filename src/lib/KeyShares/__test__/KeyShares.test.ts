@@ -10,7 +10,7 @@ describe('KeyShares', () => {
   });
 
   it('Should create empty data with version', async () => {
-    const keySharesString = ssvKeys.keySharesInstance.toString();
+    const keySharesString = ssvKeys.keyShares.toJson();
     const keySharesObject = JSON.parse(keySharesString);
     expect(keySharesObject.version).toEqual(emptyKeyShares.version);
     expect(keySharesObject.data.operators).toEqual(emptyKeyShares.data.operators);
@@ -23,7 +23,7 @@ describe('KeyShares', () => {
   //   await keyShares.setData({
   //     operators: keySharesWithOperators.data.operators,
   //   });
-  //   const keySharesString = keyShares.toString();
+  //   const keySharesString = keyShares.toJson();
   //   const keySharesObject = JSON.parse(keySharesString);
   //   expect(keySharesObject.version).toEqual(keySharesWithOperators.version);
   //   expect(keySharesObject.data.operators).toEqual(keySharesWithOperators.data?.operators);

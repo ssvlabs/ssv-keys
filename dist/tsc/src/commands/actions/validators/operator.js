@@ -1,14 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.operatorValidator = void 0;
+exports.operatorPublicKeyValidator = void 0;
 const tslib_1 = require("tslib");
 const js_base64_1 = require("js-base64");
 const JSEncrypt_1 = tslib_1.__importDefault(require("../../../lib/JSEncrypt"));
 const Encryption_1 = require("../../../lib/Encryption/Encryption");
-const operatorValidator = (operator) => {
+const operatorPublicKeyValidator = (publicKey) => {
     try {
         const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
-        const decodedOperator = (0, js_base64_1.decode)(operator);
+        const decodedOperator = (0, js_base64_1.decode)(publicKey);
+        if (publicKey.length < 98) {
+            throw Error('The length of the operator public key must be at least 98 characters.');
+        }
         if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
             throw Error(errorMessage);
         }
@@ -19,7 +22,7 @@ const operatorValidator = (operator) => {
         catch (error) {
             throw new Encryption_1.InvalidOperatorKeyException({
                 rsa: decodedOperator,
-                base64: operator,
+                base64: publicKey,
             }, errorMessage);
         }
         return true;
@@ -31,5 +34,5 @@ const operatorValidator = (operator) => {
         return message;
     }
 };
-exports.operatorValidator = operatorValidator;
+exports.operatorPublicKeyValidator = operatorPublicKeyValidator;
 //# sourceMappingURL=operator.js.map

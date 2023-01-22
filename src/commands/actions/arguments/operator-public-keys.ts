@@ -1,4 +1,4 @@
-import { operatorValidator } from '../validators/operator';
+import { operatorPublicKeyValidator } from '../validators/operator';
 
 const uniqueOperators: any = {};
 
@@ -15,12 +15,12 @@ export default {
     repeat: 4,
     options: {
       type: 'text',
-      message: 'Enter operator key for {{index}} operator',
+      message: 'Enter operator public key for {{index}} operator',
       validate: async (value: string) => {
         if (uniqueOperators[value]) {
           return 'This operator already used';
         }
-        const returnValue = await operatorValidator(value);
+        const returnValue = operatorPublicKeyValidator(value);
         if (returnValue === true) {
           uniqueOperators[value] = true;
         }
