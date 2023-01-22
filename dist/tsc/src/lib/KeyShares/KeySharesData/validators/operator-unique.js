@@ -24,7 +24,7 @@ let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
     }
 };
 OpeatorsListValidatorConstraint = tslib_1.__decorate([
-    (0, class_validator_1.ValidatorConstraint)({ name: 'operatorsList', async: false })
+    (0, class_validator_1.ValidatorConstraint)({ name: 'uniqueList', async: false })
 ], OpeatorsListValidatorConstraint);
 exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint;
 function OpeatorsListValidator(validationOptions) {

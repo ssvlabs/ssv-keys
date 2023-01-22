@@ -13,7 +13,11 @@ export class PublicKeyValidatorConstraint implements ValidatorConstraintInterfac
   async validate(value: any) {
     try {
       await bls.init(bls.BLS12_381);
-      bls.deserializeHexStrToPublicKey(value.replace('0x', ''));
+      if (typeof value === 'string') {
+        bls.deserializeHexStrToPublicKey(value.replace('0x', ''));
+      } else {
+        value.forEach((item: string) => bls.deserializeHexStrToPublicKey(item.replace('0x', '')));
+      }
     } catch (e) {
       throw new BLSDeserializeError( value, 'Failed to BLS deserialize validator public key');
     }

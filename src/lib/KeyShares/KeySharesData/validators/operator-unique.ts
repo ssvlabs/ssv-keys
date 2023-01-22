@@ -6,7 +6,7 @@ import {
 } from 'class-validator';
 import { DuplicatedOperatorIdError, DuplicatedOperatorPublicKeyError } from '../exceptions/operator';
 
-@ValidatorConstraint({ name: 'operatorsList', async: false })
+@ValidatorConstraint({ name: 'uniqueList', async: false })
 export class OpeatorsListValidatorConstraint implements ValidatorConstraintInterface {
   validate(operatorsList: any) {
     const operatorIds = new Set(), operatorPublicKeys = new Set();

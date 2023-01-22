@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { OperatorsCountsMismatchError } from '../exceptions/operator';
 
-@ValidatorConstraint({ name: 'MatchLength', async: false })
+@ValidatorConstraint({ name: 'matchLength', async: false })
 export class MatchLengthValidatorConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName, customError] = args.constraints;

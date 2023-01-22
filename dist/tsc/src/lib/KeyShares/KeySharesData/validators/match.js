@@ -27,7 +27,7 @@ let MatchLengthValidatorConstraint = class MatchLengthValidatorConstraint {
     }
 };
 MatchLengthValidatorConstraint = tslib_1.__decorate([
-    (0, class_validator_1.ValidatorConstraint)({ name: 'MatchLength', async: false })
+    (0, class_validator_1.ValidatorConstraint)({ name: 'matchLength', async: false })
 ], MatchLengthValidatorConstraint);
 exports.MatchLengthValidatorConstraint = MatchLengthValidatorConstraint;
 function MatchLengthValidator(property, validationOptions) {

@@ -92,7 +92,6 @@ export class SSVKeys {
    */
   async buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]> {
     const threshold = await this.createThreshold(privateKey, operatorIds);
-    console.log("?????", threshold)
     return this.encryptShares(operatorPublicKeys, threshold.shares);
   }
 

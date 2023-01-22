@@ -11,7 +11,12 @@ let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
                 yield BLS_1.default.init(BLS_1.default.BLS12_381);
-                BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
+                if (typeof value === 'string') {
+                    BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
+                }
+                else {
+                    value.forEach((item) => BLS_1.default.deserializeHexStrToPublicKey(item.replace('0x', '')));
+                }
             }
             catch (e) {
                 throw new bls_1.BLSDeserializeError(value, 'Failed to BLS deserialize validator public key');
