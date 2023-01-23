@@ -51,8 +51,8 @@ export class SSVKeys {
       const privateKey = await new EthereumKeyStore(data).getPrivateKey(password);
 
       await bls.init(bls.BLS12_381);
-      this.validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
-      this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+      this.validatorPrivateKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).serializeToHexStr()}`;
+      this.validatorPublicKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`;
       return privateKey;
     } catch (error: any) {
       return error;
