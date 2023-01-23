@@ -58,11 +58,11 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                     id: operatorIds[index],
                     publicKey: operator,
                 })),
-                publicKey: ssvKeys.getValidatorPublicKey(),
+                publicKey: ssvKeys.validatorPublicKey,
                 shares,
             });
             // Build payload and save it in key shares file
-            yield ssvKeys.buildPayload(ssvKeys.getValidatorPublicKey(), operatorIds, shares, ssvAmount);
+            yield ssvKeys.buildPayload(ssvKeys.validatorPublicKey, operatorIds, shares, ssvAmount);
             const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
             yield (0, file_helper_1.writeFile)(keySharesFilePath, ssvKeys.keyShares.toJson());
             return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;

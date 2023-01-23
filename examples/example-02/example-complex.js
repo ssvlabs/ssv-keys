@@ -45,7 +45,7 @@ async function main() {
 
   // Now save to key shares file encrypted shares and validator public key
   await ssvKeys.keyShares.setData({
-    publicKey: ssvKeys.getValidatorPublicKey(),
+    publicKey: ssvKeys.validatorPublicKey,
     shares,
   });
 
@@ -53,7 +53,7 @@ async function main() {
 
   // Build final web3 transaction payload and update keyshares file with payload data
   await ssvKeys.buildPayload(
-    ssvKeys.getValidatorPublicKey(),
+    ssvKeys.validatorPublicKey,
     operatorIds,
     shares,
     123456789,

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSVKeys = void 0;
 const tslib_1 = require("tslib");
 const atob_1 = tslib_1.__importDefault(require("atob"));
+const BLS_1 = tslib_1.__importDefault(require("./BLS"));
 const js_base64_1 = require("js-base64");
 const KeyShares_1 = require("./KeyShares/KeyShares");
 const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
@@ -36,7 +37,11 @@ class SSVKeys {
     getPrivateKeyFromKeystoreData(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                return (new EthereumKeyStore_1.default(data)).getPrivateKey(password);
+                const privateKey = yield new EthereumKeyStore_1.default(data).getPrivateKey(password);
+                yield BLS_1.default.init(BLS_1.default.BLS12_381);
+                this.validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
+                this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+                return privateKey;
             }
             catch (error) {
                 return error;
@@ -96,13 +101,6 @@ class SSVKeys {
      */
     getThreshold() {
         return this.threshold;
-    }
-    /**
-     * Getting public key of validator
-     */
-    getValidatorPublicKey() {
-        var _a;
-        return ((_a = this.getThreshold()) === null || _a === void 0 ? void 0 : _a.validatorPublicKey) || '';
     }
     /**
      * Build payload from encrypted shares, validator public key and operator IDs

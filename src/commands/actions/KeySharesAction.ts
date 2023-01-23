@@ -69,13 +69,13 @@ export class KeySharesAction extends BaseAction {
         id: operatorIds[index],
         publicKey: operator,
       })),
-      publicKey: ssvKeys.getValidatorPublicKey(),
+      publicKey: ssvKeys.validatorPublicKey,
       shares,
     });
 
     // Build payload and save it in key shares file
     await ssvKeys.buildPayload(
-      ssvKeys.getValidatorPublicKey(),
+      ssvKeys.validatorPublicKey,
       operatorIds,
       shares,
       ssvAmount,

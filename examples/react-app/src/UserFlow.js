@@ -57,7 +57,7 @@ function UserFlow() {
 
     // Final payload
     const payload = ssvKeys.buildPayload(
-      ssvKeys.getValidatorPublicKey(),
+      ssvKeys.validatorPublicKey,
       operatorIds,
       shares,
       ssvAmount,
@@ -73,7 +73,7 @@ function UserFlow() {
           id: operatorIds[index],
           publicKey: operator,
         })),
-        publicKey: ssvKeys.getValidatorPublicKey(),
+        publicKey: ssvKeys.validatorPublicKey,
         shares,
       },
       payload,
