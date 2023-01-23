@@ -7,14 +7,17 @@ import {
   validateSync
 } from 'class-validator';
 
+import { IKeySharesData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
+
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
 import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
 
 import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
 import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
 
-export type KeySharesData = KeySharesDataV3;
-export type KeySharesPayload = KeySharesPayloadV3;
+export type KeySharesData = IKeySharesData;
+export type KeySharesPayload = IKeySharesPayload;
 
 /**
  * Key shares file data interface.

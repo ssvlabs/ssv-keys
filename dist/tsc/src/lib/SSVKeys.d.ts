@@ -17,6 +17,8 @@ export declare class SSVKeys {
     protected version: string;
     protected threshold: ISharesKeyPairs | undefined;
     keySharesInstance: KeyShares;
+    validatorPrivateKey: any;
+    validatorPublicKey: any;
     constructor(ver: string);
     get keyShares(): KeyShares;
     /**
@@ -50,10 +52,6 @@ export declare class SSVKeys {
      * Getting threshold if it has been created before.
      */
     getThreshold(): ISharesKeyPairs | undefined;
-    /**
-     * Getting public key of validator
-     */
-    getValidatorPublicKey(): string;
     /**
      * Build payload from encrypted shares, validator public key and operator IDs
      * @param validatorPublicKey

@@ -55,7 +55,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
   const shares = await ssvKeys.buildShares(privateKey, operator_ids, operator_keys);
   const payload = await ssvKeys.buildPayload(
-    ssvKeys.getValidatorPublicKey(),
+    ssvKeys.validatorPublicKey,
     operator_ids,
     shares,
     123456789,
@@ -68,7 +68,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
         id: operator_ids[index],
         publicKey: operator,
       })),
-      publicKey: ssvKeys.getValidatorPublicKey(),
+      publicKey: ssvKeys.validatorPublicKey,
       shares,
     },
     payload,

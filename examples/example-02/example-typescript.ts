@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-import { SSVKeys } from 'ssv-keys';
+import { SSVKeys } from '../../src/main';
 
 const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -19,6 +19,7 @@ async function main() {
   // 0. Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
+
   // 1. Save it with version only and with no any data.
   await fsp.writeFile(getKeySharesFilePath(1), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
@@ -38,7 +39,7 @@ async function main() {
 
   // Now save to key shares file encrypted shares and validator public key
   await ssvKeys.keyShares.setData({
-    publicKey: ssvKeys.getValidatorPublicKey(),
+    publicKey: ssvKeys.validatorPublicKey,
     shares,
   });
 
@@ -46,7 +47,7 @@ async function main() {
 
   // Build final web3 transaction payload and update keyshares file with payload data
   await ssvKeys.buildPayload(
-    ssvKeys.getValidatorPublicKey(),
+    ssvKeys.validatorPublicKey,
     operatorIds,
     shares,
     123456789,

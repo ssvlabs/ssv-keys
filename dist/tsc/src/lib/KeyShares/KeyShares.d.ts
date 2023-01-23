@@ -1,7 +1,7 @@
-import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
-import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
-export type KeySharesData = KeySharesDataV3;
-export type KeySharesPayload = KeySharesPayloadV3;
+import { IKeySharesData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
+export type KeySharesData = IKeySharesData;
+export type KeySharesPayload = IKeySharesPayload;
 /**
  * Key shares file data interface.
  */

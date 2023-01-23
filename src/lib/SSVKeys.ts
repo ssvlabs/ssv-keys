@@ -1,4 +1,5 @@
 import atob from 'atob';
+import bls from './BLS';
 import { encode } from 'js-base64';
 import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
@@ -24,6 +25,8 @@ export class SSVKeys {
   protected threshold: ISharesKeyPairs | undefined;
 
   public keySharesInstance: KeyShares;
+  public validatorPrivateKey: any;
+  public validatorPublicKey: any;
 
   constructor(ver: string) {
     if (!Object.values(SSVKeys.VERSION).includes(ver)) {
@@ -45,7 +48,12 @@ export class SSVKeys {
    */
   async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
     try {
-      return (new EthereumKeyStore(data)).getPrivateKey(password);
+      const privateKey = await new EthereumKeyStore(data).getPrivateKey(password);
+
+      await bls.init(bls.BLS12_381);
+      this.validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
+      this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+      return privateKey;
     } catch (error: any) {
       return error;
     }
@@ -100,13 +108,6 @@ export class SSVKeys {
    */
   getThreshold()  {
     return this.threshold;
-  }
-
-  /**
-   * Getting public key of validator
-   */
-  getValidatorPublicKey(): string {
-    return this.getThreshold()?.validatorPublicKey || '';
   }
 
   /**

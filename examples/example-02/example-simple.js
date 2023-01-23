@@ -31,7 +31,7 @@ async function main() {
   // --------------------------------------------------------------------------
   const ssvAmount = 123456789;
   const payload = await ssvKeys.buildPayload(
-    ssvKeys.getValidatorPublicKey(),
+    ssvKeys.validatorPublicKey,
     operatorIds,
     shares,
     ssvAmount,
@@ -52,7 +52,7 @@ async function main() {
         id: operatorIds[index],
         publicKey: operator,
       })),
-      publicKey: ssvKeys.getValidatorPublicKey(),
+      publicKey: ssvKeys.validatorPublicKey,
       shares,
     },
     payload,
