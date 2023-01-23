@@ -16,12 +16,12 @@ exports.default = {
         repeat: 4,
         options: {
             type: 'text',
-            message: 'Enter operator key for {{index}} operator',
+            message: 'Enter operator public key for {{index}} operator',
             validate: (value) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 if (uniqueOperators[value]) {
                     return 'This operator already used';
                 }
-                const returnValue = yield (0, operator_1.operatorValidator)(value);
+                const returnValue = (0, operator_1.operatorPublicKeyValidator)(value);
                 if (returnValue === true) {
                     uniqueOperators[value] = true;
                 }

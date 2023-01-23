@@ -4,27 +4,37 @@ import {
   IsNotEmpty,
   IsOptional,
   ValidateNested,
-  validateOrReject
+  validateSync
 } from 'class-validator';
+
+import { IKeySharesData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
+
 import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
 import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
 
-export type KeySharesData = KeySharesDataV2;
-export type KeySharesPayload = KeySharesPayloadV2;
+import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
+import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
+
+export type KeySharesData = IKeySharesData;
+export type KeySharesPayload = IKeySharesPayload;
 
 /**
  * Key shares file data interface.
  */
 export class KeyShares {
   static VERSION_V2 = 'v2';
+  static VERSION_V3 = 'v3';
 
   // Versions of deeper structures
   private byVersion: any = {
     'payload': {
       [KeyShares.VERSION_V2]: KeySharesPayloadV2,
+      [KeyShares.VERSION_V3]: KeySharesPayloadV3,
     },
     'data': {
       [KeyShares.VERSION_V2]: KeySharesDataV2,
+      [KeyShares.VERSION_V3]: KeySharesDataV3,
     }
   }
 
@@ -35,63 +45,42 @@ export class KeyShares {
 
   @IsOptional()
   @ValidateNested()
-  public data?: KeySharesData | null;
+  public data: KeySharesData;
 
   @IsOptional()
   @ValidateNested()
-  public payload?: KeySharesPayload | null;
+  public payload: KeySharesPayload;
 
   /**
    * @param version
    */
   constructor({ version }: { version: string }) {
     this.version = version;
+    this.data = this.getByVersion('data', version);
+    this.payload = this.getByVersion('payload', version);
   }
 
   /**
    * Set final payload for web3 transaction and validate it.
    * @param payload
    */
-  async setPayload(payload: any): Promise<KeyShares> {
-    await this.usePayload(payload, this.version);
-    return this;
+  generateContractPayload(data: any): KeySharesPayload {
+    const payloadData = this.payload.build(data);
+    this.payload?.setData(payloadData);
+
+    return this.payload;
   }
 
   /**
    * Set new data and validate it.
    * @param data
    */
-  async setData(data: any): Promise<KeyShares> {
-    await this.useData(data, this.version);
-    return this;
-  }
-
-  /**
-   * Instantiate key shares from raw data as string or object.
-   * @param data
-   */
-  static async fromData(data: string | any): Promise<KeyShares> {
-    // Parse json
-    if (typeof data === 'string') {
-      data = JSON.parse(data);
+  setData(data: any) {
+    if (!data) {
+      return;
     }
-    const keyShares = new KeyShares({ version: data.version });
-    await keyShares.setData(data.data);
-    await keyShares.setPayload(data.payload);
-    return keyShares;
-  }
-
-  /**
-   * Set payload as new or existing instance and update its internal data.
-   * @param payload
-   * @param version
-   */
-  async usePayload(payload: any, version: string): Promise<any> {
-    this.payload = this.payload || this.getByVersion('payload', version);
-    if (this.payload) {
-      await this.payload.setData(payload);
-      await this.validate();
-    }
+    this.data.setData(data);
+    this.validate();
   }
 
   /**
@@ -111,39 +100,29 @@ export class KeyShares {
   }
 
   /**
-   * Get final data converted from raw data.
-   * @param data
-   * @param version
+   * Validate everything
    */
-  async useData(data: any, version: string): Promise<any> {
-    if (!data) {
-      return;
-    }
-    this.data = this.data || this.getByVersion('data', version);
-    if (this.data) {
-      await this.data.setData(data);
-      await this.validate();
-    }
+  validate(): any {
+    validateSync(this);
   }
 
   /**
-   * Validate everything
+   * Initialise from JSON or object data.
    */
-  async validate(): Promise<any> {
-    // Validate classes and structures
-    await validateOrReject(this).catch(errors => {
-      throw Error(`Key shares file have wrong format. Errors: ${JSON.stringify(errors, null, '  ')}`);
-    });
-
-    // Validate data and payload
-    await this.payload?.validate();
-    await this.data?.validate();
+  fromJson(data: string | any): KeyShares {
+    // Parse json
+    if (typeof data === 'string') {
+      data = JSON.parse(data);
+    }
+    this.setData(data.data);
+    return this;
   }
+
 
   /**
    * Stringify key shares to be ready for saving in file.
    */
-  toString(): string {
+  toJson(): string {
     return JSON.stringify({
       version: this.version,
       data: this.data || null,

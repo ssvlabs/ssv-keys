@@ -10,6 +10,7 @@ export declare class KeySharesPayloadV2 implements IKeySharesPayload {
     static PAYLOAD_INDEX_SSV_AMOUNT: number;
     readable?: any;
     raw?: string | null;
+    build(data: any): any;
     /**
      * Setting data in array or object format or cleaning it up.
      * @param data

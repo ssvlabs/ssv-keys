@@ -26,20 +26,4 @@ export declare class KeySharesDataV2 implements IKeySharesData {
      * Get the list of operators public keys.
      */
     get operatorPublicKeys(): string[];
-    /**
-     * Try to BLS deserialize validator public key.
-     */
-    validatePublicKey(): Promise<any>;
-    /**
-     * Check that counts are consistent.
-     */
-    validateCounts(): Promise<any>;
-    /**
-     * Validate all operators
-     */
-    validateOperators(): Promise<any>;
-    /**
-     * Do not allow to use duplicated operator IDs and public keys.
-     */
-    validateDuplicates(): Promise<void>;
 }

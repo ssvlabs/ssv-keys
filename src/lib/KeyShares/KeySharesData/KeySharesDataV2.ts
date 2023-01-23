@@ -2,32 +2,33 @@ import _ from 'underscore';
 import {
   IsString,
   Length,
-  ValidateNested, IsOptional
+  ValidateNested,
+  IsOptional,
+  validateSync,
 } from 'class-validator';
-import bls from '../../BLS';
 import { IKeySharesData } from './IKeySharesData';
 import { OperatorDataV2 } from './OperatorDataV2';
 import { KeySharesKeysV2 } from './KeySharesKeysV2';
-import {
-  DuplicatedOperatorIdError,
-  DuplicatedOperatorPublicKeyError,
-  OperatorsWithSharesCountsMismatchError
-} from './exceptions/operator';
-import { BLSDeserializeError } from './exceptions/bls';
+import { OpeatorsListValidator } from './validators/operator-unique';
+import { PublicKeyValidator } from './validators/public-key';
+import { MatchLengthValidator } from './validators/match';
 
 
 export class KeySharesDataV2 implements IKeySharesData {
   @IsOptional()
   @IsString()
   @Length(98, 98)
+  @PublicKeyValidator()
   public publicKey?: string | null = null;
 
   @IsOptional()
   @ValidateNested({ each: true })
+  @OpeatorsListValidator()
   public operators?: OperatorDataV2[] | null = null;
 
   @IsOptional()
   @ValidateNested()
+  @MatchLengthValidator('operators', { message: 'Length of operators and shares should be equal.'})
   public shares?: KeySharesKeysV2 | null = null;
 
   setData(data: any) {
@@ -61,12 +62,7 @@ export class KeySharesDataV2 implements IKeySharesData {
    * Do all possible validations.
    */
   async validate(): Promise<any> {
-    await this.validateDuplicates();
-    await bls.init(bls.BLS12_381);
-    await this.validateCounts();
-    await this.shares?.validate();
-    await this.validatePublicKey();
-    await this.validateOperators();
+    validateSync(this);
   }
 
   /**
@@ -101,74 +97,5 @@ export class KeySharesDataV2 implements IKeySharesData {
       return [];
     }
     return this.operators.map(operator => String(operator.publicKey));
-  }
-
-  /**
-   * Try to BLS deserialize validator public key.
-   */
-  async validatePublicKey(): Promise<any> {
-    if (!this.publicKey) {
-      return;
-    }
-    try {
-      await bls.deserializeHexStrToPublicKey(this.publicKey.replace('0x', ''));
-    } catch (e) {
-      throw new BLSDeserializeError(
-        this.publicKey,
-        `Can not BLS deserialize validator public key`
-      );
-    }
-  }
-
-  /**
-   * Check that counts are consistent.
-   */
-  async validateCounts(): Promise<any> {
-    if (!this.sharesEncryptedKeys?.length || !this.sharesPublicKeys?.length) {
-      return;
-    }
-    if (this.operatorIds.length !== this.sharesEncryptedKeys.length
-      || this.operatorIds.length !== this.sharesPublicKeys.length
-      || this.operatorIds.length !== this.operatorPublicKeys.length) {
-      throw new OperatorsWithSharesCountsMismatchError(
-        this.operators || [],
-        this.shares,
-        'Length of operators and shares should be equal.',
-      );
-    }
-  }
-
-  /**
-   * Validate all operators
-   */
-  async validateOperators(): Promise<any> {
-    for (const operator of this.operators || []) {
-      await operator.validate();
-    }
-  }
-
-  /**
-   * Do not allow to use duplicated operator IDs and public keys.
-   */
-  async validateDuplicates() {
-    const operatorIds: any = {},
-      operatorPublicKeys: any = {};
-    for (const operator of this.operators || []) {
-      if (operatorIds[String(operator.id)] === true) {
-        throw new DuplicatedOperatorIdError(
-          operator,
-          `Operator ID already exists`
-        );
-      }
-      operatorIds[String(operator.id)] = true;
-
-      if (operatorPublicKeys[String(operator.publicKey)] === true) {
-        throw new DuplicatedOperatorPublicKeyError(
-          operator,
-          `Operator public key already exists`
-        );
-      }
-      operatorPublicKeys[String(operator.publicKey)] = true;
-    }
   }
 }

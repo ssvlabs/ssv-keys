@@ -105,7 +105,7 @@ yarn cli <action> --help
 - output-format (of) = Format of the result (abi or raw)
 
 ```bash
-yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=...,...,... --output-format=raw
+yarn cli key-shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=...,...,... --output-format=raw
 ```
 
 **Output:**  Shares and path to file holding the shares
@@ -121,7 +121,7 @@ yarn cli shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json
 - ssv-amount (ssv) = SSV Token amount fee required for this transaction in Wei
 
 ```bash
-yarn cli shares --private-key=... -op=...,...,...,... --output=./shares.json
+yarn cli key-shares --private-key=... -op=...,...,...,... --output=./shares.json
 ```
 
 **Output:** Transaction payload and path to file holding the transaction payload

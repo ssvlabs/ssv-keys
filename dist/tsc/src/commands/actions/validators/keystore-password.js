@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.keystorePasswordValidator = exports.KeystorePasswordValidator = void 0;
 const tslib_1 = require("tslib");
 const eth2_keystore_js_1 = tslib_1.__importDefault(require("eth2-keystore-js"));
-const helpers_1 = require("../../../lib/helpers");
+const file_helper_1 = require("../../../lib/helpers/file.helper");
 class KeystorePasswordValidator {
     constructor() {
         this.keystoreFilePath = '';
@@ -31,7 +31,7 @@ class KeystorePasswordValidator {
                         dots = 1;
                     }
                 }, 1000);
-                const data = yield (0, helpers_1.readFile)(this.keystoreFilePath);
+                const data = yield (0, file_helper_1.readFile)(this.keystoreFilePath);
                 const keyStore = new eth2_keystore_js_1.default(data);
                 const privateKey = yield keyStore.getPrivateKey(password)
                     .then((privateKey) => {

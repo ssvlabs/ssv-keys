@@ -28,7 +28,8 @@
     ],
     "lib": [
       "ES6",
-      "DOM"
+      "DOM",
+      "es2019"
     ]
   },
   "include": [

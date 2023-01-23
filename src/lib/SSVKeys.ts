@@ -1,11 +1,11 @@
 import atob from 'atob';
-import Web3 from 'web3';
+import bls from './BLS';
 import { encode } from 'js-base64';
 import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
-
+import { web3 } from './helpers/web3.helper';
 
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
@@ -16,21 +16,30 @@ import Encryption, { EncryptShare } from './Encryption/Encryption';
  */
 export class SSVKeys {
   static SHARES_FORMAT_ABI = 'abi';
+  static VERSION = {
+    V2: 'v2',
+    V3: 'v3',
+  };
 
-  protected web3Instances: any = {};
+  protected version: string;
   protected threshold: ISharesKeyPairs | undefined;
 
-  /**
-   * Getting instance of web3
-   * @param nodeUrl
-   */
-  getWeb3(nodeUrl = process.env.NODE_URL || ''): Web3 {
-    if (!this.web3Instances[nodeUrl]) {
-      this.web3Instances[nodeUrl] = new Web3(String(nodeUrl || ''))
+  public keySharesInstance: KeyShares;
+  public validatorPrivateKey: any;
+  public validatorPublicKey: any;
+
+  constructor(ver: string) {
+    if (!Object.values(SSVKeys.VERSION).includes(ver)) {
+      throw Error ('Version is not supported');
     }
-    return this.web3Instances[nodeUrl];
+
+    this.version = ver;
+    this.keySharesInstance = new KeyShares({ version: this.version });
   }
 
+  get keyShares(): KeyShares {
+    return this.keySharesInstance;
+  }
   /**
    * Extract private key from keystore data using keystore password.
    * Generally can be used in browsers when the keystore data has been provided by browser.
@@ -39,8 +48,12 @@ export class SSVKeys {
    */
   async getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string> {
     try {
-      const keyStore = new EthereumKeyStore(data);
-      return await keyStore.getPrivateKey(password).then((privateKey: string) => privateKey);
+      const privateKey = await new EthereumKeyStore(data).getPrivateKey(password);
+
+      await bls.init(bls.BLS12_381);
+      this.validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
+      this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+      return privateKey;
     } catch (error: any) {
       return error;
     }
@@ -52,13 +65,8 @@ export class SSVKeys {
    * @param operators
    */
   async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
-    try {
-      const threshold: Threshold = new Threshold();
-      this.threshold = await threshold.create(privateKey, operators);
-      return this.threshold;
-    } catch (error: any) {
-      return error;
-    }
+    this.threshold = await new Threshold().create(privateKey, operators);
+    return this.threshold;
   }
 
   /**
@@ -74,8 +82,8 @@ export class SSVKeys {
       return encryptedShares.map((share: EncryptShare) => {
         share.operatorPublicKey = encode(share.operatorPublicKey);
         if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-          share.operatorPublicKey = this.getWeb3().eth.abi.encodeParameter('string', share.operatorPublicKey);
-          share.privateKey = this.getWeb3().eth.abi.encodeParameter('string', share.privateKey);
+          share.operatorPublicKey = web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
+          share.privateKey = web3.eth.abi.encodeParameter('string', share.privateKey);
         }
         return share;
       });
@@ -103,47 +111,19 @@ export class SSVKeys {
   }
 
   /**
-   * Getting public key of validator
-   */
-  getValidatorPublicKey(): string {
-    return this.getThreshold()?.validatorPublicKey || '';
-  }
-
-  /**
-   * Encode with Web3 eth abi method any fields of shares array required for transaction.
-   * @param encryptedShares
-   * @param field
-   */
-  abiEncode(encryptedShares: any[], field?: string): string[] {
-    return encryptedShares.map(share => {
-      const value = field ? Object(share)[field] : share;
-      if (String(value).startsWith('0x')) {
-        return value;
-      }
-      return this.getWeb3().eth.abi.encodeParameter('string', value);
-    });
-  }
-
-  /**
    * Build payload from encrypted shares, validator public key and operator IDs
    * @param validatorPublicKey
    * @param operatorsIds
    * @param encryptedShares
    * @param ssvAmount
    */
-  buildPayload(validatorPublicKey: string,
-               operatorsIds: number[],
-               encryptedShares: EncryptShare[],
-               ssvAmount: string | number): any {
-    const sharePublicKeys: string[] = encryptedShares.map((share: EncryptShare) => share.publicKey);
-    const sharePrivateKeys: string[] = this.abiEncode(encryptedShares, 'privateKey');
-    return [
+  buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
+    return this.keyShares.generateContractPayload({
       validatorPublicKey,
-      operatorsIds.join(','),
-      sharePublicKeys,
-      sharePrivateKeys,
-      ssvAmount,
-    ];
+      operatorsIds,
+      encryptedShares,
+      ssvAmount
+    });
   }
 
   /**
@@ -154,6 +134,7 @@ export class SSVKeys {
    */
   buildPayloadFromKeyShares(keyShares: KeyShares, ssvAmount?: string | number): any {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
+    const validatorPublicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
     const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
 
@@ -166,13 +147,14 @@ export class SSVKeys {
     ) {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
-
-    return [
-      keyShares.data?.publicKey,
-      keyShares.data?.operatorIds?.join(',') || '',
-      publicKeys,
-      this.abiEncode(encryptedKeys),
-      ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
-    ];
+    return this.keyShares.generateContractPayload({
+      validatorPublicKey,
+      operatorsIds: keyShares.data?.operators?.map((item: any) => item.id),
+      encryptedShares: publicKeys.map((item: any, index: number) => ({
+        publicKey: item,
+        privateKey: encryptedKeys[index],
+      })),
+      ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
+    });
   }
 }

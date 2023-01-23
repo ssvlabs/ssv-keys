@@ -6,5 +6,5 @@ export declare class OperatorDataV2 implements IOperatorData {
     /**
      * Validate operator ID and public key
      */
-    validate(): Promise<any>;
+    validate(): void;
 }

@@ -2,10 +2,13 @@ import { decode } from 'js-base64';
 import JSEncrypt from '../../../lib/JSEncrypt';
 import { InvalidOperatorKeyException } from '../../../lib/Encryption/Encryption';
 
-export const operatorValidator = async (operator: string): Promise<string | boolean> => {
+export const operatorPublicKeyValidator = (publicKey: string): string | boolean => {
   try {
     const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
-    const decodedOperator = decode(operator);
+    const decodedOperator = decode(publicKey);
+    if (publicKey.length < 98) {
+      throw Error('The length of the operator public key must be at least 98 characters.');
+    }
     if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
       throw Error(errorMessage);
     }
@@ -16,7 +19,7 @@ export const operatorValidator = async (operator: string): Promise<string | bool
       throw new InvalidOperatorKeyException(
         {
           rsa: decodedOperator,
-          base64: operator,
+          base64: publicKey,
         },
         errorMessage,
       );

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SSVKeys, KeyShares } from 'ssv-keys';
+import { SSVKeys } from 'ssv-keys';
 import "./index.css";
 import "./App.css";
 import Dropzone from "./Dropzone";
@@ -19,7 +19,7 @@ const STEPS = {
 
 function UserFlow() {
   // Initialize SSVKeys SDK
-  const ssvKeys = new SSVKeys();
+  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
 
   // States
   const [ssvAmount, ] = useState(Math.round(Math.random() * 100000000));
@@ -57,7 +57,7 @@ function UserFlow() {
 
     // Final payload
     const payload = ssvKeys.buildPayload(
-      ssvKeys.getValidatorPublicKey(),
+      ssvKeys.validatorPublicKey,
       operatorIds,
       shares,
       ssvAmount,
@@ -66,23 +66,21 @@ function UserFlow() {
     console.log('Payload ready');
 
     // Keyshares
-    await KeyShares.fromData({
+    const keyShares = ssvKeys.keyShares.fromJson({
       version: 'v2',
       data: {
         operators: operators.map((operator, index) => ({
           id: operatorIds[index],
           publicKey: operator,
         })),
-        publicKey: ssvKeys.getValidatorPublicKey(),
+        publicKey: ssvKeys.validatorPublicKey,
         shares,
       },
       payload,
-    }).then((keyShares) => {
-      setKeyShares(keyShares.toString());
-      console.log('KeyShares ready');
-      setStep(STEPS.FINISH);
-      return keyShares;
     });
+    setKeyShares(keyShares.toJson());
+    console.log('KeyShares ready');
+    setStep(STEPS.FINISH);
   };
 
   const downloadKeyShares = () => {

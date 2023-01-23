@@ -1,1 +1,1 @@
-export declare const operatorValidator: (operator: string) => Promise<string | boolean>;
+export declare const operatorPublicKeyValidator: (publicKey: string) => string | boolean;

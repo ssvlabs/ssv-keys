@@ -34,13 +34,13 @@ import * as path from 'path';
 import { promises as fsp } from 'fs';
 
 // In most of the cases it's enough to import only these two classes
-import { SSVKeys, KeyShares } from 'ssv-keys';
+import { SSVKeys } from 'ssv-keys';
 ```
 
 ### Initialize SSVKeys SDK
 
 ```javascript
-const ssvKeys = new SSVKeys();
+const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
 ```
 
 ### Encrypting shares
@@ -113,9 +113,10 @@ const keySharesData = {
   },
 };
 
-// Create KeyShares instance using key shares data
-const keyShares = await KeyShares.fromData(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+// Create SSVKeys instance using key shares data
+const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 #### Saving key shares file from separate data and payload
@@ -141,8 +142,9 @@ const keySharesData = {
 And at some point you saved it in a key shares file:
 
 ```javascript
-const keyShares = await KeyShares.fromData(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 Now this file contains only operators' data.
@@ -158,7 +160,7 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 You can save shares as following:
 
 ```javascript
-await keyShares.setData({
+ssvKeys.keyShares.setData({
   ...keyShares.data,
   shares: {
     publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
@@ -170,7 +172,7 @@ await keyShares.setData({
 And then you can save it again:
 
 ```javascript
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 Then if at some point you would need to build payload:
@@ -190,14 +192,8 @@ Or you can build payload from key shares file directly:
 let payload = await ssvKeys.buildPayloadFromKeyShares(keyShares, 987654321);
 ```
 
-And save payload back to key shares:
-
-```javascript
-await keyShares.setPayload(payload);
-```
-
 And save it back to key shares file:
 
 ```javascript
-await fsp.writeFile('./keyshares.json', keyShares.toString(), { encoding: 'utf-8' });
+await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 ```
