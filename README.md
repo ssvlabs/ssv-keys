@@ -29,7 +29,7 @@ Library and CLI to work with the ETH keystore file:
 2. Use the private key to get shares for operators
 3. Build the payload for the transaction
 
-## Option1: Running an Executable (Recommended route)
+## Option 1: Running an Executable (Recommended route)
 
 If you want to run a compiled version (easier option then CLI)
 
