@@ -104,7 +104,7 @@ To run you will use the "ksh" command
 yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --output-folder=./
 ```
 
-**Output:**  Name will start with keyshares-int1_int2.json
+**Output:**  Name will start with keyshares-timestamp.json
 
 ## Option 3: Integration in your projects
 
