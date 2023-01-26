@@ -29,7 +29,7 @@ Library and CLI to work with the ETH keystore file:
 2. Use the private key to get shares for operators
 3. Build the payload for the transaction
 
-## OPTION 1: Running an Executable (Recommended route)
+## Option 1: Running an Executable (Recommended route)
 
 If you want to run a compiled version (easier option then CLI)
 
@@ -71,13 +71,6 @@ yarn install
 yarn cli --help
 ```
 
-### Running from repository
-
-- For regular CLI usage you will be running the command as: `yarn cli ...`
-- Follow [installation](#Installation) instructions.
-
-
-
 ### Help
 
 Help on available actions:
@@ -95,38 +88,25 @@ yarn cli <action> --help
 
 ### Example
 
-#### Step 1: Build the shares:
+To run you will use the "ksh" command
 
 **Input parameters:**
 
+- key-shares-version (ksv) = Payload version [2 or 3]
 - keystore (ks) = Path to keystore json file
 - password (ps) = Keystore password
-- operators (op) = Comma-separated list of the operator keys
-- output-format (of) = Format of the result (abi or raw)
+- operator-ids (oid) = Comma-separated list of the operator ids 
+- operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
+- ssv-token-amount (ssv) = SSV Token amount fee required for this transaction in Wei
+- output-folder (of) = Path of where to put the output file
 
 ```bash
-yarn cli key-shares --keystore=src/lib/EthereumKeyStore/__tests__/test.keystore.json --password=testtest --operators=...,...,... --output-format=raw
+yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --output-folder=./
 ```
 
-**Output:**  Shares and path to file holding the shares
+**Output:**  Name will start with keyshares-timestamp.json
 
-#### Step 2: Build the transaction payload:
-
-**Input parameters:**
-
-- keystore (ks) = Path to keystore json file
-- password (ps) = Keystore password
-- operators (op) = Comma-separated list of the operator keys
-- operator-ids (oid) = Comma-separated list of the operator ids (same sequence as operators)
-- ssv-amount (ssv) = SSV Token amount fee required for this transaction in Wei
-
-```bash
-yarn cli key-shares --private-key=... -op=...,...,...,... --output=./shares.json
-```
-
-**Output:** Transaction payload and path to file holding the transaction payload
-
-## Integration in your projects
+## Option 3: Integration in your projects
 
 ### Node Project
 
