@@ -9,13 +9,13 @@ describe('Check Threshold creation', () => {
         const shares: Shares = await sharesSignatures(privateKey, [1, 2, 3, 4], msg, false);
         const aggSig = new bls.Signature();
         aggSig.recover(shares.signatures, shares.ids);
-        expect(shares.validatorPublicKey.verify(aggSig, msg)).toBe(true);
+        expect(shares.publicKey.verify(aggSig, msg)).toBe(true);
     });
 
     it('should aggregate 3 out of 4 (randomly) shares signatures and verify', async () => {
         const shares: Shares = await sharesSignatures(privateKey, [1, 2, 3, 4], msg, true);
         const aggSig = new bls.Signature();
         aggSig.recover(shares.signatures, shares.ids);
-        expect(shares.validatorPublicKey.verify(aggSig, msg)).toBe(true);
+        expect(shares.publicKey.verify(aggSig, msg)).toBe(true);
     });
 });

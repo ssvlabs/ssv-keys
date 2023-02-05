@@ -8,8 +8,8 @@ export interface IShares {
 }
 
 export interface ISharesKeyPairs {
-    validatorPrivateKey: string,
-    validatorPublicKey: string,
+  privateKey: string,
+    publicKey: string,
     shares: IShares[]
 }
 
@@ -37,8 +37,8 @@ export class ThresholdInvalidOperatorIdError extends Error {
  * Building threshold for list of operator IDs
  */
 class Threshold {
-  protected validatorPublicKey: any;
-  protected validatorPrivateKey: any;
+  protected publicKey: any;
+  protected privateKey: any;
   protected shares: Array<any> = [];
 
   static get DEFAULT_THRESHOLD_NUMBER(): number {
@@ -77,11 +77,11 @@ class Threshold {
     const mpk = [];
 
     // Master key Polynomial
-    this.validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
-    this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
+    this.privateKey = bls.deserializeHexStrToSecretKey(privateKey);
+    this.publicKey = this.privateKey.getPublicKey();
 
-    msk.push(this.validatorPrivateKey);
-    mpk.push(this.validatorPublicKey);
+    msk.push(this.privateKey);
+    mpk.push(this.publicKey);
 
     // Construct poly
     for (let i = 1; i < operators.length - F; i += 1) {
@@ -110,8 +110,8 @@ class Threshold {
     }
 
     const response: ISharesKeyPairs = {
-        validatorPrivateKey: `0x${this.validatorPrivateKey.serializeToHexStr()}`,
-        validatorPublicKey: `0x${this.validatorPublicKey.serializeToHexStr()}`,
+      privateKey: `0x${this.privateKey.serializeToHexStr()}`,
+        publicKey: `0x${this.publicKey.serializeToHexStr()}`,
         shares: this.shares,
     };
 

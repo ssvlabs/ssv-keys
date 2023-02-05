@@ -6,9 +6,9 @@ import Encryption, { EncryptShare } from '../../Encryption/Encryption';
 
 describe('Check Encryption shares', () => {
   it('should use raw public keys of operators and return encrypt shares without error', async () => {
-    const validatorPrivateKey = '12f1cf0ecf8086a7e1d84b3b77da48761664e3cdc73f165c644e7f0594f98bdd';
+    const privateKey = '12f1cf0ecf8086a7e1d84b3b77da48761664e3cdc73f165c644e7f0594f98bdd';
     const threshold: Threshold = new Threshold();
-    const thresholdResult: ISharesKeyPairs = await threshold.create(validatorPrivateKey, [9, 10, 11, 12]);
+    const thresholdResult: ISharesKeyPairs = await threshold.create(privateKey, [9, 10, 11, 12]);
     const encryptedShares: EncryptShare[] = new Encryption(
       operatorKeys.publicKeys,
       thresholdResult.shares

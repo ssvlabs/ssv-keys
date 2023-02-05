@@ -15,11 +15,11 @@ class KeySharesPayloadV2 {
     }
     build(data) {
         return [
-            data.validatorPublicKey,
-            data.operatorsIds.join(','),
+            data.publicKey,
+            data.operatorIds.join(','),
             data.encryptedShares.map((share) => share.publicKey),
             (0, web3_helper_1.abiEncode)(data.encryptedShares, 'privateKey'),
-            data.ssvAmount,
+            data.amount,
         ];
     }
     /**
@@ -62,11 +62,11 @@ class KeySharesPayloadV2 {
      */
     toReadable(payload) {
         return {
-            validatorPublicKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
+            publicKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
             operatorIds: payload[KeySharesPayloadV2.PAYLOAD_INDEX_OPERATOR_IDS],
             sharePublicKeys: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
             sharePrivateKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-            ssvAmount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
+            amount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
         };
     }
     validate() {

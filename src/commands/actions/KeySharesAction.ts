@@ -7,6 +7,10 @@ import ssvAmountArgument from './arguments/ssv-amount';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
 import keySharesVersionArgument from './arguments/key-shares-version';
+import contractAddressArgument from './arguments/contract-address';
+import ownerAddressArgument from './arguments/owner-address';
+import nodeUrlArgument from './arguments/node-url';
+
 import outputFolderArgument from './arguments/output-folder';
 import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
@@ -26,6 +30,9 @@ export class KeySharesAction extends BaseAction {
         operatorIdsArgument,
         operatorPublicKeysArgument,
         ssvAmountArgument,
+        contractAddressArgument,
+        ownerAddressArgument,
+        nodeUrlArgument,
         keySharesVersionArgument,
         outputFolderArgument,
       ],
@@ -40,8 +47,11 @@ export class KeySharesAction extends BaseAction {
       keystore,
       password,
       output_folder: outputFolder,
-      ssv_token_amount: ssvAmount,
+      ssv_token_amount: amount,
       key_shares_version: keySharesVersion,
+      contract_address: contractAddress,
+      owner_address: ownerAddress,
+      node_url: nodeUrl,
     } = this.args;
 
     let {
@@ -60,7 +70,7 @@ export class KeySharesAction extends BaseAction {
     const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
 
     // Build shares from operator IDs and public keys
-    const shares = await ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
 
     // Now save to key shares file encrypted shares and validator public key
     const keyShares = await ssvKeys.keyShares.fromJson({});
@@ -69,16 +79,23 @@ export class KeySharesAction extends BaseAction {
         id: operatorIds[index],
         publicKey: operator,
       })),
-      publicKey: ssvKeys.validatorPublicKey,
-      shares,
+      publicKey: ssvKeys.publicKey,
+      encryptedShares,
     });
 
     // Build payload and save it in key shares file
     await ssvKeys.buildPayload(
-      ssvKeys.validatorPublicKey,
-      operatorIds,
-      shares,
-      ssvAmount,
+      {
+        publicKey: ssvKeys.publicKey,
+        operatorIds,
+        encryptedShares,
+        amount,
+      },
+      {
+        contractAddress,
+        ownerAddress,
+        nodeUrl,
+      }
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

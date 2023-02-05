@@ -31,7 +31,7 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 
 ```javascript
 const payload = await ssvKeys.buildPayload(
-  threshold.validatorPublicKey,
+  threshold.publicKey,
   operatorIds,
   shares,
   123456789,

@@ -26,16 +26,16 @@ class KeySharesDataV2 {
                 return operatorData;
             });
         }
-        if (data.shares) {
+        if (data.encryptedShares) {
             const sharesInstance = new KeySharesKeysV2_1.KeySharesKeysV2();
-            if (underscore_1.default.isArray(data.shares)) {
+            if (underscore_1.default.isArray(data.encryptedShares)) {
                 sharesInstance.setData({
-                    publicKeys: data.shares.map((share) => share.publicKey),
-                    encryptedKeys: data.shares.map((share) => share.privateKey),
+                    publicKeys: data.encryptedShares.map((share) => share.publicKey),
+                    encryptedKeys: data.encryptedShares.map((share) => share.privateKey),
                 });
             }
             else {
-                sharesInstance.setData(data.shares);
+                sharesInstance.setData(data.encryptedShares);
             }
             this.shares = sharesInstance;
         }

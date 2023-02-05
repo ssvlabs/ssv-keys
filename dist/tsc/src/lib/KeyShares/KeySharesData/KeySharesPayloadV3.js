@@ -32,10 +32,11 @@ class KeySharesPayloadV3 {
     }
     build(data) {
         return [
-            data.validatorPublicKey,
-            data.operatorsIds.join(','),
+            data.publicKey,
+            data.operatorIds.join(','),
             this.sharesToBytes(data.encryptedShares.map((share) => share.publicKey), data.encryptedShares.map((share) => share.privateKey)),
-            data.ssvAmount,
+            data.amount,
+            data.cluster,
         ];
     }
     /**
@@ -78,10 +79,11 @@ class KeySharesPayloadV3 {
      */
     toReadable(payload) {
         return {
-            validatorPublicKey: payload[KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
+            publicKey: payload[KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
             operatorIds: payload[KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS],
             shares: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS],
-            ssvAmount: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT],
+            amount: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT],
+            cluster: payload[KeySharesPayloadV3.PAYLOAD_INDEX_CLUSTER],
         };
     }
     validate() {
@@ -92,6 +94,7 @@ KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
 KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS = 1;
 KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS = 2;
 KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT = 3;
+KeySharesPayloadV3.PAYLOAD_INDEX_CLUSTER = 4;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)()

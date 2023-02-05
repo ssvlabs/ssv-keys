@@ -4,10 +4,10 @@ exports.sharesSignatures = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../../../BLS"));
 const Threshold_1 = tslib_1.__importDefault(require("../../../Threshold"));
-const sharesSignatures = (privateKey, operators, message, isThreshold) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const threshold = yield new Threshold_1.default().create(privateKey, operators);
-    const validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
-    const validatorPublicKey = validatorPrivateKey.getPublicKey();
+const sharesSignatures = (_privateKey, operators, message, isThreshold) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const threshold = yield new Threshold_1.default().create(_privateKey, operators);
+    const privateKey = BLS_1.default.deserializeHexStrToSecretKey(_privateKey);
+    const publicKey = privateKey.getPublicKey();
     const signatures = [];
     const ids = [];
     const randomIndex = getRandomInt(4);
@@ -21,8 +21,8 @@ const sharesSignatures = (privateKey, operators, message, isThreshold) => tslib_
         ids.push(share.id);
     });
     return {
-        validatorPrivateKey,
-        validatorPublicKey,
+        privateKey,
+        publicKey,
         signatures,
         ids,
     };

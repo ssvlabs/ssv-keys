@@ -22,7 +22,7 @@ function UserFlow() {
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
 
   // States
-  const [ssvAmount, ] = useState(Math.round(Math.random() * 100000000));
+  const [amount, ] = useState(Math.round(Math.random() * 100000000));
   const [step, setStep] = useState(STEPS.START);
   const [password, setPassword] = useState('');
   const [keyShares, setKeyShares] = useState([]);
@@ -53,28 +53,39 @@ function UserFlow() {
       console.log('Private key ready');
       return result;
     });
-    const shares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
 
-    // Final payload
-    const payload = ssvKeys.buildPayload(
-      ssvKeys.validatorPublicKey,
-      operatorIds,
-      shares,
-      ssvAmount,
+    // params to scan contract for the latest cluster snapshot to fill the payload data
+    const contractParams = {
+      ownerAddress: 'VALIDATOR_OWNER_ADDRESS',
+      contractAddress: 'SSV_CONTRACT_ADDRESS',
+      nodeUrl: 'ETH_NODE_URL',
+    };
+
+    // Build final web3 transaction payload and update keyshares file with payload data
+    const payload = await ssvKeys.buildPayload(
+      {
+        publicKey: ssvKeys.publicKey,
+        operatorIds,
+        encryptedShares,
+        amount: ssvAmount,
+      },
+      contractParams
     );
+
     setFinalPayload(payload);
     console.log('Payload ready');
 
     // Keyshares
     const keyShares = ssvKeys.keyShares.fromJson({
-      version: 'v2',
+      version: 'v3',
       data: {
         operators: operators.map((operator, index) => ({
           id: operatorIds[index],
           publicKey: operator,
         })),
-        publicKey: ssvKeys.validatorPublicKey,
-        shares,
+        publicKey: ssvKeys.publicKey,
+        encryptedShares,
       },
       payload,
     });
@@ -142,7 +153,7 @@ function UserFlow() {
       return (
         <div id={`${STEPS.FINISH}`}>
           <h3>Results</h3>
-          <h4>Random SSV Amount: {ssvAmount}</h4>
+          <h4>Random SSV Amount: {amount}</h4>
           <h4>Dummy operators data:</h4>
           <table style={{ textAlign: 'left' }}>
             <tr>
