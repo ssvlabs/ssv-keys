@@ -4,7 +4,7 @@ export default {
   options: {
     type: String,
     required: true,
-    help: 'Contract address?'
+    help: 'Eth1 node url?'
   },
   interactive: {
     options: {

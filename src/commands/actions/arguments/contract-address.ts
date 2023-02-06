@@ -4,7 +4,7 @@ export default {
   options: {
     type: String,
     required: true,
-    help: 'Contract address?'
+    help: 'SSV contract address?'
   },
   interactive: {
     options: {
