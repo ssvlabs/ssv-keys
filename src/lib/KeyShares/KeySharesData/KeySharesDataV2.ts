@@ -44,15 +44,15 @@ export class KeySharesDataV2 implements IKeySharesData {
         }
       );
     }
-    if (data.shares) {
+    if (data.encryptedShares) {
       const sharesInstance = new KeySharesKeysV2();
-      if (_.isArray(data.shares)) {
+      if (_.isArray(data.encryptedShares)) {
         sharesInstance.setData({
-          publicKeys: data.shares.map((share: { publicKey: string; }) => share.publicKey),
-          encryptedKeys: data.shares.map((share: { privateKey: string; }) => share.privateKey),
+          publicKeys: data.encryptedShares.map((share: { publicKey: string; }) => share.publicKey),
+          encryptedKeys: data.encryptedShares.map((share: { privateKey: string; }) => share.privateKey),
         });
       } else {
-        sharesInstance.setData(data.shares);
+        sharesInstance.setData(data.encryptedShares);
       }
       this.shares = sharesInstance;
     }

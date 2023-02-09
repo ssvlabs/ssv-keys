@@ -24,7 +24,7 @@ Important dependencies:
 
 ---
 
-Library and CLI to work with the ETH keystore file:
+Library and CLI to work with the ETH keystore file and extract latest validator cluster snapshot to build the payload:
 1. Parse the private key using the keystore password
 2. Use the private key to get shares for operators
 3. Build the payload for the transaction
@@ -95,13 +95,16 @@ To run you will use the "ksh" command
 - key-shares-version (ksv) = Payload version [2 or 3]
 - keystore (ks) = Path to keystore json file
 - password (ps) = Keystore password
-- operator-ids (oid) = Comma-separated list of the operator ids 
+- operator-ids (oid) = Comma-separated list of the operator ids
 - operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
 - ssv-token-amount (ssv) = SSV Token amount fee required for this transaction in Wei
+- owner-address = Validator owner address
+- contract-address = SSV contract address
+- node-url = Eth1 node url
 - output-folder (of) = Path of where to put the output file
 
 ```bash
-yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --output-folder=./
+yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --owner-address=0x... --contract-address=0x... --node-url=http://... --output-folder=./
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json

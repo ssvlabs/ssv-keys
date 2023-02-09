@@ -25,11 +25,11 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
 
   build(data: any): any {
     return [
-      data.validatorPublicKey,
-      data.operatorsIds.join(','),
+      data.publicKey,
+      data.operatorIds.join(','),
       data.encryptedShares.map((share: EncryptShare) => share.publicKey),
       abiEncode(data.encryptedShares, 'privateKey'),
-      data.ssvAmount,
+      data.amount,
     ];
   }
 
@@ -77,11 +77,11 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
    */
   toReadable(payload: any[]): any {
     return {
-      validatorPublicKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
+      publicKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
       operatorIds: payload[KeySharesPayloadV2.PAYLOAD_INDEX_OPERATOR_IDS],
       sharePublicKeys: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
       sharePrivateKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-      ssvAmount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
+      amount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
     };
   }
 

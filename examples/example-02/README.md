@@ -68,7 +68,7 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 
 ```javascript
 let payload = await ssvKeys.buildPayload(
-  threshold.validatorPublicKey,
+  threshold.publicKey,
   operatorIds,
   shares,
   123456789,  // SSV Amount
@@ -101,7 +101,7 @@ This is less programmatic way of how to build key shares structure.
 const keySharesData = {
   version: 'v2',
   data: {
-    publicKey: threshold.validatorPublicKey,
+    publicKey: threshold.publicKey,
     operators: operators.map((operator: any, index: string | number) => ({
       id: operatorIds[index],
       publicKey: operator,
@@ -127,7 +127,7 @@ Let's say, initially you have only operators' data:
 const keySharesData = {
   version: 'v2',
   data: {
-    publicKey: threshold.validatorPublicKey,
+    publicKey: threshold.publicKey,
     operators: [
       {
         id: 1,
@@ -178,18 +178,29 @@ await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 
 Then if at some point you would need to build payload:
 
 ```javascript
+// params to scan contract for the latest cluster snapshot to fill the payload data
+const contractParams = {
+  ownerAddress: 'VALIDATOR_OWNER_ADDRESS',
+  contractAddress: 'SSV_CONTRACT_ADDRESS',
+  nodeUrl: 'ETH_NODE_URL',
+};
+
+// Build final web3 transaction payload and update keyshares file with payload data
 let payload = await ssvKeys.buildPayload(
-  threshold.validatorPublicKey,
-  operatorIds,
-  shares,
-  123456789,  // SSV Amount
+  {
+    publicKey: ssvKeys.publicKey,
+    operatorIds,
+    encryptedShares,
+    amount: 123456789, // SSV token amount
+  },
+  contractParams
 );
 ```
 
 Or you can build payload from key shares file directly:
 
 ```javascript
-let payload = await ssvKeys.buildPayloadFromKeyShares(keyShares, 987654321);
+let payload = await ssvKeys.buildPayloadFromKeyShares(keyShares, 987654321, contractParams);
 ```
 
 And save it back to key shares file:

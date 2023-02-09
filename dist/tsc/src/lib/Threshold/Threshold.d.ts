@@ -4,8 +4,8 @@ export interface IShares {
     id?: any;
 }
 export interface ISharesKeyPairs {
-    validatorPrivateKey: string;
-    validatorPublicKey: string;
+    privateKey: string;
+    publicKey: string;
     shares: IShares[];
 }
 export declare class ThresholdInvalidOperatorsLengthError extends Error {
@@ -20,8 +20,8 @@ export declare class ThresholdInvalidOperatorIdError extends Error {
  * Building threshold for list of operator IDs
  */
 declare class Threshold {
-    protected validatorPublicKey: any;
-    protected validatorPrivateKey: any;
+    protected publicKey: any;
+    protected privateKey: any;
     protected shares: Array<any>;
     static get DEFAULT_THRESHOLD_NUMBER(): number;
     /**
