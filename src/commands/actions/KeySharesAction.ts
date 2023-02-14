@@ -3,13 +3,9 @@ import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
 import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
-import ssvAmountArgument from './arguments/ssv-amount';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
 import keySharesVersionArgument from './arguments/key-shares-version';
-import contractAddressArgument from './arguments/contract-address';
-import ownerAddressArgument from './arguments/owner-address';
-import nodeUrlArgument from './arguments/node-url';
 
 import outputFolderArgument from './arguments/output-folder';
 import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
@@ -29,10 +25,6 @@ export class KeySharesAction extends BaseAction {
         keystorePasswordArgument,
         operatorIdsArgument,
         operatorPublicKeysArgument,
-        ssvAmountArgument,
-        contractAddressArgument,
-        ownerAddressArgument,
-        nodeUrlArgument,
         keySharesVersionArgument,
         outputFolderArgument,
       ],
@@ -47,11 +39,7 @@ export class KeySharesAction extends BaseAction {
       keystore,
       password,
       output_folder: outputFolder,
-      ssv_token_amount: amount,
       key_shares_version: keySharesVersion,
-      contract_address: contractAddress,
-      owner_address: ownerAddress,
-      node_url: nodeUrl,
     } = this.args;
 
     let {
@@ -89,13 +77,7 @@ export class KeySharesAction extends BaseAction {
         publicKey: ssvKeys.publicKey,
         operatorIds,
         encryptedShares,
-        amount,
       },
-      {
-        contractAddress,
-        ownerAddress,
-        nodeUrl,
-      }
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

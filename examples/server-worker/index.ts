@@ -54,22 +54,14 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
   const encryptedShares = await ssvKeys.buildShares(privateKey, operator_ids, operator_keys);
-  // params to scan contract for the latest cluster snapshot to fill the payload data
-  const contractParams = {
-    ownerAddress: 'VALIDATOR_OWNER_ADDRESS',
-    contractAddress: 'SSV_CONTRACT_ADDRESS',
-    nodeUrl: 'ETH_NODE_URL',
-  };
 
   // Build final web3 transaction payload and update keyshares file with payload data
   const payload = await ssvKeys.buildPayload(
     {
       publicKey: ssvKeys.publicKey,
-      operatorIds,
+      operator_ids,
       encryptedShares,
-      123456789,
-    },
-    contractParams
+    }
   );
   const keyShares = ssvKeys.keyShares.fromJson({
     version: 'v3',

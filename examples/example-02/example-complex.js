@@ -50,29 +50,20 @@ async function main() {
 
   await fsp.writeFile(getKeySharesFilePath(3), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
-  // params to scan contract for the latest cluster snapshot to fill the payload data
-  const contractParams = {
-    ownerAddress: 'VALIDATOR_OWNER_ADDRESS',
-    contractAddress: 'SSV_CONTRACT_ADDRESS',
-    nodeUrl: 'ETH_NODE_URL',
-  };
-
   // Build final web3 transaction payload and update keyshares file with payload data
   await ssvKeys.buildPayload(
     {
       publicKey: ssvKeys.publicKey,
       operatorIds,
       encryptedShares,
-      amount: 123456789,
-    },
-    contractParams
+    }
   );
 
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
   // Build payload with a new ssv amount and from saved on previous steps key shares data
   const keySharesWithoutPayload = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(getKeySharesFilePath(3))));
-  await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload, 987654321, contractParams);
+  await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload);
 
   // Save new key shares file with new ssv amount
   await fsp.writeFile(getKeySharesFilePath(5), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });

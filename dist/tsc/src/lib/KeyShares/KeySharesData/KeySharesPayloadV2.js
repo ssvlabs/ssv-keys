@@ -19,7 +19,6 @@ class KeySharesPayloadV2 {
             data.operatorIds.join(','),
             data.encryptedShares.map((share) => share.publicKey),
             (0, web3_helper_1.abiEncode)(data.encryptedShares, 'privateKey'),
-            data.amount,
         ];
     }
     /**
@@ -66,7 +65,7 @@ class KeySharesPayloadV2 {
             operatorIds: payload[KeySharesPayloadV2.PAYLOAD_INDEX_OPERATOR_IDS],
             sharePublicKeys: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
             sharePrivateKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-            amount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
+            amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
         };
     }
     validate() {
@@ -79,7 +78,6 @@ KeySharesPayloadV2.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
 KeySharesPayloadV2.PAYLOAD_INDEX_OPERATOR_IDS = 1;
 KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS = 2;
 KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS = 3;
-KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT = 4;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)()

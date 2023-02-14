@@ -1,11 +1,4 @@
 import { IKeySharesPayload } from './IKeySharesPayload';
-export interface IPayloadData {
-    publicKey: string;
-    operatorIds: number[];
-    shares: string;
-    amount: string;
-    cluster: string;
-}
 /**
  * Key Shares Payload v2.
  */
@@ -13,8 +6,6 @@ export declare class KeySharesPayloadV3 implements IKeySharesPayload {
     static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY: number;
     static PAYLOAD_INDEX_OPERATOR_IDS: number;
     static PAYLOAD_INDEX_SHARES_KEYS: number;
-    static PAYLOAD_INDEX_SSV_AMOUNT: number;
-    static PAYLOAD_INDEX_CLUSTER: number;
     readable?: any;
     raw?: string | null;
     private decodeRSAShares;

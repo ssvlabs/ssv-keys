@@ -6,19 +6,11 @@ import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
 import { web3 } from './helpers/web3.helper';
-import ClusterSnapshot from './ClusterScanner/Snapshot';
 
 export interface IPayloadMetaData {
   publicKey: string,
   operatorIds: number[],
   encryptedShares: EncryptShare[],
-  amount: string | number,
-}
-
-export interface IClusterScanParams {
-  contractAddress: string,
-  ownerAddress: string,
-  nodeUrl: string,
 }
 
 /**
@@ -129,27 +121,20 @@ export class SSVKeys {
    * @param publicKey
    * @param operatorIds
    * @param encryptedShares
-   * @param amount
    */
-  async buildPayload(metaData: IPayloadMetaData, clusterScanParams: IClusterScanParams): Promise<any> {
-    const cluster = await ClusterSnapshot.get({...clusterScanParams, operatorIds: metaData.operatorIds });
-
+  async buildPayload(metaData: IPayloadMetaData): Promise<any> {
     return this.keyShares.generateContractPayload({
       publicKey: metaData.publicKey,
       operatorIds: metaData.operatorIds,
       encryptedShares: metaData.encryptedShares,
-      amount: metaData.amount,
-      cluster,
     });
   }
 
   /**
    * Build payload from keyshares file with operators and shares details inside.
-   * If ssv amount is not provided - it will be taken from keyshares file if exist there or set to 0.
    * @param keyShares
-   * @param amount
    */
-  async buildPayloadFromKeyShares(keyShares: KeyShares, amount: string | number, clusterScanParams: IClusterScanParams): Promise<any> {
+  async buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any> {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
     const publicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
@@ -166,8 +151,6 @@ export class SSVKeys {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
 
-    const cluster = await ClusterSnapshot.get({...clusterScanParams, operatorIds });
-
     return this.keyShares.generateContractPayload({
       publicKey,
       operatorIds,
@@ -175,8 +158,6 @@ export class SSVKeys {
         publicKey: item,
         privateKey: encryptedKeys[index],
       })),
-      amount: amount || keyShares.payload?.readable?.amount || 0,
-      cluster,
     });
   }
 }
