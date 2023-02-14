@@ -7,7 +7,6 @@ export declare class KeySharesPayloadV2 implements IKeySharesPayload {
     static PAYLOAD_INDEX_OPERATOR_IDS: number;
     static PAYLOAD_INDEX_SHARE_PUBLIC_KEYS: number;
     static PAYLOAD_INDEX_SHARE_PRIVATE_KEYS: number;
-    static PAYLOAD_INDEX_SSV_AMOUNT: number;
     readable?: any;
     raw?: string | null;
     build(data: any): any;

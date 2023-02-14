@@ -10,7 +10,6 @@ const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
 const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
 const web3_helper_1 = require("./helpers/web3.helper");
-const Snapshot_1 = tslib_1.__importDefault(require("./ClusterScanner/Snapshot"));
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -108,28 +107,22 @@ class SSVKeys {
      * @param publicKey
      * @param operatorIds
      * @param encryptedShares
-     * @param amount
      */
-    buildPayload(metaData, clusterScanParams) {
+    buildPayload(metaData) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const cluster = yield Snapshot_1.default.get(Object.assign(Object.assign({}, clusterScanParams), { operatorIds: metaData.operatorIds }));
             return this.keyShares.generateContractPayload({
                 publicKey: metaData.publicKey,
                 operatorIds: metaData.operatorIds,
                 encryptedShares: metaData.encryptedShares,
-                amount: metaData.amount,
-                cluster,
             });
         });
     }
     /**
      * Build payload from keyshares file with operators and shares details inside.
-     * If ssv amount is not provided - it will be taken from keyshares file if exist there or set to 0.
      * @param keyShares
-     * @param amount
      */
-    buildPayloadFromKeyShares(keyShares, amount, clusterScanParams) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    buildPayloadFromKeyShares(keyShares) {
+        var _a, _b, _c, _d, _e, _f, _g;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const publicKeys = ((_b = (_a = keyShares.data) === null || _a === void 0 ? void 0 : _a.shares) === null || _b === void 0 ? void 0 : _b.publicKeys) || [];
             const publicKey = (_c = keyShares.data) === null || _c === void 0 ? void 0 : _c.publicKey;
@@ -144,7 +137,6 @@ class SSVKeys {
                 || !publicKeys.length) {
                 throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
             }
-            const cluster = yield Snapshot_1.default.get(Object.assign(Object.assign({}, clusterScanParams), { operatorIds }));
             return this.keyShares.generateContractPayload({
                 publicKey,
                 operatorIds,
@@ -152,8 +144,6 @@ class SSVKeys {
                     publicKey: item,
                     privateKey: encryptedKeys[index],
                 })),
-                amount: amount || ((_j = (_h = keyShares.payload) === null || _h === void 0 ? void 0 : _h.readable) === null || _j === void 0 ? void 0 : _j.amount) || 0,
-                cluster,
             });
         });
     }

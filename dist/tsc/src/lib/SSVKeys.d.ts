@@ -5,12 +5,6 @@ export interface IPayloadMetaData {
     publicKey: string;
     operatorIds: number[];
     encryptedShares: EncryptShare[];
-    amount: string | number;
-}
-export interface IClusterScanParams {
-    contractAddress: string;
-    ownerAddress: string;
-    nodeUrl: string;
 }
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
@@ -68,14 +62,11 @@ export declare class SSVKeys {
      * @param publicKey
      * @param operatorIds
      * @param encryptedShares
-     * @param amount
      */
-    buildPayload(metaData: IPayloadMetaData, clusterScanParams: IClusterScanParams): Promise<any>;
+    buildPayload(metaData: IPayloadMetaData): Promise<any>;
     /**
      * Build payload from keyshares file with operators and shares details inside.
-     * If ssv amount is not provided - it will be taken from keyshares file if exist there or set to 0.
      * @param keyShares
-     * @param amount
      */
-    buildPayloadFromKeyShares(keyShares: KeyShares, amount: string | number, clusterScanParams: IClusterScanParams): Promise<any>;
+    buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any>;
 }

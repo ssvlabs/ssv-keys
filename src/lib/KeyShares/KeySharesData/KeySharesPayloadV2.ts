@@ -13,7 +13,6 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
   static PAYLOAD_INDEX_OPERATOR_IDS = 1;
   static PAYLOAD_INDEX_SHARE_PUBLIC_KEYS = 2;
   static PAYLOAD_INDEX_SHARE_PRIVATE_KEYS = 3;
-  static PAYLOAD_INDEX_SSV_AMOUNT = 4;
 
   @IsOptional()
   @IsObject()
@@ -29,7 +28,6 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
       data.operatorIds.join(','),
       data.encryptedShares.map((share: EncryptShare) => share.publicKey),
       abiEncode(data.encryptedShares, 'privateKey'),
-      data.amount,
     ];
   }
 
@@ -81,7 +79,7 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
       operatorIds: payload[KeySharesPayloadV2.PAYLOAD_INDEX_OPERATOR_IDS],
       sharePublicKeys: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PUBLIC_KEYS],
       sharePrivateKey: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SHARE_PRIVATE_KEYS],
-      amount: payload[KeySharesPayloadV2.PAYLOAD_INDEX_SSV_AMOUNT],
+      amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
     };
   }
 

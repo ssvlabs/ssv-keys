@@ -35,8 +35,6 @@ class KeySharesPayloadV3 {
             data.publicKey,
             data.operatorIds.join(','),
             this.sharesToBytes(data.encryptedShares.map((share) => share.publicKey), data.encryptedShares.map((share) => share.privateKey)),
-            data.amount,
-            data.cluster,
         ];
     }
     /**
@@ -82,8 +80,8 @@ class KeySharesPayloadV3 {
             publicKey: payload[KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
             operatorIds: payload[KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS],
             shares: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS],
-            amount: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT],
-            cluster: payload[KeySharesPayloadV3.PAYLOAD_INDEX_CLUSTER],
+            amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
+            cluster: 'The latest cluster snapshot data, obtained using the cluster-scanner tool. If this is the cluster\'s 1st validator then use - {0,0,0,0,0,false}',
         };
     }
     validate() {
@@ -93,8 +91,6 @@ class KeySharesPayloadV3 {
 KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
 KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS = 1;
 KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS = 2;
-KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT = 3;
-KeySharesPayloadV3.PAYLOAD_INDEX_CLUSTER = 4;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)()

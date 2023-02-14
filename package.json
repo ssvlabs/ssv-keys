@@ -76,7 +76,6 @@
     "bls-signatures": "^0.2.5",
     "btoa": "^1.2.1",
     "class-validator": "^0.13.2",
-    "cluster-scanner": "https://github.com/bloxapp/cluster-scanner.git",
     "colors": "^1.4.0",
     "crypto": "^1.0.1",
     "eth2-keystore-js": "^1.0.8",

@@ -22,7 +22,6 @@ function UserFlow() {
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
 
   // States
-  const [amount, ] = useState(Math.round(Math.random() * 100000000));
   const [step, setStep] = useState(STEPS.START);
   const [password, setPassword] = useState('');
   const [keyShares, setKeyShares] = useState([]);
@@ -55,22 +54,13 @@ function UserFlow() {
     });
     const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
 
-    // params to scan contract for the latest cluster snapshot to fill the payload data
-    const contractParams = {
-      ownerAddress: 'VALIDATOR_OWNER_ADDRESS',
-      contractAddress: 'SSV_CONTRACT_ADDRESS',
-      nodeUrl: 'ETH_NODE_URL',
-    };
-
     // Build final web3 transaction payload and update keyshares file with payload data
     const payload = await ssvKeys.buildPayload(
       {
         publicKey: ssvKeys.publicKey,
         operatorIds,
         encryptedShares,
-        amount: ssvAmount,
-      },
-      contractParams
+      }
     );
 
     setFinalPayload(payload);
@@ -153,7 +143,6 @@ function UserFlow() {
       return (
         <div id={`${STEPS.FINISH}`}>
           <h3>Results</h3>
-          <h4>Random SSV Amount: {amount}</h4>
           <h4>Dummy operators data:</h4>
           <table style={{ textAlign: 'left' }}>
             <tr>
