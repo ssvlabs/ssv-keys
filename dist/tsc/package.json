@@ -1,6 +1,6 @@
 {
     "name": "ssv-keys",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "Library to work with keystore file, with private key to get shares and to build final payload for transaction in SSV Network.",
     "author": "SSV.Network",
     "repository": "https://github.com/bloxapp/ssv-keys",

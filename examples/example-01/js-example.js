@@ -12,14 +12,15 @@ async function main() {
 
   // Step 2: Build shares from operator IDs and public keys
   const threshold = await ssvKeys.createThreshold(privateKey, operatorIds);
-  const shares = await ssvKeys.encryptShares(operators, threshold.shares);
+  const encryptedShares = await ssvKeys.encryptShares(operators, threshold.shares);
 
-  // Step 3: Build final web3 transaction payload
+  // Step 3: Build final web3 transaction payload and update keyshares file with payload data
   const payload = await ssvKeys.buildPayload(
-    threshold.validatorPublicKey,
-    operatorIds,
-    shares,
-    123456789,
+    {
+      publicKey: ssvKeys.publicKey,
+      operatorIds,
+      encryptedShares,
+    },
   );
 
   console.debug('payload: ', payload);

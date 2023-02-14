@@ -7,6 +7,12 @@ import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
 import { web3 } from './helpers/web3.helper';
 
+export interface IPayloadMetaData {
+  publicKey: string,
+  operatorIds: number[],
+  encryptedShares: EncryptShare[],
+}
+
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -25,8 +31,8 @@ export class SSVKeys {
   protected threshold: ISharesKeyPairs | undefined;
 
   public keySharesInstance: KeyShares;
-  public validatorPrivateKey: any;
-  public validatorPublicKey: any;
+  public privateKey: any;
+  public publicKey: any;
 
   constructor(ver: string) {
     if (!Object.values(SSVKeys.VERSION).includes(ver)) {
@@ -51,8 +57,8 @@ export class SSVKeys {
       const privateKey = await new EthereumKeyStore(data).getPrivateKey(password);
 
       await bls.init(bls.BLS12_381);
-      this.validatorPrivateKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).serializeToHexStr()}`;
-      this.validatorPublicKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`;
+      this.privateKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).serializeToHexStr()}`;
+      this.publicKey = `0x${bls.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`;
       return privateKey;
     } catch (error: any) {
       return error;
@@ -112,31 +118,28 @@ export class SSVKeys {
 
   /**
    * Build payload from encrypted shares, validator public key and operator IDs
-   * @param validatorPublicKey
-   * @param operatorsIds
+   * @param publicKey
+   * @param operatorIds
    * @param encryptedShares
-   * @param ssvAmount
    */
-  buildPayload(validatorPublicKey: string, operatorsIds: number[], encryptedShares: EncryptShare[], ssvAmount: string | number): any {
+  async buildPayload(metaData: IPayloadMetaData): Promise<any> {
     return this.keyShares.generateContractPayload({
-      validatorPublicKey,
-      operatorsIds,
-      encryptedShares,
-      ssvAmount
+      publicKey: metaData.publicKey,
+      operatorIds: metaData.operatorIds,
+      encryptedShares: metaData.encryptedShares,
     });
   }
 
   /**
    * Build payload from keyshares file with operators and shares details inside.
-   * If ssv amount is not provided - it will be taken from keyshares file if exist there or set to 0.
    * @param keyShares
-   * @param ssvAmount
    */
-  buildPayloadFromKeyShares(keyShares: KeyShares, ssvAmount?: string | number): any {
+  async buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any> {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
-    const validatorPublicKey = keyShares.data?.publicKey;
+    const publicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
     const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
+    const operatorIds = keyShares.data.operators?.map((item: any) => item.id) as number[];
 
     if (publicKeys.length !== encryptedKeys.length
       || publicKeys.length !== operatorPublicKeys.length
@@ -147,14 +150,14 @@ export class SSVKeys {
     ) {
       throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
     }
+
     return this.keyShares.generateContractPayload({
-      validatorPublicKey,
-      operatorsIds: keyShares.data?.operators?.map((item: any) => item.id),
+      publicKey,
+      operatorIds,
       encryptedShares: publicKeys.map((item: any, index: number) => ({
         publicKey: item,
         privateKey: encryptedKeys[index],
       })),
-      ssvAmount: ssvAmount || keyShares.payload?.readable?.ssvAmount || 0,
     });
   }
 }

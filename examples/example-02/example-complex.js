@@ -39,30 +39,31 @@ async function main() {
   });
   await fsp.writeFile(getKeySharesFilePath(2), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
-
   // Build shares from operator IDs and public keys
-  const shares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
 
   // Now save to key shares file encrypted shares and validator public key
   await ssvKeys.keyShares.setData({
-    publicKey: ssvKeys.validatorPublicKey,
-    shares,
+    publicKey: ssvKeys.publicKey,
+    encryptedShares,
   });
 
   await fsp.writeFile(getKeySharesFilePath(3), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
   // Build final web3 transaction payload and update keyshares file with payload data
   await ssvKeys.buildPayload(
-    ssvKeys.validatorPublicKey,
-    operatorIds,
-    shares,
-    123456789,
+    {
+      publicKey: ssvKeys.publicKey,
+      operatorIds,
+      encryptedShares,
+    }
   );
+
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
   // Build payload with a new ssv amount and from saved on previous steps key shares data
   const keySharesWithoutPayload = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(getKeySharesFilePath(3))));
-  await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload, 987654321);
+  await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload);
 
   // Save new key shares file with new ssv amount
   await fsp.writeFile(getKeySharesFilePath(5), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });

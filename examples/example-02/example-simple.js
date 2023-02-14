@@ -24,18 +24,20 @@ async function main() {
   // Step 2: Get private key
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
   // Step 3: Build shares from operator IDs and public keys
-  const shares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
 
   // --------------------------------------------------------------------------
   // ✳️ Lesson 2: Build final web3 transaction payload
   // --------------------------------------------------------------------------
-  const ssvAmount = 123456789;
+  // Build final web3 transaction payload and update keyshares file with payload data
   const payload = await ssvKeys.buildPayload(
-    ssvKeys.validatorPublicKey,
-    operatorIds,
-    shares,
-    ssvAmount,
+    {
+      publicKey: ssvKeys.publicKey,
+      operatorIds,
+      encryptedShares,
+    }
   );
+
   console.log('Web3 Payload: ', payload);
 
   // --------------------------------------------------------------------------
@@ -46,14 +48,14 @@ async function main() {
   // --------------------------------------------------------------------------
   // Step 1: Build keyshares object
   const keyShares = await ssvKeys.keyShares.fromJson({
-    version: 'v2',
+    version: 'v3',
     data: {
       operators: operators.map((operator, index) => ({
         id: operatorIds[index],
         publicKey: operator,
       })),
-      publicKey: ssvKeys.validatorPublicKey,
-      shares,
+      publicKey: ssvKeys.publicKey,
+      encryptedShares,
     },
     payload,
   });
@@ -72,12 +74,12 @@ async function main() {
   // when you can not include json file using `require`
   // --------------------------------------------------------------------------
   const ks1 = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(filePath)));
-  console.log('Keyshares read as string: ', ks1);
+  console.log('Keyshares read as string: ', ks1.toJson());
   // --------------------------------------------------------------------------
   // Example 2: use keyshares json (node way)
   // --------------------------------------------------------------------------
   const ks2 = await ssvKeys.keyShares.fromJson(require(filePath));
-  console.log('Keyshares read as json: ', ks2);
+  console.log('Keyshares read as json: ', ks2.toJson());
 
   // For more possible scenarios ideas look at complex example.
 }

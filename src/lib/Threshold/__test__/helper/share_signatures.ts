@@ -2,16 +2,16 @@ import bls from '../../../BLS';
 import Threshold, { IShares } from '../../../Threshold';
 
 export interface Shares {
-    validatorPrivateKey: any,
-    validatorPublicKey: any,
-    signatures: any[],
-    ids: any[],
+  privateKey: any,
+  publicKey: any,
+  signatures: any[],
+  ids: any[],
 }
 
-export const sharesSignatures = async (privateKey: string, operators: number[], message: string, isThreshold: boolean): Promise<Shares> => {
-  const threshold = await new Threshold().create(privateKey, operators);
-  const validatorPrivateKey = bls.deserializeHexStrToSecretKey(privateKey);
-  const validatorPublicKey = validatorPrivateKey.getPublicKey();
+export const sharesSignatures = async (_privateKey: string, operators: number[], message: string, isThreshold: boolean): Promise<Shares> => {
+  const threshold = await new Threshold().create(_privateKey, operators);
+  const privateKey = bls.deserializeHexStrToSecretKey(_privateKey);
+  const publicKey = privateKey.getPublicKey();
   const signatures: any[] = [];
   const ids: any[] = [];
   const randomIndex: number = getRandomInt(4);
@@ -26,10 +26,10 @@ export const sharesSignatures = async (privateKey: string, operators: number[], 
     ids.push(share.id);
   });
   return {
-      validatorPrivateKey,
-      validatorPublicKey,
-      signatures,
-      ids,
+    privateKey,
+    publicKey,
+    signatures,
+    ids,
   };
 };
 

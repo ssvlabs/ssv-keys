@@ -12,7 +12,6 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;
   static PAYLOAD_INDEX_OPERATOR_IDS = 1;
   static PAYLOAD_INDEX_SHARES_KEYS = 2;
-  static PAYLOAD_INDEX_SSV_AMOUNT = 3;
 
   @IsOptional()
   @IsObject()
@@ -46,10 +45,9 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
 
   build(data: any): any {
     return [
-      data.validatorPublicKey,
-      data.operatorsIds.join(','),
+      data.publicKey,
+      data.operatorIds.join(','),
       this.sharesToBytes(data.encryptedShares.map((share: EncryptShare) => share.publicKey), data.encryptedShares.map((share: EncryptShare) => share.privateKey)),
-      data.ssvAmount,
     ];
   }
 
@@ -97,10 +95,11 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
    */
   toReadable(payload: any[]): any {
     return {
-      validatorPublicKey: payload[KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
+      publicKey: payload[KeySharesPayloadV3.PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY],
       operatorIds: payload[KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS],
       shares: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS],
-      ssvAmount: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SSV_AMOUNT],
+      amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
+      cluster: 'The latest cluster snapshot data, obtained using the cluster-scanner tool. If this is the cluster\'s 1st validator then use - {0,0,0,0,0,false}',
     };
   }
 

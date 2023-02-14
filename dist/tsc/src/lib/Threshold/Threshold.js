@@ -52,10 +52,10 @@ class Threshold {
             const msk = [];
             const mpk = [];
             // Master key Polynomial
-            this.validatorPrivateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
-            this.validatorPublicKey = this.validatorPrivateKey.getPublicKey();
-            msk.push(this.validatorPrivateKey);
-            mpk.push(this.validatorPublicKey);
+            this.privateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
+            this.publicKey = this.privateKey.getPublicKey();
+            msk.push(this.privateKey);
+            mpk.push(this.publicKey);
             // Construct poly
             for (let i = 1; i < operators.length - F; i += 1) {
                 const sk = new BLS_1.default.SecretKey();
@@ -79,8 +79,8 @@ class Threshold {
                 });
             }
             const response = {
-                validatorPrivateKey: `0x${this.validatorPrivateKey.serializeToHexStr()}`,
-                validatorPublicKey: `0x${this.validatorPublicKey.serializeToHexStr()}`,
+                privateKey: `0x${this.privateKey.serializeToHexStr()}`,
+                publicKey: `0x${this.publicKey.serializeToHexStr()}`,
                 shares: this.shares,
             };
             return response;
