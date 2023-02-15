@@ -58,16 +58,22 @@ class Threshold {
       if (!Number.isInteger(operator)) {
         throw new ThresholdInvalidOperatorIdError(
           operator,
-          `Operator must be integer. Got: ${String(operator)}`
+          `Operator must be integer. Got: ${operator}`
         );
       }
     });
 
-    const F = (operators.length - 1) / 3;
-    if (!Number.isInteger(F)) {
+    // Sort operators
+    const sortedOperators = operators.sort((a: number, b: number) => a - b);
+    const operatorsLength = sortedOperators.length;
+    if (
+      operatorsLength < 4 ||
+      operatorsLength > 13 ||
+      operatorsLength % 3 != 1
+    ) {
       throw new ThresholdInvalidOperatorsLengthError(
-        operators,
-        'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ'
+        sortedOperators,
+        'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13'
       );
     }
 
@@ -83,8 +89,9 @@ class Threshold {
     msk.push(this.privateKey);
     mpk.push(this.publicKey);
 
+    const F = (operators.length - 1) / 3;
     // Construct poly
-    for (let i = 1; i < operators.length - F; i += 1) {
+    for (let i = 1; i < sortedOperators.length - F; i += 1) {
         const sk: SecretKeyType = new bls.SecretKey();
         sk.setByCSPRNG();
         msk.push(sk);
@@ -93,7 +100,7 @@ class Threshold {
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
-    for (const operatorId of operators) {
+    for (const operatorId of sortedOperators) {
         const id = new bls.Id();
         id.setInt(operatorId);
         const shareSecretKey = new bls.SecretKey();

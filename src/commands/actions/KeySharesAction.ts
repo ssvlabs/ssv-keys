@@ -77,7 +77,7 @@ export class KeySharesAction extends BaseAction {
         publicKey: ssvKeys.publicKey,
         operatorIds,
         encryptedShares,
-      },
+      }
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

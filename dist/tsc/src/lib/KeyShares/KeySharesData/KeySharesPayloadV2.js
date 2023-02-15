@@ -11,7 +11,7 @@ const class_validator_1 = require("class-validator");
 class KeySharesPayloadV2 {
     constructor() {
         this.readable = null;
-        this.raw = null;
+        this.raw = undefined;
     }
     build(data) {
         return [
@@ -28,7 +28,7 @@ class KeySharesPayloadV2 {
     setData(data) {
         // Cleanup
         if (!data === null) {
-            this.raw = null;
+            this.raw = undefined;
             this.readable = null;
             return;
         }

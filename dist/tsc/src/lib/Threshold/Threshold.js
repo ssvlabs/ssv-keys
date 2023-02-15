@@ -41,12 +41,16 @@ class Threshold {
             // Validation
             operators.map(operator => {
                 if (!Number.isInteger(operator)) {
-                    throw new ThresholdInvalidOperatorIdError(operator, `Operator must be integer. Got: ${String(operator)}`);
+                    throw new ThresholdInvalidOperatorIdError(operator, `Operator must be integer. Got: ${operator}`);
                 }
             });
-            const F = (operators.length - 1) / 3;
-            if (!Number.isInteger(F)) {
-                throw new ThresholdInvalidOperatorsLengthError(operators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ');
+            // Sort operators
+            const sortedOperators = operators.sort((a, b) => a - b);
+            const operatorsLength = sortedOperators.length;
+            if (operatorsLength < 4 ||
+                operatorsLength > 13 ||
+                operatorsLength % 3 != 1) {
+                throw new ThresholdInvalidOperatorsLengthError(sortedOperators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13');
             }
             yield BLS_1.default.init(BLS_1.default.BLS12_381);
             const msk = [];
@@ -56,8 +60,9 @@ class Threshold {
             this.publicKey = this.privateKey.getPublicKey();
             msk.push(this.privateKey);
             mpk.push(this.publicKey);
+            const F = (operators.length - 1) / 3;
             // Construct poly
-            for (let i = 1; i < operators.length - F; i += 1) {
+            for (let i = 1; i < sortedOperators.length - F; i += 1) {
                 const sk = new BLS_1.default.SecretKey();
                 sk.setByCSPRNG();
                 msk.push(sk);
@@ -65,7 +70,7 @@ class Threshold {
                 mpk.push(pk);
             }
             // Evaluate shares - starting from 1 because 0 is master key
-            for (const operatorId of operators) {
+            for (const operatorId of sortedOperators) {
                 const id = new BLS_1.default.Id();
                 id.setInt(operatorId);
                 const shareSecretKey = new BLS_1.default.SecretKey();

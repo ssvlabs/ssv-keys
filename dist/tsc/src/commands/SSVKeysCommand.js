@@ -17,7 +17,7 @@ class SSVKeysCommand extends BaseCommand_1.BaseCommand {
             KeySharesAction_1.KeySharesAction,
         ];
         this.useAction = 'key-shares';
-        this.subParserOptions.help += 'Example: "ssv-keys key-shares --help" or "ssv-keys ksh --help"';
+        this.subParserOptions.help += 'Example: "yarn cli key-shares --help" or "yarn cli ksh --help"';
     }
 }
 exports.SSVKeysCommand = SSVKeysCommand;

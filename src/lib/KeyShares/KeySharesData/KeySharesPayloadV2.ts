@@ -20,7 +20,7 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
 
   @IsOptional()
   @IsString()
-  public raw?: string | null = null;
+  public raw?: string | undefined = undefined;
 
   build(data: any): any {
     return [
@@ -38,7 +38,7 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
   setData(data: any): any {
     // Cleanup
     if (!data === null) {
-      this.raw = null;
+      this.raw = undefined;
       this.readable = null;
       return;
     }
