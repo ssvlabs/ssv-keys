@@ -1,5 +1,6 @@
 import { SecretKeyType } from 'bls-eth-wasm';
 import bls from '../BLS';
+import { isOperatorsLengthValid } from '../../commands/actions/validators/operator-ids';
 
 export interface IShares {
     privateKey: string,
@@ -66,11 +67,8 @@ class Threshold {
     // Sort operators
     const sortedOperators = operators.sort((a: number, b: number) => a - b);
     const operatorsLength = sortedOperators.length;
-    if (
-      operatorsLength < 4 ||
-      operatorsLength > 13 ||
-      operatorsLength % 3 != 1
-    ) {
+
+    if (!isOperatorsLengthValid(operatorsLength)) {
       throw new ThresholdInvalidOperatorsLengthError(
         sortedOperators,
         'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13'
@@ -89,9 +87,9 @@ class Threshold {
     msk.push(this.privateKey);
     mpk.push(this.publicKey);
 
-    const F = (operators.length - 1) / 3;
+    const F = (operatorsLength - 1) / 3;
     // Construct poly
-    for (let i = 1; i < sortedOperators.length - F; i += 1) {
+    for (let i = 1; i < operatorsLength - F; i += 1) {
         const sk: SecretKeyType = new bls.SecretKey();
         sk.setByCSPRNG();
         msk.push(sk);

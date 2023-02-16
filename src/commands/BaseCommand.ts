@@ -161,7 +161,7 @@ export class BaseCommand extends ArgumentParser {
     const actionArguments = this.getArgumentsForAction(selectedAction);
     for (const argument of actionArguments) {
       const multi: any = {};
-      const repeats = argument.interactive?.repeat || 1;
+      const repeats = argument.interactive?.repeat ? argument.interactive?.repeat() : 1;
       const promptOptions = this.getPromptOptions(argument);
       if (processedArguments[promptOptions.name]) {
         continue;

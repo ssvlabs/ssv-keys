@@ -1,3 +1,5 @@
+import { operatorIdsValidator } from "../validators/operator-ids";
+
 const uniqueOperatorIds: any = {};
 
 export default {
@@ -9,7 +11,7 @@ export default {
     help: 'Comma-separated list of operators IDs from the contract in the same sequence as you provided operators itself'
   },
   interactive: {
-    repeat: 4,
+    repeat: () => operatorIdsValidator.operatorsCount,
     repeatWith: [
       '--operators-keys'
     ],
