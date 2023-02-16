@@ -25,7 +25,7 @@ export class KeySharesPayloadV2 implements IKeySharesPayload {
   build(data: any): any {
     return [
       data.publicKey,
-      data.operatorIds.join(','),
+      data.operatorIds,
       data.encryptedShares.map((share: EncryptShare) => share.publicKey),
       abiEncode(data.encryptedShares, 'privateKey'),
     ];

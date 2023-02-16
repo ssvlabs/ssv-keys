@@ -42,7 +42,7 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   build(data: any): any {
     return [
       data.publicKey,
-      data.operatorIds.join(','),
+      data.operatorIds,
       this.sharesToBytes(data.encryptedShares.map((share: EncryptShare) => share.publicKey), data.encryptedShares.map((share: EncryptShare) => share.privateKey)),
     ];
   }

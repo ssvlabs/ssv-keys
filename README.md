@@ -97,9 +97,6 @@ To run you will use the "ksh" command
 - password (ps) = Keystore password
 - operators-ids (oid) = Comma-separated list of the operator ids
 - operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
-- owner-address = Validator owner address
-- contract-address = SSV contract address
-- node-url = Eth1 node url
 - output-folder (of) = Path of where to put the output file
 
 ```bash
