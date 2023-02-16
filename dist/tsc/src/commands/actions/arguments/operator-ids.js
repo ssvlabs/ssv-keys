@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const operator_ids_1 = require("../validators/operator-ids");
 const uniqueOperatorIds = {};
 exports.default = {
     arg1: '-oid',
@@ -10,7 +11,7 @@ exports.default = {
         help: 'Comma-separated list of operators IDs from the contract in the same sequence as you provided operators itself'
     },
     interactive: {
-        repeat: 4,
+        repeat: () => operator_ids_1.operatorIdsValidator.operatorsCount,
         repeatWith: [
             '--operators-keys'
         ],

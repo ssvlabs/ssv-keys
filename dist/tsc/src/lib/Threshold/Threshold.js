@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ThresholdInvalidOperatorIdError = exports.ThresholdInvalidOperatorsLengthError = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../BLS"));
+const operator_ids_1 = require("../../commands/actions/validators/operator-ids");
 class ThresholdInvalidOperatorsLengthError extends Error {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operators, message) {
@@ -47,9 +48,7 @@ class Threshold {
             // Sort operators
             const sortedOperators = operators.sort((a, b) => a - b);
             const operatorsLength = sortedOperators.length;
-            if (operatorsLength < 4 ||
-                operatorsLength > 13 ||
-                operatorsLength % 3 != 1) {
+            if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorsLength)) {
                 throw new ThresholdInvalidOperatorsLengthError(sortedOperators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13');
             }
             yield BLS_1.default.init(BLS_1.default.BLS12_381);
@@ -60,9 +59,9 @@ class Threshold {
             this.publicKey = this.privateKey.getPublicKey();
             msk.push(this.privateKey);
             mpk.push(this.publicKey);
-            const F = (operators.length - 1) / 3;
+            const F = (operatorsLength - 1) / 3;
             // Construct poly
-            for (let i = 1; i < sortedOperators.length - F; i += 1) {
+            for (let i = 1; i < operatorsLength - F; i += 1) {
                 const sk = new BLS_1.default.SecretKey();
                 sk.setByCSPRNG();
                 msk.push(sk);

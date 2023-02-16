@@ -2,16 +2,16 @@ declare const _default: {
     arg1: string;
     arg2: string;
     options: {
-        type: StringConstructor;
+        type: NumberConstructor;
         required: boolean;
+        default: number;
         help: string;
     };
     interactive: {
-        repeat: () => number;
         options: {
             type: string;
             message: string;
-            validate: (value: string) => Promise<string | boolean>;
+            validate: (value: number) => true | "Invalid operators amount.";
         };
     };
 };

@@ -133,7 +133,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
@@ -144,7 +144,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
             const actionArguments = this.getArgumentsForAction(selectedAction);
             for (const argument of actionArguments) {
                 const multi = {};
-                const repeats = ((_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.repeat) || 1;
+                const repeats = ((_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.repeat) ? (_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeat() : 1;
                 const promptOptions = this.getPromptOptions(argument);
                 if (processedArguments[promptOptions.name]) {
                     continue;
@@ -165,7 +165,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     }
                     let response = {};
                     response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    while (((_b = argument.options) === null || _b === void 0 ? void 0 : _b.required) && !response[promptOptions.name]) {
+                    while (((_c = argument.options) === null || _c === void 0 ? void 0 : _c.required) && !response[promptOptions.name]) {
                         if (Object.keys(response).indexOf(promptOptions.name) === -1) {
                             process.exit(1);
                         }
@@ -176,7 +176,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
-                    if (repeats > 1 && ((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.repeatWith)) {
+                    if (repeats > 1 && ((_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.repeatWith)) {
                         for (const extraArgumentName of argument.interactive.repeatWith) {
                             const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
                             if (!extraArgument) {
@@ -203,7 +203,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                             // Prompt extra argument
                             let response = {};
                             response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                            while (((_d = extraArgumentPromptOptions.options) === null || _d === void 0 ? void 0 : _d.required) && !response[extraArgumentPromptOptions.name]) {
+                            while (((_e = extraArgumentPromptOptions.options) === null || _e === void 0 ? void 0 : _e.required) && !response[extraArgumentPromptOptions.name]) {
                                 if (Object.keys(response).indexOf(promptOptions.name) === -1) {
                                     process.exit(1);
                                 }
