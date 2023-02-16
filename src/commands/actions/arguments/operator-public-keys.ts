@@ -5,7 +5,7 @@ const uniqueOperators: any = {};
 
 export default {
   arg1: '-ok',
-  arg2: '--operators-keys',
+  arg2: '--operator-keys',
   options: {
     type: String,
     required: true,

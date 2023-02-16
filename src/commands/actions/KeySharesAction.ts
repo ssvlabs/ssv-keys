@@ -45,8 +45,8 @@ export class KeySharesAction extends BaseAction {
     } = this.args;
 
     let {
-      operators_ids: operatorIds,
-      operators_keys: operatorKeys,
+      operator_ids: operatorIds,
+      operator_keys: operatorKeys,
     } = this.args;
 
     // Prepare data

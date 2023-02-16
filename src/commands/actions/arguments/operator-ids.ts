@@ -4,7 +4,7 @@ const uniqueOperatorIds: any = {};
 
 export default {
   arg1: '-oid',
-  arg2: '--operators-ids',
+  arg2: '--operator-ids',
   options: {
     type: String,
     required: true,
@@ -13,7 +13,7 @@ export default {
   interactive: {
     repeat: () => operatorIdsValidator.operatorsCount,
     repeatWith: [
-      '--operators-keys'
+      '--operator-keys'
     ],
     options: {
       type: 'number',

@@ -4,7 +4,7 @@ const operator_ids_1 = require("../validators/operator-ids");
 const uniqueOperatorIds = {};
 exports.default = {
     arg1: '-oid',
-    arg2: '--operators-ids',
+    arg2: '--operator-ids',
     options: {
         type: String,
         required: true,
@@ -13,7 +13,7 @@ exports.default = {
     interactive: {
         repeat: () => operator_ids_1.operatorIdsValidator.operatorsCount,
         repeatWith: [
-            '--operators-keys'
+            '--operator-keys'
         ],
         options: {
             type: 'number',

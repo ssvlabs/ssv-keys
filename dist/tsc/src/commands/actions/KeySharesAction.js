@@ -40,7 +40,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const { keystore, password, output_folder: outputFolder, key_shares_version: keySharesVersion, } = this.args;
-            let { operators_ids: operatorIds, operators_keys: operatorKeys, } = this.args;
+            let { operator_ids: operatorIds, operator_keys: operatorKeys, } = this.args;
             // Prepare data
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));

@@ -6,7 +6,7 @@ const operator_ids_1 = require("../validators/operator-ids");
 const uniqueOperators = {};
 exports.default = {
     arg1: '-ok',
-    arg2: '--operators-keys',
+    arg2: '--operator-keys',
     options: {
         type: String,
         required: true,

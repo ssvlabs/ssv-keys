@@ -96,8 +96,8 @@ To run you will use the "ksh" command
 - keystore (ks) = Path to keystore json file
 - password (ps) = Keystore password
 - operators-amount (oa) = Amount of operators
-- operators-ids (oid) = Comma-separated list of the operator ids
-- operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
+- operator-ids (oid) = Comma-separated list of the operator ids
+- operator-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
 - output-folder (of) = Path of where to put the output file
 
 ```bash
