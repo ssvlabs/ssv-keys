@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const operator_1 = require("../validators/operator");
+const operator_ids_1 = require("../validators/operator-ids");
 const uniqueOperators = {};
 exports.default = {
     arg1: '-ok',
@@ -13,7 +14,7 @@ exports.default = {
             'Require at least 4 operators'
     },
     interactive: {
-        repeat: 4,
+        repeat: () => operator_ids_1.operatorIdsValidator.operatorsCount,
         options: {
             type: 'text',
             message: 'Enter operator public key for {{index}} operator',

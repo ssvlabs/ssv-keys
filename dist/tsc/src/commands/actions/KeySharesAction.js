@@ -11,8 +11,9 @@ const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids
 const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const key_shares_version_1 = tslib_1.__importDefault(require("./arguments/key-shares-version"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
-const file_helper_1 = require("../../lib/helpers/file.helper");
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
+const operators_count_1 = tslib_1.__importDefault(require("./arguments/operators-count"));
+const file_helper_1 = require("../../lib/helpers/file.helper");
 /**
  * Command to build keyshares from user input.
  */
@@ -25,6 +26,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             arguments: [
                 keystore_1.default,
                 password_1.default,
+                operators_count_1.default,
                 operator_ids_1.default,
                 operator_public_keys_1.default,
                 key_shares_version_1.default,

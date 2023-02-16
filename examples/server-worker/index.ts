@@ -13,23 +13,23 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/key-shares/generate', async (req: Request, res: Response) => {
-  const operator_ids = String(req.body['operator_ids'] || '')
+  const operators_ids = String(req.body['operators_ids'] || '')
     .split(',')
     .map((id) => Number(id.trim()))
     .filter(id => !!id);
 
-  if (!operator_ids.length) {
+  if (!operators_ids.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator IDs required' });
   }
 
-  const operator_keys = String(req.body['operator_keys'] || '')
+  const operators_keys = String(req.body['operators_keys'] || '')
     .split(',')
     .map((key) => key.trim())
     .filter(key => !!key);
 
-  if (!operator_keys.length) {
+  if (!operators_keys.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator keys required' });
@@ -53,21 +53,21 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
-  const encryptedShares = await ssvKeys.buildShares(privateKey, operator_ids, operator_keys);
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operators_ids, operators_keys);
 
   // Build final web3 transaction payload and update keyshares file with payload data
   const payload = await ssvKeys.buildPayload(
     {
       publicKey: ssvKeys.publicKey,
-      operator_ids,
+      operators_ids,
       encryptedShares,
     }
   );
   const keyShares = ssvKeys.keyShares.fromJson({
     version: 'v3',
     data: {
-      operators: operator_keys.map((operator, index) => ({
-        id: operator_ids[index],
+      operators: operators_keys.map((operator, index) => ({
+        id: operators_ids[index],
         publicKey: operator,
       })),
       publicKey: ssvKeys.publicKey,
@@ -75,7 +75,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     },
     payload,
   });
-  console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
+  console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
 });
 

@@ -1,4 +1,5 @@
 import { operatorPublicKeyValidator } from '../validators/operator';
+import { operatorIdsValidator } from '../validators/operator-ids';
 
 const uniqueOperators: any = {};
 
@@ -12,7 +13,7 @@ export default {
       'Require at least 4 operators'
   },
   interactive: {
-    repeat: 4,
+    repeat: () => operatorIdsValidator.operatorsCount,
     options: {
       type: 'text',
       message: 'Enter operator public key for {{index}} operator',

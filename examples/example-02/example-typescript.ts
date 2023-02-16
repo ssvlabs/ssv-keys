@@ -54,11 +54,11 @@ async function main() {
   );
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
-  // Build payload with a new ssv amount and from saved on previous steps key shares data
+  // Build payload and from saved on previous steps key shares data
   const keySharesWithoutPayload = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(getKeySharesFilePath(3))));
   await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload);
 
-  // Save new key shares file with new ssv amount
+  // Save new key shares file
   await fsp.writeFile(getKeySharesFilePath(5), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
   console.log('Compare key shares file contents for steps #4 and #5');
 }

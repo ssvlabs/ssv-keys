@@ -95,16 +95,15 @@ To run you will use the "ksh" command
 - key-shares-version (ksv) = Payload version [2 or 3]
 - keystore (ks) = Path to keystore json file
 - password (ps) = Keystore password
-- operator-ids (oid) = Comma-separated list of the operator ids
+- operators-ids (oid) = Comma-separated list of the operator ids
 - operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
-- ssv-token-amount (ssv) = SSV Token amount fee required for this transaction in Wei
 - owner-address = Validator owner address
 - contract-address = SSV contract address
 - node-url = Eth1 node url
 - output-folder (of) = Path of where to put the output file
 
 ```bash
-yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --owner-address=0x... --contract-address=0x... --node-url=http://... --output-folder=./
+yarn cli ksh -ksv=3 --keystore=keystore.json --password=test --operators-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json
@@ -116,20 +115,20 @@ yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2
 To run an example of a NodeJS project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
 
 ```bash
-cd examples/node
+cd examples/example-02
 yarn install
 ```
 
 To run a JavaScript example:
 
 ```bash
-yarn start:js
+node example-simple.js
 ```
 
 To run a TypeScript example:
 
 ```bash
-yarn start:ts
+yarn start
 ```
 
 ### Browser project (web application)
@@ -137,7 +136,7 @@ yarn start:ts
 Go to the example folder and then install all the dependencies:
 
 ```bash
-cd examples/browser
+cd examples/react-app
 yarn install
 ```
 

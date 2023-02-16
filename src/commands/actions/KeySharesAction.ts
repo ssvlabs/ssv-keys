@@ -6,10 +6,11 @@ import keystoreArgument from './arguments/keystore';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
 import keySharesVersionArgument from './arguments/key-shares-version';
-
 import outputFolderArgument from './arguments/output-folder';
-import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
+import operatorsCount from './arguments/operators-count';
+
+import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 
 /**
  * Command to build keyshares from user input.
@@ -23,6 +24,7 @@ export class KeySharesAction extends BaseAction {
       arguments: [
         keystoreArgument,
         keystorePasswordArgument,
+        operatorsCount,
         operatorIdsArgument,
         operatorPublicKeysArgument,
         keySharesVersionArgument,
@@ -77,7 +79,7 @@ export class KeySharesAction extends BaseAction {
         publicKey: ssvKeys.publicKey,
         operatorIds,
         encryptedShares,
-      },
+      }
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

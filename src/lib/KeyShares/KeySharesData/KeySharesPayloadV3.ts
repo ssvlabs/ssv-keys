@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import * as ethers from 'ethers';
 
-import { IsString, IsObject, IsOptional } from 'class-validator';
+import { IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
 import { EncryptShare } from '../../Encryption/Encryption';
 
@@ -16,10 +16,6 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   @IsOptional()
   @IsObject()
   public readable?: any = null;
-
-  @IsOptional()
-  @IsString()
-  public raw?: string | null = null;
 
   private decodeRSAShares(arr: string[]) {
     return arr.map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
@@ -58,14 +54,12 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   setData(data: any): any {
     // Cleanup
     if (!data === null) {
-      this.raw = null;
       this.readable = null;
       return;
     }
 
     // Payload array
     if (_.isArray(data)) {
-      this.raw = this.toRaw(data);
       this.readable = this.toReadable(data);
       return;
     }
@@ -74,9 +68,6 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
     if (_.isObject(data)) {
       if (data.readable) {
         this.readable = data.readable;
-      }
-      if (data.raw) {
-        this.raw = data.raw;
       }
     }
   }
