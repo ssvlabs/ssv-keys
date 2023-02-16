@@ -16,7 +16,7 @@ class KeySharesPayloadV2 {
     build(data) {
         return [
             data.publicKey,
-            data.operatorIds.join(','),
+            data.operatorIds,
             data.encryptedShares.map((share) => share.publicKey),
             (0, web3_helper_1.abiEncode)(data.encryptedShares, 'privateKey'),
         ];

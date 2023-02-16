@@ -32,7 +32,7 @@ class KeySharesPayloadV3 {
     build(data) {
         return [
             data.publicKey,
-            data.operatorIds.join(','),
+            data.operatorIds,
             this.sharesToBytes(data.encryptedShares.map((share) => share.publicKey), data.encryptedShares.map((share) => share.privateKey)),
         ];
     }
