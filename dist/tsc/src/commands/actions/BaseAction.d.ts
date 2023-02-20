@@ -6,7 +6,6 @@ export interface ActionArgument {
 }
 export interface ActionOptions {
     action: string;
-    shortAction: string;
     arguments: ActionArgument[];
 }
 export declare class BaseAction {

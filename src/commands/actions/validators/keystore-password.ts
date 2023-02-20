@@ -13,7 +13,7 @@ export class KeystorePasswordValidator {
     if (!password.trim().length) {
       return 'Password is empty';
     }
-    const errorMessage = 'Invalid password';
+    const errorMessage = 'Invalid keystore file password.';
     try {
       let dots = 1;
       const message = `\rChecking password`

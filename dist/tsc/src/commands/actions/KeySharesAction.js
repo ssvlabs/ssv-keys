@@ -12,7 +12,6 @@ const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const key_shares_version_1 = tslib_1.__importDefault(require("./arguments/key-shares-version"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
-const operators_count_1 = tslib_1.__importDefault(require("./arguments/operators-count"));
 const file_helper_1 = require("../../lib/helpers/file.helper");
 /**
  * Command to build keyshares from user input.
@@ -20,13 +19,11 @@ const file_helper_1 = require("../../lib/helpers/file.helper");
 class KeySharesAction extends BaseAction_1.BaseAction {
     static get options() {
         return {
-            action: 'key-shares',
-            shortAction: 'ksh',
+            action: 'shares',
             description: 'Generate shares for a list of operators from a validator keystore file',
             arguments: [
                 keystore_1.default,
                 password_1.default,
-                operators_count_1.default,
                 operator_ids_1.default,
                 operator_public_keys_1.default,
                 key_shares_version_1.default,
@@ -39,7 +36,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { keystore, password, output_folder: outputFolder, key_shares_version: keySharesVersion, } = this.args;
+            const { keystore, password, output_folder: outputFolder, } = this.args;
             let { operator_ids: operatorIds, operator_keys: operatorKeys, } = this.args;
             // Prepare data
             operatorKeys = operatorKeys.split(',');
@@ -47,7 +44,10 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
-            const ssvKeys = new SSVKeys_1.SSVKeys(`v${keySharesVersion}`);
+            const keysVersion = this.args.key_shares_version
+                ? `v${this.args.key_shares_version}`
+                : SSVKeys_1.SSVKeys.VERSION.V3;
+            const ssvKeys = new SSVKeys_1.SSVKeys(keysVersion);
             const privateKey = yield ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
             // Build shares from operator IDs and public keys
             const encryptedShares = yield ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);

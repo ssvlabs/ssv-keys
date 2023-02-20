@@ -9,7 +9,7 @@ export interface ActionArgument {
 
 export interface ActionOptions {
   action: string,
-  shortAction: string,
+  // shortAction: string,
   arguments: ActionArgument[]
 }
 

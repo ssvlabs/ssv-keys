@@ -2,7 +2,7 @@ import fs from 'fs';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(filePath);
-  return fs.existsSync(filePath.trim()) ? true : message || 'File does not exists';
+  return fs.existsSync(filePath.trim()) ? true : message || 'Couldn’t locate keystore file or directory.';
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {
@@ -11,12 +11,12 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   try {
     fileContents = fs.readFileSync(filePath, { encoding: 'utf-8' });
   } catch (e) {
-    return message || 'Can not read file';
+    return message || 'Couldn’t read a file';
   }
   try {
     JSON.parse(fileContents);
   } catch (e) {
-    return message || 'File is not a JSON file';
+    return 'Keystore file must be .JSON format';
   }
   return true;
 };

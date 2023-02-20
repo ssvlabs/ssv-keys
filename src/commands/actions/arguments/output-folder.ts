@@ -10,7 +10,7 @@ export default {
     type: String,
     required: false,
     default: defaultTargetPath,
-    help: `Target path to generate the output to. Default: ${defaultTargetPath}`
+    help: `Target folder path to output the key shares file. Default: ${defaultTargetPath}`
   },
   interactive: {
     options: {

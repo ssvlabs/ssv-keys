@@ -8,7 +8,7 @@ exports.default = {
     options: {
         required: true,
         type: String,
-        help: 'Enter password for provided keystore file'
+        help: 'The keystore file encryption password'
     },
     interactive: {
         options: {

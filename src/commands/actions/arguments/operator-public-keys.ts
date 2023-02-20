@@ -1,19 +1,16 @@
 import { operatorPublicKeyValidator } from '../validators/operator';
-import { operatorIdsValidator } from '../validators/operator-ids';
 
 const uniqueOperators: any = {};
 
 export default {
-  arg1: '-ok',
+  arg1: '-oks',
   arg2: '--operator-keys',
   options: {
     type: String,
     required: true,
-    help: 'Comma-separated list of base64 operator keys. ' +
-      'Require at least 4 operators'
+    help: 'Comma-separated list of operator keys (same sequence as operator ids)'
   },
   interactive: {
-    repeat: () => operatorIdsValidator.operatorsCount,
     options: {
       type: 'text',
       message: 'Enter operator public key for {{index}} operator',
