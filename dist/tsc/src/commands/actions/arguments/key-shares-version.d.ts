@@ -4,6 +4,7 @@ declare const _default: {
     options: {
         type: StringConstructor;
         required: boolean;
+        default: string;
         help: string;
     };
     interactive: {

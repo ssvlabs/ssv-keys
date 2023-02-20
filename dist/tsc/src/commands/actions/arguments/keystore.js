@@ -11,19 +11,18 @@ exports.default = {
     options: {
         required: true,
         type: String,
-        help: 'Provide validator keystore file path'
+        help: 'The validator keystore file path'
     },
     interactive: {
         options: {
             type: 'text',
             validate: (filePath) => {
-                const message = 'Invalid keystore file';
                 filePath = (0, file_1.sanitizePath)(String(filePath).trim());
-                let isValid = (0, file_1.fileExistsValidator)(filePath, message);
+                let isValid = (0, file_1.fileExistsValidator)(filePath);
                 if (isValid !== true) {
                     return isValid;
                 }
-                isValid = (0, file_1.jsonFileValidator)(filePath, message);
+                isValid = (0, file_1.jsonFileValidator)(filePath);
                 if (isValid !== true) {
                     return isValid;
                 }

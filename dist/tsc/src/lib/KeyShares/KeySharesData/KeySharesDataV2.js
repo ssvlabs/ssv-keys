@@ -24,7 +24,7 @@ class KeySharesDataV2 {
                 .sort((a, b) => +a.id - +b.id)
                 .map((operator) => {
                 if (!operator.id || !operator.publicKey) {
-                    throw Error('The number of operators does not match the number of public keys for those operators.');
+                    throw Error('Mismatch amount of operator ids and operator keys.');
                 }
                 const operatorData = new OperatorDataV2_1.OperatorDataV2();
                 operatorData.setData(operator);

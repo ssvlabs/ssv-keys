@@ -93,7 +93,7 @@ class SSVKeys {
     buildShares(privateKey, operatorIds, operatorPublicKeys) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             if (operatorIds.length !== operatorPublicKeys.length) {
-                throw Error('The number of operators does not match the number of public keys for those operators.');
+                throw Error('Mismatch amount of operator ids and operator keys.');
             }
             const threshold = yield this.createThreshold(privateKey, operatorIds);
             return this.encryptShares(operatorPublicKeys, threshold.shares);

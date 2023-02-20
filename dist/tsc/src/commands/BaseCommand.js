@@ -45,9 +45,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
         this.subParsers = this.add_subparsers(this.subParserOptions);
         for (const action of this.actions) {
             const actionOptions = action.options;
-            const actionParser = this.subParsers.add_parser(actionOptions.action, {
-                aliases: [actionOptions.shortAction]
-            });
+            const actionParser = this.subParsers.add_parser(actionOptions.action);
             for (const argument of actionOptions.arguments) {
                 actionParser.add_argument(argument.arg1, argument.arg2, argument.options);
             }
@@ -128,12 +126,25 @@ class BaseCommand extends argparse_1.ArgumentParser {
         const override = Object.assign(Object.assign({}, preFilledValues), { [promptOptions.name]: preFilledValue });
         prompts_1.default.override(override);
     }
+    ask(promptOptions, extraOptions, required) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            let response = {};
+            response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+            while (required && !response[promptOptions.name]) {
+                if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                    process.exit(1);
+                }
+                response = yield (0, prompts_1.default)(promptOptions, extraOptions);
+            }
+            return response[promptOptions.name];
+        });
+    }
     /**
      * Interactively ask user for action to execute, and it's arguments.
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
@@ -144,7 +155,6 @@ class BaseCommand extends argparse_1.ArgumentParser {
             const actionArguments = this.getArgumentsForAction(selectedAction);
             for (const argument of actionArguments) {
                 const multi = {};
-                const repeats = ((_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.repeat) ? (_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeat() : 1;
                 const promptOptions = this.getPromptOptions(argument);
                 if (processedArguments[promptOptions.name]) {
                     continue;
@@ -152,20 +162,21 @@ class BaseCommand extends argparse_1.ArgumentParser {
                 processedArguments[promptOptions.name] = true;
                 const message = promptOptions.message;
                 const extraOptions = { onSubmit: promptOptions.onSubmit };
-                for (let i = 0; i < repeats; i++) {
-                    if (repeats > 1) {
-                        // Build pre-filled value for parent repeat
-                        if (preFilledValues[promptOptions.name]) {
-                            this.prefillFromArrayData(i, argument, promptOptions, preFilledValues);
-                        }
-                        promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
+                let isRepeatable = !!((_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.repeat);
+                if (!isRepeatable) {
+                    multi[promptOptions.name] = multi[promptOptions.name] || [];
+                    multi[promptOptions.name].push(yield this.ask(promptOptions, extraOptions));
+                }
+                let repeatCount = 1;
+                while (isRepeatable) {
+                    // Build pre-filled value for parent repeat
+                    if (preFilledValues[promptOptions.name]) {
+                        this.prefillFromArrayData(repeatCount, argument, promptOptions, preFilledValues);
                     }
-                    else {
-                        promptOptions.message = message;
-                    }
+                    promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
                     let response = {};
                     response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    while (((_c = argument.options) === null || _c === void 0 ? void 0 : _c.required) && !response[promptOptions.name]) {
+                    while (((_b = argument.options) === null || _b === void 0 ? void 0 : _b.required) && !response[promptOptions.name]) {
                         if (Object.keys(response).indexOf(promptOptions.name) === -1) {
                             process.exit(1);
                         }
@@ -176,45 +187,35 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
-                    if (repeats > 1 && ((_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.repeatWith)) {
-                        for (const extraArgumentName of argument.interactive.repeatWith) {
-                            const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
-                            if (!extraArgument) {
-                                continue;
-                            }
-                            // Build extra argument options
-                            const extraArgumentPromptOptions = this.getPromptOptions(extraArgument);
-                            if (processedArguments[extraArgumentPromptOptions.name]
-                                && processedArguments[extraArgumentPromptOptions.name] === repeats) {
-                                continue;
-                            }
-                            const extraArgumentMessage = extraArgumentPromptOptions.message;
-                            const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
-                            if (repeats > 1) {
-                                // Build pre-filled value for child repeat
-                                if (preFilledValues[extraArgumentPromptOptions.name]) {
-                                    this.prefillFromArrayData(i, extraArgument, extraArgumentPromptOptions, preFilledValues);
-                                }
-                                extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(i + 1)}`);
-                            }
-                            else {
-                                extraArgumentPromptOptions.message = message;
-                            }
-                            // Prompt extra argument
-                            let response = {};
-                            response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                            while (((_e = extraArgumentPromptOptions.options) === null || _e === void 0 ? void 0 : _e.required) && !response[extraArgumentPromptOptions.name]) {
-                                if (Object.keys(response).indexOf(promptOptions.name) === -1) {
-                                    process.exit(1);
-                                }
-                                response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                            }
-                            multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
-                            multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
-                            processedArguments[extraArgumentPromptOptions.name] = processedArguments[extraArgumentPromptOptions.name] || 0;
-                            processedArguments[extraArgumentPromptOptions.name] += 1;
+                    for (const extraArgumentName of argument.interactive.repeatWith) {
+                        const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
+                        if (!extraArgument) {
+                            continue;
                         }
+                        // Build extra argument options
+                        const extraArgumentPromptOptions = this.getPromptOptions(extraArgument);
+                        const extraArgumentMessage = extraArgumentPromptOptions.message;
+                        const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
+                        // Build pre-filled value for child repeat
+                        if (preFilledValues[extraArgumentPromptOptions.name]) {
+                            this.prefillFromArrayData(repeatCount, extraArgument, extraArgumentPromptOptions, preFilledValues);
+                        }
+                        extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
+                        // Prompt extra argument
+                        let response = {};
+                        response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                        while (((_c = extraArgumentPromptOptions.options) === null || _c === void 0 ? void 0 : _c.required) && !response[extraArgumentPromptOptions.name]) {
+                            if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+                                process.exit(1);
+                            }
+                            response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
+                        }
+                        multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
+                        multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
+                        processedArguments[extraArgumentPromptOptions.name] = true;
                     }
+                    isRepeatable = (yield (0, prompts_1.default)({ type: 'confirm', name: 'value', message: (_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.repeat, initial: true })).value;
+                    repeatCount++;
                 }
                 for (const argumentName of Object.keys(multi)) {
                     process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);

@@ -7,7 +7,6 @@ declare const _default: {
         help: string;
     };
     interactive: {
-        repeat: () => number;
         options: {
             type: string;
             message: string;

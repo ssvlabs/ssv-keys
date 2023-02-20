@@ -106,7 +106,7 @@ export class SSVKeys {
    */
   async buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]> {
     if (operatorIds.length !== operatorPublicKeys.length) {
-      throw Error('The number of operators does not match the number of public keys for those operators.');
+      throw Error('Mismatch amount of operator ids and operator keys.');
     }
     const threshold = await this.createThreshold(privateKey, operatorIds);
     return this.encryptShares(operatorPublicKeys, threshold.shares);

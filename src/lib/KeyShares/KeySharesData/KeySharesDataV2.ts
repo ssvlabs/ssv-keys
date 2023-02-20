@@ -41,7 +41,7 @@ export class KeySharesDataV2 implements IKeySharesData {
         .map(
           (operator: { id: any; publicKey: any; }) => {
             if (!operator.id || !operator.publicKey) {
-              throw Error('The number of operators does not match the number of public keys for those operators.');
+              throw Error('Mismatch amount of operator ids and operator keys.');
             }
             const operatorData = new OperatorDataV2();
             operatorData.setData(operator);
