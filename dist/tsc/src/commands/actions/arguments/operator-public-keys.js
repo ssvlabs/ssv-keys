@@ -9,7 +9,7 @@ exports.default = {
     options: {
         type: String,
         required: true,
-        help: 'Comma-separated list of operator keys (same sequence as operator ids)'
+        help: 'Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible.'
     },
     interactive: {
         options: {
