@@ -85,7 +85,7 @@
     "events": "^3.3.0",
     "figlet": "^1.5.2",
     "js-base64": "^3.7.2",
-    "jsencrypt": "^3.2.1",
+    "jsencrypt": "3.2.1",
     "minimist": "^1.2.6",
     "moment": "^2.29.3",
     "node-jsencrypt": "^1.0.0",
