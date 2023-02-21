@@ -51,6 +51,12 @@ export class KeySharesAction extends BaseAction {
     if (isKeyStoreValid !== true) {
       throw Error(String(isKeyStoreValid));
     }
+
+    const isValidPassword = await keystorePasswordArgument.interactive.options.validate(password);
+    if (isValidPassword !== true) {
+      throw Error(String(isValidPassword));
+    }
+
     const keystoreFilePath = sanitizePath(String(keystore).trim());
     const keystoreData = await readFile(keystoreFilePath);
 

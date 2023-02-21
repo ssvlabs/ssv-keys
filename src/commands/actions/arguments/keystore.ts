@@ -1,8 +1,6 @@
 import { keystorePasswordValidator } from '../validators/keystore-password';
 import { fileExistsValidator, jsonFileValidator, sanitizePath } from '../validators/file';
 
-
-
 /**
  * Keystore argument validates if keystore file exists and is valid keystore file.
  */

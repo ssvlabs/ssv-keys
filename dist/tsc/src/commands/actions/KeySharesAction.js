@@ -45,6 +45,10 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             if (isKeyStoreValid !== true) {
                 throw Error(String(isKeyStoreValid));
             }
+            const isValidPassword = yield password_1.default.interactive.options.validate(password);
+            if (isValidPassword !== true) {
+                throw Error(String(isValidPassword));
+            }
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
