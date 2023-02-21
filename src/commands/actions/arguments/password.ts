@@ -12,7 +12,7 @@ export default {
     options: {
       type: 'password',
       validate: async (password: string): Promise<boolean | string> => {
-        return await keystorePasswordValidator.validatePassword(password);
+        return await keystorePasswordValidator.validatePassword(password, true);
       },
     }
   }

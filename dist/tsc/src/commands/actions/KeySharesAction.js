@@ -12,6 +12,7 @@ const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const key_shares_version_1 = tslib_1.__importDefault(require("./arguments/key-shares-version"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
+const keystore_password_1 = require("./validators/keystore-password");
 const file_helper_1 = require("../../lib/helpers/file.helper");
 /**
  * Command to build keyshares from user input.
@@ -45,7 +46,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             if (isKeyStoreValid !== true) {
                 throw Error(String(isKeyStoreValid));
             }
-            const isValidPassword = yield password_1.default.interactive.options.validate(password);
+            const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password);
             if (isValidPassword !== true) {
                 throw Error(String(isValidPassword));
             }

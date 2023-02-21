@@ -122,6 +122,9 @@ export class BaseCommand extends ArgumentParser {
     return parsedArgs;
   }
 
+  isPrefillFromArrayExists(dataIndex: number, promptOptions: any, preFilledValues: Record<string, any>): boolean {
+    return !!preFilledValues[promptOptions.name]?.split(',')[dataIndex];
+  }
   /**
    * Pre-fill prompts from array data on specific index
    * @param dataIndex
@@ -184,23 +187,15 @@ export class BaseCommand extends ArgumentParser {
         multi[promptOptions.name] = multi[promptOptions.name] || [];
         multi[promptOptions.name].push(await this.ask(promptOptions, extraOptions));
       }
-      let repeatCount =  1;
+      let repeatCount =  0;
       while (isRepeatable) {
         // Build pre-filled value for parent repeat
         if (preFilledValues[promptOptions.name]) {
           this.prefillFromArrayData(repeatCount, argument, promptOptions, preFilledValues);
         }
-        promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
-        let response: Record<string, any> = {};
-        response = await prompts(promptOptions, extraOptions);
-        while (argument.options?.required && !response[promptOptions.name]) {
-          if (Object.keys(response).indexOf(promptOptions.name) === -1) {
-            process.exit(1);
-          }
-          response = await prompts(promptOptions, extraOptions);
-        }
+        promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount + 1)}`);
         multi[promptOptions.name] = multi[promptOptions.name] || [];
-        multi[promptOptions.name].push(response[promptOptions.name]);
+        multi[promptOptions.name].push(await this.ask(promptOptions, extraOptions));
 
         // Processing "repeatWith".
         // For cases when some parameters are relative to each other and should be
@@ -213,32 +208,25 @@ export class BaseCommand extends ArgumentParser {
           // Build extra argument options
           const extraArgumentPromptOptions = this.getPromptOptions(extraArgument);
           const extraArgumentMessage = extraArgumentPromptOptions.message;
-          const extraArgumentOptions = {onSubmit: extraArgumentPromptOptions.onSubmit};
+          const extraArgumentOptions = { onSubmit: extraArgumentPromptOptions.onSubmit };
 
           // Build pre-filled value for child repeat
           if (preFilledValues[extraArgumentPromptOptions.name]) {
             this.prefillFromArrayData(repeatCount, extraArgument, extraArgumentPromptOptions, preFilledValues);
           }
-          extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
+          extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount + 1)}`);
 
-          // Prompt extra argument
-          let response: Record<string, any> = {};
-          response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
-          while (extraArgumentPromptOptions.options?.required && !response[extraArgumentPromptOptions.name]) {
-            if (Object.keys(response).indexOf(promptOptions.name) === -1) {
-              process.exit(1);
-            }
-            response = await prompts(extraArgumentPromptOptions, extraArgumentOptions);
-          }
+          // Prompt extra argumen
           multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
-          multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
+          multi[extraArgumentPromptOptions.name].push(await this.ask(extraArgumentPromptOptions, extraArgumentOptions));
           processedArguments[extraArgumentPromptOptions.name] = true;
         }
 
-        isRepeatable = (await prompts({ type: 'confirm', name: 'value', message: argument.interactive?.repeat, initial: true })).value;
+        if (!this.isPrefillFromArrayExists(repeatCount + 1, promptOptions, preFilledValues)) {
+          isRepeatable = (await prompts({ type: 'confirm', name: 'value', message: argument.interactive?.repeat, initial: true })).value;
+        }
         repeatCount++;
       }
-
       for (const argumentName of Object.keys(multi)) {
         process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
       }

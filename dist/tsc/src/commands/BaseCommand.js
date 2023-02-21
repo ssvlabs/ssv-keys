@@ -108,6 +108,10 @@ class BaseCommand extends argparse_1.ArgumentParser {
         }
         return parsedArgs;
     }
+    isPrefillFromArrayExists(dataIndex, promptOptions, preFilledValues) {
+        var _a;
+        return !!((_a = preFilledValues[promptOptions.name]) === null || _a === void 0 ? void 0 : _a.split(',')[dataIndex]);
+    }
     /**
      * Pre-fill prompts from array data on specific index
      * @param dataIndex
@@ -144,7 +148,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b, _c, _d;
+        var _a, _b;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
@@ -167,23 +171,15 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     multi[promptOptions.name] = multi[promptOptions.name] || [];
                     multi[promptOptions.name].push(yield this.ask(promptOptions, extraOptions));
                 }
-                let repeatCount = 1;
+                let repeatCount = 0;
                 while (isRepeatable) {
                     // Build pre-filled value for parent repeat
                     if (preFilledValues[promptOptions.name]) {
                         this.prefillFromArrayData(repeatCount, argument, promptOptions, preFilledValues);
                     }
-                    promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
-                    let response = {};
-                    response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    while (((_b = argument.options) === null || _b === void 0 ? void 0 : _b.required) && !response[promptOptions.name]) {
-                        if (Object.keys(response).indexOf(promptOptions.name) === -1) {
-                            process.exit(1);
-                        }
-                        response = yield (0, prompts_1.default)(promptOptions, extraOptions);
-                    }
+                    promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount + 1)}`);
                     multi[promptOptions.name] = multi[promptOptions.name] || [];
-                    multi[promptOptions.name].push(response[promptOptions.name]);
+                    multi[promptOptions.name].push(yield this.ask(promptOptions, extraOptions));
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
@@ -200,21 +196,15 @@ class BaseCommand extends argparse_1.ArgumentParser {
                         if (preFilledValues[extraArgumentPromptOptions.name]) {
                             this.prefillFromArrayData(repeatCount, extraArgument, extraArgumentPromptOptions, preFilledValues);
                         }
-                        extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount)}`);
-                        // Prompt extra argument
-                        let response = {};
-                        response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                        while (((_c = extraArgumentPromptOptions.options) === null || _c === void 0 ? void 0 : _c.required) && !response[extraArgumentPromptOptions.name]) {
-                            if (Object.keys(response).indexOf(promptOptions.name) === -1) {
-                                process.exit(1);
-                            }
-                            response = yield (0, prompts_1.default)(extraArgumentPromptOptions, extraArgumentOptions);
-                        }
+                        extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount + 1)}`);
+                        // Prompt extra argumen
                         multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
-                        multi[extraArgumentPromptOptions.name].push(response[extraArgumentPromptOptions.name]);
+                        multi[extraArgumentPromptOptions.name].push(yield this.ask(extraArgumentPromptOptions, extraArgumentOptions));
                         processedArguments[extraArgumentPromptOptions.name] = true;
                     }
-                    isRepeatable = (yield (0, prompts_1.default)({ type: 'confirm', name: 'value', message: (_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.repeat, initial: true })).value;
+                    if (!this.isPrefillFromArrayExists(repeatCount + 1, promptOptions, preFilledValues)) {
+                        isRepeatable = (yield (0, prompts_1.default)({ type: 'confirm', name: 'value', message: (_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeat, initial: true })).value;
+                    }
                     repeatCount++;
                 }
                 for (const argumentName of Object.keys(multi)) {

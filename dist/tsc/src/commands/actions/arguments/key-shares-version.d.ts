@@ -4,13 +4,11 @@ declare const _default: {
     options: {
         type: StringConstructor;
         required: boolean;
-        default: string;
         help: string;
     };
     interactive: {
         options: {
             type: string;
-            validate: (value: string) => string | boolean;
         };
     };
 };
