@@ -14,7 +14,7 @@ exports.default = {
         options: {
             type: 'password',
             validate: (password) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-                return yield keystore_password_1.keystorePasswordValidator.validatePassword(password);
+                return yield keystore_password_1.keystorePasswordValidator.validatePassword(password, true);
             }),
         }
     }

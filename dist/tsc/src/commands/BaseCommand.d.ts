@@ -37,6 +37,7 @@ export declare class BaseCommand extends ArgumentParser {
      * @param clearProcessArgs
      */
     prefillFromArguments(selectedAction: string, clearProcessArgs?: boolean): Record<string, any>;
+    isPrefillFromArrayExists(dataIndex: number, promptOptions: any, preFilledValues: Record<string, any>): boolean;
     /**
      * Pre-fill prompts from array data on specific index
      * @param dataIndex

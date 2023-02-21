@@ -9,7 +9,7 @@ export class KeystorePasswordValidator {
     this.keystoreFilePath = filePath;
   }
 
-  async validatePassword(password: string): Promise<boolean | string> {
+  async validatePassword(password: string, showProgress = false): Promise<boolean | string> {
     if (!password.trim().length) {
       return 'Password is empty';
     }
@@ -17,19 +17,21 @@ export class KeystorePasswordValidator {
     let messageInterval: any;
     let output: any;
     try {
-      let dots = 1;
-      const message = `\rChecking password`
-      process.stdout.write('\r' + String(' ').repeat(250));
-      process.stdout.write(`\r${message}`);
-      messageInterval = setInterval(() => {
-        const progressMessage = `\r${message}` +
-          `${String('.').repeat(dots)}${String(' ').repeat(30 - dots)}`;
-        process.stdout.write(progressMessage);
-        dots += 1;
-        if (dots > 3) {
-          dots = 1;
-        }
-      }, 1000);
+      if (showProgress) {
+        let dots = 1;
+        const message = `\rChecking password`
+        process.stdout.write('\r' + String(' ').repeat(250));
+        process.stdout.write(`\r${message}`);
+        messageInterval = setInterval(() => {
+          const progressMessage = `\r${message}` +
+            `${String('.').repeat(dots)}${String(' ').repeat(30 - dots)}`;
+          process.stdout.write(progressMessage);
+          dots += 1;
+          if (dots > 3) {
+            dots = 1;
+          }
+        }, 1000);
+      }
 
       const data = await readFile(this.keystoreFilePath);
       const keyStore = new EthereumKeyStore(data);
@@ -38,8 +40,10 @@ export class KeystorePasswordValidator {
     } catch (e) {
       output = errorMessage;
     }
-    process.stdout.write('\n');
-    clearInterval(messageInterval);
+    if (showProgress) {
+      process.stdout.write('\n');
+      clearInterval(messageInterval);
+    }
     return output;
   }
 }

@@ -8,6 +8,7 @@ import keystorePasswordArgument from './arguments/password';
 import keySharesVersionArgument from './arguments/key-shares-version';
 import outputFolderArgument from './arguments/output-folder';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
+import { keystorePasswordValidator } from './validators/keystore-password';
 
 import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 
@@ -51,8 +52,7 @@ export class KeySharesAction extends BaseAction {
     if (isKeyStoreValid !== true) {
       throw Error(String(isKeyStoreValid));
     }
-
-    const isValidPassword = await keystorePasswordArgument.interactive.options.validate(password);
+    const isValidPassword = await keystorePasswordValidator.validatePassword(password);
     if (isValidPassword !== true) {
       throw Error(String(isValidPassword));
     }
