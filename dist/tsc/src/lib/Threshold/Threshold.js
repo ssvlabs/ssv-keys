@@ -49,7 +49,7 @@ class Threshold {
             const sortedOperators = operators.sort((a, b) => a - b);
             const operatorsLength = sortedOperators.length;
             if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorsLength)) {
-                throw new ThresholdInvalidOperatorsLengthError(sortedOperators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13');
+                throw new ThresholdInvalidOperatorsLengthError(sortedOperators, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
             yield BLS_1.default.init(BLS_1.default.BLS12_381);
             const msk = [];
