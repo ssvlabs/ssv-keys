@@ -123,7 +123,7 @@ export class BaseCommand extends ArgumentParser {
   }
 
   isPrefillFromArrayExists(dataIndex: number, promptOptions: any, preFilledValues: Record<string, any>): boolean {
-    return !!preFilledValues[promptOptions.name].split(',')[dataIndex];
+    return !!preFilledValues[promptOptions.name]?.split(',')[dataIndex];
   }
   /**
    * Pre-fill prompts from array data on specific index

@@ -109,7 +109,8 @@ class BaseCommand extends argparse_1.ArgumentParser {
         return parsedArgs;
     }
     isPrefillFromArrayExists(dataIndex, promptOptions, preFilledValues) {
-        return !!preFilledValues[promptOptions.name].split(',')[dataIndex];
+        var _a;
+        return !!((_a = preFilledValues[promptOptions.name]) === null || _a === void 0 ? void 0 : _a.split(',')[dataIndex]);
     }
     /**
      * Pre-fill prompts from array data on specific index
