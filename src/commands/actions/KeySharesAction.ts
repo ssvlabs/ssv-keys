@@ -47,6 +47,10 @@ export class KeySharesAction extends BaseAction {
     // Prepare data
     operatorKeys = operatorKeys.split(',');
     operatorIds = operatorIds.split(',').map((o: string) => parseInt(o, 10));
+    const isKeyStoreValid = keystoreArgument.interactive.options.validate(keystore);
+    if (isKeyStoreValid !== true) {
+      throw Error(String(isKeyStoreValid));
+    }
     const keystoreFilePath = sanitizePath(String(keystore).trim());
     const keystoreData = await readFile(keystoreFilePath);
 

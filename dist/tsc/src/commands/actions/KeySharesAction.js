@@ -41,6 +41,10 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             // Prepare data
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));
+            const isKeyStoreValid = keystore_1.default.interactive.options.validate(keystore);
+            if (isKeyStoreValid !== true) {
+                throw Error(String(isKeyStoreValid));
+            }
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
