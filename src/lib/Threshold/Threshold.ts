@@ -71,7 +71,7 @@ class Threshold {
     if (!isOperatorsLengthValid(operatorsLength)) {
       throw new ThresholdInvalidOperatorsLengthError(
         sortedOperators,
-        'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ <= 13'
+        'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.'
       );
     }
 
