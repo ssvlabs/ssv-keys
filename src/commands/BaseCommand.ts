@@ -173,6 +173,7 @@ export class BaseCommand extends ArgumentParser {
     const actionArguments = this.getArgumentsForAction(selectedAction);
     const multi: any = {};
     for (const argument of actionArguments) {
+      if (!argument.interactive) continue;
       const promptOptions = this.getPromptOptions(argument);
       if (processedArguments[promptOptions.name]) {
         continue;

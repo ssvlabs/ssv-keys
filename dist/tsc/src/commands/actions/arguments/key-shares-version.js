@@ -8,10 +8,5 @@ exports.default = {
         required: false,
         help: 'The version of the tool output, e.g. use "2" for previous version?  (optional)'
     },
-    interactive: {
-        options: {
-            type: 'text',
-        }
-    }
 };
 //# sourceMappingURL=key-shares-version.js.map

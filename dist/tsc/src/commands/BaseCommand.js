@@ -159,6 +159,8 @@ class BaseCommand extends argparse_1.ArgumentParser {
             const actionArguments = this.getArgumentsForAction(selectedAction);
             const multi = {};
             for (const argument of actionArguments) {
+                if (!argument.interactive)
+                    continue;
                 const promptOptions = this.getPromptOptions(argument);
                 if (processedArguments[promptOptions.name]) {
                     continue;
