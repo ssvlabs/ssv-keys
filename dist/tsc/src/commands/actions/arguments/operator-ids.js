@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const operator_ids_1 = require("../validators/operator-ids");
 const uniqueOperatorIds = {};
 exports.default = {
     arg1: '-oids',
@@ -26,6 +27,11 @@ exports.default = {
                     uniqueOperatorIds[operatorId] = true;
                 }
                 return returnValue;
+            },
+        },
+        validateList: (items) => {
+            if (!(0, operator_ids_1.isOperatorsLengthValid)(items.length)) {
+                throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
         }
     }

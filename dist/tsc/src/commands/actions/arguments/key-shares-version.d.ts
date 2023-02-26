@@ -6,10 +6,5 @@ declare const _default: {
         required: boolean;
         help: string;
     };
-    interactive: {
-        options: {
-            type: string;
-        };
-    };
 };
 export default _default;

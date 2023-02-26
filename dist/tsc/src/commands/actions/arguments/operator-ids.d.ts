@@ -14,6 +14,7 @@ declare const _default: {
             message: string;
             validate: (operatorId: number) => boolean | string;
         };
+        validateList: (items: []) => void;
     };
 };
 export default _default;

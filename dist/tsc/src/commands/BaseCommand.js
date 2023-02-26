@@ -148,7 +148,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
      * Populate process.argv with user input.
      */
     executeInteractive() {
-        var _a, _b;
+        var _a, _b, _c, _d, _e;
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Ask for action
             const selectedAction = yield this.askAction();
@@ -157,8 +157,10 @@ class BaseCommand extends argparse_1.ArgumentParser {
             process.argv.push(selectedAction);
             const processedArguments = {};
             const actionArguments = this.getArgumentsForAction(selectedAction);
+            const multi = {};
             for (const argument of actionArguments) {
-                const multi = {};
+                if (!argument.interactive)
+                    continue;
                 const promptOptions = this.getPromptOptions(argument);
                 if (processedArguments[promptOptions.name]) {
                     continue;
@@ -207,9 +209,13 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     }
                     repeatCount++;
                 }
-                for (const argumentName of Object.keys(multi)) {
-                    process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
+                // if end of repeat logic, need to validate the list if validator exists
+                if (((_c = argument.interactive) === null || _c === void 0 ? void 0 : _c.repeat) && ((_d = argument.interactive) === null || _d === void 0 ? void 0 : _d.validateList)) {
+                    (_e = argument.interactive) === null || _e === void 0 ? void 0 : _e.validateList(multi[promptOptions.name]);
                 }
+            }
+            for (const argumentName of Object.keys(multi)) {
+                process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
             }
         });
     }

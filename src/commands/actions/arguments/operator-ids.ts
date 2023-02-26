@@ -1,3 +1,5 @@
+import { isOperatorsLengthValid } from "../validators/operator-ids";
+
 const uniqueOperatorIds: any = {};
 
 export default {
@@ -25,6 +27,11 @@ export default {
           uniqueOperatorIds[operatorId] = true;
         }
         return returnValue;
+      },
+    },
+    validateList: (items: []) => {
+      if (!isOperatorsLengthValid(items.length)) {
+        throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
       }
     }
   }

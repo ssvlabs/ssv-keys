@@ -10,7 +10,7 @@ declare const _default: {
         options: {
             type: string;
             message: string;
-            validate: (value: string) => Promise<string | boolean>;
+            validate: (value: string) => string | boolean;
         };
     };
 };
