@@ -14,7 +14,7 @@ export default {
     options: {
       type: 'text',
       message: 'Enter operator public key for {{index}} operator',
-      validate: async (value: string) => {
+      validate: (value: string) => {
         if (uniqueOperators[value]) {
           return 'This operator already used';
         }

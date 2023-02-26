@@ -171,8 +171,8 @@ export class BaseCommand extends ArgumentParser {
     process.argv.push(selectedAction);
     const processedArguments: any = {};
     const actionArguments = this.getArgumentsForAction(selectedAction);
+    const multi: any = {};
     for (const argument of actionArguments) {
-      const multi: any = {};
       const promptOptions = this.getPromptOptions(argument);
       if (processedArguments[promptOptions.name]) {
         continue;
@@ -196,7 +196,6 @@ export class BaseCommand extends ArgumentParser {
         promptOptions.message = `${message}`.replace('{{index}}', `${ordinalSuffixOf(repeatCount + 1)}`);
         multi[promptOptions.name] = multi[promptOptions.name] || [];
         multi[promptOptions.name].push(await this.ask(promptOptions, extraOptions));
-
         // Processing "repeatWith".
         // For cases when some parameters are relative to each other and should be
         // asked from user in a relative way.
@@ -227,11 +226,16 @@ export class BaseCommand extends ArgumentParser {
         }
         repeatCount++;
       }
-      for (const argumentName of Object.keys(multi)) {
-        process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
+
+      // if end of repeat logic, need to validate the list if validator exists
+      if (argument.interactive?.repeat && argument.interactive?.validateList) {
+        argument.interactive?.validateList(multi[promptOptions.name]);
       }
     }
-  }
+    for (const argumentName of Object.keys(multi)) {
+      process.argv.push(`--${argumentName.replace(/(_)/gi, '-')}=${multi[argumentName].join(',')}`);
+    }
+}
 
   /**
    * Find argument in list of arguments by its arg2 value.
