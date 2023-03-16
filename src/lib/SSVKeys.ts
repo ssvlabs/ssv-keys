@@ -70,8 +70,8 @@ export class SSVKeys {
    * @param privateKey
    * @param operators
    */
-  async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
-    this.threshold = await new Threshold().create(privateKey, operators);
+  async createThreshold(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+    this.threshold = await new Threshold().create(privateKey, operatorIds);
     return this.threshold;
   }
 
@@ -108,7 +108,11 @@ export class SSVKeys {
     if (operatorIds.length !== operatorPublicKeys.length) {
       throw Error('Mismatch amount of operator ids and operator keys.');
     }
-    const threshold = await this.createThreshold(privateKey, operatorIds);
+    const operators = operatorIds
+      .map((id, index) => ({ id, publicKey: operatorPublicKeys[index]}))
+      .sort((a: any, b: any) => +a.id - +b.id);
+
+    const threshold = await this.createThreshold(privateKey, operators.map(item => item.id));
     return this.encryptShares(operatorPublicKeys, threshold.shares);
   }
 

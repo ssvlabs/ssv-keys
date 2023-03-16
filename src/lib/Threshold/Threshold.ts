@@ -53,24 +53,24 @@ class Threshold {
    * If F calculated from this formula is not integer number - it will raise exception.
    * Generate keys and return promise
    */
-  async create(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
+  async create(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
     // Validation
-    operators.map(operator => {
-      if (!Number.isInteger(operator)) {
+    operatorIds.map(operatorId => {
+      if (!Number.isInteger(operatorId)) {
         throw new ThresholdInvalidOperatorIdError(
-          operator,
-          `Operator must be integer. Got: ${operator}`
+          operatorId,
+          `Operator must be integer. Got: ${operatorId}`
         );
       }
     });
 
     // Sort operators
-    const sortedOperators = operators.sort((a: number, b: number) => a - b);
-    const operatorsLength = sortedOperators.length;
+    const sortedOperatorIds = [...operatorIds].sort((a: number, b: number) => a - b);
+    const operatorsLength = sortedOperatorIds.length;
 
     if (!isOperatorsLengthValid(operatorsLength)) {
       throw new ThresholdInvalidOperatorsLengthError(
-        sortedOperators,
+        sortedOperatorIds,
         'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.'
       );
     }
@@ -98,7 +98,7 @@ class Threshold {
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
-    for (const operatorId of sortedOperators) {
+    for (const operatorId of sortedOperatorIds) {
         const id = new bls.Id();
         id.setInt(operatorId);
         const shareSecretKey = new bls.SecretKey();

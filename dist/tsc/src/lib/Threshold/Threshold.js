@@ -37,19 +37,19 @@ class Threshold {
      * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    create(privateKey, operators) {
+    create(privateKey, operatorIds) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Validation
-            operators.map(operator => {
-                if (!Number.isInteger(operator)) {
-                    throw new ThresholdInvalidOperatorIdError(operator, `Operator must be integer. Got: ${operator}`);
+            operatorIds.map(operatorId => {
+                if (!Number.isInteger(operatorId)) {
+                    throw new ThresholdInvalidOperatorIdError(operatorId, `Operator must be integer. Got: ${operatorId}`);
                 }
             });
             // Sort operators
-            const sortedOperators = operators.sort((a, b) => a - b);
-            const operatorsLength = sortedOperators.length;
+            const sortedOperatorIds = [...operatorIds].sort((a, b) => a - b);
+            const operatorsLength = sortedOperatorIds.length;
             if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorsLength)) {
-                throw new ThresholdInvalidOperatorsLengthError(sortedOperators, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
+                throw new ThresholdInvalidOperatorsLengthError(sortedOperatorIds, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
             yield BLS_1.default.init(BLS_1.default.BLS12_381);
             const msk = [];
@@ -69,7 +69,7 @@ class Threshold {
                 mpk.push(pk);
             }
             // Evaluate shares - starting from 1 because 0 is master key
-            for (const operatorId of sortedOperators) {
+            for (const operatorId of sortedOperatorIds) {
                 const id = new BLS_1.default.Id();
                 id.setInt(operatorId);
                 const shareSecretKey = new BLS_1.default.SecretKey();
