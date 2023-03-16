@@ -38,7 +38,7 @@ export declare class SSVKeys {
      * @param privateKey
      * @param operators
      */
-    createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs>;
+    createThreshold(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs>;
     /**
      * Encrypt operators shares using operators public keys.
      * @param operatorsPublicKeys

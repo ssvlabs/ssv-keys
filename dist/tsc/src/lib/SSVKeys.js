@@ -53,9 +53,9 @@ class SSVKeys {
      * @param privateKey
      * @param operators
      */
-    createThreshold(privateKey, operators) {
+    createThreshold(privateKey, operatorIds) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            this.threshold = yield new Threshold_1.default().create(privateKey, operators);
+            this.threshold = yield new Threshold_1.default().create(privateKey, operatorIds);
             return this.threshold;
         });
     }
@@ -95,7 +95,10 @@ class SSVKeys {
             if (operatorIds.length !== operatorPublicKeys.length) {
                 throw Error('Mismatch amount of operator ids and operator keys.');
             }
-            const threshold = yield this.createThreshold(privateKey, operatorIds);
+            const operators = operatorIds
+                .map((id, index) => ({ id, publicKey: operatorPublicKeys[index] }))
+                .sort((a, b) => +a.id - +b.id);
+            const threshold = yield this.createThreshold(privateKey, operators.map(item => item.id));
             return this.encryptShares(operatorPublicKeys, threshold.shares);
         });
     }
