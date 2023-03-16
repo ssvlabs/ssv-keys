@@ -63,7 +63,7 @@ function UserFlow() {
       }
     );
 
-    setFinalPayload(payload);
+    setFinalPayload(JSON.stringify(payload));
     console.log('Payload ready');
 
     // Keyshares
