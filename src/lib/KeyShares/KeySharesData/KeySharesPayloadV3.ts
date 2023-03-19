@@ -39,8 +39,10 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
     const str = `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
     if (str.length !== 2438) {
       console.log('error', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength, str);
+      console.log('error', encryptedShares);
     } else {
       console.log('ok', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength);
+      console.log('ok', encryptedShares);
     }
     return str;
   }
