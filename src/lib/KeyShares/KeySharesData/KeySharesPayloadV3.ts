@@ -36,7 +36,13 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
 
     // add length of the public keys at the beginning
     // this is the variable that is sent to the contract as bytes, prefixed with 0x
-    return `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
+    const str = `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
+    if (str.length !== 2438) {
+      console.log('error', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength, str);
+    } else {
+      console.log('ok', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength);
+    }
+    return str;
   }
 
   build(data: any): any {
