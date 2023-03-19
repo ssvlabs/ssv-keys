@@ -113,7 +113,7 @@ export class SSVKeys {
       .sort((a: any, b: any) => +a.id - +b.id);
 
     const threshold = await this.createThreshold(privateKey, operators.map(item => item.id));
-    return this.encryptShares(operatorPublicKeys, threshold.shares);
+    return this.encryptShares(operators.map(item => item.publicKey), threshold.shares);
   }
 
   /**
@@ -132,7 +132,7 @@ export class SSVKeys {
   async buildPayload(metaData: IPayloadMetaData): Promise<any> {
     return this.keyShares.generateContractPayload({
       publicKey: metaData.publicKey,
-      operatorIds: metaData.operatorIds,
+      operatorIds: [...metaData.operatorIds].sort((a: number, b: number) => a - b),
       encryptedShares: metaData.encryptedShares,
     });
   }
@@ -145,10 +145,14 @@ export class SSVKeys {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
     const publicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
-    const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
+    const operatorPublicKeys = keyShares.data.operators?.map((item: any) => item.publicKey) as string[];
     const operatorIds = keyShares.data.operators?.map((item: any) => item.id) as number[];
 
-    if (publicKeys.length !== encryptedKeys.length
+    const operators = operatorIds
+      .map((id, index) => ({ id, publicKey: operatorPublicKeys[index]}))
+      .sort((a: any, b: any) => +a.id - +b.id);
+
+      if (publicKeys.length !== encryptedKeys.length
       || publicKeys.length !== operatorPublicKeys.length
       || encryptedKeys.length !== operatorPublicKeys.length
       || !encryptedKeys.length
@@ -160,7 +164,7 @@ export class SSVKeys {
 
     return this.keyShares.generateContractPayload({
       publicKey,
-      operatorIds,
+      operatorIds: operators.map(item => item.id),
       encryptedShares: publicKeys.map((item: any, index: number) => ({
         publicKey: item,
         privateKey: encryptedKeys[index],

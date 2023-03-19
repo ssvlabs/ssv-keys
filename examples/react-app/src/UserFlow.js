@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SSVKeys } from 'ssv-keys';
 import "./index.css";
 import "./App.css";
@@ -6,7 +6,7 @@ import Dropzone from "./Dropzone";
 import Spinner from "./Spinner";
 
 // Operators and their IDs dummy data
-const operators = require('./operators.json');
+const operatorPublicKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 
 const STEPS = {
@@ -52,7 +52,7 @@ function UserFlow() {
       console.log('Private key ready');
       return result;
     });
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operatorPublicKeys);
 
     // Build final web3 transaction payload and update keyshares file with payload data
     const payload = await ssvKeys.buildPayload(
@@ -70,7 +70,7 @@ function UserFlow() {
     const keyShares = ssvKeys.keyShares.fromJson({
       version: 'v3',
       data: {
-        operators: operators.map((operator, index) => ({
+        operators: operatorPublicKeys.map((operator, index) => ({
           id: operatorIds[index],
           publicKey: operator,
         })),
@@ -149,7 +149,7 @@ function UserFlow() {
               <th>ID</th>
               <th>Public Key</th>
             </tr>
-            {operators.map((operator, index) => {
+            {operatorPublicKeys.map((operator, index) => {
               return (
                 <tr>
                   <td>{operatorIds[index]}</td>
