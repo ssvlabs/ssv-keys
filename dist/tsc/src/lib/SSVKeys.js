@@ -2,14 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSVKeys = void 0;
 const tslib_1 = require("tslib");
-const atob_1 = tslib_1.__importDefault(require("atob"));
+// import atob from 'atob';
 const BLS_1 = tslib_1.__importDefault(require("./BLS"));
-const js_base64_1 = require("js-base64");
 const KeyShares_1 = require("./KeyShares/KeyShares");
 const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
 const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
-const web3_helper_1 = require("./helpers/web3.helper");
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -65,23 +63,11 @@ class SSVKeys {
      * @param shares
      * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys, shares, sharesFormat = '') {
+    encryptShares(operatorsPublicKeys, shares) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                const decodedOperators = operatorsPublicKeys.map((operator) => String((0, js_base64_1.encode)((0, atob_1.default)(operator))));
-                const encryptedShares = new Encryption_1.default(decodedOperators, shares).encrypt();
-                return encryptedShares.map((share) => {
-                    share.operatorPublicKey = (0, js_base64_1.encode)(share.operatorPublicKey);
-                    if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-                        share.operatorPublicKey = web3_helper_1.web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
-                        share.privateKey = web3_helper_1.web3.eth.abi.encodeParameter('string', share.privateKey);
-                    }
-                    return share;
-                });
-            }
-            catch (error) {
-                return error;
-            }
+            const decodedOperatorPublicKeys = operatorsPublicKeys.map((operator) => Buffer.from(operator, 'base64').toString());
+            const encryptedShares = new Encryption_1.default(decodedOperatorPublicKeys, shares).encrypt();
+            return encryptedShares;
         });
     }
     /**

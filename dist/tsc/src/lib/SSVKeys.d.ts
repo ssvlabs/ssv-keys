@@ -45,7 +45,7 @@ export declare class SSVKeys {
      * @param shares
      * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys: string[], shares: IShares[], sharesFormat?: string): Promise<EncryptShare[]>;
+    encryptShares(operatorsPublicKeys: string[], shares: IShares[]): Promise<EncryptShare[]>;
     /**
      * Build shares from private key, operator IDs and public keys
      * @param privateKey

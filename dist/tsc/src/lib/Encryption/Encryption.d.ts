@@ -12,9 +12,8 @@ export interface EncryptShare {
     publicKey: string;
 }
 export default class Encryption {
-    private readonly operators;
+    private readonly operatorPublicKeys;
     private readonly shares;
-    RAW_OPERATOR_PUBLIC_KEY_SIGNATURE: RegExp;
-    constructor(operators: string[], shares: IShares[]);
+    constructor(operatorPublicKeys: string[], shares: IShares[]);
     encrypt(): EncryptShare[];
 }
