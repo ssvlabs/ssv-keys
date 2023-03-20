@@ -90,34 +90,34 @@ class Threshold {
     const F = (operatorsLength - 1) / 3;
     // Construct poly
     for (let i = 1; i < operatorsLength - F; i += 1) {
-        const sk: SecretKeyType = new bls.SecretKey();
-        sk.setByCSPRNG();
-        msk.push(sk);
-        const pk = sk.getPublicKey();
-        mpk.push(pk);
+      const sk: SecretKeyType = new bls.SecretKey();
+      sk.setByCSPRNG();
+      msk.push(sk);
+      const pk = sk.getPublicKey();
+      mpk.push(pk);
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
     for (const operatorId of sortedOperatorIds) {
-        const id = new bls.Id();
-        id.setInt(operatorId);
-        const shareSecretKey = new bls.SecretKey();
-        shareSecretKey.share(msk, id);
+      const id = new bls.Id();
+      id.setInt(operatorId);
+      const shareSecretKey = new bls.SecretKey();
+      shareSecretKey.share(msk, id);
 
-        const sharePublicKey = new bls.PublicKey();
-        sharePublicKey.share(mpk, id);
+      const sharePublicKey = new bls.PublicKey();
+      sharePublicKey.share(mpk, id);
 
-        this.shares.push({
-            privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
-            publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
-            id,
-        });
+      this.shares.push({
+        privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
+        publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
+        id,
+      });
     }
 
     const response: ISharesKeyPairs = {
       privateKey: `0x${this.privateKey.serializeToHexStr()}`,
-        publicKey: `0x${this.publicKey.serializeToHexStr()}`,
-        shares: this.shares,
+      publicKey: `0x${this.publicKey.serializeToHexStr()}`,
+      shares: this.shares,
     };
 
     return response;
