@@ -12,7 +12,7 @@ const options = {
   platform: 'browser',
   minify: true,
   bundle: true,
-  outdir: "dist/esbuild", // add this line to specify the output directory
+  outdir: "dist/esbuild",
   sourcemap: "external",
   plugins: [
     nodeExternalsPlugin({}),
