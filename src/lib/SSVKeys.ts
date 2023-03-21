@@ -1,11 +1,9 @@
-import atob from 'atob';
+// import atob from 'atob';
 import bls from './BLS';
-import { encode } from 'js-base64';
 import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
-import { web3 } from './helpers/web3.helper';
 
 export interface IPayloadMetaData {
   publicKey: string,
@@ -81,21 +79,10 @@ export class SSVKeys {
    * @param shares
    * @param sharesFormat
    */
-  async encryptShares(operatorsPublicKeys: string[], shares: IShares[], sharesFormat = ''): Promise<EncryptShare[]> {
-    try {
-      const decodedOperators = operatorsPublicKeys.map((operator: string) => String(encode(atob(operator))));
-      const encryptedShares = new Encryption(decodedOperators, shares).encrypt();
-      return encryptedShares.map((share: EncryptShare) => {
-        share.operatorPublicKey = encode(share.operatorPublicKey);
-        if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-          share.operatorPublicKey = web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
-          share.privateKey = web3.eth.abi.encodeParameter('string', share.privateKey);
-        }
-        return share;
-      });
-    } catch (error: any) {
-      return error;
-    }
+  async encryptShares(operatorsPublicKeys: string[], shares: IShares[]): Promise<EncryptShare[]> {
+    const decodedOperatorPublicKeys = operatorsPublicKeys.map((operator: string) => Buffer.from(operator, 'base64').toString());
+    const encryptedShares = new Encryption(decodedOperatorPublicKeys, shares).encrypt();
+    return encryptedShares;
   }
 
   /**

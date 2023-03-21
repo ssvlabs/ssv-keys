@@ -16,7 +16,7 @@ class KeySharesPayloadV3 {
         return arr.map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
     }
     sharesToBytes(publicKeys, privateKeys) {
-        const encryptedShares = this.decodeRSAShares(privateKeys);
+        const encryptedShares = this.decodeRSAShares([...privateKeys]);
         const arrayPublicKeys = new Uint8Array(publicKeys.map(pk => [...ethers.utils.arrayify(pk)]).flat());
         const arrayEncryptedShares = new Uint8Array(encryptedShares.map(sh => [...ethers.utils.arrayify(sh)]).flat());
         // public keys hex encoded
@@ -27,16 +27,7 @@ class KeySharesPayloadV3 {
         const pkPsBytes = Buffer.concat([arrayPublicKeys, arrayEncryptedShares]);
         // add length of the public keys at the beginning
         // this is the variable that is sent to the contract as bytes, prefixed with 0x
-        const str = `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
-        if (str.length !== 2438) {
-            console.log('error', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength, str);
-            console.log('error', privateKeys);
-        }
-        else {
-            console.log('ok', arrayPublicKeys.length, arrayEncryptedShares.length, pkHexLength);
-            console.log('ok', privateKeys);
-        }
-        return str;
+        return `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
     }
     build(data) {
         return [

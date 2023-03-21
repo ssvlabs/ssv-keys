@@ -6,7 +6,7 @@ try {
     index = require('jsencrypt').JSEncrypt;
 }
 catch (_a) {
-    index = require('node-jsencrypt');
+    index = require('./jsencrypt.bundle');
 }
 exports.default = index;
 //# sourceMappingURL=index.js.map
