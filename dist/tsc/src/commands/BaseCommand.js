@@ -185,6 +185,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     // Processing "repeatWith".
                     // For cases when some parameters are relative to each other and should be
                     // asked from user in a relative way.
+                    let filledAsParent = false;
                     for (const extraArgumentName of argument.interactive.repeatWith) {
                         const extraArgument = this.findArgumentByName(extraArgumentName, actionArguments);
                         if (!extraArgument) {
@@ -203,8 +204,14 @@ class BaseCommand extends argparse_1.ArgumentParser {
                         multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
                         multi[extraArgumentPromptOptions.name].push(yield this.ask(extraArgumentPromptOptions, extraArgumentOptions));
                         processedArguments[extraArgumentPromptOptions.name] = true;
+                        if (preFilledValues[promptOptions.name].split(',').length === multi[extraArgumentPromptOptions.name].length) {
+                            filledAsParent = true;
+                        }
                     }
-                    if (!this.isPrefillFromArrayExists(repeatCount + 1, promptOptions, preFilledValues)) {
+                    if (filledAsParent) {
+                        isRepeatable = false;
+                    }
+                    else if (!this.isPrefillFromArrayExists(repeatCount + 1, promptOptions, preFilledValues)) {
                         isRepeatable = (yield (0, prompts_1.default)({ type: 'confirm', name: 'value', message: (_b = argument.interactive) === null || _b === void 0 ? void 0 : _b.repeat, initial: true })).value;
                     }
                     repeatCount++;
