@@ -222,7 +222,7 @@ export class BaseCommand extends ArgumentParser {
           multi[extraArgumentPromptOptions.name].push(await this.ask(extraArgumentPromptOptions, extraArgumentOptions));
           processedArguments[extraArgumentPromptOptions.name] = true;
 
-          if (preFilledValues[promptOptions.name].split(',').length === multi[extraArgumentPromptOptions.name].length) {
+          if (preFilledValues[promptOptions.name] && preFilledValues[promptOptions.name].split(',').length === multi[extraArgumentPromptOptions.name].length) {
             filledAsParent = true;
           }
         }

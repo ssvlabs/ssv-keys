@@ -204,7 +204,7 @@ class BaseCommand extends argparse_1.ArgumentParser {
                         multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
                         multi[extraArgumentPromptOptions.name].push(yield this.ask(extraArgumentPromptOptions, extraArgumentOptions));
                         processedArguments[extraArgumentPromptOptions.name] = true;
-                        if (preFilledValues[promptOptions.name].split(',').length === multi[extraArgumentPromptOptions.name].length) {
+                        if (preFilledValues[promptOptions.name] && preFilledValues[promptOptions.name].split(',').length === multi[extraArgumentPromptOptions.name].length) {
                             filledAsParent = true;
                         }
                     }
