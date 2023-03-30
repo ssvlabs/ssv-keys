@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ThresholdInvalidOperatorIdError = exports.ThresholdInvalidOperatorsLengthError = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../BLS"));
+const operator_ids_1 = require("../../commands/actions/validators/operator-ids");
 class ThresholdInvalidOperatorsLengthError extends Error {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operators, message) {
@@ -36,17 +37,19 @@ class Threshold {
      * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    create(privateKey, operators) {
+    create(privateKey, operatorIds) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             // Validation
-            operators.map(operator => {
-                if (!Number.isInteger(operator)) {
-                    throw new ThresholdInvalidOperatorIdError(operator, `Operator must be integer. Got: ${String(operator)}`);
+            operatorIds.map(operatorId => {
+                if (!Number.isInteger(operatorId)) {
+                    throw new ThresholdInvalidOperatorIdError(operatorId, `Operator must be integer. Got: ${operatorId}`);
                 }
             });
-            const F = (operators.length - 1) / 3;
-            if (!Number.isInteger(F)) {
-                throw new ThresholdInvalidOperatorsLengthError(operators, 'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ');
+            // Sort operators
+            const sortedOperatorIds = [...operatorIds].sort((a, b) => a - b);
+            const operatorsLength = sortedOperatorIds.length;
+            if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorsLength)) {
+                throw new ThresholdInvalidOperatorsLengthError(sortedOperatorIds, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
             yield BLS_1.default.init(BLS_1.default.BLS12_381);
             const msk = [];
@@ -56,8 +59,9 @@ class Threshold {
             this.publicKey = this.privateKey.getPublicKey();
             msk.push(this.privateKey);
             mpk.push(this.publicKey);
+            const F = (operatorsLength - 1) / 3;
             // Construct poly
-            for (let i = 1; i < operators.length - F; i += 1) {
+            for (let i = 1; i < operatorsLength - F; i += 1) {
                 const sk = new BLS_1.default.SecretKey();
                 sk.setByCSPRNG();
                 msk.push(sk);
@@ -65,7 +69,7 @@ class Threshold {
                 mpk.push(pk);
             }
             // Evaluate shares - starting from 1 because 0 is master key
-            for (const operatorId of operators) {
+            for (const operatorId of sortedOperatorIds) {
                 const id = new BLS_1.default.Id();
                 id.setInt(operatorId);
                 const shareSecretKey = new BLS_1.default.SecretKey();

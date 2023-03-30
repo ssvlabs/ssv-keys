@@ -11,13 +11,12 @@ const class_validator_1 = require("class-validator");
 class KeySharesPayloadV3 {
     constructor() {
         this.readable = null;
-        this.raw = null;
     }
     decodeRSAShares(arr) {
         return arr.map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
     }
     sharesToBytes(publicKeys, privateKeys) {
-        const encryptedShares = this.decodeRSAShares(privateKeys);
+        const encryptedShares = this.decodeRSAShares([...privateKeys]);
         const arrayPublicKeys = new Uint8Array(publicKeys.map(pk => [...ethers.utils.arrayify(pk)]).flat());
         const arrayEncryptedShares = new Uint8Array(encryptedShares.map(sh => [...ethers.utils.arrayify(sh)]).flat());
         // public keys hex encoded
@@ -33,7 +32,7 @@ class KeySharesPayloadV3 {
     build(data) {
         return [
             data.publicKey,
-            data.operatorIds.join(','),
+            data.operatorIds,
             this.sharesToBytes(data.encryptedShares.map((share) => share.publicKey), data.encryptedShares.map((share) => share.privateKey)),
         ];
     }
@@ -44,13 +43,11 @@ class KeySharesPayloadV3 {
     setData(data) {
         // Cleanup
         if (!data === null) {
-            this.raw = null;
             this.readable = null;
             return;
         }
         // Payload array
         if (underscore_1.default.isArray(data)) {
-            this.raw = this.toRaw(data);
             this.readable = this.toReadable(data);
             return;
         }
@@ -58,9 +55,6 @@ class KeySharesPayloadV3 {
         if (underscore_1.default.isObject(data)) {
             if (data.readable) {
                 this.readable = data.readable;
-            }
-            if (data.raw) {
-                this.raw = data.raw;
             }
         }
     }
@@ -95,9 +89,5 @@ tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)()
 ], KeySharesPayloadV3.prototype, "readable", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)()
-], KeySharesPayloadV3.prototype, "raw", void 0);
 exports.KeySharesPayloadV3 = KeySharesPayloadV3;
 //# sourceMappingURL=KeySharesPayloadV3.js.map

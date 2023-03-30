@@ -6,10 +6,11 @@ import keystoreArgument from './arguments/keystore';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
 import keySharesVersionArgument from './arguments/key-shares-version';
-
 import outputFolderArgument from './arguments/output-folder';
-import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
+import { keystorePasswordValidator } from './validators/keystore-password';
+
+import { getFilePath, readFile, writeFile } from '../../lib/helpers/file.helper';
 
 /**
  * Command to build keyshares from user input.
@@ -17,8 +18,7 @@ import operatorPublicKeysArgument from './arguments/operator-public-keys';
 export class KeySharesAction extends BaseAction {
   static override get options(): any {
     return {
-      action: 'key-shares',
-      shortAction: 'ksh',
+      action: 'shares',
       description: 'Generate shares for a list of operators from a validator keystore file',
       arguments: [
         keystoreArgument,
@@ -39,22 +39,33 @@ export class KeySharesAction extends BaseAction {
       keystore,
       password,
       output_folder: outputFolder,
-      key_shares_version: keySharesVersion,
     } = this.args;
 
     let {
-      operators_ids: operatorIds,
-      operators_keys: operatorKeys,
+      operator_ids: operatorIds,
+      operator_keys: operatorKeys,
     } = this.args;
-
     // Prepare data
     operatorKeys = operatorKeys.split(',');
     operatorIds = operatorIds.split(',').map((o: string) => parseInt(o, 10));
+
+    const isKeyStoreValid = keystoreArgument.interactive.options.validate(keystore);
+    if (isKeyStoreValid !== true) {
+      throw Error(String(isKeyStoreValid));
+    }
+    const isValidPassword = await keystorePasswordValidator.validatePassword(password);
+    if (isValidPassword !== true) {
+      throw Error(String(isValidPassword));
+    }
+
     const keystoreFilePath = sanitizePath(String(keystore).trim());
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
-    const ssvKeys = new SSVKeys(`v${keySharesVersion}`);
+    const keysVersion = this.args.key_shares_version
+      ? `v${this.args.key_shares_version}`
+      : SSVKeys.VERSION.V3;
+    const ssvKeys = new SSVKeys(keysVersion);
     const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
 
     // Build shares from operator IDs and public keys
@@ -77,7 +88,7 @@ export class KeySharesAction extends BaseAction {
         publicKey: ssvKeys.publicKey,
         operatorIds,
         encryptedShares,
-      },
+      }
     );
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

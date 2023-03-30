@@ -7,13 +7,14 @@ declare const _default: {
         help: string;
     };
     interactive: {
-        repeat: number;
+        repeat: string;
         repeatWith: string[];
         options: {
             type: string;
             message: string;
             validate: (operatorId: number) => boolean | string;
         };
+        validateList: (items: []) => void;
     };
 };
 export default _default;

@@ -6,12 +6,13 @@ const options = {
   tsconfig: 'tsconfig.json',
   logLevel: "info",
   entryPoints: [
-    "src/main.ts"
+    "src/main.ts",
+    "src/lib/JSEncrypt/jsencrypt.bundle.js"
   ],
   platform: 'browser',
   minify: true,
   bundle: true,
-  outfile: "dist/esbuild/main.js",
+  outdir: "dist/esbuild",
   sourcemap: "external",
   plugins: [
     nodeExternalsPlugin({}),

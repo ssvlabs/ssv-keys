@@ -9,41 +9,42 @@ export class KeystorePasswordValidator {
     this.keystoreFilePath = filePath;
   }
 
-  async validatePassword(password: string): Promise<boolean | string> {
+  async validatePassword(password: string, showProgress = false): Promise<boolean | string> {
     if (!password.trim().length) {
       return 'Password is empty';
     }
-    const errorMessage = 'Invalid password';
+    const errorMessage = 'Invalid keystore file password.';
+    let messageInterval: any;
+    let output: any;
     try {
-      let dots = 1;
-      const message = `\rChecking password`
-      process.stdout.write('\r' + String(' ').repeat(250));
-      process.stdout.write(`\r${message}`);
-      const messageInterval = setInterval(() => {
-        const progressMessage = `\r${message}` +
-          `${String('.').repeat(dots)}${String(' ').repeat(30 - dots)}`;
-        process.stdout.write(progressMessage);
-        dots += 1;
-        if (dots > 3) {
-          dots = 1;
-        }
-      }, 1000);
+      if (showProgress) {
+        let dots = 1;
+        const message = `\rChecking password`
+        process.stdout.write('\r' + String(' ').repeat(250));
+        process.stdout.write(`\r${message}`);
+        messageInterval = setInterval(() => {
+          const progressMessage = `\r${message}` +
+            `${String('.').repeat(dots)}${String(' ').repeat(30 - dots)}`;
+          process.stdout.write(progressMessage);
+          dots += 1;
+          if (dots > 3) {
+            dots = 1;
+          }
+        }, 1000);
+      }
 
       const data = await readFile(this.keystoreFilePath);
       const keyStore = new EthereumKeyStore(data);
       const privateKey = await keyStore.getPrivateKey(password)
-        .then((privateKey: string) => {
-          clearInterval(messageInterval);
-          return privateKey;
-        })
-        .catch(() => { clearInterval(messageInterval); });
-      return privateKey ? true : errorMessage;
+      output = !!privateKey;
     } catch (e) {
-      if (e instanceof Error) {
-        return e.message;
-      }
-      return errorMessage;
+      output = errorMessage;
     }
+    if (showProgress) {
+      process.stdout.write('\n');
+      clearInterval(messageInterval);
+    }
+    return output;
   }
 }
 

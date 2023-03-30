@@ -88,23 +88,19 @@ yarn cli <action> --help
 
 ### Example
 
-To run you will use the "ksh" command
+To run you will use the "shares" command
 
 **Input parameters:**
 
-- key-shares-version (ksv) = Payload version [2 or 3]
-- keystore (ks) = Path to keystore json file
-- password (ps) = Keystore password
-- operator-ids (oid) = Comma-separated list of the operator ids
-- operators-keys (ok) = Comma-separated list of the operator public keys (same sequence as operator ids)
-- ssv-token-amount (ssv) = SSV Token amount fee required for this transaction in Wei
-- owner-address = Validator owner address
-- contract-address = SSV contract address
-- node-url = Eth1 node url
-- output-folder (of) = Path of where to put the output file
+- key-shares-version (ksv) = The version of the tool output, e.g. use "2" for previous version (optional)
+- keystore (ks) = The validator keystore file path
+- password (ps) = The keystore file encryption password
+- operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
+- operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible.
+- output-folder (of) = Target folder path to output the key shares file
 
 ```bash
-yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --ssv-token-amount=500000 --owner-address=0x... --contract-address=0x... --node-url=http://... --output-folder=./
+yarn cli shares -ksv=3 --keystore=keystore.json --password=test --operators-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json
@@ -116,20 +112,20 @@ yarn cli ksh --ksv=3 --keystore=keystore.json --password=test --operator-ids=1,2
 To run an example of a NodeJS project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
 
 ```bash
-cd examples/node
+cd examples/example-02
 yarn install
 ```
 
 To run a JavaScript example:
 
 ```bash
-yarn start:js
+node example-simple.js
 ```
 
 To run a TypeScript example:
 
 ```bash
-yarn start:ts
+yarn start
 ```
 
 ### Browser project (web application)
@@ -137,7 +133,7 @@ yarn start:ts
 Go to the example folder and then install all the dependencies:
 
 ```bash
-cd examples/browser
+cd examples/react-app
 yarn install
 ```
 

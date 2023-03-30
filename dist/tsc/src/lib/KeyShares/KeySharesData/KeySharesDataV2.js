@@ -20,7 +20,12 @@ class KeySharesDataV2 {
             this.publicKey = data.publicKey;
         }
         if (data.operators) {
-            this.operators = data.operators.map((operator) => {
+            this.operators = data.operators
+                .sort((a, b) => +a.id - +b.id)
+                .map((operator) => {
+                if (!operator.id || !operator.publicKey) {
+                    throw Error('Mismatch amount of operator ids and operator keys.');
+                }
                 const operatorData = new OperatorDataV2_1.OperatorDataV2();
                 operatorData.setData(operator);
                 return operatorData;

@@ -1,11 +1,9 @@
-import atob from 'atob';
+// import atob from 'atob';
 import bls from './BLS';
-import { encode } from 'js-base64';
 import { KeyShares } from './KeyShares/KeyShares';
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
-import { web3 } from './helpers/web3.helper';
 
 export interface IPayloadMetaData {
   publicKey: string,
@@ -70,8 +68,8 @@ export class SSVKeys {
    * @param privateKey
    * @param operators
    */
-  async createThreshold(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
-    this.threshold = await new Threshold().create(privateKey, operators);
+  async createThreshold(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+    this.threshold = await new Threshold().create(privateKey, operatorIds);
     return this.threshold;
   }
 
@@ -81,21 +79,10 @@ export class SSVKeys {
    * @param shares
    * @param sharesFormat
    */
-  async encryptShares(operatorsPublicKeys: string[], shares: IShares[], sharesFormat = ''): Promise<EncryptShare[]> {
-    try {
-      const decodedOperators = operatorsPublicKeys.map((operator: string) => String(encode(atob(operator))));
-      const encryptedShares = new Encryption(decodedOperators, shares).encrypt();
-      return encryptedShares.map((share: EncryptShare) => {
-        share.operatorPublicKey = encode(share.operatorPublicKey);
-        if (sharesFormat === SSVKeys.SHARES_FORMAT_ABI) {
-          share.operatorPublicKey = web3.eth.abi.encodeParameter('string', share.operatorPublicKey);
-          share.privateKey = web3.eth.abi.encodeParameter('string', share.privateKey);
-        }
-        return share;
-      });
-    } catch (error: any) {
-      return error;
-    }
+  async encryptShares(operatorsPublicKeys: string[], shares: IShares[]): Promise<EncryptShare[]> {
+    const decodedOperatorPublicKeys = operatorsPublicKeys.map((operator: string) => Buffer.from(operator, 'base64').toString());
+    const encryptedShares = new Encryption(decodedOperatorPublicKeys, shares).encrypt();
+    return encryptedShares;
   }
 
   /**
@@ -105,8 +92,15 @@ export class SSVKeys {
    * @param operatorPublicKeys
    */
   async buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]> {
-    const threshold = await this.createThreshold(privateKey, operatorIds);
-    return this.encryptShares(operatorPublicKeys, threshold.shares);
+    if (operatorIds.length !== operatorPublicKeys.length) {
+      throw Error('Mismatch amount of operator ids and operator keys.');
+    }
+    const operators = operatorIds
+      .map((id, index) => ({ id, publicKey: operatorPublicKeys[index]}))
+      .sort((a: any, b: any) => +a.id - +b.id);
+
+    const threshold = await this.createThreshold(privateKey, operators.map(item => item.id));
+    return this.encryptShares(operators.map(item => item.publicKey), threshold.shares);
   }
 
   /**
@@ -125,7 +119,7 @@ export class SSVKeys {
   async buildPayload(metaData: IPayloadMetaData): Promise<any> {
     return this.keyShares.generateContractPayload({
       publicKey: metaData.publicKey,
-      operatorIds: metaData.operatorIds,
+      operatorIds: [...metaData.operatorIds].sort((a: number, b: number) => a - b),
       encryptedShares: metaData.encryptedShares,
     });
   }
@@ -138,10 +132,14 @@ export class SSVKeys {
     const publicKeys = keyShares.data?.shares?.publicKeys || [];
     const publicKey = keyShares.data?.publicKey;
     const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
-    const operatorPublicKeys = keyShares.data?.operatorPublicKeys || [];
+    const operatorPublicKeys = keyShares.data.operators?.map((item: any) => item.publicKey) as string[];
     const operatorIds = keyShares.data.operators?.map((item: any) => item.id) as number[];
 
-    if (publicKeys.length !== encryptedKeys.length
+    const operators = operatorIds
+      .map((id, index) => ({ id, publicKey: operatorPublicKeys[index]}))
+      .sort((a: any, b: any) => +a.id - +b.id);
+
+      if (publicKeys.length !== encryptedKeys.length
       || publicKeys.length !== operatorPublicKeys.length
       || encryptedKeys.length !== operatorPublicKeys.length
       || !encryptedKeys.length
@@ -153,7 +151,7 @@ export class SSVKeys {
 
     return this.keyShares.generateContractPayload({
       publicKey,
-      operatorIds,
+      operatorIds: operators.map(item => item.id),
       encryptedShares: publicKeys.map((item: any, index: number) => ({
         publicKey: item,
         privateKey: encryptedKeys[index],

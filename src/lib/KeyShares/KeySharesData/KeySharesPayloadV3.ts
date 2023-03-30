@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import * as ethers from 'ethers';
 
-import { IsString, IsObject, IsOptional } from 'class-validator';
+import { IsObject, IsOptional } from 'class-validator';
 import { IKeySharesPayload } from './IKeySharesPayload';
 import { EncryptShare } from '../../Encryption/Encryption';
 
@@ -17,16 +17,12 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   @IsObject()
   public readable?: any = null;
 
-  @IsOptional()
-  @IsString()
-  public raw?: string | null = null;
-
   private decodeRSAShares(arr: string[]) {
     return arr.map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
   }
 
   private sharesToBytes(publicKeys: string[], privateKeys: string[]): string {
-    const encryptedShares = this.decodeRSAShares(privateKeys);
+    const encryptedShares = this.decodeRSAShares([...privateKeys]);
     const arrayPublicKeys = new Uint8Array(publicKeys.map(pk => [...ethers.utils.arrayify(pk)]).flat());
     const arrayEncryptedShares = new Uint8Array(encryptedShares.map(sh => [...ethers.utils.arrayify(sh)]).flat());
 
@@ -46,7 +42,7 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   build(data: any): any {
     return [
       data.publicKey,
-      data.operatorIds.join(','),
+      data.operatorIds,
       this.sharesToBytes(data.encryptedShares.map((share: EncryptShare) => share.publicKey), data.encryptedShares.map((share: EncryptShare) => share.privateKey)),
     ];
   }
@@ -58,14 +54,12 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
   setData(data: any): any {
     // Cleanup
     if (!data === null) {
-      this.raw = null;
       this.readable = null;
       return;
     }
 
     // Payload array
     if (_.isArray(data)) {
-      this.raw = this.toRaw(data);
       this.readable = this.toReadable(data);
       return;
     }
@@ -74,9 +68,6 @@ export class KeySharesPayloadV3 implements IKeySharesPayload {
     if (_.isObject(data)) {
       if (data.readable) {
         this.readable = data.readable;
-      }
-      if (data.raw) {
-        this.raw = data.raw;
       }
     }
   }

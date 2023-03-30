@@ -6,13 +6,13 @@ export default {
   options: {
     required: true,
     type: String,
-    help: 'Enter password for provided keystore file'
+    help: 'The keystore file encryption password'
   },
   interactive: {
     options: {
       type: 'password',
       validate: async (password: string): Promise<boolean | string> => {
-        return await keystorePasswordValidator.validatePassword(password);
+        return await keystorePasswordValidator.validatePassword(password, true);
       },
     }
   }

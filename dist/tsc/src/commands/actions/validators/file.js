@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(filePath);
-    return fs_1.default.existsSync(filePath.trim()) ? true : message || 'File does not exists';
+    return fs_1.default.existsSync(filePath.trim()) ? true : message || 'Couldn’t locate keystore file or directory.';
 };
 exports.fileExistsValidator = fileExistsValidator;
 const jsonFileValidator = (filePath, message = '') => {
@@ -15,13 +15,13 @@ const jsonFileValidator = (filePath, message = '') => {
         fileContents = fs_1.default.readFileSync(filePath, { encoding: 'utf-8' });
     }
     catch (e) {
-        return message || 'Can not read file';
+        return message || 'Couldn’t read a file';
     }
     try {
         JSON.parse(fileContents);
     }
     catch (e) {
-        return message || 'File is not a JSON file';
+        return 'Keystore file must be .JSON format';
     }
     return true;
 };

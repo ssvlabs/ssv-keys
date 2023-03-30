@@ -11,12 +11,12 @@ const class_validator_1 = require("class-validator");
 class KeySharesPayloadV2 {
     constructor() {
         this.readable = null;
-        this.raw = null;
+        this.raw = undefined;
     }
     build(data) {
         return [
             data.publicKey,
-            data.operatorIds.join(','),
+            data.operatorIds,
             data.encryptedShares.map((share) => share.publicKey),
             (0, web3_helper_1.abiEncode)(data.encryptedShares, 'privateKey'),
         ];
@@ -28,7 +28,7 @@ class KeySharesPayloadV2 {
     setData(data) {
         // Cleanup
         if (!data === null) {
-            this.raw = null;
+            this.raw = undefined;
             this.readable = null;
             return;
         }

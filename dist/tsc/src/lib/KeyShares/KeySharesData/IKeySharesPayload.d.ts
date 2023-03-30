@@ -6,7 +6,7 @@ export interface IKeySharesPayload {
     /**
      * Raw payload ready for using in web3 transaction.
      */
-    raw?: string | null;
+    raw?: string | undefined;
     /**
      * Build payload data.
      * @param data

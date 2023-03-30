@@ -10,13 +10,13 @@ export class SSVKeysCommand extends BaseCommand {
     KeySharesAction,
   ]
 
-  protected useAction = 'key-shares';
+  protected useAction = 'shares';
 
   /**
    * Add more specific help.
    */
   constructor(interactive= false, options = undefined) {
     super(interactive, options);
-    this.subParserOptions.help += 'Example: "ssv-keys key-shares --help" or "ssv-keys ksh --help"'
+    this.subParserOptions.help += 'Example: "yarn cli shares --help"'
   }
 }

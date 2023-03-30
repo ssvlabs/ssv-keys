@@ -1,5 +1,6 @@
 import { SecretKeyType } from 'bls-eth-wasm';
 import bls from '../BLS';
+import { isOperatorsLengthValid } from '../../commands/actions/validators/operator-ids';
 
 export interface IShares {
     privateKey: string,
@@ -52,22 +53,25 @@ class Threshold {
    * If F calculated from this formula is not integer number - it will raise exception.
    * Generate keys and return promise
    */
-  async create(privateKey: string, operators: number[]): Promise<ISharesKeyPairs> {
+  async create(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
     // Validation
-    operators.map(operator => {
-      if (!Number.isInteger(operator)) {
+    operatorIds.map(operatorId => {
+      if (!Number.isInteger(operatorId)) {
         throw new ThresholdInvalidOperatorIdError(
-          operator,
-          `Operator must be integer. Got: ${String(operator)}`
+          operatorId,
+          `Operator must be integer. Got: ${operatorId}`
         );
       }
     });
 
-    const F = (operators.length - 1) / 3;
-    if (!Number.isInteger(F)) {
+    // Sort operators
+    const sortedOperatorIds = [...operatorIds].sort((a: number, b: number) => a - b);
+    const operatorsLength = sortedOperatorIds.length;
+
+    if (!isOperatorsLengthValid(operatorsLength)) {
       throw new ThresholdInvalidOperatorsLengthError(
-        operators,
-        'Invalid operators length. It should satisfy conditions: ‖ Operators ‖ := 3 * F + 1 ; F ∈ ℕ'
+        sortedOperatorIds,
+        'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.'
       );
     }
 
@@ -83,36 +87,37 @@ class Threshold {
     msk.push(this.privateKey);
     mpk.push(this.publicKey);
 
+    const F = (operatorsLength - 1) / 3;
     // Construct poly
-    for (let i = 1; i < operators.length - F; i += 1) {
-        const sk: SecretKeyType = new bls.SecretKey();
-        sk.setByCSPRNG();
-        msk.push(sk);
-        const pk = sk.getPublicKey();
-        mpk.push(pk);
+    for (let i = 1; i < operatorsLength - F; i += 1) {
+      const sk: SecretKeyType = new bls.SecretKey();
+      sk.setByCSPRNG();
+      msk.push(sk);
+      const pk = sk.getPublicKey();
+      mpk.push(pk);
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
-    for (const operatorId of operators) {
-        const id = new bls.Id();
-        id.setInt(operatorId);
-        const shareSecretKey = new bls.SecretKey();
-        shareSecretKey.share(msk, id);
+    for (const operatorId of sortedOperatorIds) {
+      const id = new bls.Id();
+      id.setInt(operatorId);
+      const shareSecretKey = new bls.SecretKey();
+      shareSecretKey.share(msk, id);
 
-        const sharePublicKey = new bls.PublicKey();
-        sharePublicKey.share(mpk, id);
+      const sharePublicKey = new bls.PublicKey();
+      sharePublicKey.share(mpk, id);
 
-        this.shares.push({
-            privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
-            publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
-            id,
-        });
+      this.shares.push({
+        privateKey: `0x${shareSecretKey.serializeToHexStr()}`,
+        publicKey: `0x${sharePublicKey.serializeToHexStr()}`,
+        id,
+      });
     }
 
     const response: ISharesKeyPairs = {
       privateKey: `0x${this.privateKey.serializeToHexStr()}`,
-        publicKey: `0x${this.publicKey.serializeToHexStr()}`,
-        shares: this.shares,
+      publicKey: `0x${this.publicKey.serializeToHexStr()}`,
+      shares: this.shares,
     };
 
     return response;

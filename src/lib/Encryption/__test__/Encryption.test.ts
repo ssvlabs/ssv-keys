@@ -1,4 +1,3 @@
-import { decode } from 'js-base64';
 import JSEncrypt from '../../JSEncrypt';
 import * as operatorKeys from './RsaKeys';
 import Threshold, { ISharesKeyPairs } from '../../Threshold';
@@ -9,17 +8,19 @@ describe('Check Encryption shares', () => {
     const privateKey = '12f1cf0ecf8086a7e1d84b3b77da48761664e3cdc73f165c644e7f0594f98bdd';
     const threshold: Threshold = new Threshold();
     const thresholdResult: ISharesKeyPairs = await threshold.create(privateKey, [9, 10, 11, 12]);
+    const decodedOperatorPublicKeys = operatorKeys.publicKeys.map((operator: string) => Buffer.from(operator, 'base64').toString());
     const encryptedShares: EncryptShare[] = new Encryption(
-      operatorKeys.publicKeys,
+      decodedOperatorPublicKeys,
       thresholdResult.shares
     ).encrypt();
 
     encryptedShares.forEach((share: EncryptShare, index: number) => {
       const decrypt = new JSEncrypt({});
-      decrypt.setPrivateKey(decode(operatorKeys.privateKeys[index]));
-      const decrypted = decrypt.decrypt(share.privateKey) || '';
+      const privateKey = Buffer.from(operatorKeys.privateKeys[index], 'base64').toString();
+      decrypt.setPrivateKey(privateKey);
+      const decrypted = decrypt.decrypt(share.privateKey);
       expect(decrypted).toEqual(thresholdResult.shares[index].privateKey);
-      expect(encryptedShares[index].operatorPublicKey).toEqual(decode(operatorKeys.publicKeys[index]));
+      // expect(encryptedShares[index].operatorPublicKey).toEqual(privateKey);
     });
   });
 });

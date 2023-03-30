@@ -8,7 +8,7 @@ export declare class KeySharesPayloadV2 implements IKeySharesPayload {
     static PAYLOAD_INDEX_SHARE_PUBLIC_KEYS: number;
     static PAYLOAD_INDEX_SHARE_PRIVATE_KEYS: number;
     readable?: any;
-    raw?: string | null;
+    raw?: string | undefined;
     build(data: any): any;
     /**
      * Setting data in array or object format or cleaning it up.

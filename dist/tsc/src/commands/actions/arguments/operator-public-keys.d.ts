@@ -7,11 +7,10 @@ declare const _default: {
         help: string;
     };
     interactive: {
-        repeat: number;
         options: {
             type: string;
             message: string;
-            validate: (value: string) => Promise<string | boolean>;
+            validate: (value: string) => string | boolean;
         };
     };
 };

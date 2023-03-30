@@ -6,11 +6,5 @@ declare const _default: {
         required: boolean;
         help: string;
     };
-    interactive: {
-        options: {
-            type: string;
-            validate: (value: string) => string | boolean;
-        };
-    };
 };
 export default _default;

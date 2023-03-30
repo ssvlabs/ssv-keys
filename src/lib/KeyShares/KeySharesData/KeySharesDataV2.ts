@@ -36,13 +36,18 @@ export class KeySharesDataV2 implements IKeySharesData {
       this.publicKey = data.publicKey;
     }
     if (data.operators) {
-      this.operators = data.operators.map(
-        (operator: { id: any; publicKey: any; }) => {
-          const operatorData = new OperatorDataV2();
-          operatorData.setData(operator);
-          return operatorData;
-        }
-      );
+      this.operators = data.operators
+        .sort((a: any, b: any) => +a.id - +b.id)
+        .map(
+          (operator: { id: any; publicKey: any; }) => {
+            if (!operator.id || !operator.publicKey) {
+              throw Error('Mismatch amount of operator ids and operator keys.');
+            }
+            const operatorData = new OperatorDataV2();
+            operatorData.setData(operator);
+            return operatorData;
+          }
+        );
     }
     if (data.encryptedShares) {
       const sharesInstance = new KeySharesKeysV2();
