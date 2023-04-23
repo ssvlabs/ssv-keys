@@ -75,7 +75,7 @@ class KeySharesPayloadV3 {
             operatorIds: payload[KeySharesPayloadV3.PAYLOAD_INDEX_OPERATOR_IDS],
             shares: payload[KeySharesPayloadV3.PAYLOAD_INDEX_SHARES_KEYS],
             amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
-            cluster: 'The latest cluster snapshot data, obtained using the cluster-scanner tool. If this is the cluster\'s 1st validator then use - {0,0,0,0,0,false}',
+            cluster: 'The latest cluster snapshot data, obtained using the cluster-scanner tool. If this is the cluster\'s 1st validator then use - {0,0,0,0,true}',
         };
     }
     validate() {
