@@ -6,7 +6,7 @@ const underscore_1 = tslib_1.__importDefault(require("underscore"));
 const ethers = tslib_1.__importStar(require("ethers"));
 const class_validator_1 = require("class-validator");
 /**
- * Key Shares Payload v2.
+ * Key Shares Payload
  */
 class KeySharesPayloadV3 {
     constructor() {

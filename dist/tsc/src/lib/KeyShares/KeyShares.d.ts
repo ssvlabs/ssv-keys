@@ -6,7 +6,6 @@ export type KeySharesPayload = IKeySharesPayload;
  * Key shares file data interface.
  */
 export declare class KeyShares {
-    static VERSION_V2: string;
     static VERSION_V3: string;
     private byVersion;
     version: string;
@@ -15,9 +14,7 @@ export declare class KeyShares {
     /**
      * @param version
      */
-    constructor({ version }: {
-        version: string;
-    });
+    constructor();
     /**
      * Set final payload for web3 transaction and validate it.
      * @param payload

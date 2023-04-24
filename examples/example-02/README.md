@@ -40,7 +40,7 @@ import { SSVKeys } from 'ssv-keys';
 ### Initialize SSVKeys SDK
 
 ```javascript
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const ssvKeys = new SSVKeys();
 ```
 
 ### Encrypting shares
@@ -113,7 +113,7 @@ const keySharesData = {
 };
 
 // Create SSVKeys instance using key shares data
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const ssvKeys = new SSVKeys();
 const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
 await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
@@ -141,7 +141,7 @@ const keySharesData = {
 And at some point you saved it in a key shares file:
 
 ```javascript
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const ssvKeys = new SSVKeys();
 const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
 await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```

@@ -16,7 +16,6 @@ export interface IPayloadMetaData {
 export declare class SSVKeys {
     static SHARES_FORMAT_ABI: string;
     static VERSION: {
-        V2: string;
         V3: string;
     };
     protected version: string;
@@ -24,7 +23,7 @@ export declare class SSVKeys {
     keySharesInstance: KeyShares;
     privateKey: any;
     publicKey: any;
-    constructor(ver: string);
+    constructor();
     get keyShares(): KeyShares;
     /**
      * Extract private key from keystore data using keystore password.

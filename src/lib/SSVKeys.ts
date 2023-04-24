@@ -21,7 +21,6 @@ export interface IPayloadMetaData {
 export class SSVKeys {
   static SHARES_FORMAT_ABI = 'abi';
   static VERSION = {
-    V2: 'v2',
     V3: 'v3',
   };
 
@@ -32,13 +31,9 @@ export class SSVKeys {
   public privateKey: any;
   public publicKey: any;
 
-  constructor(ver: string) {
-    if (!Object.values(SSVKeys.VERSION).includes(ver)) {
-      throw Error ('Version is not supported');
-    }
-
-    this.version = ver;
-    this.keySharesInstance = new KeyShares({ version: this.version });
+  constructor() {
+    this.version = SSVKeys.VERSION.V3;
+    this.keySharesInstance = new KeyShares();
   }
 
   get keyShares(): KeyShares {

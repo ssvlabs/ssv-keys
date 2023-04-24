@@ -7,7 +7,7 @@ const keystorePassword = 'testtest';
 
 async function main() {
   // Step 1: read keystore file
-  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+  const ssvKeys = new SSVKeys();
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
 
   // Step 2: Build shares from operator IDs and public keys

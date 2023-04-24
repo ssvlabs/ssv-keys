@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
-const KeySharesDataV2_1 = require("./KeySharesData/KeySharesDataV2");
-const KeySharesPayloadV2_1 = require("./KeySharesData/KeySharesPayloadV2");
 const KeySharesDataV3_1 = require("./KeySharesData/KeySharesDataV3");
 const KeySharesPayloadV3_1 = require("./KeySharesData/KeySharesPayloadV3");
 /**
@@ -14,21 +12,19 @@ class KeyShares {
     /**
      * @param version
      */
-    constructor({ version }) {
+    constructor() {
         // Versions of deeper structures
         this.byVersion = {
             'payload': {
-                [KeyShares.VERSION_V2]: KeySharesPayloadV2_1.KeySharesPayloadV2,
                 [KeyShares.VERSION_V3]: KeySharesPayloadV3_1.KeySharesPayloadV3,
             },
             'data': {
-                [KeyShares.VERSION_V2]: KeySharesDataV2_1.KeySharesDataV2,
                 [KeyShares.VERSION_V3]: KeySharesDataV3_1.KeySharesDataV3,
             }
         };
-        this.version = version;
-        this.data = this.getByVersion('data', version);
-        this.payload = this.getByVersion('payload', version);
+        this.version = KeyShares.VERSION_V3;
+        this.data = this.getByVersion('data', this.version);
+        this.payload = this.getByVersion('payload', this.version);
     }
     /**
      * Set final payload for web3 transaction and validate it.
@@ -95,7 +91,6 @@ class KeyShares {
         }, null, '  ');
     }
 }
-KeyShares.VERSION_V2 = 'v2';
 KeyShares.VERSION_V3 = 'v3';
 tslib_1.__decorate([
     (0, class_validator_1.IsString)(),

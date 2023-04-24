@@ -5,7 +5,6 @@ import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
-import keySharesVersionArgument from './arguments/key-shares-version';
 import outputFolderArgument from './arguments/output-folder';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
 import { keystorePasswordValidator } from './validators/keystore-password';
@@ -25,7 +24,6 @@ export class KeySharesAction extends BaseAction {
         keystorePasswordArgument,
         operatorIdsArgument,
         operatorPublicKeysArgument,
-        keySharesVersionArgument,
         outputFolderArgument,
       ],
     }
@@ -62,10 +60,7 @@ export class KeySharesAction extends BaseAction {
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
-    const keysVersion = this.args.key_shares_version
-      ? `v${this.args.key_shares_version}`
-      : SSVKeys.VERSION.V3;
-    const ssvKeys = new SSVKeys(keysVersion);
+    const ssvKeys = new SSVKeys();
     const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
 
     // Build shares from operator IDs and public keys

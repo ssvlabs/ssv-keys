@@ -16,12 +16,9 @@ const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"))
  *  - building final payload which is ready to be used in web3 transaction
  */
 class SSVKeys {
-    constructor(ver) {
-        if (!Object.values(SSVKeys.VERSION).includes(ver)) {
-            throw Error('Version is not supported');
-        }
-        this.version = ver;
-        this.keySharesInstance = new KeyShares_1.KeyShares({ version: this.version });
+    constructor() {
+        this.version = SSVKeys.VERSION.V3;
+        this.keySharesInstance = new KeyShares_1.KeyShares();
     }
     get keyShares() {
         return this.keySharesInstance;
@@ -146,7 +143,6 @@ class SSVKeys {
 exports.SSVKeys = SSVKeys;
 SSVKeys.SHARES_FORMAT_ABI = 'abi';
 SSVKeys.VERSION = {
-    V2: 'v2',
     V3: 'v3',
 };
 //# sourceMappingURL=SSVKeys.js.map

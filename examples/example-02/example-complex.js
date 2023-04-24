@@ -17,14 +17,14 @@ const getKeySharesFilePath = (step) => {
  */
 async function main() {
   // Initialize SSVKeys SDK
-  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+  const ssvKeys = new SSVKeys();
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
 
   /**
    * Or alternatively you can use simple constructor, but in this case potentially passed
    * data won't be automatically validated at this point.
    * Example:
-   *  const keyShares = new KeyShares({ version: 'v2' });
+   *  const keyShares = new KeyShares();
    */
 
   // Save it with version only and with no any data.

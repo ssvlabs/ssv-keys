@@ -6,7 +6,7 @@ import { IKeySharesPayload } from './IKeySharesPayload';
 import { EncryptShare } from '../../Encryption/Encryption';
 
 /**
- * Key Shares Payload v2.
+ * Key Shares Payload
  */
 export class KeySharesPayloadV3 implements IKeySharesPayload {
   static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY = 0;

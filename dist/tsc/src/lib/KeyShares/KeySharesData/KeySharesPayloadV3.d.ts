@@ -1,6 +1,6 @@
 import { IKeySharesPayload } from './IKeySharesPayload';
 /**
- * Key Shares Payload v2.
+ * Key Shares Payload
  */
 export declare class KeySharesPayloadV3 implements IKeySharesPayload {
     static PAYLOAD_INDEX_VALIDATOR_PUBLIC_KEY: number;

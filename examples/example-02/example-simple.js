@@ -20,7 +20,7 @@ async function main() {
   // ✳️ Lesson 1: Building shares in 3 easy steps.
   // --------------------------------------------------------------------------
   // Step 1: Initialize SSVKeys SDK
-  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+  const ssvKeys = new SSVKeys();
   // Step 2: Get private key
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
   // Step 3: Build shares from operator IDs and public keys

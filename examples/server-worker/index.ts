@@ -51,7 +51,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Keystore password is required' });
   }
 
-  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+  const ssvKeys = new SSVKeys();
   const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators_ids, operators_keys);
 

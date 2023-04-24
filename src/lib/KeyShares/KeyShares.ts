@@ -10,9 +10,6 @@ import {
 import { IKeySharesData } from './KeySharesData/IKeySharesData';
 import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
 
-import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
-import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
-
 import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
 import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
 
@@ -23,17 +20,14 @@ export type KeySharesPayload = IKeySharesPayload;
  * Key shares file data interface.
  */
 export class KeyShares {
-  static VERSION_V2 = 'v2';
   static VERSION_V3 = 'v3';
 
   // Versions of deeper structures
   private byVersion: any = {
     'payload': {
-      [KeyShares.VERSION_V2]: KeySharesPayloadV2,
       [KeyShares.VERSION_V3]: KeySharesPayloadV3,
     },
     'data': {
-      [KeyShares.VERSION_V2]: KeySharesDataV2,
       [KeyShares.VERSION_V3]: KeySharesDataV3,
     }
   }
@@ -54,10 +48,10 @@ export class KeyShares {
   /**
    * @param version
    */
-  constructor({ version }: { version: string }) {
-    this.version = version;
-    this.data = this.getByVersion('data', version);
-    this.payload = this.getByVersion('payload', version);
+  constructor() {
+    this.version = KeyShares.VERSION_V3;
+    this.data = this.getByVersion('data', this.version);
+    this.payload = this.getByVersion('payload', this.version);
   }
 
   /**
