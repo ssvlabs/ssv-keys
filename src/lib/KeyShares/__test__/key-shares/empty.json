@@ -1,12 +1,10 @@
 {
   "version": "v3",
+  "createdAt": "2022-08-16T06:46:51.046Z",
   "data": {
     "publicKey": null,
     "operators": null,
     "shares": null
   },
-  "payload": {
-    "readable": null
-  },
-  "createdAt": "2022-08-16T06:46:51.046Z"
+  "payload": null
 }
