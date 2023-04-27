@@ -103,7 +103,7 @@ class SSVKeys {
                 publicKey: metaData.publicKey,
                 operatorIds: [...metaData.operatorIds].sort((a, b) => a - b),
                 encryptedShares: metaData.encryptedShares,
-            });
+            }).readable;
         });
     }
 }
