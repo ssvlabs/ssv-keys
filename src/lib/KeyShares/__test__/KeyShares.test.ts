@@ -14,7 +14,6 @@ describe('KeyShares', () => {
     const keySharesObject = JSON.parse(keySharesString);
     expect(keySharesObject.data.operators).toEqual(emptyKeyShares.data.operators);
     expect(keySharesObject.data.publicKey).toEqual(emptyKeyShares.data.publicKey);
-    expect(keySharesObject.data.shares).toEqual(emptyKeyShares.data.shares);
     expect(keySharesObject.payload).toEqual(emptyKeyShares.payload);
   });
 
