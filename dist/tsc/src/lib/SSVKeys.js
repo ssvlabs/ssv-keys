@@ -106,39 +106,6 @@ class SSVKeys {
             });
         });
     }
-    /**
-     * Build payload from keyshares file with operators and shares details inside.
-     * @param keyShares
-     */
-    buildPayloadFromKeyShares(keyShares) {
-        var _a, _b, _c, _d, _e, _f, _g;
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const publicKeys = ((_b = (_a = keyShares.data) === null || _a === void 0 ? void 0 : _a.shares) === null || _b === void 0 ? void 0 : _b.publicKeys) || [];
-            const publicKey = (_c = keyShares.data) === null || _c === void 0 ? void 0 : _c.publicKey;
-            const encryptedKeys = ((_e = (_d = keyShares.data) === null || _d === void 0 ? void 0 : _d.shares) === null || _e === void 0 ? void 0 : _e.encryptedKeys) || [];
-            const operatorPublicKeys = (_f = keyShares.data.operators) === null || _f === void 0 ? void 0 : _f.map((item) => item.publicKey);
-            const operatorIds = (_g = keyShares.data.operators) === null || _g === void 0 ? void 0 : _g.map((item) => item.id);
-            const operators = operatorIds
-                .map((id, index) => ({ id, publicKey: operatorPublicKeys[index] }))
-                .sort((a, b) => +a.id - +b.id);
-            if (publicKeys.length !== encryptedKeys.length
-                || publicKeys.length !== operatorPublicKeys.length
-                || encryptedKeys.length !== operatorPublicKeys.length
-                || !encryptedKeys.length
-                || !operatorPublicKeys.length
-                || !publicKeys.length) {
-                throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
-            }
-            return this.keyShares.generateContractPayload({
-                publicKey,
-                operatorIds: operators.map(item => item.id),
-                encryptedShares: publicKeys.map((item, index) => ({
-                    publicKey: item,
-                    privateKey: encryptedKeys[index],
-                })),
-            });
-        });
-    }
 }
 exports.SSVKeys = SSVKeys;
 SSVKeys.SHARES_FORMAT_ABI = 'abi';

@@ -63,9 +63,4 @@ export declare class SSVKeys {
      * @param encryptedShares
      */
     buildPayload(metaData: IPayloadMetaData): Promise<any>;
-    /**
-     * Build payload from keyshares file with operators and shares details inside.
-     * @param keyShares
-     */
-    buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any>;
 }

@@ -1,3 +1,5 @@
+import * as ethers from 'ethers';
+
 import {
   IsString,
   IsDefined,
@@ -63,6 +65,42 @@ export class KeyShares {
     this.payload?.setData(payloadData);
 
     return this.payload;
+  }
+
+  generateKeySharesFromBytes(shares: string, operatorIds: any[]): any {
+    const operatorCount = operatorIds.length;
+    shares = shares.replace('0x', '');
+    const pkLength = parseInt(shares.substring(0, 4), 16);
+
+    // get the public keys part
+    const pkSplit = shares.substring(4, pkLength + 2);
+    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+    const sharesPublicKeys = this.splitArray(operatorCount, pkArray).map(item =>
+      ethers.utils.hexlify(item),
+    );
+
+    const eSplit = shares.substring(pkLength + 2);
+    const eArray = ethers.utils.arrayify('0x' + eSplit);
+    const encryptedKeys = this.splitArray(operatorCount, eArray).map(item =>
+      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
+        'base64',
+      ),
+    );
+    return {
+      sharesPublicKeys,
+      encryptedKeys,
+    };
+  }
+
+  private splitArray(parts: number, arr: Uint8Array) {
+    const partLength = Math.floor(arr.length / parts);
+    const partsArr = [];
+    for (let i = 0; i < parts; i++) {
+      const start = i * partLength;
+      const end = start + partLength;
+      partsArr.push(arr.slice(start, end));
+    }
+    return partsArr;
   }
 
   /**

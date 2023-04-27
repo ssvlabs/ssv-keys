@@ -75,7 +75,6 @@ function UserFlow() {
           publicKey: operator,
         })),
         publicKey: ssvKeys.publicKey,
-        encryptedShares,
       },
       payload,
     });

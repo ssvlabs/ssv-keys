@@ -11,7 +11,6 @@ import { OperatorDataV3 } from './OperatorDataV3';
 import { KeySharesKeysV3 } from './KeySharesKeysV3';
 import { OpeatorsListValidator } from './validators/operator-unique';
 import { PublicKeyValidator } from './validators/public-key';
-import { MatchLengthValidator } from './validators/match';
 
 
 export class KeySharesDataV3 implements IKeySharesData {
@@ -25,11 +24,6 @@ export class KeySharesDataV3 implements IKeySharesData {
   @ValidateNested({ each: true })
   @OpeatorsListValidator()
   public operators?: OperatorDataV3[] | null = null;
-
-  @IsOptional()
-  @ValidateNested()
-  @MatchLengthValidator('operators', { message: 'Length of operators and shares should be equal.'})
-  public shares?: KeySharesKeysV3 | null = null;
 
   setData(data: any) {
     if (data.publicKey) {
@@ -59,7 +53,7 @@ export class KeySharesDataV3 implements IKeySharesData {
       } else {
         sharesInstance.setData(data.encryptedShares);
       }
-      this.shares = sharesInstance;
+      // this.shares = sharesInstance;
     }
   }
 
@@ -68,20 +62,6 @@ export class KeySharesDataV3 implements IKeySharesData {
    */
   async validate(): Promise<any> {
     validateSync(this);
-  }
-
-  /**
-   * Get the list of shares public keys.
-   */
-  get sharesPublicKeys(): string[] {
-    return this.shares?.publicKeys || [];
-  }
-
-  /**
-   * Get the list of encrypted shares.
-   */
-  get sharesEncryptedKeys(): string[] {
-    return this.shares?.encryptedKeys || [];
   }
 
   /**

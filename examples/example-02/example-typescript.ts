@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-import { SSVKeys } from 'ssv-keys';
+import { SSVKeys } from '../../src/main';
 
 const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -54,13 +54,8 @@ async function main() {
   );
   await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
 
-  // Build payload and from saved on previous steps key shares data
-  const keySharesWithoutPayload = await ssvKeys.keyShares.fromJson(String(await fsp.readFile(getKeySharesFilePath(3))));
-  await ssvKeys.buildPayloadFromKeyShares(keySharesWithoutPayload);
-
-  // Save new key shares file
-  await fsp.writeFile(getKeySharesFilePath(5), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
-  console.log('Compare key shares file contents for steps #4 and #5');
+  const keyShares = ssvKeys.keyShares.generateKeySharesFromBytes(ssvKeys.keyShares.payload.readable.shares, operatorIds);
+  console.log('Keys Shares from bytes:', keyShares);
 }
 
 void main();

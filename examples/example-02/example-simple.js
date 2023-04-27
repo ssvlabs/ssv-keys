@@ -40,28 +40,8 @@ async function main() {
 
   console.log('Web3 Payload: ', payload);
 
-  // --------------------------------------------------------------------------
-  // ✳️ Lesson 3: Saving keyshares file
-  // --------------------------------------------------------------------------
-  // If you need to save result in a reusable unified format for both web and node
-  // environments, save data to keyshares file.
-  // --------------------------------------------------------------------------
-  // Step 1: Build keyshares object
-  const keyShares = await ssvKeys.keyShares.fromJson({
-    version: 'v3',
-    data: {
-      operators: operators.map((operator, index) => ({
-        id: operatorIds[index],
-        publicKey: operator,
-      })),
-      publicKey: ssvKeys.publicKey,
-      encryptedShares,
-    },
-    payload,
-  });
-  // Step 2: Save to the file
   const filePath = getKeySharesFilePath();
-  await fsp.writeFile(filePath, keyShares.toJson(), { encoding: 'utf-8' });
+  await fsp.writeFile(filePath, ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
   console.log('See your keyshares file in ', filePath);
 
   // --------------------------------------------------------------------------

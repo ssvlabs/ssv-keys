@@ -8,12 +8,10 @@ const OperatorDataV3_1 = require("./OperatorDataV3");
 const KeySharesKeysV3_1 = require("./KeySharesKeysV3");
 const operator_unique_1 = require("./validators/operator-unique");
 const public_key_1 = require("./validators/public-key");
-const match_1 = require("./validators/match");
 class KeySharesDataV3 {
     constructor() {
         this.publicKey = null;
         this.operators = null;
-        this.shares = null;
     }
     setData(data) {
         if (data.publicKey) {
@@ -42,7 +40,7 @@ class KeySharesDataV3 {
             else {
                 sharesInstance.setData(data.encryptedShares);
             }
-            this.shares = sharesInstance;
+            // this.shares = sharesInstance;
         }
     }
     /**
@@ -52,20 +50,6 @@ class KeySharesDataV3 {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             (0, class_validator_1.validateSync)(this);
         });
-    }
-    /**
-     * Get the list of shares public keys.
-     */
-    get sharesPublicKeys() {
-        var _a;
-        return ((_a = this.shares) === null || _a === void 0 ? void 0 : _a.publicKeys) || [];
-    }
-    /**
-     * Get the list of encrypted shares.
-     */
-    get sharesEncryptedKeys() {
-        var _a;
-        return ((_a = this.shares) === null || _a === void 0 ? void 0 : _a.encryptedKeys) || [];
     }
     /**
      * Get the list of operators IDs.
@@ -99,10 +83,5 @@ tslib_1.__decorate([
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, operator_unique_1.OpeatorsListValidator)()
 ], KeySharesDataV3.prototype, "operators", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.ValidateNested)(),
-    (0, match_1.MatchLengthValidator)('operators', { message: 'Length of operators and shares should be equal.' })
-], KeySharesDataV3.prototype, "shares", void 0);
 exports.KeySharesDataV3 = KeySharesDataV3;
 //# sourceMappingURL=KeySharesDataV3.js.map

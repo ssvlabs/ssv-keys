@@ -119,38 +119,4 @@ export class SSVKeys {
     });
   }
 
-  /**
-   * Build payload from keyshares file with operators and shares details inside.
-   * @param keyShares
-   */
-  async buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any> {
-    const publicKeys = keyShares.data?.shares?.publicKeys || [];
-    const publicKey = keyShares.data?.publicKey;
-    const encryptedKeys = keyShares.data?.shares?.encryptedKeys || [];
-    const operatorPublicKeys = keyShares.data.operators?.map((item: any) => item.publicKey) as string[];
-    const operatorIds = keyShares.data.operators?.map((item: any) => item.id) as number[];
-
-    const operators = operatorIds
-      .map((id, index) => ({ id, publicKey: operatorPublicKeys[index]}))
-      .sort((a: any, b: any) => +a.id - +b.id);
-
-      if (publicKeys.length !== encryptedKeys.length
-      || publicKeys.length !== operatorPublicKeys.length
-      || encryptedKeys.length !== operatorPublicKeys.length
-      || !encryptedKeys.length
-      || !operatorPublicKeys.length
-      || !publicKeys.length
-    ) {
-      throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
-    }
-
-    return this.keyShares.generateContractPayload({
-      publicKey,
-      operatorIds: operators.map(item => item.id),
-      encryptedShares: publicKeys.map((item: any, index: number) => ({
-        publicKey: item,
-        privateKey: encryptedKeys[index],
-      })),
-    });
-  }
 }

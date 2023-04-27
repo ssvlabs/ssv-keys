@@ -20,6 +20,8 @@ export declare class KeyShares {
      * @param payload
      */
     generateContractPayload(data: any): KeySharesPayload;
+    generateKeySharesFromBytes(shares: string, operatorIds: any[]): any;
+    private splitArray;
     /**
      * Set new data and validate it.
      * @param data

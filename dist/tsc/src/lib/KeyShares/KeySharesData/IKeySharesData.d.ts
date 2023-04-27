@@ -6,8 +6,6 @@ export interface IKeySharesData {
     shares?: IKeySharesKeys | null;
     setData(data: any): any;
     validate(): void;
-    get sharesPublicKeys(): string[];
-    get sharesEncryptedKeys(): string[];
     get operatorIds(): number[];
     get operatorPublicKeys(): string[];
 }

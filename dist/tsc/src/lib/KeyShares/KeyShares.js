@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
+const ethers = tslib_1.__importStar(require("ethers"));
 const class_validator_1 = require("class-validator");
 const KeySharesDataV3_1 = require("./KeySharesData/KeySharesDataV3");
 const KeySharesPayloadV3_1 = require("./KeySharesData/KeySharesPayloadV3");
@@ -35,6 +36,32 @@ class KeyShares {
         const payloadData = this.payload.build(data);
         (_a = this.payload) === null || _a === void 0 ? void 0 : _a.setData(payloadData);
         return this.payload;
+    }
+    generateKeySharesFromBytes(shares, operatorIds) {
+        const operatorCount = operatorIds.length;
+        shares = shares.replace('0x', '');
+        const pkLength = parseInt(shares.substring(0, 4), 16);
+        // get the public keys part
+        const pkSplit = shares.substring(4, pkLength + 2);
+        const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+        const sharesPublicKeys = this.splitArray(operatorCount, pkArray).map(item => ethers.utils.hexlify(item));
+        const eSplit = shares.substring(pkLength + 2);
+        const eArray = ethers.utils.arrayify('0x' + eSplit);
+        const encryptedKeys = this.splitArray(operatorCount, eArray).map(item => Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString('base64'));
+        return {
+            sharesPublicKeys,
+            encryptedKeys,
+        };
+    }
+    splitArray(parts, arr) {
+        const partLength = Math.floor(arr.length / parts);
+        const partsArr = [];
+        for (let i = 0; i < parts; i++) {
+            const start = i * partLength;
+            const end = start + partLength;
+            partsArr.push(arr.slice(start, end));
+        }
+        return partsArr;
     }
     /**
      * Set new data and validate it.

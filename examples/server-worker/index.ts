@@ -71,7 +71,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
         publicKey: operator,
       })),
       publicKey: ssvKeys.publicKey,
-      encryptedShares,
     },
     payload,
   });
