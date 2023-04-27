@@ -157,9 +157,9 @@ export class KeyShares {
   toJson(): string {
     return JSON.stringify({
       version: this.version,
+      createdAt: new Date().toISOString(),
       data: this.data || null,
-      payload: this.payload || null,
-      createdAt: new Date().toISOString()
+      payload: this.payload.readable || null,
     }, null, '  ');
   }
 }

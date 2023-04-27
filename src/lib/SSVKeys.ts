@@ -116,7 +116,7 @@ export class SSVKeys {
       publicKey: metaData.publicKey,
       operatorIds: [...metaData.operatorIds].sort((a: number, b: number) => a - b),
       encryptedShares: metaData.encryptedShares,
-    });
+    }).readable;
   }
 
 }
