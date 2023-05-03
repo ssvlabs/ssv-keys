@@ -1,39 +1,38 @@
-import { IKeySharesData } from './KeySharesData/IKeySharesData';
-import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
-export type KeySharesData = IKeySharesData;
-export type KeySharesPayload = IKeySharesPayload;
+import { KeySharesData } from './KeySharesData/KeySharesData';
+import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
+import { EncryptShare } from '../Encryption/Encryption';
+import { IPartitialData } from './KeySharesData/IKeySharesData';
+import { IOperator } from './KeySharesData/IOperator';
+export interface IPayloadMetaData {
+    publicKey: string;
+    operators: IOperator[];
+    encryptedShares: EncryptShare[];
+}
 /**
  * Key shares file data interface.
  */
 export declare class KeyShares {
-    static VERSION_V3: string;
-    private byVersion;
-    version: string;
     data: KeySharesData;
     payload: KeySharesPayload;
-    /**
-     * @param version
-     */
     constructor();
     /**
-     * Set final payload for web3 transaction and validate it.
-     * @param payload
+     * Build payload from encrypted shares, validator public key and operator IDs
+     * @param publicKey
+     * @param operatorIds
+     * @param encryptedShares
      */
-    generateContractPayload(data: any): KeySharesPayload;
-    generateKeySharesFromBytes(shares: string, operatorIds: any[]): any;
-    private splitArray;
+    buildPayload(metaData: IPayloadMetaData): any;
+    /**
+     * Build shares from bytes string and operators list length
+     * @param bytes
+     * @param operatorCount
+     */
+    buildSharesFromBytes(bytes: string, operatorCount: number): any;
     /**
      * Set new data and validate it.
      * @param data
      */
-    setData(data: any): void;
-    /**
-     * Get entity by version.
-     * @param entity
-     * @param version
-     * @private
-     */
-    private getByVersion;
+    update(data: IPartitialData): void;
     /**
      * Validate everything
      */
@@ -41,9 +40,10 @@ export declare class KeyShares {
     /**
      * Initialise from JSON or object data.
      */
-    fromJson(data: string | any): KeyShares;
+    fromJson(content: string | any): KeyShares;
     /**
      * Stringify key shares to be ready for saving in file.
      */
     toJson(): string;
+    private _splitArray;
 }

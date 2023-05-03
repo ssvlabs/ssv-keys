@@ -104,11 +104,7 @@ const keySharesData = {
     operators: operators.map((operator: any, index: string | number) => ({
       id: operatorIds[index],
       publicKey: operator,
-    })),
-    shares: {
-      publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
-      encryptedKeys: shares.map((share: { privateKey: any; }) => share.privateKey),
-    },
+    }))
   },
 };
 

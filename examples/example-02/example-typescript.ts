@@ -1,9 +1,9 @@
 import * as path from 'path';
 import { promises as fsp } from 'fs';
-import { SSVKeys } from '../../src/main';
+import { SSVKeys, KeyShares } from 'ssv-keys';
 
-const operators = require('./operators.json');
 const keystore = require('./test.keystore.json');
+const operatorPublicKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 
@@ -18,44 +18,33 @@ const getKeySharesFilePath = (step: string | number) => {
 async function main() {
   // 0. Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys();
-  const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
+  const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+
+  const keyShares = new KeyShares();
   // 1. Save it with version only and with no any data.
-  await fsp.writeFile(getKeySharesFilePath(1), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+  await fsp.writeFile(getKeySharesFilePath(1), keyShares.toJson(), { encoding: 'utf-8' });
 
   // 2. At some point we get operator IDs and public keys and want to save them too
-  await ssvKeys.keyShares.setData({
-    operators: operators.map((operator: any, index: string | number) => ({
-      id: operatorIds[index],
-      publicKey: operator,
-    }))
-  });
+  const operators = operatorPublicKeys.map((publicKey: any, index: string | number) => ({
+    id: operatorIds[index],
+    publicKey,
+  }));
+
+  keyShares.update({ operators, publicKey });
 
   // 3. Save it with version only and with no any data.
-  await fsp.writeFile(getKeySharesFilePath(2), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+  await fsp.writeFile(getKeySharesFilePath(2), keyShares.toJson(), { encoding: 'utf-8' });
 
   // 4. Build shares from operator IDs and public keys
-  const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
-
-  // Now save to key shares file encrypted shares and validator public key
-  await ssvKeys.keyShares.setData({
-    publicKey: ssvKeys.publicKey,
-    encryptedShares,
-  });
-
-  await fsp.writeFile(getKeySharesFilePath(3), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
   // Build final web3 transaction payload and update keyshares file with payload data
-  await ssvKeys.buildPayload(
-    {
-      publicKey: ssvKeys.publicKey,
-      operatorIds,
-      encryptedShares,
-    }
-  );
-  await fsp.writeFile(getKeySharesFilePath(4), ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+  const payload = keyShares.buildPayload({ publicKey, operators, encryptedShares });
 
-  const keyShares = ssvKeys.keyShares.generateKeySharesFromBytes(ssvKeys.keyShares.payload.readable.shares, operatorIds);
-  console.log('Keys Shares from bytes:', keyShares);
+  await fsp.writeFile(getKeySharesFilePath(3), keyShares.toJson(), { encoding: 'utf-8' });
+
+  const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+  console.log('Keys Shares from bytes:', shares);
 }
 
 void main();

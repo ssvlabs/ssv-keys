@@ -64,13 +64,9 @@ class Threshold {
       }
     });
 
-    // Sort operators
-    const sortedOperatorIds = [...operatorIds].sort((a: number, b: number) => a - b);
-    const operatorsLength = sortedOperatorIds.length;
-
-    if (!isOperatorsLengthValid(operatorsLength)) {
+    if (!isOperatorsLengthValid(operatorIds.length)) {
       throw new ThresholdInvalidOperatorsLengthError(
-        sortedOperatorIds,
+        operatorIds,
         'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.'
       );
     }
@@ -87,9 +83,9 @@ class Threshold {
     msk.push(this.privateKey);
     mpk.push(this.publicKey);
 
-    const F = (operatorsLength - 1) / 3;
+    const F = (operatorIds.length - 1) / 3;
     // Construct poly
-    for (let i = 1; i < operatorsLength - F; i += 1) {
+    for (let i = 1; i < operatorIds.length - F; i += 1) {
       const sk: SecretKeyType = new bls.SecretKey();
       sk.setByCSPRNG();
       msk.push(sk);
@@ -98,7 +94,7 @@ class Threshold {
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
-    for (const operatorId of sortedOperatorIds) {
+    for (const operatorId of operatorIds) {
       const id = new bls.Id();
       id.setInt(operatorId);
       const shareSecretKey = new bls.SecretKey();
