@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import * as ethers from 'ethers';
 
 import { IKeySharesPayload } from './IKeySharesPayload';
