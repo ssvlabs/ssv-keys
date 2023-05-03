@@ -13,7 +13,7 @@ import { IPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
 
-export interface IPayloadMetaData {
+export interface IKeySharesPayloadData {
   publicKey: string,
   operators: IOperator[],
   encryptedShares: EncryptShare[],
@@ -42,7 +42,7 @@ export class KeyShares {
    * @param operatorIds
    * @param encryptedShares
    */
-  buildPayload(metaData: IPayloadMetaData): any {
+  buildPayload(metaData: IKeySharesPayloadData): any {
     return this.payload.build({
       publicKey: metaData.publicKey,
       operatorIds: operatorSortedList(metaData.operators).map(operator => operator.id),

@@ -4,7 +4,8 @@ exports.KeySharesAction = void 0;
 const tslib_1 = require("tslib");
 const safe_1 = tslib_1.__importDefault(require("colors/safe"));
 const BaseAction_1 = require("./BaseAction");
-const main_1 = require("../../main");
+const SSVKeys_1 = require("../../lib/SSVKeys");
+const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
 const file_1 = require("./validators/file");
 const keystore_1 = tslib_1.__importDefault(require("./arguments/keystore"));
 const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids"));
@@ -51,7 +52,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
-            const ssvKeys = new main_1.SSVKeys();
+            const ssvKeys = new SSVKeys_1.SSVKeys();
             const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
             // Now save to key shares file encrypted shares and validator public key
             const operators = operatorKeys.map((publicKey, index) => ({
@@ -60,7 +61,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             }));
             // Build shares from operator IDs and public keys
             const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);
-            const keyShares = new main_1.KeyShares();
+            const keyShares = new KeyShares_1.KeyShares();
             yield keyShares.update({
                 operators,
                 publicKey,

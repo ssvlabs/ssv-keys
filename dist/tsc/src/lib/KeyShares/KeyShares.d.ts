@@ -3,7 +3,7 @@ import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
 import { IPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
-export interface IPayloadMetaData {
+export interface IKeySharesPayloadData {
     publicKey: string;
     operators: IOperator[];
     encryptedShares: EncryptShare[];
@@ -21,7 +21,7 @@ export declare class KeyShares {
      * @param operatorIds
      * @param encryptedShares
      */
-    buildPayload(metaData: IPayloadMetaData): any;
+    buildPayload(metaData: IKeySharesPayloadData): any;
     /**
      * Build shares from bytes string and operators list length
      * @param bytes

@@ -1,6 +1,7 @@
 import colors from 'colors/safe';
 import { BaseAction } from './BaseAction';
-import { SSVKeys, KeyShares } from '../../main';
+import { SSVKeys } from '../../lib/SSVKeys';
+import { KeyShares } from '../../lib/KeyShares/KeyShares';
 import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
 import operatorIdsArgument from './arguments/operator-ids';
