@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { constants } from 'http2';
 import bodyParser from 'body-parser';
-import { SSVKeys } from 'ssv-keys';
+import { SSVKeys, KeyShares } from 'ssv-keys';
 import express, { Express, Request, Response } from 'express';
 
 dotenv.config();
@@ -52,28 +52,25 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   }
 
   const ssvKeys = new SSVKeys();
-  const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, password)
-  const encryptedShares = await ssvKeys.buildShares(privateKey, operators_ids, operators_keys);
+  const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
+
+  const operators = operators_keys.map((publicKey, index) => ({
+    id: operators_ids[index],
+    publicKey,
+  }));
+
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
   // Build final web3 transaction payload and update keyshares file with payload data
-  const payload = await ssvKeys.buildPayload(
-    {
-      publicKey: ssvKeys.publicKey,
-      operators_ids,
-      encryptedShares,
-    }
-  );
-  const keyShares = ssvKeys.keyShares.fromJson({
-    version: 'v3',
-    data: {
-      operators: operators_keys.map((operator, index) => ({
-        id: operators_ids[index],
-        publicKey: operator,
-      })),
-      publicKey: ssvKeys.publicKey,
-    },
-    payload,
+  const keyShares = new KeyShares();
+  keyShares.update({ operators, publicKey });
+
+  await keyShares.buildPayload({
+    publicKey,
+    operators,
+    encryptedShares,
   });
+
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
 });

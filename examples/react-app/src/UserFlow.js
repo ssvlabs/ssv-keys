@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { SSVKeys } from 'ssv-keys';
+import { SSVKeys, KeyShares } from 'ssv-keys';
 import "./index.css";
 import "./App.css";
 import Dropzone from "./Dropzone";
@@ -20,11 +20,12 @@ const STEPS = {
 function UserFlow() {
   // Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys();
+  const keyShares = new KeyShares();
 
   // States
   const [step, setStep] = useState(STEPS.START);
   const [password, setPassword] = useState('');
-  const [keyShares, setKeyShares] = useState([]);
+  const [keySharesData, setKeyShares] = useState([]);
   const [finalPayload, setFinalPayload] = useState('');
   const [keystoreFile, setKeystoreFile] = useState('');
 
@@ -42,42 +43,36 @@ function UserFlow() {
 
   const startProcess = async () => {
     setStep(STEPS.DECRYPT_KEYSTORE);
-    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreFile, password).then((result) => {
-      if (result instanceof Error) {
-        alert(result.message);
+    const { publicKey, privateKey } = await ssvKeys.extractKeys(keystoreFile, password)
+      .then((result) => {
+        setStep(STEPS.ENCRYPT_SHARES);
+        console.log('Private key ready');
+        return result;
+      }).catch((e) => {
+        alert(e.message);
         setStep(STEPS.ENTER_PASSWORD);
         return;
-      }
-      setStep(STEPS.ENCRYPT_SHARES);
-      console.log('Private key ready');
-      return result;
-    });
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operatorPublicKeys);
+      });
+
+    const operators = operatorPublicKeys.map((operator, index) => ({
+      id: operatorIds[index],
+      publicKey: operator,
+    }));
+
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
     // Build final web3 transaction payload and update keyshares file with payload data
-    const payload = await ssvKeys.buildPayload(
-      {
-        publicKey: ssvKeys.publicKey,
-        operatorIds,
-        encryptedShares,
-      }
-    );
+    const payload = await keyShares.buildPayload({
+      publicKey,
+      operatorIds,
+      encryptedShares,
+    });
 
     setFinalPayload(JSON.stringify(payload));
     console.log('Payload ready');
 
     // Keyshares
-    const keyShares = ssvKeys.keyShares.fromJson({
-      version: 'v3',
-      data: {
-        operators: operatorPublicKeys.map((operator, index) => ({
-          id: operatorIds[index],
-          publicKey: operator,
-        })),
-        publicKey: ssvKeys.publicKey,
-      },
-      payload,
-    });
+    keyShares.update({ operators, publicKey });
     setKeyShares(keyShares.toJson());
     console.log('KeyShares ready');
     setStep(STEPS.FINISH);
@@ -160,10 +155,10 @@ function UserFlow() {
           <h4>Web3 Raw Payload</h4>
           <textarea rows={10} style={{ width: '100%' }} value={finalPayload} />
           <h4>KeyShares File Contents</h4>
-          <textarea rows={10} style={{ width: '100%' }} value={keyShares} />
+          <textarea rows={10} style={{ width: '100%' }} value={keySharesData} />
           <br />
           <br />
-          <button type="button" onClick={downloadKeyShares} disabled={!keyShares} className="btn">
+          <button type="button" onClick={downloadKeyShares} disabled={!keySharesData} className="btn">
             Download Keyshares File
           </button>
         </div>

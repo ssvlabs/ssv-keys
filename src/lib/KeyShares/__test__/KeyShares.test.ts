@@ -1,16 +1,16 @@
-import { SSVKeys } from '../../SSVKeys';
+import { KeyShares } from '../../../main';
 import emptyKeyShares from './key-shares/empty.json';
 // import keySharesWithOperators from './key-shares/with-operators.json';
 
-let ssvKeys: SSVKeys;
+let keyShares: KeyShares;
 
 describe('KeyShares', () => {
   beforeAll(async () => {
-    ssvKeys = new SSVKeys();
+    keyShares = new KeyShares();
   });
 
   it('Should create empty data with version', async () => {
-    const keySharesString = ssvKeys.keyShares.toJson();
+    const keySharesString = keyShares.toJson();
     const keySharesObject = JSON.parse(keySharesString);
     expect(keySharesObject.data.operators).toEqual(emptyKeyShares.data.operators);
     expect(keySharesObject.data.publicKey).toEqual(emptyKeyShares.data.publicKey);
