@@ -64,7 +64,7 @@ function UserFlow() {
     // Build final web3 transaction payload and update keyshares file with payload data
     const payload = await keyShares.buildPayload({
       publicKey,
-      operatorIds,
+      operators,
       encryptedShares,
     });
 
