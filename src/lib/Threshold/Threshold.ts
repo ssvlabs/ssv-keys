@@ -1,6 +1,7 @@
 import { SecretKeyType } from 'bls-eth-wasm';
 import bls from '../BLS';
 import { isOperatorsLengthValid } from '../../commands/actions/validators/operator-ids';
+import { PrivateKeyFormatError } from '../exceptions/keystore';
 
 export interface IShares {
     privateKey: string,
@@ -53,7 +54,10 @@ class Threshold {
    * If F calculated from this formula is not integer number - it will raise exception.
    * Generate keys and return promise
    */
-  async create(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+  async create(privateKeyString: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+    if (!privateKeyString.startsWith('0x')) {
+      throw new PrivateKeyFormatError(privateKeyString, 'The private key must be provided in the 0x format.')
+    }
     // Validation
     operatorIds.map(operatorId => {
       if (!Number.isInteger(operatorId)) {
@@ -77,7 +81,7 @@ class Threshold {
     const mpk = [];
 
     // Master key Polynomial
-    this.privateKey = bls.deserializeHexStrToSecretKey(privateKey);
+    this.privateKey = bls.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
     this.publicKey = this.privateKey.getPublicKey();
 
     msk.push(this.privateKey);

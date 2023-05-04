@@ -4,6 +4,7 @@ exports.ThresholdInvalidOperatorIdError = exports.ThresholdInvalidOperatorsLengt
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../BLS"));
 const operator_ids_1 = require("../../commands/actions/validators/operator-ids");
+const keystore_1 = require("../exceptions/keystore");
 class ThresholdInvalidOperatorsLengthError extends Error {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operators, message) {
@@ -37,8 +38,11 @@ class Threshold {
      * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    create(privateKey, operatorIds) {
+    create(privateKeyString, operatorIds) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (!privateKeyString.startsWith('0x')) {
+                throw new keystore_1.PrivateKeyFormatError(privateKeyString, 'The private key must be provided in the 0x format.');
+            }
             // Validation
             operatorIds.map(operatorId => {
                 if (!Number.isInteger(operatorId)) {
@@ -52,7 +56,7 @@ class Threshold {
             const msk = [];
             const mpk = [];
             // Master key Polynomial
-            this.privateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKey);
+            this.privateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
             this.publicKey = this.privateKey.getPublicKey();
             msk.push(this.privateKey);
             mpk.push(this.publicKey);

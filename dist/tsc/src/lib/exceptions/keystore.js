@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EthereumWalletError = exports.KeyStorePasswordError = exports.KeyStoreInvalidError = exports.KeyStoreDataFormatError = void 0;
+exports.PrivateKeyFormatError = exports.EthereumWalletError = exports.KeyStorePasswordError = exports.KeyStoreInvalidError = exports.KeyStoreDataFormatError = void 0;
 class KeyStoreDataFormatError extends Error {
     constructor(data, message) {
         super(message);
@@ -27,4 +27,11 @@ class EthereumWalletError extends Error {
     }
 }
 exports.EthereumWalletError = EthereumWalletError;
+class PrivateKeyFormatError extends Error {
+    constructor(data, message) {
+        super(message);
+        this.data = data;
+    }
+}
+exports.PrivateKeyFormatError = PrivateKeyFormatError;
 //# sourceMappingURL=keystore.js.map

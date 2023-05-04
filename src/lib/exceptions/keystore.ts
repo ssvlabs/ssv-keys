@@ -27,3 +27,12 @@ export class EthereumWalletError extends Error {
     super(message);
   }
 }
+
+export class PrivateKeyFormatError extends Error {
+  public data: any;
+
+  constructor(data: any, message: string) {
+    super(message);
+    this.data = data;
+  }
+}

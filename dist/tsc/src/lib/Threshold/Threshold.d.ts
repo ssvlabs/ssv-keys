@@ -31,6 +31,6 @@ declare class Threshold {
      * If F calculated from this formula is not integer number - it will raise exception.
      * Generate keys and return promise
      */
-    create(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs>;
+    create(privateKeyString: string, operatorIds: number[]): Promise<ISharesKeyPairs>;
 }
 export default Threshold;

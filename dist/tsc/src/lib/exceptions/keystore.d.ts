@@ -12,3 +12,7 @@ export declare class KeyStorePasswordError extends Error {
 export declare class EthereumWalletError extends Error {
     constructor(message: string);
 }
+export declare class PrivateKeyFormatError extends Error {
+    data: any;
+    constructor(data: any, message: string);
+}

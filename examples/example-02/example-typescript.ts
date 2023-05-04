@@ -19,7 +19,6 @@ async function main() {
   // 0. Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys();
   const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
-
   const keyShares = new KeyShares();
   // 1. Save it with version only and with no any data.
   await fsp.writeFile(getKeySharesFilePath(1), keyShares.toJson(), { encoding: 'utf-8' });
