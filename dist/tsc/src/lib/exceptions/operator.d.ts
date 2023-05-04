@@ -1,4 +1,4 @@
-import { IOperatorData } from '../IOperatorData';
+import { IOperatorData } from '../KeyShares/KeySharesData/IOperatorData';
 export declare class DuplicatedOperatorIdError extends Error {
     operator: IOperatorData;
     constructor(operator: IOperatorData, message: string);

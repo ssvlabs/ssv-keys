@@ -5,10 +5,11 @@ import {
   IsOptional,
   validateSync,
 } from 'class-validator';
-import { IKeySharesData, IPartitialData } from './IKeySharesData';
+import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
 import { OperatorData } from './OperatorData';
 import { OpeatorsListValidator } from './validators/operator-unique';
 import { PublicKeyValidator } from './validators/public-key';
+import { operatorSortedList } from '../../helpers/operator.helper';
 
 export class KeySharesData implements IKeySharesData {
   @IsOptional()
@@ -22,21 +23,12 @@ export class KeySharesData implements IKeySharesData {
   @OpeatorsListValidator()
   public operators?: OperatorData[] | null = null;
 
-  update(data: IPartitialData) {
+  update(data: IKeySharesPartitialData) {
     if (data.publicKey) {
       this.publicKey = data.publicKey;
     }
     if (data.operators) {
-      this.operators = data.operators
-        .sort((a: any, b: any) => +a.id - +b.id)
-        .map(
-          (operator: { id: any; publicKey: any; }) => {
-            if (!operator.id || !operator.publicKey) {
-              throw Error('Mismatch amount of operator ids and operator keys.');
-            }
-            return new OperatorData(operator);
-          }
-        );
+      this.operators = operatorSortedList(data.operators);
     }
   }
 

@@ -1,3 +1,4 @@
+import { IOperator } from './IOperator';
 import { IOperatorData } from './IOperatorData';
 
 export interface IKeySharesData {
@@ -10,7 +11,7 @@ export interface IKeySharesData {
 }
 
 
-export interface IPartitialData {
+export interface IKeySharesPartitialData {
   publicKey?: string | null;
-  operators?: IOperatorData[] | null;
+  operators?: IOperator[] | null;
 }

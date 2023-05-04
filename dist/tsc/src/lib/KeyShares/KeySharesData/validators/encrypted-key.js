@@ -5,6 +5,7 @@ const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
 const js_base64_1 = require("js-base64");
 const web3_helper_1 = require("../../../helpers/web3.helper");
+const keyshares_1 = require("../../../exceptions/keyshares");
 /* Try to BLS deserialize validator public key. */
 let EncryptedKeyValidatorConstraint = class EncryptedKeyValidatorConstraint {
     validate(value) {
@@ -17,7 +18,7 @@ let EncryptedKeyValidatorConstraint = class EncryptedKeyValidatorConstraint {
             });
         }
         catch (e) {
-            throw Error(`Filed ABI decode shares encrypted key: ${keyWithError}. Error: ${e.message}`);
+            throw new keyshares_1.KeySharesAbiDecodeError(keyWithError, `Filed ABI decode shares encrypted key. Error: ${e.message}`);
         }
         return true;
     }

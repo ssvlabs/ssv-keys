@@ -1,7 +1,7 @@
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
-import { IPartitialData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 export interface IKeySharesPayloadData {
     publicKey: string;
@@ -32,7 +32,7 @@ export declare class KeyShares {
      * Set new data and validate it.
      * @param data
      */
-    update(data: IPartitialData): void;
+    update(data: IKeySharesPartitialData): void;
     /**
      * Validate everything
      */

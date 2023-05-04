@@ -4,7 +4,7 @@ exports.PublicKeyValidator = exports.PublicKeyValidatorConstraint = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../../../BLS"));
 const class_validator_1 = require("class-validator");
-const bls_1 = require("../exceptions/bls");
+const bls_1 = require("../../../exceptions/bls");
 /* Try to BLS deserialize validator public key. */
 let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
     validate(value) {

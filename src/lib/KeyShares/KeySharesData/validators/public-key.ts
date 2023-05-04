@@ -5,7 +5,7 @@ import {
   ValidatorConstraintInterface,
   ValidationOptions,
 } from 'class-validator';
-import { BLSDeserializeError } from '../exceptions/bls';
+import { BLSDeserializeError } from '../../../exceptions/bls';
 
 /* Try to BLS deserialize validator public key. */
 @ValidatorConstraint({ name: 'publicKey', async: true })

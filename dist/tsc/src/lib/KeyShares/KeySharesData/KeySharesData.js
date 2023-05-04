@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesData = void 0;
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
-const OperatorData_1 = require("./OperatorData");
 const operator_unique_1 = require("./validators/operator-unique");
 const public_key_1 = require("./validators/public-key");
+const operator_helper_1 = require("../../helpers/operator.helper");
 class KeySharesData {
     constructor() {
         this.publicKey = null;
@@ -16,14 +16,7 @@ class KeySharesData {
             this.publicKey = data.publicKey;
         }
         if (data.operators) {
-            this.operators = data.operators
-                .sort((a, b) => +a.id - +b.id)
-                .map((operator) => {
-                if (!operator.id || !operator.publicKey) {
-                    throw Error('Mismatch amount of operator ids and operator keys.');
-                }
-                return new OperatorData_1.OperatorData(operator);
-            });
+            this.operators = (0, operator_helper_1.operatorSortedList)(data.operators);
         }
     }
     /**

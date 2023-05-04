@@ -9,7 +9,7 @@ import {
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
-import { IPartitialData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
 
@@ -83,7 +83,7 @@ export class KeyShares {
    * Set new data and validate it.
    * @param data
    */
-  update(data: IPartitialData) {
+  update(data: IKeySharesPartitialData) {
     this.data.update(data);
     this.validate();
   }

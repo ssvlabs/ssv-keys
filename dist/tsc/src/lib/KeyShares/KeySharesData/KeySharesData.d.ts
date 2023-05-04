@@ -1,9 +1,9 @@
-import { IKeySharesData, IPartitialData } from './IKeySharesData';
+import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
 import { OperatorData } from './OperatorData';
 export declare class KeySharesData implements IKeySharesData {
     publicKey?: string | null;
     operators?: OperatorData[] | null;
-    update(data: IPartitialData): void;
+    update(data: IKeySharesPartitialData): void;
     /**
      * Do all possible validations.
      */

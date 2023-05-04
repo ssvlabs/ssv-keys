@@ -1,5 +1,6 @@
 import { IOperator } from "../KeyShares/KeySharesData/IOperator";
 import { OperatorData } from "../KeyShares/KeySharesData/OperatorData";
+import { OperatorsCountsMismatchError } from "../exceptions/operator";
 
 /**
  * Sort operators input.
@@ -11,7 +12,7 @@ export const operatorSortedList = (operators: IOperator[]): OperatorData[] => {
     .map(
       (operator: { id: any; publicKey: any; }) => {
         if (!operator.id || !operator.publicKey) {
-          throw Error('Mismatch amount of operator ids and operator keys.');
+          throw new OperatorsCountsMismatchError(operators, operators, 'Mismatch amount of operator ids and operator keys.');
         }
         return new OperatorData(operator);
       }

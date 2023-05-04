@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MatchLengthValidator = exports.MatchLengthValidatorConstraint = void 0;
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
-const operator_1 = require("../exceptions/operator");
+const operator_1 = require("../../../exceptions/operator");
 let MatchLengthValidatorConstraint = class MatchLengthValidatorConstraint {
     validate(value, args) {
         const [relatedPropertyName, customError] = args.constraints;
