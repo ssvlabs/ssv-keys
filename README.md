@@ -92,7 +92,6 @@ To run you will use the "shares" command
 
 **Input parameters:**
 
-- key-shares-version (ksv) = The version of the tool output, e.g. use "2" for previous version (optional)
 - keystore (ks) = The validator keystore file path
 - password (ps) = The keystore file encryption password
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
@@ -197,15 +196,11 @@ Build everything
 yarn build-all
 ```
 
-## TODO
-
-* Make it possible to use a specific number of signers (Currently with a default of 4).
-  Read: [From Crash to Byzantine Consensus with 2f + 1 Processes](https://www.gsd.inesc-id.pt/~mpc/pubs/bc2f+1.pdf)
-
 ## Authors
 
 * [Dmitri Meshin](https://github.com/meshin-blox)
 * [Guy Muroch](https://github.com/guym-blox)
+* [Wadym C](https://github.com/vadiminc)
 
 ## License
 

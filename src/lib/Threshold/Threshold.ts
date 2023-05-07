@@ -1,6 +1,7 @@
 import { SecretKeyType } from 'bls-eth-wasm';
 import bls from '../BLS';
 import { isOperatorsLengthValid } from '../../commands/actions/validators/operator-ids';
+import { PrivateKeyFormatError } from '../exceptions/keystore';
 
 export interface IShares {
     privateKey: string,
@@ -53,7 +54,10 @@ class Threshold {
    * If F calculated from this formula is not integer number - it will raise exception.
    * Generate keys and return promise
    */
-  async create(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+  async create(privateKeyString: string, operatorIds: number[]): Promise<ISharesKeyPairs> {
+    if (!privateKeyString.startsWith('0x')) {
+      throw new PrivateKeyFormatError(privateKeyString, 'The private key must be provided in the 0x format.')
+    }
     // Validation
     operatorIds.map(operatorId => {
       if (!Number.isInteger(operatorId)) {
@@ -64,32 +68,29 @@ class Threshold {
       }
     });
 
-    // Sort operators
-    const sortedOperatorIds = [...operatorIds].sort((a: number, b: number) => a - b);
-    const operatorsLength = sortedOperatorIds.length;
-
-    if (!isOperatorsLengthValid(operatorsLength)) {
+    if (!isOperatorsLengthValid(operatorIds.length)) {
       throw new ThresholdInvalidOperatorsLengthError(
-        sortedOperatorIds,
+        operatorIds,
         'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.'
       );
     }
 
-    await bls.init(bls.BLS12_381);
-
     const msk = [];
     const mpk = [];
 
+    if (!bls.deserializeHexStrToSecretKey) {
+      await bls.init(bls.BLS12_381);
+    }
     // Master key Polynomial
-    this.privateKey = bls.deserializeHexStrToSecretKey(privateKey);
+    this.privateKey = bls.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
     this.publicKey = this.privateKey.getPublicKey();
 
     msk.push(this.privateKey);
     mpk.push(this.publicKey);
 
-    const F = (operatorsLength - 1) / 3;
+    const F = (operatorIds.length - 1) / 3;
     // Construct poly
-    for (let i = 1; i < operatorsLength - F; i += 1) {
+    for (let i = 1; i < operatorIds.length - F; i += 1) {
       const sk: SecretKeyType = new bls.SecretKey();
       sk.setByCSPRNG();
       msk.push(sk);
@@ -98,7 +99,7 @@ class Threshold {
     }
 
     // Evaluate shares - starting from 1 because 0 is master key
-    for (const operatorId of sortedOperatorIds) {
+    for (const operatorId of operatorIds) {
       const id = new bls.Id();
       id.setInt(operatorId);
       const shareSecretKey = new bls.SecretKey();

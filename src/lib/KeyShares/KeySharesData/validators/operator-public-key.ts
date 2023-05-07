@@ -5,7 +5,7 @@ import {
   ValidationOptions,
 } from 'class-validator';
 import { operatorPublicKeyValidator } from '../../../../commands/actions/validators/operator';
-import { OperatorPublicKeyError } from '../exceptions/operator';
+import { OperatorPublicKeyError } from '../../../exceptions/operator';
 
 @ValidatorConstraint({ name: 'operatorPublicKey', async: false })
 export class OpeatorPublicKeyValidatorConstraint implements ValidatorConstraintInterface {

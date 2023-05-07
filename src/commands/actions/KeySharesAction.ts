@@ -1,11 +1,11 @@
 import colors from 'colors/safe';
 import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
+import { KeyShares } from '../../lib/KeyShares/KeyShares';
 import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
 import operatorIdsArgument from './arguments/operator-ids';
 import keystorePasswordArgument from './arguments/password';
-import keySharesVersionArgument from './arguments/key-shares-version';
 import outputFolderArgument from './arguments/output-folder';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
 import { keystorePasswordValidator } from './validators/keystore-password';
@@ -25,7 +25,6 @@ export class KeySharesAction extends BaseAction {
         keystorePasswordArgument,
         operatorIdsArgument,
         operatorPublicKeysArgument,
-        keySharesVersionArgument,
         outputFolderArgument,
       ],
     }
@@ -62,37 +61,33 @@ export class KeySharesAction extends BaseAction {
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
-    const keysVersion = this.args.key_shares_version
-      ? `v${this.args.key_shares_version}`
-      : SSVKeys.VERSION.V3;
-    const ssvKeys = new SSVKeys(keysVersion);
-    const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystoreData, password);
-
-    // Build shares from operator IDs and public keys
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operatorKeys);
+    const ssvKeys = new SSVKeys();
+    const { privateKey, publicKey } = await ssvKeys.extractKeys(keystoreData, password);
 
     // Now save to key shares file encrypted shares and validator public key
-    const keyShares = await ssvKeys.keyShares.fromJson({});
-    await keyShares.setData({
-      operators: operatorKeys.map((operator: string, index: number) => ({
-        id: operatorIds[index],
-        publicKey: operator,
-      })),
-      publicKey: ssvKeys.publicKey,
-      encryptedShares,
+    const operators = operatorKeys.map((publicKey: string, index: number) => ({
+      id: operatorIds[index],
+      publicKey,
+    }));
+
+    // Build shares from operator IDs and public keys
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
+
+    const keyShares = new KeyShares();
+    await keyShares.update({
+      operators,
+      publicKey,
     });
 
     // Build payload and save it in key shares file
-    await ssvKeys.buildPayload(
-      {
-        publicKey: ssvKeys.publicKey,
-        operatorIds,
-        encryptedShares,
-      }
-    );
+    await keyShares.buildPayload({
+      publicKey,
+      operators,
+      encryptedShares,
+    });
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());
-    await writeFile(keySharesFilePath, ssvKeys.keyShares.toJson());
+    await writeFile(keySharesFilePath, keyShares.toJson());
     return `\nKey distribution successful! Find your key shares file at ${colors.bgYellow(colors.black(keySharesFilePath))}\n`;
   }
 }

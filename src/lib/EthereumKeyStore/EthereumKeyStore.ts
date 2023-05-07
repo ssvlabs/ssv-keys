@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { syncScrypt } from 'scrypt-js';
 import Wallet from 'ethereumjs-wallet';
 import { keccak256, sha256 } from 'ethereumjs-util';
+import { EthereumWalletError, KeyStoreDataFormatError, KeyStoreInvalidError, KeyStorePasswordError } from '../exceptions/keystore';
 
 interface V4Keystore {
   crypto: {
@@ -60,7 +61,7 @@ class EthereumKeyStore {
    */
   constructor(keyStoreData: any) {
     if (!keyStoreData) {
-      throw new Error('Key store data should be JSON or string');
+      throw new KeyStoreDataFormatError(keyStoreData, 'Key store data should be JSON or string');
     }
     if (typeof keyStoreData === 'string') {
       this.keyStoreData = JSON.parse(keyStoreData);
@@ -68,7 +69,7 @@ class EthereumKeyStore {
       this.keyStoreData = keyStoreData;
     }
     if (!this.keyStoreData.version) {
-      throw new Error('Invalid keystore file');
+      throw new KeyStoreInvalidError(this.keyStoreData, 'Invalid keystore file');
     }
   }
 
@@ -107,7 +108,7 @@ class EthereumKeyStore {
     if (this.wallet) {
       this.privateKey = this.wallet.getPrivateKey().toString('hex');
       if (!this.privateKey) {
-        throw new Error('Invalid password');
+        throw new KeyStorePasswordError('Invalid password');
       }
     }
     return this.privateKey;
@@ -126,7 +127,7 @@ class EthereumKeyStore {
     const json: V4Keystore = typeof input === 'object' ? input : JSON.parse(input);
 
     if (json.version !== 4) {
-      throw new Error('Not a V4 wallet');
+      throw new EthereumWalletError('Not a V4 wallet');
     }
 
     let derivedKey: Uint8Array;
@@ -145,7 +146,7 @@ class EthereumKeyStore {
       kdfParams = json.crypto.kdf.params;
 
       if (kdfParams.prf !== 'hmac-sha256') {
-        throw new Error('Unsupported parameters to PBKDF2');
+        throw new EthereumWalletError('Unsupported parameters to PBKDF2');
       }
 
       derivedKey = crypto.pbkdf2Sync(
@@ -156,7 +157,7 @@ class EthereumKeyStore {
         'sha256',
       );
     } else {
-      throw new Error('Unsupported key derivation scheme');
+      throw new EthereumWalletError('Unsupported key derivation scheme');
     }
 
     const ciphertext = Buffer.from(json.crypto.cipher.message, 'hex');
@@ -168,7 +169,7 @@ class EthereumKeyStore {
     const hashFunction: any = hashFunctions[json.crypto.checksum.function];
     const mac: Buffer = hashFunction(checksumBuffer);
     if (mac.toString('hex') !== json.crypto.checksum.message) {
-      throw new Error('Invalid password');
+      throw new EthereumWalletError('Invalid password');
     }
 
     const decipher = crypto.createDecipheriv(
