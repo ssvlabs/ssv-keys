@@ -219,13 +219,16 @@ This release introduces some significant SDK changes, including a few breaking c
   ```
 
 - Replaced `operatorIds` and `operatorKeys` with a single array of objects:
-```code
-const operators = [{ id, publicKey },...];
-```
+
+  ```code
+  const operators = [{ id, publicKey },...];
+  ```
+
 - Replaced `getPrivateKeyFromKeystoreData` method by `extractKeys` which returns validato privateKey and publicKey.
-```code
-const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
-```
+
+  ```code
+  const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+  ```
 
 - Replaced `ssvKeys.keyShares.setData` to `keyShares.update`
 
