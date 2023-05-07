@@ -272,32 +272,6 @@ This release introduces some significant SDK changes, including a few breaking c
     ```code
     const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
     ```
-
-### API Changes
-
-- **Deprecated**: Endpoints `/api/v1/user` and `/api/v1/item` are deprecated and will be removed in the next major release (#178)
-  - Migrate to the new `/api/v2/users` and `/api/v2/items` endpoints for continued support
-- Changed response structure for `/api/v2/items` (#190)
-  - Update your code to handle the new response format
-
-### Library Updates
-
-- Upgraded to library X v4.0.0 from v3.5.2 (#202)
-  - Check the library's changelog for potential breaking changes in your code
-
-## Miscellaneous
-
-- Improved performance of search functionality (#144)
-- Updated documentation for the new features (#182)
-
-## Upgrade Notes
-
-1. Backup your current data and configurations
-2. Update your code to accommodate the breaking changes
-3. Run the provided migration script to update your database schema
-4. Test your application thoroughly to ensure compatibility
-5. Deploy the new version to your production environment
-
 ## TODO
 
 * Make it possible to use a specific number of signers (Currently with a default of 4).
