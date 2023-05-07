@@ -39,7 +39,7 @@ export class SSVKeys {
   }
 
   /**
-   * Build threshold using private key for number of participants and failed participants.
+   * Build threshold using private key and list of operators.
    * @param privateKey
    * @param operators
    */
@@ -50,10 +50,9 @@ export class SSVKeys {
   }
 
   /**
-   * Encrypt operators shares using operators public keys.
-   * @param operatorsPublicKeys
+   * Encrypt operators shares using operators list (id, publicKey).
+   * @param operators
    * @param shares
-   * @param sharesFormat
    */
   async encryptShares(operators: IOperator[], shares: IShares[]): Promise<EncryptShare[]> {
     const sortedOperators = operatorSortedList(operators);
@@ -62,10 +61,9 @@ export class SSVKeys {
   }
 
   /**
-   * Build shares from private key, operator IDs and public keys
+   * Build shares from private key, operators list
    * @param privateKey
-   * @param operatorIds
-   * @param operatorPublicKeys
+   * @param operators
    */
   async buildShares(privateKey: string, operators: IOperator[]): Promise<EncryptShare[]> {
     const threshold = await this.createThreshold(privateKey, operators);

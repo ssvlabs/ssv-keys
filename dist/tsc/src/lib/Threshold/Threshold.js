@@ -52,9 +52,14 @@ class Threshold {
             if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorIds.length)) {
                 throw new ThresholdInvalidOperatorsLengthError(operatorIds, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
-            yield BLS_1.default.init(BLS_1.default.BLS12_381);
             const msk = [];
             const mpk = [];
+            try {
+                BLS_1.default.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
+            }
+            catch (_a) {
+                yield BLS_1.default.init(BLS_1.default.BLS12_381);
+            }
             // Master key Polynomial
             this.privateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
             this.publicKey = this.privateKey.getPublicKey();

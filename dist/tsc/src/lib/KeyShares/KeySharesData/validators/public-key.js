@@ -10,7 +10,6 @@ let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
     validate(value) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
-                yield BLS_1.default.init(BLS_1.default.BLS12_381);
                 if (typeof value === 'string') {
                     BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
                 }

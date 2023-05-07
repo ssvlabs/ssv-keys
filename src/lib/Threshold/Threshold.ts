@@ -75,11 +75,14 @@ class Threshold {
       );
     }
 
-    await bls.init(bls.BLS12_381);
-
     const msk = [];
     const mpk = [];
 
+    try {
+      bls.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''))
+    } catch {
+      await bls.init(bls.BLS12_381);
+    }
     // Master key Polynomial
     this.privateKey = bls.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
     this.publicKey = this.privateKey.getPublicKey();

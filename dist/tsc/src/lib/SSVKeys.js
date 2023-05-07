@@ -33,7 +33,7 @@ class SSVKeys {
         });
     }
     /**
-     * Build threshold using private key for number of participants and failed participants.
+     * Build threshold using private key and list of operators.
      * @param privateKey
      * @param operators
      */
@@ -45,10 +45,9 @@ class SSVKeys {
         });
     }
     /**
-     * Encrypt operators shares using operators public keys.
-     * @param operatorsPublicKeys
+     * Encrypt operators shares using operators list (id, publicKey).
+     * @param operators
      * @param shares
-     * @param sharesFormat
      */
     encryptShares(operators, shares) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -58,10 +57,9 @@ class SSVKeys {
         });
     }
     /**
-     * Build shares from private key, operator IDs and public keys
+     * Build shares from private key, operators list
      * @param privateKey
-     * @param operatorIds
-     * @param operatorPublicKeys
+     * @param operators
      */
     buildShares(privateKey, operators) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {

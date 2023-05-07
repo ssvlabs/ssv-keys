@@ -16,7 +16,7 @@ class KeyShares {
         this.payload = new KeySharesPayload_1.KeySharesPayload();
     }
     /**
-     * Build payload from encrypted shares, validator public key and operator IDs
+     * Build payload from operators list, encrypted shares and validator public key
      * @param publicKey
      * @param operatorIds
      * @param encryptedShares

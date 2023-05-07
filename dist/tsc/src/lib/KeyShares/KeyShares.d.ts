@@ -16,7 +16,7 @@ export declare class KeyShares {
     payload: KeySharesPayload;
     constructor();
     /**
-     * Build payload from encrypted shares, validator public key and operator IDs
+     * Build payload from operators list, encrypted shares and validator public key
      * @param publicKey
      * @param operatorIds
      * @param encryptedShares

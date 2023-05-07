@@ -23,23 +23,21 @@ export declare class SSVKeys {
      */
     extractKeys(data: string, password: string): Promise<ExtractedKeys>;
     /**
-     * Build threshold using private key for number of participants and failed participants.
+     * Build threshold using private key and list of operators.
      * @param privateKey
      * @param operators
      */
     createThreshold(privateKey: string, operators: IOperator[]): Promise<ISharesKeyPairs>;
     /**
-     * Encrypt operators shares using operators public keys.
-     * @param operatorsPublicKeys
+     * Encrypt operators shares using operators list (id, publicKey).
+     * @param operators
      * @param shares
-     * @param sharesFormat
      */
     encryptShares(operators: IOperator[], shares: IShares[]): Promise<EncryptShare[]>;
     /**
-     * Build shares from private key, operator IDs and public keys
+     * Build shares from private key, operators list
      * @param privateKey
-     * @param operatorIds
-     * @param operatorPublicKeys
+     * @param operators
      */
     buildShares(privateKey: string, operators: IOperator[]): Promise<EncryptShare[]>;
     /**
