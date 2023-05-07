@@ -196,6 +196,105 @@ Build everything
 yarn build-all
 ```
 
+# Release v0.0.18 - 2023-05-07
+
+This release introduces some significant SDK changes, including a few breaking changes. Please review the notes below and update your code accordingly.
+
+## Breaking Changes
+
+### SSVKeys, KeyShares
+- Removed multi-version support.
+
+  Old version:
+  ```code
+  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+  ```
+
+  New format:
+  ```code
+  import { SSVKeys, KeyShares } from 'ssv-keys';
+
+  const ssvKeys = new SSVKeys();
+  const keyShares = new KeyShares();
+  ```
+
+- Replaced `operatorIds` and `operatorKeys` with a single array of objects:
+```code
+const operators = [{ id, publicKey },...];
+```
+- Replaced `getPrivateKeyFromKeystoreData` method by `extractKeys` which returns validato privateKey and publicKey.
+```code
+const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+```
+
+- Replaced `ssvKeys.keyShares.setData` to `keyShares.update`
+
+  Old version:
+  ```code
+  await ssvKeys.keyShares.setData({ operators });
+  ````
+
+  New format:
+  ```code
+  const keyShares = new KeyShares();
+  keyShares.update({ operators, publicKey });
+  ```
+
+  - Changed `buildShares` function paramateres:
+
+    Old version:
+    ```code
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+    ```
+
+    New format:
+    ```code
+    const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
+    ```
+
+  - Changed `buildPayload` interface and parameters:
+
+    Old version:
+    ```code
+    const payload = await ssvKeys.buildPayload({ publicKey, operatorIds, encryptedShares });
+    ```
+
+    New format:
+    ```code
+    const payload = keyShares.buildPayload({ publicKey, operators, encryptedShares });
+    ```
+
+  - Added `buildSharesFromBytes` to extract shares from a single string:
+
+    ```code
+    const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+    ```
+
+### API Changes
+
+- **Deprecated**: Endpoints `/api/v1/user` and `/api/v1/item` are deprecated and will be removed in the next major release (#178)
+  - Migrate to the new `/api/v2/users` and `/api/v2/items` endpoints for continued support
+- Changed response structure for `/api/v2/items` (#190)
+  - Update your code to handle the new response format
+
+### Library Updates
+
+- Upgraded to library X v4.0.0 from v3.5.2 (#202)
+  - Check the library's changelog for potential breaking changes in your code
+
+## Miscellaneous
+
+- Improved performance of search functionality (#144)
+- Updated documentation for the new features (#182)
+
+## Upgrade Notes
+
+1. Backup your current data and configurations
+2. Update your code to accommodate the breaking changes
+3. Run the provided migration script to update your database schema
+4. Test your application thoroughly to ensure compatibility
+5. Deploy the new version to your production environment
+
 ## TODO
 
 * Make it possible to use a specific number of signers (Currently with a default of 4).
@@ -205,6 +304,7 @@ yarn build-all
 
 * [Dmitri Meshin](https://github.com/meshin-blox)
 * [Guy Muroch](https://github.com/guym-blox)
+* [Wadym C](https://github.com/vadiminc)
 
 ## License
 
