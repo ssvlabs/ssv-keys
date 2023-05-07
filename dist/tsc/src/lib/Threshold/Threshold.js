@@ -54,10 +54,7 @@ class Threshold {
             }
             const msk = [];
             const mpk = [];
-            try {
-                BLS_1.default.deserializeHexStrToSecretKey(privateKeyString.replace('0x', ''));
-            }
-            catch (_a) {
+            if (!BLS_1.default.deserializeHexStrToSecretKey) {
                 yield BLS_1.default.init(BLS_1.default.BLS12_381);
             }
             // Master key Polynomial

@@ -25,7 +25,9 @@ class SSVKeys {
     extractKeys(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const privateKey = yield new EthereumKeyStore_1.default(data).getPrivateKey(password);
-            yield BLS_1.default.init(BLS_1.default.BLS12_381);
+            if (!BLS_1.default.deserializeHexStrToSecretKey) {
+                yield BLS_1.default.init(BLS_1.default.BLS12_381);
+            }
             return {
                 privateKey: `0x${privateKey}`,
                 publicKey: `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`
