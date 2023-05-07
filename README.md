@@ -92,7 +92,6 @@ To run you will use the "shares" command
 
 **Input parameters:**
 
-- key-shares-version (ksv) = The version of the tool output, e.g. use "2" for previous version (optional)
 - keystore (ks) = The validator keystore file path
 - password (ps) = The keystore file encryption password
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
@@ -197,15 +196,87 @@ Build everything
 yarn build-all
 ```
 
-## TODO
+# Release v0.0.18 - 2023-05-07
 
-* Make it possible to use a specific number of signers (Currently with a default of 4).
-  Read: [From Crash to Byzantine Consensus with 2f + 1 Processes](https://www.gsd.inesc-id.pt/~mpc/pubs/bc2f+1.pdf)
+This release introduces some significant SDK changes, including a few breaking changes. Please review the notes below and update your code accordingly.
 
+## Breaking Changes
+
+### SSVKeys, KeyShares
+- Removed multi-version support.
+
+  Old version:
+  ```code
+  const ssvKeys = new SSVKeys(SSVKeys.VERSION.V3);
+  ```
+
+  New format:
+  ```code
+  import { SSVKeys, KeyShares } from 'ssv-keys';
+
+  const ssvKeys = new SSVKeys();
+  const keyShares = new KeyShares();
+  ```
+
+- Replaced `operatorIds` and `operatorKeys` with a single array of objects:
+
+  ```code
+  const operators = [{ id, publicKey },...];
+  ```
+
+- Replaced `getPrivateKeyFromKeystoreData` method by `extractKeys` which returns validator privateKey and publicKey.
+
+  ```code
+  const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+  ```
+
+- Replaced `ssvKeys.keyShares.setData` to `keyShares.update`
+
+  Old version:
+  ```code
+  await ssvKeys.keyShares.setData({ operators });
+  ````
+
+  New format:
+  ```code
+  const keyShares = new KeyShares();
+  keyShares.update({ operators, publicKey });
+  ```
+
+- Changed `buildShares` function params:
+
+  Old version:
+  ```code
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+  ```
+
+  New format:
+  ```code
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
+  ```
+
+- Changed `buildPayload` interface and params:
+
+  Old version:
+  ```code
+  const payload = await ssvKeys.buildPayload({ publicKey, operatorIds, encryptedShares });
+  ```
+
+  New format:
+  ```code
+  const payload = keyShares.buildPayload({ publicKey, operators, encryptedShares });
+  ```
+
+- Added `buildSharesFromBytes` to extract shares from a single string:
+
+  ```code
+  const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+  ```
 ## Authors
 
 * [Dmitri Meshin](https://github.com/meshin-blox)
 * [Guy Muroch](https://github.com/guym-blox)
+* [Wadym C](https://github.com/vadiminc)
 
 ## License
 

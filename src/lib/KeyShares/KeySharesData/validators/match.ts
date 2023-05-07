@@ -5,7 +5,7 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { OperatorsCountsMismatchError } from '../exceptions/operator';
+import { OperatorsCountsMismatchError } from '../../../exceptions/operator';
 
 @ValidatorConstraint({ name: 'matchLength', async: false })
 export class MatchLengthValidatorConstraint implements ValidatorConstraintInterface {

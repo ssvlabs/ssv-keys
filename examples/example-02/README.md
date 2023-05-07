@@ -40,7 +40,7 @@ import { SSVKeys } from 'ssv-keys';
 ### Initialize SSVKeys SDK
 
 ```javascript
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
+const ssvKeys = new SSVKeys();
 ```
 
 ### Encrypting shares
@@ -51,7 +51,7 @@ const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
 const keystore = require('./test.keystore.json');
 const keystorePassword = 'testtest';
 
-const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystorePassword);
+const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
 ```
 
 #### Encrypting shares
@@ -60,18 +60,23 @@ const privateKey = await ssvKeys.getPrivateKeyFromKeystoreData(keystore, keystor
 const operators = require('./operators.json');      // ['pubkey', ..., 'pubkey']
 const operatorIds = require('./operatorIds.json');  // [int, ..., int]
 
-const threshold = await ssvKeys.createThreshold(privateKey, operatorIds);
+const operators = operatorPublicKeys.map((publicKey, index) => ({
+  id: operatorIds[index],
+  publicKey,
+}));
+
+const threshold = await ssvKeys.createThreshold(privateKey, operators);
 const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 ```
 
 ### Building final web3 payload
 
 ```javascript
-let payload = await ssvKeys.buildPayload(
-  threshold.publicKey,
-  operatorIds,
+let payload = await ssvKeys.buildPayload({
+  publicKey,
+  operators,
   shares,
-);
+});
 ```
 
 Now `payload` contains all required data to be sent to the contract.
@@ -104,18 +109,16 @@ const keySharesData = {
     operators: operators.map((operator: any, index: string | number) => ({
       id: operatorIds[index],
       publicKey: operator,
-    })),
-    shares: {
-      publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
-      encryptedKeys: shares.map((share: { privateKey: any; }) => share.privateKey),
-    },
+    }))
   },
 };
 
 // Create SSVKeys instance using key shares data
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
-const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
+const ssvKeys = new SSVKeys();
+const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+const keyShares = new KeyShares();
+const ks = keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', ks.toJson(), { encoding: 'utf-8' });
 ```
 
 #### Saving key shares file from separate data and payload
@@ -124,7 +127,7 @@ Let's say, initially you have only operators' data:
 
 ```javascript
 const keySharesData = {
-  version: 'v2',
+  version: 'v3',
   data: {
     publicKey: threshold.publicKey,
     operators: [
@@ -141,9 +144,11 @@ const keySharesData = {
 And at some point you saved it in a key shares file:
 
 ```javascript
-const ssvKeys = new SSVKeys(SSVKeys.VERSION.V2);
-const keyShares = ssvKeys.keyShares.fromJson(keySharesData);
-await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
+const ssvKeys = new SSVKeys();
+const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
+const keyShares = new KeyShares();
+const ks = keyShares.fromJson(keySharesData);
+await fsp.writeFile('./keyshares.json', ks.toJson(), { encoding: 'utf-8' });
 ```
 
 Now this file contains only operators' data.
@@ -152,49 +157,33 @@ Let's say, now on the next step you want to build shares and save them too.
 
 ```javascript
 // ...
-const threshold = await ssvKeys.createThreshold(privateKey, operatorIds);
+const threshold = await ssvKeys.createThreshold(privateKey, operators);
 const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 ```
 
 You can save shares as following:
 
 ```javascript
-ssvKeys.keyShares.setData({
-  ...keyShares.data,
-  shares: {
-    publicKeys: shares.map((share: { publicKey: any; }) => share.publicKey),
-    encryptedKeys: shares.map((share: { privateKey: any; }) => share.privateKey),
-  }
+keyShares.update({
+  ...ks.data,
 });
 ```
 
 And then you can save it again:
 
 ```javascript
-await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+await fsp.writeFile('./keyshares.json', keyShares.toJson(), { encoding: 'utf-8' });
 ```
 
 Then if at some point you would need to build payload:
 
 ```javascript
 // Build final web3 transaction payload and update keyshares file with payload data
-let payload = await ssvKeys.buildPayload(
-  {
-    publicKey: ssvKeys.publicKey,
-    operatorIds,
-    encryptedShares,
-  }
-);
-```
+const payload = await keyShares.buildPayload({
+  publicKey,
+  operators,
+  encryptedShares,
+});
 
-Or you can build payload from key shares file directly:
-
-```javascript
-let payload = await ssvKeys.buildPayloadFromKeyShares(keyShares);
-```
-
-And save it back to key shares file:
-
-```javascript
-await fsp.writeFile('./keyshares.json', ssvKeys.keyShares.toJson(), { encoding: 'utf-8' });
+console.log(payload);
 ```

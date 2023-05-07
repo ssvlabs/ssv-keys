@@ -5,14 +5,13 @@ import {
   ValidatorConstraintInterface,
   ValidationOptions,
 } from 'class-validator';
-import { BLSDeserializeError } from '../exceptions/bls';
+import { BLSDeserializeError } from '../../../exceptions/bls';
 
 /* Try to BLS deserialize validator public key. */
 @ValidatorConstraint({ name: 'publicKey', async: true })
 export class PublicKeyValidatorConstraint implements ValidatorConstraintInterface {
   async validate(value: any) {
     try {
-      await bls.init(bls.BLS12_381);
       if (typeof value === 'string') {
         bls.deserializeHexStrToPublicKey(value.replace('0x', ''));
       } else {

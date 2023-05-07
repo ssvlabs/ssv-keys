@@ -1,10 +1,9 @@
-import { KeyShares } from './KeyShares/KeyShares';
 import { IShares, ISharesKeyPairs } from './Threshold';
 import { EncryptShare } from './Encryption/Encryption';
-export interface IPayloadMetaData {
+import { IOperator } from './KeyShares/KeySharesData/IOperator';
+export interface ExtractedKeys {
+    privateKey: string;
     publicKey: string;
-    operatorIds: number[];
-    encryptedShares: EncryptShare[];
 }
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
@@ -15,58 +14,34 @@ export interface IPayloadMetaData {
  */
 export declare class SSVKeys {
     static SHARES_FORMAT_ABI: string;
-    static VERSION: {
-        V2: string;
-        V3: string;
-    };
-    protected version: string;
     protected threshold: ISharesKeyPairs | undefined;
-    keySharesInstance: KeyShares;
-    privateKey: any;
-    publicKey: any;
-    constructor(ver: string);
-    get keyShares(): KeyShares;
     /**
      * Extract private key from keystore data using keystore password.
      * Generally can be used in browsers when the keystore data has been provided by browser.
      * @param data
      * @param password
      */
-    getPrivateKeyFromKeystoreData(data: string, password: string): Promise<string>;
+    extractKeys(data: string, password: string): Promise<ExtractedKeys>;
     /**
-     * Build threshold using private key for number of participants and failed participants.
+     * Build threshold using private key and list of operators.
      * @param privateKey
      * @param operators
      */
-    createThreshold(privateKey: string, operatorIds: number[]): Promise<ISharesKeyPairs>;
+    createThreshold(privateKey: string, operators: IOperator[]): Promise<ISharesKeyPairs>;
     /**
-     * Encrypt operators shares using operators public keys.
-     * @param operatorsPublicKeys
+     * Encrypt operators shares using operators list (id, publicKey).
+     * @param operators
      * @param shares
-     * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys: string[], shares: IShares[]): Promise<EncryptShare[]>;
+    encryptShares(operators: IOperator[], shares: IShares[]): Promise<EncryptShare[]>;
     /**
-     * Build shares from private key, operator IDs and public keys
+     * Build shares from private key, operators list
      * @param privateKey
-     * @param operatorIds
-     * @param operatorPublicKeys
+     * @param operators
      */
-    buildShares(privateKey: string, operatorIds: number[], operatorPublicKeys: string[]): Promise<EncryptShare[]>;
+    buildShares(privateKey: string, operators: IOperator[]): Promise<EncryptShare[]>;
     /**
      * Getting threshold if it has been created before.
      */
     getThreshold(): ISharesKeyPairs | undefined;
-    /**
-     * Build payload from encrypted shares, validator public key and operator IDs
-     * @param publicKey
-     * @param operatorIds
-     * @param encryptedShares
-     */
-    buildPayload(metaData: IPayloadMetaData): Promise<any>;
-    /**
-     * Build payload from keyshares file with operators and shares details inside.
-     * @param keyShares
-     */
-    buildPayloadFromKeyShares(keyShares: KeyShares): Promise<any>;
 }

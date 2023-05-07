@@ -1,48 +1,28 @@
+import * as ethers from 'ethers';
+
 import {
-  IsString,
-  IsDefined,
-  IsNotEmpty,
   IsOptional,
   ValidateNested,
   validateSync
 } from 'class-validator';
 
-import { IKeySharesData } from './KeySharesData/IKeySharesData';
-import { IKeySharesPayload } from './KeySharesData/IKeySharesPayload';
+import { KeySharesData } from './KeySharesData/KeySharesData';
+import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
+import { EncryptShare } from '../Encryption/Encryption';
+import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
+import { IOperator } from './KeySharesData/IOperator';
+import { operatorSortedList } from '../helpers/operator.helper';
 
-import { KeySharesDataV2 } from './KeySharesData/KeySharesDataV2';
-import { KeySharesPayloadV2 } from './KeySharesData/KeySharesPayloadV2';
-
-import { KeySharesDataV3 } from './KeySharesData/KeySharesDataV3';
-import { KeySharesPayloadV3 } from './KeySharesData/KeySharesPayloadV3';
-
-export type KeySharesData = IKeySharesData;
-export type KeySharesPayload = IKeySharesPayload;
+export interface IKeySharesPayloadData {
+  publicKey: string,
+  operators: IOperator[],
+  encryptedShares: EncryptShare[],
+}
 
 /**
  * Key shares file data interface.
  */
 export class KeyShares {
-  static VERSION_V2 = 'v2';
-  static VERSION_V3 = 'v3';
-
-  // Versions of deeper structures
-  private byVersion: any = {
-    'payload': {
-      [KeyShares.VERSION_V2]: KeySharesPayloadV2,
-      [KeyShares.VERSION_V3]: KeySharesPayloadV3,
-    },
-    'data': {
-      [KeyShares.VERSION_V2]: KeySharesDataV2,
-      [KeyShares.VERSION_V3]: KeySharesDataV3,
-    }
-  }
-
-  @IsString()
-  @IsDefined()
-  @IsNotEmpty()
-  public version: string;
-
   @IsOptional()
   @ValidateNested()
   public data: KeySharesData;
@@ -51,52 +31,61 @@ export class KeyShares {
   @ValidateNested()
   public payload: KeySharesPayload;
 
-  /**
-   * @param version
-   */
-  constructor({ version }: { version: string }) {
-    this.version = version;
-    this.data = this.getByVersion('data', version);
-    this.payload = this.getByVersion('payload', version);
+  constructor() {
+    this.data = new KeySharesData();
+    this.payload = new KeySharesPayload();
   }
 
   /**
-   * Set final payload for web3 transaction and validate it.
-   * @param payload
+   * Build payload from operators list, encrypted shares and validator public key
+   * @param publicKey
+   * @param operatorIds
+   * @param encryptedShares
    */
-  generateContractPayload(data: any): KeySharesPayload {
-    const payloadData = this.payload.build(data);
-    this.payload?.setData(payloadData);
+  buildPayload(metaData: IKeySharesPayloadData): any {
+    return this.payload.build({
+      publicKey: metaData.publicKey,
+      operatorIds: operatorSortedList(metaData.operators).map(operator => operator.id),
+      encryptedShares: metaData.encryptedShares,
+    });
+  }
 
-    return this.payload;
+  /**
+   * Build shares from bytes string and operators list length
+   * @param bytes
+   * @param operatorCount
+   */
+  buildSharesFromBytes(bytes: string, operatorCount: number): any {
+    bytes = bytes.replace('0x', '');
+    const pkLength = parseInt(bytes.substring(0, 4), 16);
+
+    // get the public keys part
+    const pkSplit = bytes.substring(4, pkLength + 2);
+    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+    const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item =>
+      ethers.utils.hexlify(item),
+    );
+
+    const eSplit = bytes.substring(pkLength + 2);
+    const eArray = ethers.utils.arrayify('0x' + eSplit);
+    const encryptedKeys = this._splitArray(operatorCount, eArray).map(item =>
+      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
+        'base64',
+      ),
+    );
+    return {
+      sharesPublicKeys,
+      encryptedKeys,
+    };
   }
 
   /**
    * Set new data and validate it.
    * @param data
    */
-  setData(data: any) {
-    if (!data) {
-      return;
-    }
-    this.data.setData(data);
+  update(data: IKeySharesPartitialData) {
+    this.data.update(data);
     this.validate();
-  }
-
-  /**
-   * Get entity by version.
-   * @param entity
-   * @param version
-   * @private
-   */
-  private getByVersion(entity: string, version: string): any {
-    if (!this.byVersion[entity]) {
-      throw Error(`"${entity}" is unknown entity`);
-    }
-    if (!this.byVersion[entity][version]) {
-      throw Error(`"${entity}" is not supported in version of key shares: ${version}`);
-    }
-    return new this.byVersion[entity][version]();
   }
 
   /**
@@ -109,25 +98,35 @@ export class KeyShares {
   /**
    * Initialise from JSON or object data.
    */
-  fromJson(data: string | any): KeyShares {
-    // Parse json
-    if (typeof data === 'string') {
-      data = JSON.parse(data);
-    }
-    this.setData(data.data);
+  fromJson(content: string | any): KeyShares {
+    const data = typeof content === 'string'
+      ? JSON.parse(content).data
+      : content.data;
+
+    this.update(data);
     return this;
   }
-
 
   /**
    * Stringify key shares to be ready for saving in file.
    */
   toJson(): string {
     return JSON.stringify({
-      version: this.version,
+      version: 'v3',
+      createdAt: new Date().toISOString(),
       data: this.data || null,
-      payload: this.payload || null,
-      createdAt: new Date().toISOString()
+      payload: this.payload.readable || null,
     }, null, '  ');
+  }
+
+  private _splitArray(parts: number, arr: Uint8Array) {
+    const partLength = Math.floor(arr.length / parts);
+    const partsArr = [];
+    for (let i = 0; i < parts; i++) {
+      const start = i * partLength;
+      const end = start + partLength;
+      partsArr.push(arr.slice(start, end));
+    }
+    return partsArr;
   }
 }
