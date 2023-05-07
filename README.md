@@ -243,35 +243,35 @@ This release introduces some significant SDK changes, including a few breaking c
   keyShares.update({ operators, publicKey });
   ```
 
-  - Changed `buildShares` function paramateres:
+- Changed `buildShares` function params:
 
-    Old version:
-    ```code
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
-    ```
+  Old version:
+  ```code
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operatorIds, operators);
+  ```
 
-    New format:
-    ```code
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
-    ```
+  New format:
+  ```code
+  const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
+  ```
 
-  - Changed `buildPayload` interface and parameters:
+- Changed `buildPayload` interface and parameters:
 
-    Old version:
-    ```code
-    const payload = await ssvKeys.buildPayload({ publicKey, operatorIds, encryptedShares });
-    ```
+  Old version:
+  ```code
+  const payload = await ssvKeys.buildPayload({ publicKey, operatorIds, encryptedShares });
+  ```
 
-    New format:
-    ```code
-    const payload = keyShares.buildPayload({ publicKey, operators, encryptedShares });
-    ```
+  New format:
+  ```code
+  const payload = keyShares.buildPayload({ publicKey, operators, encryptedShares });
+  ```
 
-  - Added `buildSharesFromBytes` to extract shares from a single string:
+- Added `buildSharesFromBytes` to extract shares from a single string:
 
-    ```code
-    const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
-    ```
+  ```code
+  const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+  ```
 ## Authors
 
 * [Dmitri Meshin](https://github.com/meshin-blox)
