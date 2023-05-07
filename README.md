@@ -255,7 +255,7 @@ This release introduces some significant SDK changes, including a few breaking c
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
   ```
 
-- Changed `buildPayload` interface and parameters:
+- Changed `buildPayload` interface and params:
 
   Old version:
   ```code
