@@ -272,11 +272,6 @@ This release introduces some significant SDK changes, including a few breaking c
     ```code
     const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
     ```
-## TODO
-
-* Make it possible to use a specific number of signers (Currently with a default of 4).
-  Read: [From Crash to Byzantine Consensus with 2f + 1 Processes](https://www.gsd.inesc-id.pt/~mpc/pubs/bc2f+1.pdf)
-
 ## Authors
 
 * [Dmitri Meshin](https://github.com/meshin-blox)
