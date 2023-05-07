@@ -8,6 +8,7 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+const ssvKeys = new SSVKeys();
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -51,7 +52,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Keystore password is required' });
   }
 
-  const ssvKeys = new SSVKeys();
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
 
   const operators = operators_keys.map((publicKey, index) => ({
