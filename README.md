@@ -224,7 +224,7 @@ This release introduces some significant SDK changes, including a few breaking c
   const operators = [{ id, publicKey },...];
   ```
 
-- Replaced `getPrivateKeyFromKeystoreData` method by `extractKeys` which returns validato privateKey and publicKey.
+- Replaced `getPrivateKeyFromKeystoreData` method by `extractKeys` which returns validator privateKey and publicKey.
 
   ```code
   const { privateKey, publicKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
