@@ -79,7 +79,7 @@
     "colors": "^1.4.0",
     "crypto": "^1.0.1",
     "eth2-keystore-js": "^1.0.8",
-    "ethereumjs-util": "^7.0.10",
+    "ethereumjs-util": "^7.1.5",
     "ethereumjs-wallet": "^1.0.1",
     "ethers": "^5.7.2",
     "events": "^3.3.0",

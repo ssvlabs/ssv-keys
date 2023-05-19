@@ -8,6 +8,11 @@ export interface IKeySharesPayloadData {
     operators: IOperator[];
     encryptedShares: EncryptShare[];
 }
+export interface IKeySharesSignatureData {
+    ownerAddress: string;
+    ownerNonce: number;
+    privateKey: string;
+}
 /**
  * Key shares file data interface.
  */
@@ -21,7 +26,7 @@ export declare class KeyShares {
      * @param operatorIds
      * @param encryptedShares
      */
-    buildPayload(metaData: IKeySharesPayloadData): any;
+    buildPayload(metaData: IKeySharesPayloadData, signatureData: IKeySharesSignatureData): any;
     /**
      * Build shares from bytes string and operators list length
      * @param bytes

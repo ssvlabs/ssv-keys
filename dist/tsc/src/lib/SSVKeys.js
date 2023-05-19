@@ -28,6 +28,8 @@ class SSVKeys {
             if (!BLS_1.default.deserializeHexStrToSecretKey) {
                 yield BLS_1.default.init(BLS_1.default.BLS12_381);
             }
+            console.log(privateKey);
+            console.log("?!", BLS_1.default.deserializeHexStrToSecretKey(privateKey));
             return {
                 privateKey: `0x${privateKey}`,
                 publicKey: `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`

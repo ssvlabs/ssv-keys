@@ -4,7 +4,9 @@ import { SSVKeys } from '../../lib/SSVKeys';
 import { KeyShares } from '../../lib/KeyShares/KeyShares';
 import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
+import ownerNonce from './arguments/owner-nonce';
 import operatorIdsArgument from './arguments/operator-ids';
+import ownerAddress from './arguments/owner-address';
 import keystorePasswordArgument from './arguments/password';
 import outputFolderArgument from './arguments/output-folder';
 import operatorPublicKeysArgument from './arguments/operator-public-keys';
@@ -26,6 +28,8 @@ export class KeySharesAction extends BaseAction {
         operatorIdsArgument,
         operatorPublicKeysArgument,
         outputFolderArgument,
+        ownerAddress,
+        ownerNonce,
       ],
     }
   }
@@ -38,6 +42,8 @@ export class KeySharesAction extends BaseAction {
       keystore,
       password,
       output_folder: outputFolder,
+      owner_address: ownerAddress,
+      owner_nonce: ownerNonce,
     } = this.args;
 
     let {
@@ -84,6 +90,10 @@ export class KeySharesAction extends BaseAction {
       publicKey,
       operators,
       encryptedShares,
+    }, {
+      ownerAddress,
+      ownerNonce,
+      privateKey,
     });
 
     const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());

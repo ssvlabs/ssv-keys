@@ -8,7 +8,9 @@ const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
 const file_1 = require("./validators/file");
 const keystore_1 = tslib_1.__importDefault(require("./arguments/keystore"));
+const owner_nonce_1 = tslib_1.__importDefault(require("./arguments/owner-nonce"));
 const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids"));
+const owner_address_1 = tslib_1.__importDefault(require("./arguments/owner-address"));
 const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
@@ -28,6 +30,8 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 operator_ids_1.default,
                 operator_public_keys_1.default,
                 output_folder_1.default,
+                owner_address_1.default,
+                owner_nonce_1.default,
             ],
         };
     }
@@ -36,7 +40,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { keystore, password, output_folder: outputFolder, } = this.args;
+            const { keystore, password, output_folder: outputFolder, owner_address: ownerAddress, owner_nonce: ownerNonce, } = this.args;
             let { operator_ids: operatorIds, operator_keys: operatorKeys, } = this.args;
             // Prepare data
             operatorKeys = operatorKeys.split(',');
@@ -71,6 +75,10 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 publicKey,
                 operators,
                 encryptedShares,
+            }, {
+                ownerAddress,
+                ownerNonce,
+                privateKey,
             });
             const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
             yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());

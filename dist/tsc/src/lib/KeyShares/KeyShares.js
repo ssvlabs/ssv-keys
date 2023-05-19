@@ -4,6 +4,7 @@ exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
 const ethers = tslib_1.__importStar(require("ethers"));
 const class_validator_1 = require("class-validator");
+const web3Helper = tslib_1.__importStar(require("../helpers/web3.helper"));
 const KeySharesData_1 = require("./KeySharesData/KeySharesData");
 const KeySharesPayload_1 = require("./KeySharesData/KeySharesPayload");
 const operator_helper_1 = require("../helpers/operator.helper");
@@ -21,12 +22,17 @@ class KeyShares {
      * @param operatorIds
      * @param encryptedShares
      */
-    buildPayload(metaData) {
-        return this.payload.build({
+    buildPayload(metaData, signatureData) {
+        const payload = this.payload.build({
             publicKey: metaData.publicKey,
             operatorIds: (0, operator_helper_1.operatorSortedList)(metaData.operators).map(operator => operator.id),
             encryptedShares: metaData.encryptedShares,
         });
+        const { ownerAddress, ownerNonce, privateKey, } = signatureData;
+        const signature = web3Helper.buildSignature(`${web3Helper.web3.utils.toChecksumAddress(ownerAddress)}:${ownerNonce}`, privateKey);
+        const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
+        payload.shares = `0x${signSharesBytes.toString('hex')}`;
+        return payload;
     }
     /**
      * Build shares from bytes string and operators list length

@@ -6,6 +6,8 @@ import {
   validateSync
 } from 'class-validator';
 
+import * as web3Helper from '../helpers/web3.helper';
+
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
@@ -17,6 +19,12 @@ export interface IKeySharesPayloadData {
   publicKey: string,
   operators: IOperator[],
   encryptedShares: EncryptShare[],
+}
+
+export interface IKeySharesSignatureData {
+  ownerAddress: string,
+  ownerNonce: number,
+  privateKey: string,
 }
 
 /**
@@ -42,12 +50,24 @@ export class KeyShares {
    * @param operatorIds
    * @param encryptedShares
    */
-  buildPayload(metaData: IKeySharesPayloadData): any {
-    return this.payload.build({
+  buildPayload(metaData: IKeySharesPayloadData, signatureData: IKeySharesSignatureData): any {
+    const payload = this.payload.build({
       publicKey: metaData.publicKey,
       operatorIds: operatorSortedList(metaData.operators).map(operator => operator.id),
       encryptedShares: metaData.encryptedShares,
     });
+
+    const {
+      ownerAddress,
+      ownerNonce,
+      privateKey,
+    } = signatureData;
+
+    const signature = web3Helper.buildSignature(`${web3Helper.web3.utils.toChecksumAddress(ownerAddress)}:${ownerNonce}`, privateKey);
+    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
+
+    payload.shares = `0x${signSharesBytes.toString('hex')}`
+    return payload;
   }
 
   /**
