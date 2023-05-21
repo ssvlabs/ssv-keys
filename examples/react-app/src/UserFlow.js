@@ -6,7 +6,7 @@ import Dropzone from "./Dropzone";
 import Spinner from "./Spinner";
 
 // Operators and their IDs dummy data
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 
 const STEPS = {
@@ -54,9 +54,9 @@ function UserFlow() {
         return;
       });
 
-    const operators = operatorPublicKeys.map((operator, index) => ({
+    const operators = operatorKeys.map((operator, index) => ({
       id: operatorIds[index],
-      publicKey: operator,
+      operatorKey: operator,
     }));
 
     const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
@@ -152,7 +152,7 @@ function UserFlow() {
               <th>ID</th>
               <th>Public Key</th>
             </tr>
-            {operatorPublicKeys.map((operator, index) => {
+            {operatorKeys.map((operator, index) => {
               return (
                 <tr>
                   <td>{operatorIds[index]}</td>

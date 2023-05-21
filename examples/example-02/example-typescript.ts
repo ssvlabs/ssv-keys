@@ -3,7 +3,7 @@ import { promises as fsp } from 'fs';
 import { SSVKeys, KeyShares } from 'ssv-keys';
 
 const keystore = require('./test.keystore.json');
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 
@@ -29,9 +29,9 @@ async function main() {
   await fsp.writeFile(getKeySharesFilePath(1), keyShares.toJson(), { encoding: 'utf-8' });
 
   // 2. At some point we get operator IDs and public keys and want to save them too
-  const operators = operatorPublicKeys.map((publicKey: any, index: string | number) => ({
+  const operators = operatorKeys.map((operatorKey: any, index: string | number) => ({
     id: operatorIds[index],
-    publicKey,
+    operatorKey,
   }));
 
   keyShares.update({ operators, publicKey });

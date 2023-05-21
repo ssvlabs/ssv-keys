@@ -71,9 +71,9 @@ export class KeySharesAction extends BaseAction {
     const { privateKey, publicKey } = await ssvKeys.extractKeys(keystoreData, password);
 
     // Now save to key shares file encrypted shares and validator public key
-    const operators = operatorKeys.map((publicKey: string, index: number) => ({
+    const operators = operatorKeys.map((operatorKey: string, index: number) => ({
       id: operatorIds[index],
-      publicKey,
+      operatorKey,
     }));
 
     // Build shares from operator IDs and public keys

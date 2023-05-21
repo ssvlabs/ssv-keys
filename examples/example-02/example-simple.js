@@ -2,7 +2,7 @@ const path = require('path');
 const fsp = require('fs').promises;
 const { SSVKeys, KeyShares } = require('ssv-keys');
 
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
@@ -29,9 +29,9 @@ async function main() {
   // Step 2: Get private key
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
   // Step 3: Build shares from operator IDs and public keys
-  const operators = operatorPublicKeys.map((publicKey, index) => ({
+  const operators = operatorKeys.map((operatorKey, index) => ({
     id: operatorIds[index],
-    publicKey,
+    operatorKey,
   }));
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 

@@ -30,3 +30,19 @@ This release introduces new feature to generate BLS signatures with a validator'
   });
   ```
 
+### KeyShares Json v4
+  ```code
+  version: 'v4',
+  data: {
+    publicKey,
+    operators: [
+      {
+        id: ...,
+        operatorPublicKey: '...',
+      },
+    ],
+  },
+  payload: {
+    ...
+  }
+  ```

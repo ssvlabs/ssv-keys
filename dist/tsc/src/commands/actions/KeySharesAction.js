@@ -59,9 +59,9 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const ssvKeys = new SSVKeys_1.SSVKeys();
             const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
             // Now save to key shares file encrypted shares and validator public key
-            const operators = operatorKeys.map((publicKey, index) => ({
+            const operators = operatorKeys.map((operatorKey, index) => ({
                 id: operatorIds[index],
-                publicKey,
+                operatorKey,
             }));
             // Build shares from operator IDs and public keys
             const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);

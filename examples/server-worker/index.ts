@@ -54,9 +54,9 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
 
-  const operators = operators_keys.map((publicKey, index) => ({
+  const operators = operators_keys.map((operatorKey, index) => ({
     id: operators_ids[index],
-    publicKey,
+    operatorKey,
   }));
 
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);

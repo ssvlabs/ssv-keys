@@ -1,6 +1,6 @@
 import { SSVKeys, KeyShares } from 'ssv-keys';
 
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
@@ -15,9 +15,9 @@ async function main() {
   const ssvKeys = new SSVKeys();
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
 
-  const operators = operatorPublicKeys.map((publicKey: string, index: number) => ({
+  const operators = operatorKeys.map((operatorKey: string, index: number) => ({
     id: operatorIds[index],
-    publicKey,
+    operatorKey,
   }));
 
   // Step 2: Build shares from operator IDs and public keys

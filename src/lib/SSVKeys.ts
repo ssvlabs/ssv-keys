@@ -59,7 +59,7 @@ export class SSVKeys {
    */
   async encryptShares(operators: IOperator[], shares: IShares[]): Promise<EncryptShare[]> {
     const sortedOperators = operatorSortedList(operators);
-    const decodedOperatorPublicKeys = sortedOperators.map(item => Buffer.from(item.publicKey, 'base64').toString());
+    const decodedOperatorPublicKeys = sortedOperators.map(item => Buffer.from(item.operatorKey, 'base64').toString());
     return new Encryption(decodedOperatorPublicKeys, shares).encrypt();
   }
 

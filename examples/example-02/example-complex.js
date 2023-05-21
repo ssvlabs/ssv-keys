@@ -2,7 +2,7 @@ const path = require('path');
 const fsp = require('fs').promises;
 const { SSVKeys, KeyShares } = require('ssv-keys');
 
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
@@ -26,9 +26,9 @@ async function main() {
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
 
   // At some point we get operator IDs and public keys and want to save them too
-  const operators = operatorPublicKeys.map((publicKey, index) => ({
+  const operators = operatorKeys.map((operatorKey, index) => ({
     id: operatorIds[index],
-    publicKey,
+    operatorKey,
   }));
 
   const keyShares = new KeyShares();

@@ -175,7 +175,7 @@ export class KeyShares {
    */
   toJson(): string {
     return JSON.stringify({
-      version: 'v3',
+      version: 'v4',
       createdAt: new Date().toISOString(),
       data: this.data || null,
       payload: this.payload.readable || null,

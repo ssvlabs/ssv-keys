@@ -8,13 +8,13 @@
 import { ISharesKeyPairs, SSVKeys } from 'ssv-keys';
 
 const keystore = require('./test.keystore.json');
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 
-const operators = operatorPublicKeys.map((publicKey, index) => ({
+const operators = operatorKeys.map((operatorKey, index) => ({
   id: operatorIds[index],
-  publicKey,
+  operatorKey,
 }));
 ```
 

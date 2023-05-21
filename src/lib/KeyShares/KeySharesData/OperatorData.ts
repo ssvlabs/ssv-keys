@@ -13,11 +13,11 @@ export class OperatorData implements IOperatorData {
   @IsDefined({ message: 'The operator public key is undefined'})
   @IsString({ message: 'The operator public key must be a string'})
   @OpeatorPublicKeyValidator()
-  public publicKey: string;
+  public operatorKey: string;
 
   constructor(data: IOperator) {
     this.id = data.id;
-    this.publicKey = data.publicKey;
+    this.operatorKey = data.operatorKey;
     this.validate();
   }
 
