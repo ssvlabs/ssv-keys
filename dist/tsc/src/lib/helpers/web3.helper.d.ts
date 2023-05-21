@@ -50,3 +50,4 @@ export declare const buildSignature: (dataToSign: string, privateKeyHex: string)
  * computes the Keccak-256 hash of the signed data, and verifies the signature using the deserialized public key.
  */
 export declare const validateSignature: (signedData: string, signatureHex: string, publicKey: string) => Promise<void>;
+export declare const privateToPublicKey: (privateKey: string) => Promise<string>;

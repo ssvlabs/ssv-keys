@@ -87,7 +87,15 @@ export class KeyShares {
     const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
     const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
 
-    payload.shares = `0x${signSharesBytes.toString('hex')}`
+    payload.shares = `0x${signSharesBytes.toString('hex')}`;
+
+    // verify signature
+    await this.validateSingleShares(payload.shares, {
+      ownerAddress,
+      ownerNonce,
+      publicKey: await web3Helper.privateToPublicKey(privateKey),
+    });
+
     return payload;
   }
 

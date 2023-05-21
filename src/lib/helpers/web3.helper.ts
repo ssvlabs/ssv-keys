@@ -108,3 +108,10 @@ export const validateSignature = async(signedData: string, signatureHex: string,
     throw new SingleSharesSignatureInvalid(signatureHex, 'Single shares signature is invalid');
   }
 }
+
+export const privateToPublicKey = async(privateKey: string): Promise<string> => {
+  if (!bls.deserializeHexStrToSecretKey) {
+    await bls.init(bls.BLS12_381);
+  }
+  return `0x${bls.deserializeHexStrToSecretKey(privateKey.replace('0x', '')).getPublicKey().serializeToHexStr()}`;
+}

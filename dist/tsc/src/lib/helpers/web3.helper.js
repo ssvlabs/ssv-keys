@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSignature = exports.buildSignature = exports.hexArrayToBytes = exports.hexToUint8Array = exports.abiEncode = exports.web3 = void 0;
+exports.privateToPublicKey = exports.validateSignature = exports.buildSignature = exports.hexArrayToBytes = exports.hexToUint8Array = exports.abiEncode = exports.web3 = void 0;
 const tslib_1 = require("tslib");
 const web3_1 = tslib_1.__importDefault(require("web3"));
 const ethers = tslib_1.__importStar(require("ethers"));
@@ -105,4 +105,11 @@ const validateSignature = (signedData, signatureHex, publicKey) => tslib_1.__awa
     }
 });
 exports.validateSignature = validateSignature;
+const privateToPublicKey = (privateKey) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    if (!BLS_1.default.deserializeHexStrToSecretKey) {
+        yield BLS_1.default.init(BLS_1.default.BLS12_381);
+    }
+    return `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey.replace('0x', '')).getPublicKey().serializeToHexStr()}`;
+});
+exports.privateToPublicKey = privateToPublicKey;
 //# sourceMappingURL=web3.helper.js.map
