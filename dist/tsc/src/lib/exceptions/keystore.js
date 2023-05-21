@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrivateKeyFormatError = exports.EthereumWalletError = exports.KeyStorePasswordError = exports.KeyStoreInvalidError = exports.KeyStoreDataFormatError = void 0;
+exports.OwnerNonceFormatError = exports.OwnerAddressFormatError = exports.PrivateKeyFormatError = exports.EthereumWalletError = exports.KeyStorePasswordError = exports.KeyStoreInvalidError = exports.KeyStoreDataFormatError = void 0;
 class KeyStoreDataFormatError extends Error {
     constructor(data, message) {
         super(message);
@@ -34,4 +34,18 @@ class PrivateKeyFormatError extends Error {
     }
 }
 exports.PrivateKeyFormatError = PrivateKeyFormatError;
+class OwnerAddressFormatError extends Error {
+    constructor(data, message) {
+        super(message);
+        this.data = data;
+    }
+}
+exports.OwnerAddressFormatError = OwnerAddressFormatError;
+class OwnerNonceFormatError extends Error {
+    constructor(data, message) {
+        super(message);
+        this.data = data;
+    }
+}
+exports.OwnerNonceFormatError = OwnerNonceFormatError;
 //# sourceMappingURL=keystore.js.map

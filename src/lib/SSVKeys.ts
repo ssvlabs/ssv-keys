@@ -1,5 +1,6 @@
 // import atob from 'atob';
 import bls from './BLS';
+
 import Threshold, { IShares, ISharesKeyPairs } from './Threshold';
 import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
@@ -34,8 +35,6 @@ export class SSVKeys {
     if (!bls.deserializeHexStrToSecretKey) {
       await bls.init(bls.BLS12_381);
     }
-    console.log(privateKey);
-    console.log("?!", bls.deserializeHexStrToSecretKey(privateKey));
     return {
       privateKey: `0x${privateKey}`,
       publicKey: `0x${bls.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`

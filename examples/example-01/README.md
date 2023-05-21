@@ -40,6 +40,10 @@ const payload = await ssvKeys.buildPayload({
   publicKey,
   operators,
   shares
+}, {
+  ownerAddress: TEST_OWNER_ADDRESS,
+  ownerNonce: TEST_OWNER_NONCE,
+  privateKey
 });
 console.log(payload);
 ```

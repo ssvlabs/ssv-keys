@@ -72,10 +72,14 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 ### Building final web3 payload
 
 ```javascript
-let payload = await ssvKeys.buildPayload({
+let payload = await keyShares.buildPayload({
   publicKey,
   operators,
   shares,
+}, {
+  ownerAddress: TEST_OWNER_ADDRESS,
+  ownerNonce: TEST_OWNER_NONCE,
+  privateKey
 });
 ```
 
@@ -183,6 +187,10 @@ const payload = await keyShares.buildPayload({
   publicKey,
   operators,
   encryptedShares,
+}, {
+  ownerAddress: TEST_OWNER_ADDRESS,
+  ownerNonce: TEST_OWNER_NONCE,
+  privateKey
 });
 
 console.log(payload);

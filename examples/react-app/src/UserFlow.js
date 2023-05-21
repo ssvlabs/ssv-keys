@@ -61,11 +61,20 @@ function UserFlow() {
 
     const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
+    // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+    const TEST_OWNER_NONCE = 1;
+    // The cluster owner address
+    const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
+
     // Build final web3 transaction payload and update keyshares file with payload data
     const payload = await keyShares.buildPayload({
       publicKey,
       operators,
       encryptedShares,
+    }, {
+      ownerAddress: TEST_OWNER_ADDRESS,
+      ownerNonce: TEST_OWNER_NONCE,
+      privateKey
     });
 
     setFinalPayload(JSON.stringify(payload));

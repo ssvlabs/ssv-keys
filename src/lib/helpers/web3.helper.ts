@@ -2,6 +2,9 @@ import Web3 from 'web3';
 import * as ethers from 'ethers';
 import * as ethUtil from 'ethereumjs-util';
 
+import bls from '../BLS';
+import { SingleSharesSignatureInvalid } from '../exceptions/bls';
+
 export const web3 = new Web3();
 
 /**
@@ -55,43 +58,53 @@ export const hexArrayToBytes = (hexArr: string[]): Buffer => {
   return Buffer.from(uint8Array);
 }
 
-export const buildSignature = (dataToSign: string, privateKey: string): string => {
+/**
+ * Asynchronously creates a BLS signature for given data using a private key.
+ *
+ * @param {string} dataToSign - The data to be signed.
+ * @param {string} privateKeyHex - Hexadecimal representation of the private key.
+ * @returns {Promise<string>} - A promise that resolves to the BLS signature in hexadecimal format.
+ *
+ * The function initializes the BLS library if needed, deserializes the private key from a hexadecimal string,
+ * computes the Keccak-256 hash of the data, signs the hashed data using the deserialized private key,
+ * and returns the signature in hexadecimal format, prefixed with '0x'.
+ */
+export const buildSignature = async(dataToSign: string, privateKeyHex: string): Promise<string> => {
+  if (!bls.deserializeHexStrToSecretKey) {
+    await bls.init(bls.BLS12_381);
+  }
+
+  const privateKey = bls.deserializeHexStrToSecretKey(privateKeyHex.replace('0x', ''));
+
   const messageHash = ethUtil.keccak256(Buffer.from(dataToSign));
-
-  const signature = ethUtil.ecsign(messageHash, Buffer.from(hexToUint8Array(privateKey)));
-  const signatureHex = ethUtil.toRpcSig(signature.v, signature.r, signature.s);
-
-  /*
-  const publicKey = ethUtil.privateToPublic(Buffer.from(hexToUint8Array(signatureData.privateKey)));
-  const address = ethUtil.publicToAddress(publicKey).toString('hex');
-  const recoveredPublicKey = ethUtil.ecrecover(messageHash, signature.v, signature.r, signature.s);
-  const recoveredAddress = ethUtil.publicToAddress(recoveredPublicKey).toString('hex');
-
-  console.log("+++++", signatureHex);
-  console.log(`0x${recoveredPublicKey.toString('hex')}`);
-  console.log('address', address);
-  console.log('rec address', recoveredAddress);
-  console.log(metaData.publicKey);
-  */
-  // const signature = ethUtil.ecsign(messageHash, privateKey);
-  return signatureHex;
+  const signature = privateKey.sign(new Uint8Array(messageHash));
+  const signatureHex = signature.serializeToHexStr();
+  return `0x${signatureHex}`;
 }
 
+/**
+ * Asynchronously validates a BLS signature for given signed data.
+ *
+ * @param {string} signedData - Data that has been signed.
+ * @param {string} signatureHex - Hexadecimal representation of the BLS signature.
+ * @param {string} publicKey - Hexadecimal representation of the public key.
+ * @throws {SingleSharesSignatureInvalid} - Throws an error if the signature is invalid.
+ * @returns {Promise<void>} - Resolves when the signature is successfully verified.
+ *
+ * The function initializes the BLS library if needed, deserializes the public key and signature from hexadecimal strings,
+ * computes the Keccak-256 hash of the signed data, and verifies the signature using the deserialized public key.
+ */
+export const validateSignature = async(signedData: string, signatureHex: string, publicKey: string): Promise<void> => {
+  if (!bls.deserializeHexStrToSecretKey) {
+    await bls.init(bls.BLS12_381);
+  }
 
-export const sharesToBytes = (publicKeys: string[], privateKeys: string[]): string => {
-  const encryptedShares = [...privateKeys].map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
-  const arrayPublicKeys = new Uint8Array(publicKeys.map(pk => [...ethers.utils.arrayify(pk)]).flat());
-  const arrayEncryptedShares = new Uint8Array(encryptedShares.map(sh => [...ethers.utils.arrayify(sh)]).flat());
+  const blsPublicKey = bls.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
+  const signature = bls.deserializeHexStrToSignature(signatureHex.replace('0x', ''));
 
-  // public keys hex encoded
-  const pkHex = ethers.utils.hexlify(arrayPublicKeys);
-  // length of the public keys (hex), hex encoded
-  const pkHexLength = String(pkHex.length.toString(16)).padStart(4, '0');
+  const messageHash = ethUtil.keccak256(Buffer.from(signedData));
 
-  // join arrays
-  const pkPsBytes = Buffer.concat([arrayPublicKeys, arrayEncryptedShares]);
-
-  // add length of the public keys at the beginning
-  // this is the variable that is sent to the contract as bytes, prefixed with 0x
-  return `0x${pkHexLength}${pkPsBytes.toString('hex')}`;
+  if (!blsPublicKey.verify(signature, new Uint8Array(messageHash))) {
+    throw new SingleSharesSignatureInvalid(signatureHex, 'Single shares signature is invalid');
+  }
 }
