@@ -56,6 +56,6 @@ export class KeySharesData implements IKeySharesData {
     if (!this.operators?.length) {
       return [];
     }
-    return this.operators.map(operator => String(operator.publicKey));
+    return this.operators.map(operator => String(operator.operatorKey));
   }
 }

@@ -54,7 +54,7 @@ class SSVKeys {
     encryptShares(operators, shares) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const sortedOperators = (0, operator_helper_1.operatorSortedList)(operators);
-            const decodedOperatorPublicKeys = sortedOperators.map(item => Buffer.from(item.publicKey, 'base64').toString());
+            const decodedOperatorPublicKeys = sortedOperators.map(item => Buffer.from(item.operatorKey, 'base64').toString());
             return new Encryption_1.default(decodedOperatorPublicKeys, shares).encrypt();
         });
     }

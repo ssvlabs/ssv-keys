@@ -9,6 +9,9 @@ export interface Shares {
 }
 
 export const sharesSignatures = async (_privateKey: string, operators: number[], message: string, isThreshold: boolean): Promise<Shares> => {
+  if (!bls.deserializeHexStrToSecretKey) {
+    await bls.init(bls.BLS12_381);
+  }
   const threshold = await new Threshold().create(_privateKey, operators);
   const privateKey = bls.deserializeHexStrToSecretKey(_privateKey.replace('0x', ''));
   const publicKey = privateKey.getPublicKey();

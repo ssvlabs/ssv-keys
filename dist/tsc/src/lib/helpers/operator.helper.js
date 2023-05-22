@@ -11,7 +11,7 @@ const operatorSortedList = (operators) => {
     return operators
         .sort((a, b) => +a.id - +b.id)
         .map((operator) => {
-        if (!operator.id || !operator.publicKey) {
+        if (!operator.id || !operator.operatorKey) {
             throw new operator_1.OperatorsCountsMismatchError(operators, operators, 'Mismatch amount of operator ids and operator keys.');
         }
         return new OperatorData_1.OperatorData(operator);

@@ -2,10 +2,15 @@ const path = require('path');
 const fsp = require('fs').promises;
 const { SSVKeys, KeyShares } = require('ssv-keys');
 
-const operatorPublicKeys = require('./operators.json');
+const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
+
+// The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+const TEST_OWNER_NONCE = 1;
+// The cluster owner address
+const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
 const getKeySharesFilePath = (step) => {
   return `${path.join(process.cwd(), 'data')}${path.sep}keyshares-step-${step}.json`;
@@ -21,9 +26,9 @@ async function main() {
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePassword);
 
   // At some point we get operator IDs and public keys and want to save them too
-  const operators = operatorPublicKeys.map((publicKey, index) => ({
+  const operators = operatorKeys.map((operatorKey, index) => ({
     id: operatorIds[index],
-    publicKey,
+    operatorKey,
   }));
 
   const keyShares = new KeyShares();
@@ -45,6 +50,10 @@ async function main() {
     publicKey,
     operators,
     encryptedShares,
+  }, {
+    ownerAddress: TEST_OWNER_ADDRESS,
+    ownerNonce: TEST_OWNER_NONCE,
+    privateKey
   });
 
   await fsp.writeFile(getKeySharesFilePath(4), keyShares.toJson(), { encoding: 'utf-8' });

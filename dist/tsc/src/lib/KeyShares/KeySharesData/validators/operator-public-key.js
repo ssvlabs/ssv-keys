@@ -18,7 +18,7 @@ let OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstra
     }
 };
 OpeatorPublicKeyValidatorConstraint = tslib_1.__decorate([
-    (0, class_validator_1.ValidatorConstraint)({ name: 'operatorPublicKey', async: false })
+    (0, class_validator_1.ValidatorConstraint)({ name: 'operatorKey', async: false })
 ], OpeatorPublicKeyValidatorConstraint);
 exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint;
 function OpeatorPublicKeyValidator(validationOptions) {

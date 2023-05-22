@@ -54,9 +54,9 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
 
-  const operators = operators_keys.map((publicKey, index) => ({
+  const operators = operators_keys.map((operatorKey, index) => ({
     id: operators_ids[index],
-    publicKey,
+    operatorKey,
   }));
 
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
@@ -65,10 +65,19 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const keyShares = new KeyShares();
   keyShares.update({ operators, publicKey });
 
+  // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+  const TEST_OWNER_NONCE = 1;
+  // The cluster owner address
+  const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
+
   await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
+  }, {
+    ownerAddress: TEST_OWNER_ADDRESS,
+    ownerNonce: TEST_OWNER_NONCE,
+    privateKey
   });
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);

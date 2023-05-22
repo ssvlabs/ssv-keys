@@ -97,9 +97,11 @@ To run you will use the "shares" command
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
 - operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible.
 - output-folder (of) = Target folder path to output the key shares file
+- owner-address (oa) = The cluster owner address
+- owner-nonce (on) = The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
 
 ```bash
-yarn cli shares -ksv=3 --keystore=keystore.json --password=test --operators-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./
+yarn cli shares --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json

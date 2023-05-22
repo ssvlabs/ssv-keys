@@ -12,10 +12,10 @@ let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
                 throw new operator_1.DuplicatedOperatorIdError(operator, `Operator ID already exists`);
             }
             operatorIds.add(operator.id);
-            if (operatorPublicKeys.has(operator.publicKey)) {
+            if (operatorPublicKeys.has(operator.operatorKey)) {
                 throw new operator_1.DuplicatedOperatorPublicKeyError(operator, `Operator public key already exists`);
             }
-            operatorPublicKeys.add(operator.publicKey);
+            operatorPublicKeys.add(operator.operatorKey);
         }
         return true;
     }
