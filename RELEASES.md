@@ -1,4 +1,4 @@
-# Release v0.0.20 - 2023-05-19
+# Release v0.0.21 - 2023-05-19
 
 This release introduces new feature to generate BLS signatures with a validator's private key for improved security.
 
