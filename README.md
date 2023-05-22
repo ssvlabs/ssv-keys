@@ -101,7 +101,7 @@ To run you will use the "shares" command
 - owner-nonce (on) = The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
 
 ```bash
-yarn cli shares --keystore=keystore.json --password=test --operators-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./
+yarn cli shares --keystore=keystore.json --password=test --operators-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json
