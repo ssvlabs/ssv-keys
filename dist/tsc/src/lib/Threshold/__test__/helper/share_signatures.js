@@ -6,7 +6,7 @@ const BLS_1 = tslib_1.__importDefault(require("../../../BLS"));
 const Threshold_1 = tslib_1.__importDefault(require("../../../Threshold"));
 const sharesSignatures = (_privateKey, operators, message, isThreshold) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const threshold = yield new Threshold_1.default().create(_privateKey, operators);
-    const privateKey = BLS_1.default.deserializeHexStrToSecretKey(_privateKey);
+    const privateKey = BLS_1.default.deserializeHexStrToSecretKey(_privateKey.replace('0x', ''));
     const publicKey = privateKey.getPublicKey();
     const signatures = [];
     const ids = [];

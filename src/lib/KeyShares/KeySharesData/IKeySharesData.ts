@@ -1,15 +1,17 @@
+import { IOperator } from './IOperator';
 import { IOperatorData } from './IOperatorData';
-import { IKeySharesKeys } from './IKeySharesKeys';
 
 export interface IKeySharesData {
   publicKey?: string | null;
   operators?: IOperatorData[] | null;
-  shares?: IKeySharesKeys | null;
-  setData(data: any): any;
+  update(data: any): any;
   validate(): void;
-  get sharesPublicKeys(): string[];
-  get sharesEncryptedKeys(): string[];
   get operatorIds(): number[];
   get operatorPublicKeys(): string[];
+}
 
+
+export interface IKeySharesPartitialData {
+  publicKey?: string | null;
+  operators?: IOperator[] | null;
 }

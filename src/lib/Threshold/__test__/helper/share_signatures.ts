@@ -10,7 +10,7 @@ export interface Shares {
 
 export const sharesSignatures = async (_privateKey: string, operators: number[], message: string, isThreshold: boolean): Promise<Shares> => {
   const threshold = await new Threshold().create(_privateKey, operators);
-  const privateKey = bls.deserializeHexStrToSecretKey(_privateKey);
+  const privateKey = bls.deserializeHexStrToSecretKey(_privateKey.replace('0x', ''));
   const publicKey = privateKey.getPublicKey();
   const signatures: any[] = [];
   const ids: any[] = [];

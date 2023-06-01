@@ -4,10 +4,10 @@ exports.SSVKeys = void 0;
 const tslib_1 = require("tslib");
 // import atob from 'atob';
 const BLS_1 = tslib_1.__importDefault(require("./BLS"));
-const KeyShares_1 = require("./KeyShares/KeyShares");
 const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
 const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
+const operator_helper_1 = require("./helpers/operator.helper");
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -16,76 +16,57 @@ const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"))
  *  - building final payload which is ready to be used in web3 transaction
  */
 class SSVKeys {
-    constructor(ver) {
-        if (!Object.values(SSVKeys.VERSION).includes(ver)) {
-            throw Error('Version is not supported');
-        }
-        this.version = ver;
-        this.keySharesInstance = new KeyShares_1.KeyShares({ version: this.version });
-    }
-    get keyShares() {
-        return this.keySharesInstance;
-    }
     /**
      * Extract private key from keystore data using keystore password.
      * Generally can be used in browsers when the keystore data has been provided by browser.
      * @param data
      * @param password
      */
-    getPrivateKeyFromKeystoreData(data, password) {
+    extractKeys(data, password) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                const privateKey = yield new EthereumKeyStore_1.default(data).getPrivateKey(password);
+            const privateKey = yield new EthereumKeyStore_1.default(data).getPrivateKey(password);
+            if (!BLS_1.default.deserializeHexStrToSecretKey) {
                 yield BLS_1.default.init(BLS_1.default.BLS12_381);
-                this.privateKey = `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey).serializeToHexStr()}`;
-                this.publicKey = `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`;
-                return privateKey;
             }
-            catch (error) {
-                return error;
-            }
+            return {
+                privateKey: `0x${privateKey}`,
+                publicKey: `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey).getPublicKey().serializeToHexStr()}`
+            };
         });
     }
     /**
-     * Build threshold using private key for number of participants and failed participants.
+     * Build threshold using private key and list of operators.
      * @param privateKey
      * @param operators
      */
-    createThreshold(privateKey, operatorIds) {
+    createThreshold(privateKey, operators) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            this.threshold = yield new Threshold_1.default().create(privateKey, operatorIds);
+            const sortedOperators = (0, operator_helper_1.operatorSortedList)(operators);
+            this.threshold = yield new Threshold_1.default().create(privateKey, sortedOperators.map(item => item.id));
             return this.threshold;
         });
     }
     /**
-     * Encrypt operators shares using operators public keys.
-     * @param operatorsPublicKeys
+     * Encrypt operators shares using operators list (id, publicKey).
+     * @param operators
      * @param shares
-     * @param sharesFormat
      */
-    encryptShares(operatorsPublicKeys, shares) {
+    encryptShares(operators, shares) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const decodedOperatorPublicKeys = operatorsPublicKeys.map((operator) => Buffer.from(operator, 'base64').toString());
-            const encryptedShares = new Encryption_1.default(decodedOperatorPublicKeys, shares).encrypt();
-            return encryptedShares;
+            const sortedOperators = (0, operator_helper_1.operatorSortedList)(operators);
+            const decodedOperatorPublicKeys = sortedOperators.map(item => Buffer.from(item.publicKey, 'base64').toString());
+            return new Encryption_1.default(decodedOperatorPublicKeys, shares).encrypt();
         });
     }
     /**
-     * Build shares from private key, operator IDs and public keys
+     * Build shares from private key, operators list
      * @param privateKey
-     * @param operatorIds
-     * @param operatorPublicKeys
+     * @param operators
      */
-    buildShares(privateKey, operatorIds, operatorPublicKeys) {
+    buildShares(privateKey, operators) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (operatorIds.length !== operatorPublicKeys.length) {
-                throw Error('Mismatch amount of operator ids and operator keys.');
-            }
-            const operators = operatorIds
-                .map((id, index) => ({ id, publicKey: operatorPublicKeys[index] }))
-                .sort((a, b) => +a.id - +b.id);
-            const threshold = yield this.createThreshold(privateKey, operators.map(item => item.id));
-            return this.encryptShares(operators.map(item => item.publicKey), threshold.shares);
+            const threshold = yield this.createThreshold(privateKey, operators);
+            return this.encryptShares(operators, threshold.shares);
         });
     }
     /**
@@ -94,59 +75,7 @@ class SSVKeys {
     getThreshold() {
         return this.threshold;
     }
-    /**
-     * Build payload from encrypted shares, validator public key and operator IDs
-     * @param publicKey
-     * @param operatorIds
-     * @param encryptedShares
-     */
-    buildPayload(metaData) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return this.keyShares.generateContractPayload({
-                publicKey: metaData.publicKey,
-                operatorIds: [...metaData.operatorIds].sort((a, b) => a - b),
-                encryptedShares: metaData.encryptedShares,
-            });
-        });
-    }
-    /**
-     * Build payload from keyshares file with operators and shares details inside.
-     * @param keyShares
-     */
-    buildPayloadFromKeyShares(keyShares) {
-        var _a, _b, _c, _d, _e, _f, _g;
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const publicKeys = ((_b = (_a = keyShares.data) === null || _a === void 0 ? void 0 : _a.shares) === null || _b === void 0 ? void 0 : _b.publicKeys) || [];
-            const publicKey = (_c = keyShares.data) === null || _c === void 0 ? void 0 : _c.publicKey;
-            const encryptedKeys = ((_e = (_d = keyShares.data) === null || _d === void 0 ? void 0 : _d.shares) === null || _e === void 0 ? void 0 : _e.encryptedKeys) || [];
-            const operatorPublicKeys = (_f = keyShares.data.operators) === null || _f === void 0 ? void 0 : _f.map((item) => item.publicKey);
-            const operatorIds = (_g = keyShares.data.operators) === null || _g === void 0 ? void 0 : _g.map((item) => item.id);
-            const operators = operatorIds
-                .map((id, index) => ({ id, publicKey: operatorPublicKeys[index] }))
-                .sort((a, b) => +a.id - +b.id);
-            if (publicKeys.length !== encryptedKeys.length
-                || publicKeys.length !== operatorPublicKeys.length
-                || encryptedKeys.length !== operatorPublicKeys.length
-                || !encryptedKeys.length
-                || !operatorPublicKeys.length
-                || !publicKeys.length) {
-                throw Error('Operator public keys and shares public/encrypted keys length does not match or have zero length.');
-            }
-            return this.keyShares.generateContractPayload({
-                publicKey,
-                operatorIds: operators.map(item => item.id),
-                encryptedShares: publicKeys.map((item, index) => ({
-                    publicKey: item,
-                    privateKey: encryptedKeys[index],
-                })),
-            });
-        });
-    }
 }
 exports.SSVKeys = SSVKeys;
 SSVKeys.SHARES_FORMAT_ABI = 'abi';
-SSVKeys.VERSION = {
-    V2: 'v2',
-    V3: 'v3',
-};
 //# sourceMappingURL=SSVKeys.js.map

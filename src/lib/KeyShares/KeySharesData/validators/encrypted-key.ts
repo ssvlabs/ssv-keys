@@ -6,6 +6,7 @@ import {
 } from 'class-validator';
 import { decode } from 'js-base64';
 import { web3 } from '../../../helpers/web3.helper';
+import { KeySharesAbiDecodeError } from '../../../exceptions/keyshares';
 
 /* Try to BLS deserialize validator public key. */
 @ValidatorConstraint({ name: 'encryptedKey', async: false })
@@ -19,7 +20,7 @@ export class EncryptedKeyValidatorConstraint implements ValidatorConstraintInter
         decode(key.startsWith('0x') ? web3.eth.abi.decodeParameter('string', key): key);
       });
     } catch (e: any) {
-      throw Error(`Filed ABI decode shares encrypted key: ${keyWithError}. Error: ${e.message}`);
+      throw new KeySharesAbiDecodeError(keyWithError, `Filed ABI decode shares encrypted key. Error: ${e.message}`);
     }
 
     return true;

@@ -4,7 +4,7 @@ exports.OpeatorPublicKeyValidator = exports.OpeatorPublicKeyValidatorConstraint 
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
 const operator_1 = require("../../../../commands/actions/validators/operator");
-const operator_2 = require("../exceptions/operator");
+const operator_2 = require("../../../exceptions/operator");
 let OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstraint {
     validate(value) {
         const result = (0, operator_1.operatorPublicKeyValidator)(value);
