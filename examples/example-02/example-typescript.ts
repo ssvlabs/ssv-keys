@@ -7,8 +7,8 @@ const operatorKeys = require('./operators.json');
 const operatorIds = require('./operatorIds.json');
 const keystorePassword = 'testtest';
 
-// The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
-const TEST_OWNER_NONCE = 1;
+// The validator registration nonce of the account (owner address) within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+const TEST_REGISTER_NONCE = 1;
 // The cluster owner address
 const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
@@ -49,18 +49,18 @@ async function main() {
     encryptedShares
   }, {
     ownerAddress: TEST_OWNER_ADDRESS,
-    ownerNonce: TEST_OWNER_NONCE,
+    registerNonce: TEST_REGISTER_NONCE,
     privateKey
   });
 
   await fsp.writeFile(getKeySharesFilePath(3), keyShares.toJson(), { encoding: 'utf-8' });
 
-  const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+  const shares = keyShares.buildSharesFromBytes(payload.sharesData, operators.length);
   console.log('Keys Shares from bytes:', shares);
 
-  await keyShares.validateSingleShares(payload.shares, {
+  await keyShares.validateSingleShares(payload.sharesData, {
     ownerAddress: TEST_OWNER_ADDRESS,
-    ownerNonce: TEST_OWNER_NONCE,
+    registerNonce: TEST_REGISTER_NONCE,
     publicKey,
   });
 }

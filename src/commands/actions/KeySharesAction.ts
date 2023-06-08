@@ -4,7 +4,7 @@ import { SSVKeys } from '../../lib/SSVKeys';
 import { KeyShares } from '../../lib/KeyShares/KeyShares';
 import { sanitizePath } from './validators/file';
 import keystoreArgument from './arguments/keystore';
-import ownerNonce from './arguments/owner-nonce';
+import registerNonce from './arguments/register-nonce';
 import operatorIdsArgument from './arguments/operator-ids';
 import ownerAddress from './arguments/owner-address';
 import keystorePasswordArgument from './arguments/password';
@@ -29,7 +29,7 @@ export class KeySharesAction extends BaseAction {
         operatorPublicKeysArgument,
         outputFolderArgument,
         ownerAddress,
-        ownerNonce,
+        registerNonce,
       ],
     }
   }
@@ -43,7 +43,7 @@ export class KeySharesAction extends BaseAction {
       password,
       output_folder: outputFolder,
       owner_address: ownerAddress,
-      owner_nonce: ownerNonce,
+      register_nonce: registerNonce,
     } = this.args;
 
     let {
@@ -92,7 +92,7 @@ export class KeySharesAction extends BaseAction {
       encryptedShares,
     }, {
       ownerAddress,
-      ownerNonce,
+      registerNonce,
       privateKey,
     });
 

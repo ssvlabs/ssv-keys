@@ -65,8 +65,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const keyShares = new KeyShares();
   keyShares.update({ operators, publicKey });
 
-  // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
-  const TEST_OWNER_NONCE = 1;
+  // The validator registration nonce of the account (owner address) within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+  const TEST_REGISTER_NONCE = 1;
   // The cluster owner address
   const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
@@ -76,7 +76,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     encryptedShares,
   }, {
     ownerAddress: TEST_OWNER_ADDRESS,
-    ownerNonce: TEST_OWNER_NONCE,
+    registerNonce: TEST_REGISTER_NONCE,
     privateKey
   });
 

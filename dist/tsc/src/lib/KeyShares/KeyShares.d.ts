@@ -10,12 +10,12 @@ export interface IKeySharesPayloadData {
 }
 export interface IKeySharesToSignatureData {
     ownerAddress: string;
-    ownerNonce: number;
+    registerNonce: number;
     privateKey: string;
 }
 export interface IKeySharesFromSignatureData {
     ownerAddress: string;
-    ownerNonce: number;
+    registerNonce: number;
     publicKey: string;
 }
 /**

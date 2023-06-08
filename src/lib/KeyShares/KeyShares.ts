@@ -14,7 +14,7 @@ import { EncryptShare } from '../Encryption/Encryption';
 import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
-import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
+import { OwnerAddressFormatError, RegisterNonceFormatError } from '../exceptions/keystore';
 
 export interface IKeySharesPayloadData {
   publicKey: string,
@@ -24,13 +24,13 @@ export interface IKeySharesPayloadData {
 
 export interface IKeySharesToSignatureData {
   ownerAddress: string,
-  ownerNonce: number,
+  registerNonce: number,
   privateKey: string,
 }
 
 export interface IKeySharesFromSignatureData {
   ownerAddress: string,
-  ownerNonce: number,
+  registerNonce: number,
   publicKey: string,
 }
 
@@ -63,12 +63,12 @@ export class KeyShares {
   async buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any> {
     const {
       ownerAddress,
-      ownerNonce,
+      registerNonce,
       privateKey,
     } = toSignatureData;
 
-    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+    if (!Number.isInteger(registerNonce) || registerNonce < 0) {
+      throw new RegisterNonceFormatError(registerNonce, 'Owner nonce is not positive integer');
     }
 
     let address;
@@ -84,15 +84,15 @@ export class KeyShares {
       encryptedShares: metaData.encryptedShares,
     });
 
-    const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
+    const signature = await web3Helper.buildSignature(`${address}:${registerNonce}`, privateKey);
+    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
 
-    payload.shares = `0x${signSharesBytes.toString('hex')}`;
+    payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
 
     // verify signature
-    await this.validateSingleShares(payload.shares, {
+    await this.validateSingleShares(payload.sharesData, {
       ownerAddress,
-      ownerNonce,
+      registerNonce,
       publicKey: await web3Helper.privateToPublicKey(privateKey),
     });
 
@@ -103,12 +103,12 @@ export class KeyShares {
   async validateSingleShares(shares: string, fromSignatureData: IKeySharesFromSignatureData): Promise<void> {
     const {
       ownerAddress,
-      ownerNonce,
+      registerNonce,
       publicKey,
     } = fromSignatureData;
 
-    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+    if (!Number.isInteger(registerNonce) || registerNonce < 0) {
+      throw new RegisterNonceFormatError(registerNonce, 'Owner nonce is not positive integer');
     }
 
     let address;
@@ -120,7 +120,7 @@ export class KeyShares {
 
     const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
 
-    await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
+    await web3Helper.validateSignature(`${address}:${registerNonce}`, `0x${signaturePt}`, publicKey);
   }
 
   /**

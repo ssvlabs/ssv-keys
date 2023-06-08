@@ -20,7 +20,7 @@ export declare class OwnerAddressFormatError extends Error {
     data: any;
     constructor(data: any, message: string);
 }
-export declare class OwnerNonceFormatError extends Error {
+export declare class RegisterNonceFormatError extends Error {
     data: any;
     constructor(data: any, message: string);
 }

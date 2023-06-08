@@ -27,9 +27,9 @@ class KeyShares {
      */
     buildPayload(metaData, toSignatureData) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { ownerAddress, ownerNonce, privateKey, } = toSignatureData;
-            if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-                throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+            const { ownerAddress, registerNonce, privateKey, } = toSignatureData;
+            if (!Number.isInteger(registerNonce) || registerNonce < 0) {
+                throw new keystore_1.RegisterNonceFormatError(registerNonce, 'Owner nonce is not positive integer');
             }
             let address;
             try {
@@ -43,13 +43,13 @@ class KeyShares {
                 operatorIds: (0, operator_helper_1.operatorSortedList)(metaData.operators).map(operator => operator.id),
                 encryptedShares: metaData.encryptedShares,
             });
-            const signature = yield web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-            const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
-            payload.shares = `0x${signSharesBytes.toString('hex')}`;
+            const signature = yield web3Helper.buildSignature(`${address}:${registerNonce}`, privateKey);
+            const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+            payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
             // verify signature
-            yield this.validateSingleShares(payload.shares, {
+            yield this.validateSingleShares(payload.sharesData, {
                 ownerAddress,
-                ownerNonce,
+                registerNonce,
                 publicKey: yield web3Helper.privateToPublicKey(privateKey),
             });
             return payload;
@@ -57,9 +57,9 @@ class KeyShares {
     }
     validateSingleShares(shares, fromSignatureData) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { ownerAddress, ownerNonce, publicKey, } = fromSignatureData;
-            if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-                throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+            const { ownerAddress, registerNonce, publicKey, } = fromSignatureData;
+            if (!Number.isInteger(registerNonce) || registerNonce < 0) {
+                throw new keystore_1.RegisterNonceFormatError(registerNonce, 'Owner nonce is not positive integer');
             }
             let address;
             try {
@@ -69,7 +69,7 @@ class KeyShares {
                 throw new keystore_1.OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
             }
             const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
-            yield web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
+            yield web3Helper.validateSignature(`${address}:${registerNonce}`, `0x${signaturePt}`, publicKey);
         });
     }
     /**

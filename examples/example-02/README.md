@@ -78,7 +78,7 @@ let payload = await keyShares.buildPayload({
   shares,
 }, {
   ownerAddress: TEST_OWNER_ADDRESS,
-  ownerNonce: TEST_OWNER_NONCE,
+  registerNonce: TEST_REGISTER_NONCE,
   privateKey
 });
 ```
@@ -189,7 +189,7 @@ const payload = await keyShares.buildPayload({
   encryptedShares,
 }, {
   ownerAddress: TEST_OWNER_ADDRESS,
-  ownerNonce: TEST_OWNER_NONCE,
+  registerNonce: TEST_REGISTER_NONCE,
   privateKey
 });
 

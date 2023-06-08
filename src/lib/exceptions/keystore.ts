@@ -46,7 +46,7 @@ export class OwnerAddressFormatError extends Error {
   }
 }
 
-export class OwnerNonceFormatError extends Error {
+export class RegisterNonceFormatError extends Error {
   public data: any;
 
   constructor(data: any, message: string) {
