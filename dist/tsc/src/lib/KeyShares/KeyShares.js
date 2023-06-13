@@ -44,10 +44,10 @@ class KeyShares {
                 encryptedShares: metaData.encryptedShares,
             });
             const signature = yield web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-            const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.shares]);
-            payload.shares = `0x${signSharesBytes.toString('hex')}`;
+            const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+            payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
             // verify signature
-            yield this.validateSingleShares(payload.shares, {
+            yield this.validateSingleShares(payload.sharesData, {
                 ownerAddress,
                 ownerNonce,
                 publicKey: yield web3Helper.privateToPublicKey(privateKey),

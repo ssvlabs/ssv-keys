@@ -55,10 +55,10 @@ async function main() {
 
   await fsp.writeFile(getKeySharesFilePath(3), keyShares.toJson(), { encoding: 'utf-8' });
 
-  const shares = keyShares.buildSharesFromBytes(payload.shares, operators.length);
+  const shares = keyShares.buildSharesFromBytes(payload.sharesData, operators.length);
   console.log('Keys Shares from bytes:', shares);
 
-  await keyShares.validateSingleShares(payload.shares, {
+  await keyShares.validateSingleShares(payload.sharesData, {
     ownerAddress: TEST_OWNER_ADDRESS,
     ownerNonce: TEST_OWNER_NONCE,
     publicKey,
