@@ -1,6 +1,6 @@
 const path = require('path');
 const fsp = require('fs').promises;
-const { SSVKeys, KeyShares } = require('../../dist/tsc/src/main');
+const { SSVKeys, KeyShares } = require('ssv-keys');
 
 const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
