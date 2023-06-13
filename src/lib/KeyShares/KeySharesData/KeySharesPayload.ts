@@ -22,7 +22,7 @@ export class KeySharesPayload implements IKeySharesPayload {
     this.readable = {
       publicKey: data.publicKey,
       operatorIds: data.operatorIds,
-      shares: this._sharesToBytes(
+      sharesData: this._sharesToBytes(
         data.encryptedShares.map((share: EncryptShare) => share.publicKey),
         data.encryptedShares.map((share: EncryptShare) => share.privateKey)
       ),

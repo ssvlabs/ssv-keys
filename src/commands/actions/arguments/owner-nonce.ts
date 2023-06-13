@@ -4,12 +4,12 @@ export default {
   options: {
     type: Number,
     required: true,
-    help: 'The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool'
+    help: 'The validator owner nonce of the account (owner address) within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool.'
   },
   interactive: {
     options: {
       type: 'number',
-      message: 'Please provide a nonce of the owner within the SSV contract',
+      message: 'Please provide a valid owner nonce of the account (owner address) obtained using the ssv-scanner tool.',
     }
   }
 };
