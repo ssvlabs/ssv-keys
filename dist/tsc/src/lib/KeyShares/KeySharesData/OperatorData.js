@@ -7,7 +7,7 @@ const operator_public_key_1 = require("./validators/operator-public-key");
 class OperatorData {
     constructor(data) {
         this.id = data.id;
-        this.publicKey = data.publicKey;
+        this.operatorKey = data.operatorKey;
         this.validate();
     }
     /**
@@ -27,6 +27,6 @@ tslib_1.__decorate([
     (0, class_validator_1.IsDefined)({ message: 'The operator public key is undefined' }),
     (0, class_validator_1.IsString)({ message: 'The operator public key must be a string' }),
     (0, operator_public_key_1.OpeatorPublicKeyValidator)()
-], OperatorData.prototype, "publicKey", void 0);
+], OperatorData.prototype, "operatorKey", void 0);
 exports.OperatorData = OperatorData;
 //# sourceMappingURL=OperatorData.js.map

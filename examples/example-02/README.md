@@ -60,9 +60,9 @@ const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, keystorePa
 const operators = require('./operators.json');      // ['pubkey', ..., 'pubkey']
 const operatorIds = require('./operatorIds.json');  // [int, ..., int]
 
-const operators = operatorPublicKeys.map((publicKey, index) => ({
+const operators = operatorKeys.map((operatorKey, index) => ({
   id: operatorIds[index],
-  publicKey,
+  operatorKey,
 }));
 
 const threshold = await ssvKeys.createThreshold(privateKey, operators);
@@ -72,10 +72,14 @@ const shares = await ssvKeys.encryptShares(operators, threshold.shares);
 ### Building final web3 payload
 
 ```javascript
-let payload = await ssvKeys.buildPayload({
+let payload = await keyShares.buildPayload({
   publicKey,
   operators,
   shares,
+}, {
+  ownerAddress: TEST_OWNER_ADDRESS,
+  ownerNonce: TEST_OWNER_NONCE,
+  privateKey
 });
 ```
 
@@ -127,13 +131,13 @@ Let's say, initially you have only operators' data:
 
 ```javascript
 const keySharesData = {
-  version: 'v3',
+  version: 'v4',
   data: {
     publicKey: threshold.publicKey,
     operators: [
       {
         id: 1,
-        publicKey: '...',
+        operatorKey: '...',
       },
       // ... 3 more operators ...
     ],
@@ -183,6 +187,10 @@ const payload = await keyShares.buildPayload({
   publicKey,
   operators,
   encryptedShares,
+}, {
+  ownerAddress: TEST_OWNER_ADDRESS,
+  ownerNonce: TEST_OWNER_NONCE,
+  privateKey
 });
 
 console.log(payload);

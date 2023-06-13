@@ -1,5 +1,5 @@
 export interface IOperatorData {
     id: number | undefined;
-    publicKey: string | undefined;
+    operatorKey: string | undefined;
     validate(): void;
 }

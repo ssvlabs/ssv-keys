@@ -36,3 +36,21 @@ export class PrivateKeyFormatError extends Error {
     this.data = data;
   }
 }
+
+export class OwnerAddressFormatError extends Error {
+  public data: any;
+
+  constructor(data: any, message: string) {
+    super(message);
+    this.data = data;
+  }
+}
+
+export class OwnerNonceFormatError extends Error {
+  public data: any;
+
+  constructor(data: any, message: string) {
+    super(message);
+    this.data = data;
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "ssv-keys",
-  "version": "0.0.18",
-  "description": "Library to split a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them to a set of operator keys.",
+  "version": "1.0.0",
+  "description": "Tool for splitting a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them with a set of operator keys.",
   "author": "SSV.Network",
   "repository": "https://github.com/bloxapp/ssv-keys",
   "license": "MIT",
@@ -79,7 +79,7 @@
     "colors": "^1.4.0",
     "crypto": "^1.0.1",
     "eth2-keystore-js": "^1.0.8",
-    "ethereumjs-util": "^7.0.10",
+    "ethereumjs-util": "^7.1.5",
     "ethereumjs-wallet": "^1.0.1",
     "ethers": "^5.7.2",
     "events": "^3.3.0",

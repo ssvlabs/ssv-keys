@@ -45,7 +45,7 @@ class KeySharesData {
         if (!((_a = this.operators) === null || _a === void 0 ? void 0 : _a.length)) {
             return [];
         }
-        return this.operators.map(operator => String(operator.publicKey));
+        return this.operators.map(operator => String(operator.operatorKey));
     }
 }
 tslib_1.__decorate([

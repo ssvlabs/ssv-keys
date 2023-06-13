@@ -6,18 +6,36 @@ import {
   validateSync
 } from 'class-validator';
 
+import * as web3Helper from '../helpers/web3.helper';
+
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
 import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
+import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
 
 export interface IKeySharesPayloadData {
   publicKey: string,
   operators: IOperator[],
   encryptedShares: EncryptShare[],
 }
+
+export interface IKeySharesToSignatureData {
+  ownerAddress: string,
+  ownerNonce: number,
+  privateKey: string,
+}
+
+export interface IKeySharesFromSignatureData {
+  ownerAddress: string,
+  ownerNonce: number,
+  publicKey: string,
+}
+
+const SIGNATURE_LENGHT = 192;
+const PUBLIC_KEY_LENGHT = 96;
 
 /**
  * Key shares file data interface.
@@ -42,12 +60,67 @@ export class KeyShares {
    * @param operatorIds
    * @param encryptedShares
    */
-  buildPayload(metaData: IKeySharesPayloadData): any {
-    return this.payload.build({
+  async buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any> {
+    const {
+      ownerAddress,
+      ownerNonce,
+      privateKey,
+    } = toSignatureData;
+
+    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
+      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+    }
+
+    let address;
+    try {
+      address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+    } catch {
+      throw new OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
+    }
+
+    const payload = this.payload.build({
       publicKey: metaData.publicKey,
       operatorIds: operatorSortedList(metaData.operators).map(operator => operator.id),
       encryptedShares: metaData.encryptedShares,
     });
+
+    const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
+    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+
+    payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
+
+    // verify signature
+    await this.validateSingleShares(payload.sharesData, {
+      ownerAddress,
+      ownerNonce,
+      publicKey: await web3Helper.privateToPublicKey(privateKey),
+    });
+
+    return payload;
+  }
+
+
+  async validateSingleShares(shares: string, fromSignatureData: IKeySharesFromSignatureData): Promise<void> {
+    const {
+      ownerAddress,
+      ownerNonce,
+      publicKey,
+    } = fromSignatureData;
+
+    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
+      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+    }
+
+    let address;
+    try {
+      address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+    } catch {
+      throw new OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
+    }
+
+    const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
+
+    await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
   }
 
   /**
@@ -56,17 +129,15 @@ export class KeyShares {
    * @param operatorCount
    */
   buildSharesFromBytes(bytes: string, operatorCount: number): any {
-    bytes = bytes.replace('0x', '');
-    const pkLength = parseInt(bytes.substring(0, 4), 16);
+    const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
-    // get the public keys part
-    const pkSplit = bytes.substring(4, pkLength + 2);
+    const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
     const pkArray = ethers.utils.arrayify('0x' + pkSplit);
     const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item =>
       ethers.utils.hexlify(item),
     );
 
-    const eSplit = bytes.substring(pkLength + 2);
+    const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
     const eArray = ethers.utils.arrayify('0x' + eSplit);
     const encryptedKeys = this._splitArray(operatorCount, eArray).map(item =>
       Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
@@ -112,7 +183,7 @@ export class KeyShares {
    */
   toJson(): string {
     return JSON.stringify({
-      version: 'v3',
+      version: 'v4',
       createdAt: new Date().toISOString(),
       data: this.data || null,
       payload: this.payload.readable || null,

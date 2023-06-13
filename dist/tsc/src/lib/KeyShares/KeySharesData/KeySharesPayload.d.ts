@@ -4,7 +4,6 @@ import { IKeySharesPayload } from './IKeySharesPayload';
  */
 export declare class KeySharesPayload implements IKeySharesPayload {
     readable: any;
-    private decodeRSAShares;
-    private sharesToBytes;
+    private _sharesToBytes;
     build(data: any): any;
 }
