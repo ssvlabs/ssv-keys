@@ -1,12 +1,13 @@
 import * as ethers from 'ethers';
+import * as web3Helper from '../helpers/web3.helper';
+
+import pkg from '../../../package.json';
 
 import {
   IsOptional,
   ValidateNested,
   validateSync
 } from 'class-validator';
-
-import * as web3Helper from '../helpers/web3.helper';
 
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
@@ -170,11 +171,12 @@ export class KeyShares {
    * Initialise from JSON or object data.
    */
   fromJson(content: string | any): KeyShares {
-    const data = typeof content === 'string'
-      ? JSON.parse(content).data
-      : content.data;
+    const body = typeof content === 'string' ? JSON.parse(content) : content;
+    if (!body.version || body.version !== `v${pkg.version}`) {
+      throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
+    }
 
-    this.update(data);
+    this.update(body.data);
     return this;
   }
 
@@ -183,7 +185,7 @@ export class KeyShares {
    */
   toJson(): string {
     return JSON.stringify({
-      version: 'v4',
+      version: `v${pkg.version}`,
       createdAt: new Date().toISOString(),
       data: this.data || null,
       payload: this.payload.readable || null,
