@@ -22,7 +22,7 @@ function main(interactive) {
             console.log(' ----------------------------------------------------------------------');
             console.log(`${message || messageText}`);
             console.log(' ----------------------------------------------------------------------');
-            for (const str of String(package_json_1.default.description).match(/.{1,67}/g) || []) {
+            for (const str of String(package_json_1.default.description).match(/.{1,70}/g) || []) {
                 console.log(` ${str}`);
             }
             console.log(' ----------------------------------------------------------------------\n');

@@ -20,7 +20,7 @@ export default async function main(interactive: boolean): Promise<any> {
     console.log(' ----------------------------------------------------------------------');
     console.log(`${message || messageText}`);
     console.log(' ----------------------------------------------------------------------');
-    for (const str of String(pkg.description).match(/.{1,67}/g) || []) {
+    for (const str of String(pkg.description).match(/.{1,70}/g) || []) {
       console.log(` ${str}`);
     }
     console.log(' ----------------------------------------------------------------------\n');
