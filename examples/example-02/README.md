@@ -107,7 +107,7 @@ This is less programmatic way of how to build key shares structure.
 
 ```javascript
 const keySharesData = {
-  version: 'v2',
+  version: 'v1.0.0',
   data: {
     publicKey: threshold.publicKey,
     operators: operators.map((operator: any, index: string | number) => ({
@@ -131,7 +131,7 @@ Let's say, initially you have only operators' data:
 
 ```javascript
 const keySharesData = {
-  version: 'v4',
+  version: 'v1.0.0',
   data: {
     publicKey: threshold.publicKey,
     operators: [

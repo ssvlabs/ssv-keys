@@ -1,4 +1,5 @@
 import * as ethers from 'ethers';
+import semver from 'semver';
 import * as web3Helper from '../helpers/web3.helper';
 
 import pkg from '../../../package.json';
@@ -172,7 +173,13 @@ export class KeyShares {
    */
   fromJson(content: string | any): KeyShares {
     const body = typeof content === 'string' ? JSON.parse(content) : content;
-    if (!body.version || body.version !== `v${pkg.version}`) {
+    const extVersion = semver.parse(body.version);
+    const currentVersion = semver.parse(pkg.version);
+    if (!extVersion || !currentVersion) {
+      throw new Error(`The file for keyshares must contain a version mark provided by ssv-keys.`);
+    }
+
+    if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
       throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
     }
 
