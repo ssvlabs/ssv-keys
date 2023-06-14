@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
 const ethers = tslib_1.__importStar(require("ethers"));
-const class_validator_1 = require("class-validator");
+const semver_1 = tslib_1.__importDefault(require("semver"));
 const web3Helper = tslib_1.__importStar(require("../helpers/web3.helper"));
+const package_json_1 = tslib_1.__importDefault(require("../../../package.json"));
+const class_validator_1 = require("class-validator");
 const KeySharesData_1 = require("./KeySharesData/KeySharesData");
 const KeySharesPayload_1 = require("./KeySharesData/KeySharesPayload");
 const operator_helper_1 = require("../helpers/operator.helper");
@@ -108,10 +110,16 @@ class KeyShares {
      * Initialise from JSON or object data.
      */
     fromJson(content) {
-        const data = typeof content === 'string'
-            ? JSON.parse(content).data
-            : content.data;
-        this.update(data);
+        const body = typeof content === 'string' ? JSON.parse(content) : content;
+        const extVersion = semver_1.default.parse(body.version);
+        const currentVersion = semver_1.default.parse(package_json_1.default.version);
+        if (!extVersion || !currentVersion) {
+            throw new Error(`The file for keyshares must contain a version mark provided by ssv-keys.`);
+        }
+        if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
+            throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
+        }
+        this.update(body.data);
         return this;
     }
     /**
@@ -119,7 +127,7 @@ class KeyShares {
      */
     toJson() {
         return JSON.stringify({
-            version: 'v4',
+            version: `v${package_json_1.default.version}`,
             createdAt: new Date().toISOString(),
             data: this.data || null,
             payload: this.payload.readable || null,
