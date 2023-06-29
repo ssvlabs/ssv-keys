@@ -74,7 +74,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     publicKey,
     operators,
     encryptedShares,
-  }, {
+  },{
     ownerAddress: TEST_OWNER_ADDRESS,
     ownerNonce: TEST_OWNER_NONCE,
     privateKey
