@@ -85,6 +85,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log('guy!!!!');
+  console.log('!it works!!');
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
