@@ -1,9 +1,8 @@
 import dotenv from 'dotenv';
 import { constants } from 'http2';
 import bodyParser from 'body-parser';
-import { SSVKeys, KeyShares } from 'ssv-keys';
+import { SSVKeys, KeyShares, EncryptShare } from 'ssv-keys';
 import express, { Express, Request, Response } from 'express';
-import {EncryptShare} from '../../src/lib/Encryption/Encryption';
 
 dotenv.config();
 
