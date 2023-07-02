@@ -70,7 +70,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   // The cluster owner address
   const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
-  await keyShares.buildPayload({
+  const newPayload = await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
@@ -79,6 +79,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     ownerNonce: TEST_OWNER_NONCE,
     privateKey
   });
+  keyShares.payload = newPayload;
+  console.log(newPayload);
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
