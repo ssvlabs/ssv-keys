@@ -3,6 +3,7 @@ import { constants } from 'http2';
 import bodyParser from 'body-parser';
 import { SSVKeys, KeyShares } from 'ssv-keys';
 import express, { Express, Request, Response } from 'express';
+import {EncryptShare} from '../../src/lib/Encryption/Encryption';
 
 dotenv.config();
 
@@ -70,7 +71,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   // The cluster owner address
   const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
-  const newPayload = await keyShares.buildPayload({
+  await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
@@ -79,10 +80,11 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     ownerNonce: TEST_OWNER_NONCE,
     privateKey
   });
-  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
-  keyShares.payload.readable.encryptedKeys = newPayload.encryptedKeys;
-  keyShares.payload.readable.publicKeys = newPayload.publicKeys;
-  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload-guy>>>>>>>>>>>>>>>>>>>>>>>>>');
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload-guy>>>>>>>>>>>>>>>>>>>>>>>>>');
+  keyShares.payload.readable.encryptedKeys = encryptedShares.map((share: EncryptShare) => share.privateKey);
+  keyShares.payload.readable.publicKeys = encryptedShares.map((share: EncryptShare) => share.publicKey);
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload-guy>>>>>>>>>>>>>>>>>>>>>>>>>');
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));

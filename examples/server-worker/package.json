@@ -1,6 +1,6 @@
 {
   "name": "ssv-keys-server-worker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Example of expressjs server worker accepting data to build key shares and responding with keyshares json",
   "main": "./dist/index.js",
   "scripts": {
