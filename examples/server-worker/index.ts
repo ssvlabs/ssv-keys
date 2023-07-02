@@ -80,7 +80,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     privateKey
   });
   console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
-  console.log(newPayload);
   keyShares.payload.readable.encryptedKeys = newPayload.encryptedKeys;
   keyShares.payload.readable.publicKeys = newPayload.publicKeys;
   console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -90,6 +89,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log('!it works2222!!');
+  console.log('brotherit!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
