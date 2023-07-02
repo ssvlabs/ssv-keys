@@ -79,8 +79,11 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     ownerNonce: TEST_OWNER_NONCE,
     privateKey
   });
-  keyShares.payload = newPayload;
-  console.log(newPayload);
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
+  console.log(newPayload.sharesData);
+  console.log(keyShares.payload.readable);
+  keyShares.payload.readable.sharesData = newPayload.sharesData;
+  console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
