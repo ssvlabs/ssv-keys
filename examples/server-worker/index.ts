@@ -81,8 +81,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   });
   console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
   console.log(newPayload);
-  keyShares.payload.readable.publicKeys = newPayload.publicKeys;
   keyShares.payload.readable.encryptedKeys = newPayload.encryptedKeys;
+  keyShares.payload.readable.publicKeys = newPayload.publicKeys;
   console.log('<<<<<<<<<<<<<<<<<<<<<<<<<newPayload>>>>>>>>>>>>>>>>>>>>>>>>>');
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
