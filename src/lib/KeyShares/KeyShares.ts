@@ -86,6 +86,10 @@ export class KeyShares {
       encryptedShares: metaData.encryptedShares,
     });
 
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<KeyShares.ts:89>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(payload);
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<KeyShares.ts:89>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
     const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
     const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
 

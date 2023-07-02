@@ -31,6 +31,9 @@ export class KeySharesPayload implements IKeySharesPayload {
       amount: 'Amount of SSV tokens to be deposited to your validator\'s cluster balance (mandatory only for 1st validator in a cluster)',
       cluster: 'The latest cluster snapshot data, obtained using the cluster-scanner tool. If this is the cluster\'s 1st validator then use - {0,0,0,0,true}',
     };
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<KeySharesPayload.ts:34>>>>>>>>>>>>>>>>>>>>>>>>>>')
+    console.log(this.readable);
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<KeySharesPayload.ts:34>>>>>>>>>>>>>>>>>>>>>>>>>>')
     return this.readable;
   }
 }
