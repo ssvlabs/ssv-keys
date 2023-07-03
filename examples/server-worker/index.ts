@@ -51,12 +51,13 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Keystore is required' });
   }
 
-  const owner_address = String(req.body['owner_address'] || '')
+  // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+  const nonce = Number(req.body['nonce'] || '')
 
-  if (!owner_address.length) {
+  if (!nonce) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
-      .json({ message: 'Owner address is required' });
+      .json({ message: 'Nonce is required' });
   }
 
   const password = String(req.body['password'] || '');
@@ -80,12 +81,15 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const keyShares = new KeyShares();
   keyShares.update({ operators, publicKey });
 
+  // The cluster owner address
+  const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
+
   await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
   },{
-    ownerAddress: owner_address,
+    ownerAddress: TEST_OWNER_ADDRESS,
     ownerNonce: nonce,
     privateKey
   });
@@ -97,5 +101,6 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
+  console.log('brotherit!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
