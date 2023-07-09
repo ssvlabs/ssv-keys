@@ -12,7 +12,6 @@ const ssvKeys = new SSVKeys();
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const nonce = 0;
 app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const operators_ids = String(req.body['operators_ids'] || '')
     .split(',')
@@ -101,6 +100,5 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log('brotherit!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
