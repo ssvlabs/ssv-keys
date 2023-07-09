@@ -50,10 +50,10 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Keystore is required' });
   }
 
-  // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
-  const nonce = Number(req.body['nonce'] || '')
+// The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+  const nonce = Number(req.body['nonce']);
 
-  if (!nonce) {
+  if (isNaN(nonce)) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Nonce is required' });
