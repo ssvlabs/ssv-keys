@@ -59,6 +59,15 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
       .json({ message: 'Nonce is required' });
   }
 
+  // The owner address for signing the share payload
+  const owner_address = String(req.body['owner_address']);
+
+  if (!owner_address) {
+    return res
+      .status(constants.HTTP_STATUS_BAD_REQUEST)
+      .json({ message: 'owner_address is required' });
+  }
+
   const password = String(req.body['password'] || '');
 
   if (!password.length) {
@@ -81,19 +90,15 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   keyShares.update({ operators, publicKey });
 
   // The cluster owner address
-  const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
-
   await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
   },{
-    ownerAddress: TEST_OWNER_ADDRESS,
+    ownerAddress: owner_address,
     ownerNonce: nonce,
     privateKey
   });
-  keyShares.payload.readable.encryptedKeys = encryptedShares.map((share: EncryptShare) => share.privateKey);
-  keyShares.payload.readable.publicKeys = encryptedShares.map((share: EncryptShare) => share.publicKey);
 
   console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
