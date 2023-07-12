@@ -13,29 +13,23 @@ const ssvKeys = new SSVKeys();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/key-shares/generate', async (req: Request, res: Response) => {
-  const operators_ids = String(req.body['operators_ids'] || '')
+  const operator_ids = String(req.body['operator_ids'] || '')
     .split(',')
     .map((id) => Number(id.trim()))
     .filter(id => !!id);
 
-  if (!operators_ids.length) {
+  if (!operator_ids.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator IDs required' });
   }
 
-  if (!operators_ids.length) {
-    return res
-      .status(constants.HTTP_STATUS_BAD_REQUEST)
-      .json({ message: 'Operator IDs required' });
-  }
-
-  const operators_keys = String(req.body['operators_keys'] || '')
+  const operator_keys = String(req.body['operator_keys'] || '')
     .split(',')
     .map((key) => key.trim())
     .filter(key => !!key);
 
-  if (!operators_keys.length) {
+  if (!operator_keys.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator keys required' });
@@ -78,8 +72,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
 
-  const operators = operators_keys.map((operatorKey, index) => ({
-    id: operators_ids[index],
+  const operators = operator_keys.map((operatorKey, index) => ({
+    id: operator_ids[index],
     operatorKey,
   }));
 
@@ -100,7 +94,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     privateKey
   });
 
-  console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
+  console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
 });
 
