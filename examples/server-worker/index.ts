@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { constants } from 'http2';
 import bodyParser from 'body-parser';
-import { SSVKeys, KeyShares } from 'ssv-keys';
+import { SSVKeys, KeyShares, EncryptShare } from 'ssv-keys';
 import express, { Express, Request, Response } from 'express';
 
 dotenv.config();
@@ -12,25 +12,24 @@ const ssvKeys = new SSVKeys();
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.post('/key-shares/generate', async (req: Request, res: Response) => {
-  const operators_ids = String(req.body['operators_ids'] || '')
+  const operator_ids = String(req.body['operator_ids'] || '')
     .split(',')
     .map((id) => Number(id.trim()))
     .filter(id => !!id);
 
-  if (!operators_ids.length) {
+  if (!operator_ids.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator IDs required' });
   }
 
-  const operators_keys = String(req.body['operators_keys'] || '')
+  const operator_keys = String(req.body['operator_keys'] || '')
     .split(',')
     .map((key) => key.trim())
     .filter(key => !!key);
 
-  if (!operators_keys.length) {
+  if (!operator_keys.length) {
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Operator keys required' });
@@ -39,9 +38,28 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const keystore = req.body['keystore'];
 
   if (!keystore) {
+
     return res
       .status(constants.HTTP_STATUS_BAD_REQUEST)
       .json({ message: 'Keystore is required' });
+  }
+
+// The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+  const nonce = Number(req.body['nonce']);
+
+  if (isNaN(nonce)) {
+    return res
+      .status(constants.HTTP_STATUS_BAD_REQUEST)
+      .json({ message: 'Nonce is required' });
+  }
+
+  // The owner address for signing the share payload
+  const owner_address = String(req.body['owner_address']);
+
+  if (!owner_address) {
+    return res
+      .status(constants.HTTP_STATUS_BAD_REQUEST)
+      .json({ message: 'owner_address is required' });
   }
 
   const password = String(req.body['password'] || '');
@@ -54,8 +72,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   const { publicKey, privateKey } = await ssvKeys.extractKeys(keystore, password);
 
-  const operators = operators_keys.map((operatorKey, index) => ({
-    id: operators_ids[index],
+  const operators = operator_keys.map((operatorKey, index) => ({
+    id: operator_ids[index],
     operatorKey,
   }));
 
@@ -65,22 +83,18 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const keyShares = new KeyShares();
   keyShares.update({ operators, publicKey });
 
-  // The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
-  const TEST_OWNER_NONCE = 1;
   // The cluster owner address
-  const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
-
   await keyShares.buildPayload({
     publicKey,
     operators,
     encryptedShares,
-  }, {
-    ownerAddress: TEST_OWNER_ADDRESS,
-    ownerNonce: TEST_OWNER_NONCE,
+  },{
+    ownerAddress: owner_address,
+    ownerNonce: nonce,
     privateKey
   });
 
-  console.log(`Built key shares for operators: ${String(operators_ids)} and public key: ${keystore.pubkey}`);
+  console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));
 });
 
