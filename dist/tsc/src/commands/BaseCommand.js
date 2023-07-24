@@ -166,6 +166,15 @@ class BaseCommand extends argparse_1.ArgumentParser {
                     continue;
                 }
                 processedArguments[promptOptions.name] = true;
+                if (argument.interactive.confirmConditions) {
+                    const value = yield argument.interactive.confirmConditions(preFilledValues[promptOptions.name]);
+                    if (value !== false) {
+                        const message = argument.interactive.confirmMessage.replace(/{value}/g, value);
+                        const isConfirmed = (yield (0, prompts_1.default)({ type: 'confirm', name: 'value', message, initial: true })).value;
+                        if (!isConfirmed)
+                            throw '';
+                    }
+                }
                 const message = promptOptions.message;
                 const extraOptions = { onSubmit: promptOptions.onSubmit };
                 let isRepeatable = !!((_a = argument.interactive) === null || _a === void 0 ? void 0 : _a.repeat);

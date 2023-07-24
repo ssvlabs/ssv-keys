@@ -180,9 +180,17 @@ export class BaseCommand extends ArgumentParser {
       }
       processedArguments[promptOptions.name] = true;
 
+      if (argument.interactive.confirmConditions) {
+        const value = await argument.interactive.confirmConditions(preFilledValues[promptOptions.name]);
+        if (value !== false) {
+          const message = argument.interactive.confirmMessage.replace(/{value}/g, value);
+          const isConfirmed = (await prompts({ type: 'confirm', name: 'value', message, initial: true })).value;
+          if (!isConfirmed) throw '';
+        }
+      }
+
       const message = promptOptions.message;
       const extraOptions = { onSubmit: promptOptions.onSubmit };
-
       let isRepeatable = !!argument.interactive?.repeat;
       if (!isRepeatable) {
         multi[promptOptions.name] = multi[promptOptions.name] || [];
@@ -299,7 +307,7 @@ export class BaseCommand extends ArgumentParser {
     };
   }
 
-  async execute(): Promise<void> {
+  async execute(): Promise<any> {
     // Interactive execution
     if (this.interactive) {
       await this.executeInteractive();

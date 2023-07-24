@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const keystore_password_1 = require("../validators/keystore-password");
+const tslib_1 = require("tslib");
+const file_helper_1 = require("../../../lib/helpers/file.helper");
 const file_1 = require("../validators/file");
 /**
  * Keystore argument validates if keystore file exists and is valid keystore file.
@@ -11,12 +12,20 @@ exports.default = {
     options: {
         required: true,
         type: String,
-        help: 'The validator keystore file path'
+        help: 'The validator keystore file(s) path'
     },
     interactive: {
+        confirmMessage: `{value} keystore files detected would you like to proceed with key distribution?`,
+        confirmConditions: (filePath) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+            const { files, isFolder } = yield (0, file_helper_1.getKeyStoreFiles)(filePath);
+            if (isFolder) {
+                return files.length;
+            }
+            return false;
+        }),
         options: {
             type: 'text',
-            validate: (filePath) => {
+            validateSingle: (filePath) => {
                 filePath = (0, file_1.sanitizePath)(String(filePath).trim());
                 let isValid = (0, file_1.fileExistsValidator)(filePath);
                 if (isValid !== true) {
@@ -26,7 +35,6 @@ exports.default = {
                 if (isValid !== true) {
                     return isValid;
                 }
-                keystore_password_1.keystorePasswordValidator.setKeystoreFilePath(filePath);
                 return true;
             },
         }

@@ -9,7 +9,6 @@ declare const _default: {
     interactive: {
         options: {
             type: string;
-            validate: (password: string) => Promise<boolean | string>;
         };
     };
 };

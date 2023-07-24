@@ -10,9 +10,11 @@ declare const _default: {
         help: string;
     };
     interactive: {
+        confirmMessage: string;
+        confirmConditions: (filePath: string) => Promise<number | false>;
         options: {
             type: string;
-            validate: (filePath: string) => boolean | string;
+            validateSingle: (filePath: string) => any;
         };
     };
 };

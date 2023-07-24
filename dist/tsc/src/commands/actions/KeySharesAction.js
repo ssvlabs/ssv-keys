@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesAction = void 0;
 const tslib_1 = require("tslib");
-const safe_1 = tslib_1.__importDefault(require("colors/safe"));
 const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
@@ -45,28 +44,53 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             // Prepare data
             operatorKeys = operatorKeys.split(',');
             operatorIds = operatorIds.split(',').map((o) => parseInt(o, 10));
-            const isKeyStoreValid = keystore_1.default.interactive.options.validate(keystore);
-            if (isKeyStoreValid !== true) {
-                throw Error(String(isKeyStoreValid));
-            }
-            const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password);
-            if (isValidPassword !== true) {
-                throw Error(String(isValidPassword));
-            }
-            const keystoreFilePath = (0, file_1.sanitizePath)(String(keystore).trim());
-            const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
-            // Initialize SSVKeys SDK
-            const ssvKeys = new SSVKeys_1.SSVKeys();
-            const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
             // Now save to key shares file encrypted shares and validator public key
             const operators = operatorKeys.map((operatorKey, index) => ({
                 id: operatorIds[index],
                 operatorKey,
             }));
+            const keystorePath = (0, file_1.sanitizePath)(String(keystore).trim());
+            const { files, isFolder } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
+            // validate all files
+            for (const file of files) {
+                const isKeyStoreValid = yield keystore_1.default.interactive.options.validateSingle(file);
+                if (isKeyStoreValid !== true) {
+                    throw Error(String(isKeyStoreValid));
+                }
+                const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password, file);
+                if (isValidPassword !== true) {
+                    throw Error(String(isValidPassword));
+                }
+            }
+            const outputFiles = [];
+            let nextNonce = ownerNonce;
+            let processedFilesCount = 0;
+            isFolder && console.debug('Splitting keystore files to shares, do not terminate process!');
+            for (const file of files) {
+                const keySharesFilePath = yield this._processFile(file, password, outputFolder, operators, ownerAddress, nextNonce);
+                outputFiles.push(keySharesFilePath);
+                if (isFolder) {
+                    processedFilesCount++;
+                    process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
+                }
+                nextNonce++;
+            }
+            process.stdout.write('\n');
+            return outputFiles;
+        });
+    }
+    _processFile(keystoreFilePath, password, outputFolder, operators, ownerAddress, ownerNonce) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
+            // Initialize SSVKeys SDK
+            const ssvKeys = new SSVKeys_1.SSVKeys();
+            const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
             // Build shares from operator IDs and public keys
             const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);
             const keyShares = new KeyShares_1.KeyShares();
             yield keyShares.update({
+                ownerAddress,
+                ownerNonce,
                 operators,
                 publicKey,
             });
@@ -80,9 +104,9 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 ownerNonce,
                 privateKey,
             });
-            const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
+            const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares-files', outputFolder.trim());
             yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
-            return `\nKey distribution successful! Find your key shares file at ${safe_1.default.bgYellow(safe_1.default.black(keySharesFilePath))}\n`;
+            return keySharesFilePath;
         });
     }
 }
