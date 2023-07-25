@@ -7,8 +7,8 @@ const file_1 = require("../validators/file");
  * Keystore argument validates if keystore file exists and is valid keystore file.
  */
 exports.default = {
-    arg1: '-ks',
-    arg2: '--keystore',
+    arg1: '-kp',
+    arg2: '--keystore-path',
     options: {
         required: true,
         type: String,
