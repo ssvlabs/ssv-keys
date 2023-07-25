@@ -81,7 +81,12 @@ function UserFlow() {
     console.log('Payload ready');
 
     // Keyshares
-    keyShares.update({ operators, publicKey });
+    keyShares.update({
+      ownerAddress: TEST_OWNER_ADDRESS,
+      ownerNonce: TEST_OWNER_NONCE,
+      operators,
+      publicKey
+    });
     setKeyShares(keyShares.toJson());
     console.log('KeyShares ready');
     setStep(STEPS.FINISH);

@@ -34,7 +34,7 @@ async function main() {
     operatorKey,
   }));
 
-  keyShares.update({ operators, publicKey });
+  keyShares.update({ ownerAddress: TEST_OWNER_ADDRESS, ownerNonce: TEST_OWNER_NONCE, operators, publicKey });
 
   // 3. Save it with version only and with no any data.
   await fsp.writeFile(getKeySharesFilePath(2), keyShares.toJson(), { encoding: 'utf-8' });

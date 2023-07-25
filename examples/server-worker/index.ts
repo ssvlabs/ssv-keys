@@ -81,7 +81,12 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
 
   // Build final web3 transaction payload and update keyshares file with payload data
   const keyShares = new KeyShares();
-  keyShares.update({ operators, publicKey });
+  keyShares.update({
+    ownerAddress: owner_address,
+    ownerNonce: nonce,
+    operators,
+    publicKey
+  });
 
   // The cluster owner address
   await keyShares.buildPayload({
