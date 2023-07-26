@@ -6,10 +6,11 @@ const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
 const file_1 = require("./validators/file");
-const keystore_1 = tslib_1.__importDefault(require("./arguments/keystore"));
+const keystore_path_1 = tslib_1.__importDefault(require("./arguments/keystore-path"));
 const owner_nonce_1 = tslib_1.__importDefault(require("./arguments/owner-nonce"));
 const operator_ids_1 = tslib_1.__importDefault(require("./arguments/operator-ids"));
 const owner_address_1 = tslib_1.__importDefault(require("./arguments/owner-address"));
+const multi_shares_1 = tslib_1.__importDefault(require("./arguments/multi-shares"));
 const password_1 = tslib_1.__importDefault(require("./arguments/password"));
 const output_folder_1 = tslib_1.__importDefault(require("./arguments/output-folder"));
 const operator_public_keys_1 = tslib_1.__importDefault(require("./arguments/operator-public-keys"));
@@ -24,7 +25,8 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             action: 'shares',
             description: 'Generate shares for a list of operators from a validator keystore file',
             arguments: [
-                keystore_1.default,
+                keystore_path_1.default,
+                multi_shares_1.default,
                 password_1.default,
                 operator_ids_1.default,
                 operator_public_keys_1.default,
@@ -39,7 +41,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
      */
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { keystore, password, output_folder: outputFolder, owner_address: ownerAddress, owner_nonce: ownerNonce, } = this.args;
+            const { keystore_path: keystore, password, output_folder: outputFolder, owner_address: ownerAddress, owner_nonce: ownerNonce, multi_shares: multiShares, } = this.args;
             let { operator_ids: operatorIds, operator_keys: operatorKeys, } = this.args;
             // Prepare data
             operatorKeys = operatorKeys.split(',');
@@ -50,33 +52,45 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 operatorKey,
             }));
             const keystorePath = (0, file_1.sanitizePath)(String(keystore).trim());
-            const { files, isFolder } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
-            // validate all files
-            for (const file of files) {
-                const isKeyStoreValid = yield keystore_1.default.interactive.options.validateSingle(file);
+            if (multiShares) {
+                const { files } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
+                // validate all files
+                for (const file of files) {
+                    const isKeyStoreValid = yield keystore_path_1.default.interactive.options.validateSingle(file);
+                    if (isKeyStoreValid !== true) {
+                        throw Error(String(isKeyStoreValid));
+                    }
+                    const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password, file);
+                    if (isValidPassword !== true) {
+                        throw Error(String(isValidPassword));
+                    }
+                }
+                const outputFiles = [];
+                let nextNonce = ownerNonce;
+                let processedFilesCount = 0;
+                console.debug('Splitting keystore files to shares, do not terminate process!');
+                for (const file of files) {
+                    const keySharesFilePath = yield this._processFile(file, password, outputFolder, operators, ownerAddress, nextNonce);
+                    outputFiles.push(keySharesFilePath);
+                    processedFilesCount++;
+                    process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
+                    nextNonce++;
+                }
+                process.stdout.write('\n');
+                return outputFiles;
+            }
+            else {
+                const isKeyStoreValid = yield keystore_path_1.default.interactive.options.validateSingle(keystorePath);
                 if (isKeyStoreValid !== true) {
                     throw Error(String(isKeyStoreValid));
                 }
-                const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password, file);
+                const isValidPassword = yield keystore_password_1.keystorePasswordValidator.validatePassword(password, keystorePath);
                 if (isValidPassword !== true) {
                     throw Error(String(isValidPassword));
                 }
+                const keySharesFilePath = yield this._processFile(keystorePath, password, outputFolder, operators, ownerAddress, ownerNonce);
+                return [keySharesFilePath];
             }
-            const outputFiles = [];
-            let nextNonce = ownerNonce;
-            let processedFilesCount = 0;
-            isFolder && console.debug('Splitting keystore files to shares, do not terminate process!');
-            for (const file of files) {
-                const keySharesFilePath = yield this._processFile(file, password, outputFolder, operators, ownerAddress, nextNonce);
-                outputFiles.push(keySharesFilePath);
-                if (isFolder) {
-                    processedFilesCount++;
-                    process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
-                }
-                nextNonce++;
-            }
-            process.stdout.write('\n');
-            return outputFiles;
         });
     }
     _processFile(keystoreFilePath, password, outputFolder, operators, ownerAddress, ownerNonce) {

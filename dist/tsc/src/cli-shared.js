@@ -31,7 +31,7 @@ function main(interactive) {
         const command = new SSVKeysCommand_1.SSVKeysCommand(interactive);
         try {
             const outputFiles = yield command.execute();
-            console.debug('\nKey distribution successful! Find your key shares files at:');
+            console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's' : ''} at:`);
             outputFiles.map((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
         }
         catch (error) {

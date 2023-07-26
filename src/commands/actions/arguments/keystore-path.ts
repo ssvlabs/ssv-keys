@@ -1,4 +1,3 @@
-import { getKeyStoreFiles } from '../../../lib/helpers/file.helper';
 import { fileExistsValidator, jsonFileValidator, sanitizePath } from '../validators/file';
 
 /**
@@ -13,14 +12,6 @@ export default {
     help: 'The validator keystore file(s) path'
   },
   interactive: {
-    confirmMessage: `{value} keystore files detected would you like to proceed with key distribution?`,
-    confirmConditions: async(filePath: string) => {
-      const { files, isFolder } = await getKeyStoreFiles(filePath);
-      if (isFolder) {
-        return files.length;
-      }
-      return false;
-    },
     options: {
       type: 'text',
       validateSingle: (filePath: string): any => {

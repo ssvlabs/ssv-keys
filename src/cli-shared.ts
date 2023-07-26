@@ -30,7 +30,7 @@ export default async function main(interactive: boolean): Promise<any> {
   const command = new SSVKeysCommand(interactive);
   try {
     const outputFiles = await command.execute();
-    console.debug('\nKey distribution successful! Find your key shares files at:');
+    console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's': ''} at:`);
     outputFiles.map((file: string) => console.debug(`${colors.bgYellow(colors.black(file))}`));
   } catch(error) {
     console.log(error);
