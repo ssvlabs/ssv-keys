@@ -182,7 +182,6 @@ export class BaseCommand extends ArgumentParser {
 
       const message = promptOptions.message;
       const extraOptions = { onSubmit: promptOptions.onSubmit };
-
       let isRepeatable = !!argument.interactive?.repeat;
       if (!isRepeatable) {
         multi[promptOptions.name] = multi[promptOptions.name] || [];
@@ -299,7 +298,7 @@ export class BaseCommand extends ArgumentParser {
     };
   }
 
-  async execute(): Promise<void> {
+  async execute(): Promise<any> {
     // Interactive execution
     if (this.interactive) {
       await this.executeInteractive();

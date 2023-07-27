@@ -1,8 +1,13 @@
 import fs from 'fs';
+import * as path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(filePath);
-  return fs.existsSync(filePath.trim()) ? true : message || 'Couldn’t locate keystore file or directory.';
+
+  if (!path.basename(filePath).includes('keystore') || !fs.existsSync(filePath.trim())) {
+    return message || 'Couldn’t locate keystore file or directory.';
+  }
+  return true;
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {
@@ -16,7 +21,7 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   try {
     JSON.parse(fileContents);
   } catch (e) {
-    return 'Keystore file must be .JSON format';
+    return `Keystore file "${filePath}" must be .JSON format`;
   }
   return true;
 };

@@ -3,9 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sanitizePath = exports.jsonFileValidator = exports.fileExistsValidator = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
+const path = tslib_1.__importStar(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(filePath);
-    return fs_1.default.existsSync(filePath.trim()) ? true : message || 'Couldn’t locate keystore file or directory.';
+    if (!path.basename(filePath).includes('keystore') || !fs_1.default.existsSync(filePath.trim())) {
+        return message || 'Couldn’t locate keystore file or directory.';
+    }
+    return true;
 };
 exports.fileExistsValidator = fileExistsValidator;
 const jsonFileValidator = (filePath, message = '') => {
@@ -21,7 +25,7 @@ const jsonFileValidator = (filePath, message = '') => {
         JSON.parse(fileContents);
     }
     catch (e) {
-        return 'Keystore file must be .JSON format';
+        return `Keystore file "${filePath}" must be .JSON format`;
     }
     return true;
 };

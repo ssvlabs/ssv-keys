@@ -74,5 +74,5 @@ export declare class BaseCommand extends ArgumentParser {
      * @param argument
      */
     getPromptOptions(argument: any): any;
-    execute(): Promise<void>;
+    execute(): Promise<any>;
 }

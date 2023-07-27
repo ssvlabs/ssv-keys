@@ -1,5 +1,7 @@
 import figlet from 'figlet';
+import colors from 'colors/safe';
 import pkg from '../package.json';
+
 import { SSVKeysCommand } from './commands/SSVKeysCommand';
 
 const FigletMessage = async (message: string) => {
@@ -26,5 +28,11 @@ export default async function main(interactive: boolean): Promise<any> {
     console.log(' ----------------------------------------------------------------------\n');
   }
   const command = new SSVKeysCommand(interactive);
-  await command.execute().then(console.debug).catch(console.error);
+  try {
+    const outputFiles = await command.execute();
+    console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's': ''} at:`);
+    outputFiles.forEach((file: string) => console.debug(`${colors.bgYellow(colors.black(file))}`));
+  } catch(error) {
+    console.log(error);
+  }
 }

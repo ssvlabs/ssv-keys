@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = void 0;
+exports.getKeyStoreFiles = exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
@@ -45,7 +45,24 @@ const getSSVDir = (outputFolder) => tslib_1.__awaiter(void 0, void 0, void 0, fu
 });
 exports.getSSVDir = getSSVDir;
 const getFilePath = (name, outputFolder, withTime = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    return `${yield (0, exports.getSSVDir)(outputFolder)}${name}${withTime ? '-' + (0, moment_1.default)().format('YYYYMMDD_hhmmss') : ''}.json`;
+    return `${yield (0, exports.getSSVDir)(outputFolder)}${name}${withTime ? `-${(0, moment_1.default)().unix()}` : ''}.json`;
 });
 exports.getFilePath = getFilePath;
+const getKeyStoreFiles = (keystorePath) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const stat = yield fs_2.promises.stat(keystorePath);
+    const isFolder = stat.isDirectory();
+    let files;
+    if (isFolder) {
+        const folderContent = yield fs_2.promises.readdir(keystorePath);
+        if (folderContent.length === 0) {
+            throw Error('No keystore files detected please provide a folder with correct keystore files and try again');
+        }
+        files = folderContent.map(file => path_1.default.join(keystorePath, file)).sort();
+    }
+    else {
+        files = [keystorePath];
+    }
+    return { files, isFolder };
+});
+exports.getKeyStoreFiles = getKeyStoreFiles;
 //# sourceMappingURL=file.helper.js.map

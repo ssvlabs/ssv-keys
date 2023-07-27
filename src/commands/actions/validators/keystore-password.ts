@@ -5,18 +5,21 @@ import { readFile } from '../../../lib/helpers/file.helper';
 export class KeystorePasswordValidator {
   protected keystoreFilePath = '';
 
+  /*
   setKeystoreFilePath(filePath: string): void {
     this.keystoreFilePath = filePath;
   }
+  */
 
-  async validatePassword(password: string, showProgress = false): Promise<boolean | string> {
+  async validatePassword(password: string, keystoreFilePath: string): Promise<boolean | string> {
     if (!password.trim().length) {
       return 'Password is empty';
     }
     const errorMessage = 'Invalid keystore file password.';
-    let messageInterval: any;
+    // let messageInterval: any;
     let output: any;
     try {
+      /*
       if (showProgress) {
         let dots = 1;
         const message = `\rChecking password`
@@ -32,18 +35,20 @@ export class KeystorePasswordValidator {
           }
         }, 1000);
       }
-
-      const data = await readFile(this.keystoreFilePath);
+      */
+      const data = await readFile(keystoreFilePath);
       const keyStore = new EthereumKeyStore(data);
       const privateKey = await keyStore.getPrivateKey(password)
       output = !!privateKey;
     } catch (e) {
       output = errorMessage;
     }
+    /*
     if (showProgress) {
       process.stdout.write('\n');
       clearInterval(messageInterval);
     }
+    */
     return output;
   }
 }

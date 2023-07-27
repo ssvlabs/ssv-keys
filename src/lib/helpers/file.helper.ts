@@ -42,5 +42,27 @@ export const getSSVDir = async (outputFolder: string): Promise<string> => {
 }
 
 export const getFilePath = async (name: string, outputFolder: string, withTime = true): Promise<string> => {
-  return `${await getSSVDir(outputFolder)}${name}${withTime ? '-' + moment().format('YYYYMMDD_hhmmss') : ''}.json`;
+  return `${await getSSVDir(outputFolder)}${name}${withTime ? `-${moment().unix()}` : ''}.json`;
+}
+
+export type KeyStoreFilesResult = {
+  files: string[];
+  isFolder: boolean;
+}
+
+export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFilesResult> => {
+  const stat = await fsp.stat(keystorePath);
+  const isFolder = stat.isDirectory();
+
+  let files;
+  if (isFolder) {
+    const folderContent = await fsp.readdir(keystorePath);
+    if (folderContent.length === 0) {
+      throw Error ('No keystore files detected please provide a folder with correct keystore files and try again');
+    }
+    files = folderContent.map(file => path.join(keystorePath, file)).sort();
+  } else {
+    files = [keystorePath];
+  }
+  return { files, isFolder };
 }

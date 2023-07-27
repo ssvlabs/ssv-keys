@@ -1,4 +1,4 @@
-import { keystorePasswordValidator } from '../validators/keystore-password';
+// import { keystorePasswordValidator } from '../validators/keystore-password';
 
 export default {
   arg1: '-ps',
@@ -11,9 +11,11 @@ export default {
   interactive: {
     options: {
       type: 'password',
+      /*
       validate: async (password: string): Promise<boolean | string> => {
         return await keystorePasswordValidator.validatePassword(password, true);
       },
+      */
     }
   }
 };

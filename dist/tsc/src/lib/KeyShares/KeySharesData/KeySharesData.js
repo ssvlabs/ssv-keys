@@ -6,12 +6,22 @@ const class_validator_1 = require("class-validator");
 const operator_unique_1 = require("./validators/operator-unique");
 const public_key_1 = require("./validators/public-key");
 const operator_helper_1 = require("../../helpers/operator.helper");
+const owner_address_1 = require("./validators/owner-address");
+const owner_nonce_1 = require("./validators/owner-nonce");
 class KeySharesData {
     constructor() {
+        this.ownerNonce = null;
+        this.ownerAddress = null;
         this.publicKey = null;
         this.operators = null;
     }
     update(data) {
+        if (data.ownerAddress) {
+            this.ownerAddress = data.ownerAddress;
+        }
+        if (data.ownerNonce) {
+            this.ownerNonce = data.ownerNonce;
+        }
         if (data.publicKey) {
             this.publicKey = data.publicKey;
         }
@@ -48,6 +58,16 @@ class KeySharesData {
         return this.operators.map(operator => String(operator.operatorKey));
     }
 }
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, owner_nonce_1.OwnerNonceValidator)()
+], KeySharesData.prototype, "ownerNonce", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, owner_address_1.OwnerAddressValidator)()
+], KeySharesData.prototype, "ownerAddress", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

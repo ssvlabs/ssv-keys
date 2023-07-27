@@ -12,7 +12,7 @@ declare const _default: {
     interactive: {
         options: {
             type: string;
-            validate: (filePath: string) => boolean | string;
+            validateSingle: (filePath: string) => any;
         };
     };
 };

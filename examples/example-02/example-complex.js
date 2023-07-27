@@ -39,7 +39,7 @@ async function main() {
   await fsp.writeFile(getKeySharesFilePath(2), keyShares.toJson(), { encoding: 'utf-8' });
 
   // Now save to key shares file encrypted shares and validator public key
-  await keyShares.update({ publicKey });
+  await keyShares.update({ ownerAddress: TEST_OWNER_ADDRESS, ownerNonce: TEST_OWNER_NONCE, publicKey });
   await fsp.writeFile(getKeySharesFilePath(3), keyShares.toJson(), { encoding: 'utf-8' });
 
   // Build shares from operator IDs and public keys

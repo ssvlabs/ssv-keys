@@ -4,14 +4,27 @@ import {
   ValidateNested,
   IsOptional,
   validateSync,
+  IsNumber,
 } from 'class-validator';
 import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
 import { OperatorData } from './OperatorData';
 import { OpeatorsListValidator } from './validators/operator-unique';
 import { PublicKeyValidator } from './validators/public-key';
 import { operatorSortedList } from '../../helpers/operator.helper';
+import { OwnerAddressValidator } from './validators/owner-address';
+import { OwnerNonceValidator } from './validators/owner-nonce';
 
 export class KeySharesData implements IKeySharesData {
+  @IsOptional()
+  @IsNumber()
+  @OwnerNonceValidator()
+  public ownerNonce?: number | null = null;
+
+  @IsOptional()
+  @IsString()
+  @OwnerAddressValidator()
+  public ownerAddress?: string | null = null;
+
   @IsOptional()
   @IsString()
   @Length(98, 98)
@@ -24,6 +37,12 @@ export class KeySharesData implements IKeySharesData {
   public operators?: OperatorData[] | null = null;
 
   update(data: IKeySharesPartitialData) {
+    if (data.ownerAddress) {
+      this.ownerAddress = data.ownerAddress;
+    }
+    if (data.ownerNonce) {
+      this.ownerNonce = data.ownerNonce;
+    }
     if (data.publicKey) {
       this.publicKey = data.publicKey;
     }

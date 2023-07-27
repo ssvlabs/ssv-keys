@@ -1,21 +1,20 @@
-import { keystorePasswordValidator } from '../validators/keystore-password';
 import { fileExistsValidator, jsonFileValidator, sanitizePath } from '../validators/file';
 
 /**
  * Keystore argument validates if keystore file exists and is valid keystore file.
  */
 export default {
-  arg1: '-ks',
-  arg2: '--keystore',
+  arg1: '-kp',
+  arg2: '--keystore-path',
   options: {
     required: true,
     type: String,
-    help: 'The validator keystore file path'
+    help: 'The validator keystore file(s) path'
   },
   interactive: {
     options: {
       type: 'text',
-      validate: (filePath: string): boolean | string => {
+      validateSingle: (filePath: string): any => {
         filePath = sanitizePath(String(filePath).trim());
         let isValid = fileExistsValidator(filePath);
         if (isValid !== true) {
@@ -25,7 +24,6 @@ export default {
         if (isValid !== true) {
           return isValid;
         }
-        keystorePasswordValidator.setKeystoreFilePath(filePath);
         return true;
       },
     }

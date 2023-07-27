@@ -8,4 +8,5 @@ export declare class KeySharesAction extends BaseAction {
      * Decrypt and return private key.
      */
     execute(): Promise<any>;
+    private _processFile;
 }
