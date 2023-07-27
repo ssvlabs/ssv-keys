@@ -31,7 +31,7 @@ export default async function main(interactive: boolean): Promise<any> {
   try {
     const outputFiles = await command.execute();
     console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's': ''} at:`);
-    outputFiles.map((file: string) => console.debug(`${colors.bgYellow(colors.black(file))}`));
+    outputFiles.forEach((file: string) => console.debug(`${colors.bgYellow(colors.black(file))}`));
   } catch(error) {
     console.log(error);
   }
