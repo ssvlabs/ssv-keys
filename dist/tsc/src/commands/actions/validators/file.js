@@ -6,6 +6,7 @@ const fs_1 = tslib_1.__importDefault(require("fs"));
 const path = tslib_1.__importStar(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(filePath);
+    console.log('???', filePath);
     if (!path.basename(filePath).includes('keystore') || !fs_1.default.existsSync(filePath.trim())) {
         return message || 'Couldn’t locate keystore file or directory.';
     }
@@ -36,7 +37,7 @@ exports.jsonFileValidator = jsonFileValidator;
  * @param regex
  */
 const sanitizePath = (path, regex) => {
-    return path.replace(regex || /\\([^a-zA-Z0-9_])/g, "$1");
+    return path.trim().replace(regex || /\\([^a-zA-Z0-9_])/g, "$1");
 };
 exports.sanitizePath = sanitizePath;
 //# sourceMappingURL=file.js.map

@@ -19,9 +19,11 @@ export declare const createSSVDir: (outputFolder: string) => Promise<any>;
  * Create it before, if it doesn't exist.
  */
 export declare const getSSVDir: (outputFolder: string) => Promise<string>;
-export declare const getFilePath: (name: string, outputFolder: string, withTime?: boolean) => Promise<string>;
+export declare const getFilePath: (name: string, outputFolder: string, postfixName?: string, withTime?: boolean) => Promise<string>;
 export type KeyStoreFilesResult = {
     files: string[];
     isFolder: boolean;
 };
 export declare const getKeyStoreFiles: (keystorePath: string) => Promise<KeyStoreFilesResult>;
+export declare const readOperatorsFile: (filePath: string) => Map<number, string>;
+export declare const readOperatorsDistributionFile: (filePath: string) => number[][];

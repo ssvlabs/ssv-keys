@@ -41,8 +41,8 @@ export const getSSVDir = async (outputFolder: string): Promise<string> => {
   return outputFolder.endsWith(path.sep) ? outputFolder : `${outputFolder}${path.sep}`;
 }
 
-export const getFilePath = async (name: string, outputFolder: string, withTime = true): Promise<string> => {
-  return `${await getSSVDir(outputFolder)}${name}${withTime ? `-${moment().unix()}` : ''}.json`;
+export const getFilePath = async (name: string, outputFolder: string, postfixName?: string, withTime = true): Promise<string> => {
+  return `${await getSSVDir(outputFolder)}${name}${withTime ? `-${moment().unix()}` : ''}${postfixName || ''}.json`;
 }
 
 export type KeyStoreFilesResult = {
@@ -65,4 +65,21 @@ export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFi
     files = [keystorePath];
   }
   return { files, isFolder };
+}
+
+export const readOperatorsFile = (filePath: string): Map<number, string> => {
+  const data = fs.readFileSync(filePath, 'utf8');
+  const lines = data.trim().split('\n');
+  const operators = new Map<number, string>();
+  lines.forEach(line => {
+    const [id, operatorKey] = line.split(',');
+    operators.set(Number(id), operatorKey);
+  });
+  return operators;
+}
+
+export const readOperatorsDistributionFile = (filePath: string): number[][] => {
+  const data = fs.readFileSync(filePath, 'utf8');
+  const lines = data.trim().split('\n');
+  return lines.map(line => line.split(',').map(Number));
 }

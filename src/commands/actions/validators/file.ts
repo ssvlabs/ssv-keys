@@ -3,7 +3,7 @@ import * as path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(filePath);
-
+  console.log('???', filePath);
   if (!path.basename(filePath).includes('keystore') || !fs.existsSync(filePath.trim())) {
     return message || 'Couldn’t locate keystore file or directory.';
   }
@@ -32,5 +32,5 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
  * @param regex
  */
 export const sanitizePath = (path: string, regex?: RegExp): string => {
-  return path.replace(regex || /\\([^a-zA-Z0-9_])/g, "$1");
+  return path.trim().replace(regex || /\\([^a-zA-Z0-9_])/g, "$1");
 };

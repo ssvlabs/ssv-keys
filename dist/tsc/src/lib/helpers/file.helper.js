@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getKeyStoreFiles = exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = void 0;
+exports.readOperatorsDistributionFile = exports.readOperatorsFile = exports.getKeyStoreFiles = exports.getFilePath = exports.getSSVDir = exports.createSSVDir = exports.writeFile = exports.readFile = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
@@ -44,8 +44,8 @@ const getSSVDir = (outputFolder) => tslib_1.__awaiter(void 0, void 0, void 0, fu
     return outputFolder.endsWith(path_1.default.sep) ? outputFolder : `${outputFolder}${path_1.default.sep}`;
 });
 exports.getSSVDir = getSSVDir;
-const getFilePath = (name, outputFolder, withTime = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    return `${yield (0, exports.getSSVDir)(outputFolder)}${name}${withTime ? `-${(0, moment_1.default)().unix()}` : ''}.json`;
+const getFilePath = (name, outputFolder, postfixName, withTime = true) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    return `${yield (0, exports.getSSVDir)(outputFolder)}${name}${withTime ? `-${(0, moment_1.default)().unix()}` : ''}${postfixName || ''}.json`;
 });
 exports.getFilePath = getFilePath;
 const getKeyStoreFiles = (keystorePath) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
@@ -65,4 +65,21 @@ const getKeyStoreFiles = (keystorePath) => tslib_1.__awaiter(void 0, void 0, voi
     return { files, isFolder };
 });
 exports.getKeyStoreFiles = getKeyStoreFiles;
+const readOperatorsFile = (filePath) => {
+    const data = fs_1.default.readFileSync(filePath, 'utf8');
+    const lines = data.trim().split('\n');
+    const operators = new Map();
+    lines.forEach(line => {
+        const [id, operatorKey] = line.split(',');
+        operators.set(Number(id), operatorKey);
+    });
+    return operators;
+};
+exports.readOperatorsFile = readOperatorsFile;
+const readOperatorsDistributionFile = (filePath) => {
+    const data = fs_1.default.readFileSync(filePath, 'utf8');
+    const lines = data.trim().split('\n');
+    return lines.map(line => line.split(',').map(Number));
+};
+exports.readOperatorsDistributionFile = readOperatorsDistributionFile;
 //# sourceMappingURL=file.helper.js.map

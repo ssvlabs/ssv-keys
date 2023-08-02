@@ -15,7 +15,7 @@ const FigletMessage = (message) => tslib_1.__awaiter(void 0, void 0, void 0, fun
         });
     });
 });
-function main(interactive) {
+function main(interactive, defaultAction) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const messageText = `SSV Keys v${package_json_1.default.version}`;
         const message = yield FigletMessage(messageText);
@@ -28,11 +28,11 @@ function main(interactive) {
             }
             console.log(' ----------------------------------------------------------------------\n');
         }
-        const command = new SSVKeysCommand_1.SSVKeysCommand(interactive);
+        const command = new SSVKeysCommand_1.SSVKeysCommand(interactive, defaultAction);
         try {
             const outputFiles = yield command.execute();
             console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's' : ''} at:`);
-            outputFiles.map((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
+            outputFiles.forEach((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
         }
         catch (error) {
             console.log(error);

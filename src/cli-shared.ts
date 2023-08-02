@@ -15,7 +15,7 @@ const FigletMessage = async (message: string) => {
   })
 }
 
-export default async function main(interactive: boolean): Promise<any> {
+export default async function main(interactive: boolean, defaultAction?: string): Promise<any> {
   const messageText = `SSV Keys v${pkg.version}`;
   const message = await FigletMessage(messageText);
   if (message) {
@@ -27,7 +27,7 @@ export default async function main(interactive: boolean): Promise<any> {
     }
     console.log(' ----------------------------------------------------------------------\n');
   }
-  const command = new SSVKeysCommand(interactive);
+  const command = new SSVKeysCommand(interactive, defaultAction);
   try {
     const outputFiles = await command.execute();
     console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's': ''} at:`);
