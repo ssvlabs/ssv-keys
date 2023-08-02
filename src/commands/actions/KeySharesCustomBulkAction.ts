@@ -18,6 +18,7 @@ import { getFilePath, getKeyStoreFiles, readFile, readOperatorsDistributionFile,
  * Command to build keyshares from user input.
  */
 export class KeySharesCustomBulkAction extends BaseAction {
+  private ownerNonce!: number;
   static override get options(): any {
     return {
       action: 'custom-bulk',
@@ -82,17 +83,15 @@ export class KeySharesCustomBulkAction extends BaseAction {
           throw Error(String(isValidPassword));
         }
       }
-      let nextNonce = ownerNonce;
+      this.ownerNonce = ownerNonce;
       let processedFilesCount = 0;
       console.debug('Splitting keystore files to shares, do not terminate process!');
       for (const file of files) {
-        const keySharesFiles = await this._processFile(file, password, outputFolder, operatorGroups, ownerAddress, nextNonce);
+        const keySharesFiles = await this._processFile(file, password, outputFolder, operatorGroups, ownerAddress);
         outputFiles = [...outputFiles, ...keySharesFiles];
 
         processedFilesCount++;
         process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
-
-        nextNonce++;
       }
     } else {
       const isKeyStoreValid = await keystorePathArgument.validateSingle(keystorePath);
@@ -103,13 +102,13 @@ export class KeySharesCustomBulkAction extends BaseAction {
       if (isValidPassword !== true) {
         throw Error(String(isValidPassword));
       }
-      const keySharesFiles = await this._processFile(keystorePath, password, outputFolder, operatorGroups, ownerAddress, ownerNonce);
+      const keySharesFiles = await this._processFile(keystorePath, password, outputFolder, operatorGroups, ownerAddress);
       outputFiles = [...keySharesFiles];
     }
     return outputFiles;
   }
 
-  private async _processFile(keystoreFilePath: string, password: string, outputFolder: string, operatorGroups: any[], ownerAddress: string, ownerNonce: number) {
+  private async _processFile(keystoreFilePath: string, password: string, outputFolder: string, operatorGroups: any[], ownerAddress: string) {
     const keystoreData = await readFile(keystoreFilePath);
 
     // Initialize SSVKeys SDK
@@ -124,7 +123,7 @@ export class KeySharesCustomBulkAction extends BaseAction {
       const keyShares = new KeyShares();
       await keyShares.update({
         ownerAddress,
-        ownerNonce,
+        ownerNonce: this.ownerNonce,
         operators,
         publicKey,
       });
@@ -136,13 +135,14 @@ export class KeySharesCustomBulkAction extends BaseAction {
         encryptedShares,
       }, {
         ownerAddress,
-        ownerNonce,
+        ownerNonce: this.ownerNonce,
         privateKey,
       });
 
       const keySharesFilePath = await getFilePath('keyshares-files', outputFolder.trim(), `${index}`);
       await writeFile(keySharesFilePath, keyShares.toJson());
       keySharesFiles.push(keySharesFilePath);
+      this.ownerNonce++;
     }
 
     return keySharesFiles;

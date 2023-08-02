@@ -4,7 +4,7 @@ import * as path from 'path';
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(filePath);
   if (!path.basename(filePath).includes('keystore') || !fs.existsSync(filePath.trim())) {
-    return message || 'Couldn’t locate keystore file or directory.';
+    return message || `${filePath.trim()}: Couldn’t locate keystore file or directory.`;
   }
   return true;
 };

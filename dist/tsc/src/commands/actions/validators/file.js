@@ -7,7 +7,7 @@ const path = tslib_1.__importStar(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(filePath);
     if (!path.basename(filePath).includes('keystore') || !fs_1.default.existsSync(filePath.trim())) {
-        return message || 'Couldn’t locate keystore file or directory.';
+        return message || `${filePath.trim()}: Couldn’t locate keystore file or directory.`;
     }
     return true;
 };

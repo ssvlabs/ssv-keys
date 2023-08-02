@@ -70,15 +70,14 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                         throw Error(String(isValidPassword));
                     }
                 }
-                let nextNonce = ownerNonce;
+                this.ownerNonce = ownerNonce;
                 let processedFilesCount = 0;
                 console.debug('Splitting keystore files to shares, do not terminate process!');
                 for (const file of files) {
-                    const keySharesFiles = yield this._processFile(file, password, outputFolder, operatorGroups, ownerAddress, nextNonce);
+                    const keySharesFiles = yield this._processFile(file, password, outputFolder, operatorGroups, ownerAddress);
                     outputFiles = [...outputFiles, ...keySharesFiles];
                     processedFilesCount++;
                     process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
-                    nextNonce++;
                 }
             }
             else {
@@ -90,13 +89,13 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                 if (isValidPassword !== true) {
                     throw Error(String(isValidPassword));
                 }
-                const keySharesFiles = yield this._processFile(keystorePath, password, outputFolder, operatorGroups, ownerAddress, ownerNonce);
+                const keySharesFiles = yield this._processFile(keystorePath, password, outputFolder, operatorGroups, ownerAddress);
                 outputFiles = [...keySharesFiles];
             }
             return outputFiles;
         });
     }
-    _processFile(keystoreFilePath, password, outputFolder, operatorGroups, ownerAddress, ownerNonce) {
+    _processFile(keystoreFilePath, password, outputFolder, operatorGroups, ownerAddress) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
@@ -109,7 +108,7 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                 const keyShares = new KeyShares_1.KeyShares();
                 yield keyShares.update({
                     ownerAddress,
-                    ownerNonce,
+                    ownerNonce: this.ownerNonce,
                     operators,
                     publicKey,
                 });
@@ -120,12 +119,13 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                     encryptedShares,
                 }, {
                     ownerAddress,
-                    ownerNonce,
+                    ownerNonce: this.ownerNonce,
                     privateKey,
                 });
                 const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares-files', outputFolder.trim(), `${index}`);
                 yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
                 keySharesFiles.push(keySharesFilePath);
+                this.ownerNonce++;
             }
             return keySharesFiles;
         });
