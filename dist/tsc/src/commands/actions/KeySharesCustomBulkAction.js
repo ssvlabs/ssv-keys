@@ -59,6 +59,10 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
             const bulkProcess = multiShares || true;
             if (bulkProcess) {
                 const { files } = yield (0, file_helper_1.getKeyStoreFiles)((0, file_1.sanitizePath)(keystorePath));
+                // validate data
+                if (files.length !== operatorGroups.length) {
+                    throw Error(`Files amoumt(${files.length}) is not equal clusters amount(${operatorGroups.length})`);
+                }
                 // validate all files
                 console.debug('Validating keystore files, do not terminate process!');
                 let validatedFilesCount = 0;
@@ -78,9 +82,9 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                 this.ownerNonce = ownerNonce;
                 let processedFilesCount = 0;
                 console.debug('Splitting keystore files to shares, do not terminate process!');
-                for (const file of files) {
-                    const keySharesFiles = yield this._processFile(file, password, outputFolder, operatorGroups, ownerAddress);
-                    outputFiles = [...outputFiles, ...keySharesFiles];
+                for (const [index, file] of files.entries()) {
+                    const keySharesFile = yield this._processFile(file, password, outputFolder, operatorGroups[index], ownerAddress);
+                    outputFiles.push(keySharesFile);
                     processedFilesCount++;
                     process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
                 }
@@ -94,45 +98,41 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                 if (isValidPassword !== true) {
                     throw Error(String(isValidPassword));
                 }
-                const keySharesFiles = yield this._processFile(keystorePath, password, outputFolder, operatorGroups, ownerAddress);
-                outputFiles = [...keySharesFiles];
+                const keySharesFile = yield this._processFile(keystorePath, password, outputFolder, operatorGroups[0], ownerAddress);
+                outputFiles = [keySharesFile];
             }
             return outputFiles;
         });
     }
-    _processFile(keystoreFilePath, password, outputFolder, operatorGroups, ownerAddress) {
+    _processFile(keystoreFilePath, password, outputFolder, operators, ownerAddress) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
             // Initialize SSVKeys SDK
             const ssvKeys = new SSVKeys_1.SSVKeys();
             const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
-            const keySharesFiles = [];
-            for (const [index, operators] of operatorGroups.entries()) {
-                // Build shares from operator IDs and public keys
-                const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);
-                const keyShares = new KeyShares_1.KeyShares();
-                yield keyShares.update({
-                    ownerAddress,
-                    ownerNonce: this.ownerNonce,
-                    operators,
-                    publicKey,
-                });
-                // Build payload and save it in key shares file
-                yield keyShares.buildPayload({
-                    publicKey,
-                    operators,
-                    encryptedShares,
-                }, {
-                    ownerAddress,
-                    ownerNonce: this.ownerNonce,
-                    privateKey,
-                });
-                const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares-files', outputFolder.trim(), `${index}`);
-                yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
-                keySharesFiles.push(keySharesFilePath);
-                this.ownerNonce++;
-            }
-            return keySharesFiles;
+            // Build shares from operator IDs and public keys
+            const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);
+            const keyShares = new KeyShares_1.KeyShares();
+            yield keyShares.update({
+                ownerAddress,
+                ownerNonce: this.ownerNonce,
+                operators,
+                publicKey,
+            });
+            // Build payload and save it in key shares file
+            yield keyShares.buildPayload({
+                publicKey,
+                operators,
+                encryptedShares,
+            }, {
+                ownerAddress,
+                ownerNonce: this.ownerNonce,
+                privateKey,
+            });
+            const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares-files', outputFolder.trim());
+            yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
+            this.ownerNonce++;
+            return keySharesFilePath;
         });
     }
 }
