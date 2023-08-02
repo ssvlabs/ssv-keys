@@ -60,6 +60,8 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
             if (bulkProcess) {
                 const { files } = yield (0, file_helper_1.getKeyStoreFiles)((0, file_1.sanitizePath)(keystorePath));
                 // validate all files
+                console.debug('Validating keystore files, do not terminate process!');
+                let validatedFilesCount = 0;
                 for (const file of files) {
                     const isKeyStoreValid = yield keystore_path_1.default.validateSingle(file);
                     if (isKeyStoreValid !== true) {
@@ -69,7 +71,10 @@ class KeySharesCustomBulkAction extends BaseAction_1.BaseAction {
                     if (isValidPassword !== true) {
                         throw Error(String(isValidPassword));
                     }
+                    validatedFilesCount++;
+                    process.stdout.write(`\r${validatedFilesCount}/${files.length} keystore files successfully validated`);
                 }
+                process.stdout.write('\n');
                 this.ownerNonce = ownerNonce;
                 let processedFilesCount = 0;
                 console.debug('Splitting keystore files to shares, do not terminate process!');
