@@ -63,12 +63,11 @@ export class KeySharesAction extends BaseAction {
     }));
 
     const keystorePath = sanitizePath(String(keystore).trim());
-
     if (multiShares) {
       const { files } = await getKeyStoreFiles(keystorePath);
       // validate all files
       for (const file of files) {
-        const isKeyStoreValid = await keystorePathArgument.interactive.options.validateSingle(file);
+        const isKeyStoreValid = await keystorePathArgument.validateSingle(file);
         if (isKeyStoreValid !== true) {
           throw Error(String(isKeyStoreValid));
         }
@@ -93,7 +92,7 @@ export class KeySharesAction extends BaseAction {
       process.stdout.write('\n');
       return outputFiles;
     } else {
-      const isKeyStoreValid = await keystorePathArgument.interactive.options.validateSingle(keystorePath);
+      const isKeyStoreValid = await keystorePathArgument.validateSingle(keystorePath);
       if (isKeyStoreValid !== true) {
         throw Error(String(isKeyStoreValid));
       }

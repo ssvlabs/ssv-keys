@@ -14,18 +14,18 @@ export default {
   interactive: {
     options: {
       type: 'text',
-      validateSingle: (filePath: string): any => {
-        filePath = sanitizePath(String(filePath).trim());
-        let isValid = fileExistsValidator(filePath);
-        if (isValid !== true) {
-          return isValid;
-        }
-        isValid = jsonFileValidator(filePath);
-        if (isValid !== true) {
-          return isValid;
-        }
-        return true;
-      },
+    },
+  },
+  validateSingle: (filePath: string): any => {
+    filePath = sanitizePath(String(filePath).trim());
+    let isValid = fileExistsValidator(filePath);
+    if (isValid !== true) {
+      return isValid;
     }
-  }
+    isValid = jsonFileValidator(filePath);
+    if (isValid !== true) {
+      return isValid;
+    }
+    return true;
+  },
 };

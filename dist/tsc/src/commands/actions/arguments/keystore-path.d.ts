@@ -12,8 +12,8 @@ declare const _default: {
     interactive: {
         options: {
             type: string;
-            validateSingle: (filePath: string) => any;
         };
     };
+    validateSingle: (filePath: string) => any;
 };
 export default _default;

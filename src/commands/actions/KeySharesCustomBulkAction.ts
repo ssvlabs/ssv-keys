@@ -68,11 +68,12 @@ export class KeySharesCustomBulkAction extends BaseAction {
     );
 
     let outputFiles: any = [];
-    if (multiShares) {
+    const bulkProcess = multiShares || true;
+    if (bulkProcess) {
       const { files } = await getKeyStoreFiles(sanitizePath(keystorePath));
       // validate all files
       for (const file of files) {
-        const isKeyStoreValid = await keystorePathArgument.interactive.options.validateSingle(file);
+        const isKeyStoreValid = await keystorePathArgument.validateSingle(file);
         if (isKeyStoreValid !== true) {
           throw Error(String(isKeyStoreValid));
         }
@@ -94,7 +95,7 @@ export class KeySharesCustomBulkAction extends BaseAction {
         nextNonce++;
       }
     } else {
-      const isKeyStoreValid = await keystorePathArgument.interactive.options.validateSingle(keystorePath);
+      const isKeyStoreValid = await keystorePathArgument.validateSingle(keystorePath);
       if (isKeyStoreValid !== true) {
         throw Error(String(isKeyStoreValid));
       }

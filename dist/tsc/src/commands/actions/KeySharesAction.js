@@ -56,7 +56,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 const { files } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
                 // validate all files
                 for (const file of files) {
-                    const isKeyStoreValid = yield keystore_path_1.default.interactive.options.validateSingle(file);
+                    const isKeyStoreValid = yield keystore_path_1.default.validateSingle(file);
                     if (isKeyStoreValid !== true) {
                         throw Error(String(isKeyStoreValid));
                     }
@@ -80,7 +80,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
                 return outputFiles;
             }
             else {
-                const isKeyStoreValid = yield keystore_path_1.default.interactive.options.validateSingle(keystorePath);
+                const isKeyStoreValid = yield keystore_path_1.default.validateSingle(keystorePath);
                 if (isKeyStoreValid !== true) {
                     throw Error(String(isKeyStoreValid));
                 }

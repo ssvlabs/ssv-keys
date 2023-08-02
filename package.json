@@ -21,8 +21,8 @@
   },
   "scripts": {
     "dev:cli": "ts-node src/cli.ts",
-    "dev:icli": "ts-node src/cli-interactive.ts",
-    "icli": "node ./dist/tsc/src/cli-interactive.js",
+    "dev:icli": "ts-node src/cli-custom-bulk-interactive.ts",
+    "icli": "node ./dist/tsc/src/cli-custom-bulk-interactive.js",
     "cli": "node ./dist/tsc/src/cli.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",

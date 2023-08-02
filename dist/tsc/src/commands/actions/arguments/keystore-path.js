@@ -15,19 +15,19 @@ exports.default = {
     interactive: {
         options: {
             type: 'text',
-            validateSingle: (filePath) => {
-                filePath = (0, file_1.sanitizePath)(String(filePath).trim());
-                let isValid = (0, file_1.fileExistsValidator)(filePath);
-                if (isValid !== true) {
-                    return isValid;
-                }
-                isValid = (0, file_1.jsonFileValidator)(filePath);
-                if (isValid !== true) {
-                    return isValid;
-                }
-                return true;
-            },
+        },
+    },
+    validateSingle: (filePath) => {
+        filePath = (0, file_1.sanitizePath)(String(filePath).trim());
+        let isValid = (0, file_1.fileExistsValidator)(filePath);
+        if (isValid !== true) {
+            return isValid;
         }
-    }
+        isValid = (0, file_1.jsonFileValidator)(filePath);
+        if (isValid !== true) {
+            return isValid;
+        }
+        return true;
+    },
 };
 //# sourceMappingURL=keystore-path.js.map
