@@ -33,14 +33,10 @@
         "build-all": "yarn clean && yarn build && yarn esbuild",
         "esbuild": "node ./esbuild.js",
         "pre-commit": "yarn test && yarn lint && yarn build-all",
-        "package-linux": "pkg dist/tsc/src/cli-interactive.js --targets node14-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
-        "package-macos": "pkg dist/tsc/src/cli-interactive.js --targets node14-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
-        "package-win": "pkg dist/tsc/src/cli-interactive.js --targets node14-win-x64 --output bin/win/ssv-keys.exe --compress GZip",
-        "package-all": "yarn package-linux && yarn package-macos && yarn package-win",
-        "package-custom-bulk-linux": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-linux-x64 --output bin/linux/ssv-keys-bulk-lin --compress GZip",
-        "package-custom-bulk-macos": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-macos-x64 --output bin/macos/ssv-keys-bulk-mac --compress GZip",
-        "package-custom-bulk-win": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-win-x64 --output bin/win/ssv-keys-bulk.exe --compress GZip",
-        "package-custom-bulk-all": "yarn package-custom-bulk-linux && yarn package-custom-bulk-macos && yarn package-custom-bulk-win"
+        "package-linux": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-linux-x64 --output bin/linux/ssv-keys-bulk-lin --compress GZip",
+        "package-macos": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-macos-x64 --output bin/macos/ssv-keys-bulk-mac --compress GZip",
+        "package-win": "pkg dist/tsc/src/cli-custom-bulk-interactive.js --targets node14-win-x64 --output bin/win/ssv-keys-bulk.exe --compress GZip",
+        "package-all": "yarn package-custom-bulk-linux && yarn package-custom-bulk-macos && yarn package-custom-bulk-win"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "^5.16.4",
