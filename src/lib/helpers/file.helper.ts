@@ -73,7 +73,7 @@ export const readOperatorsFile = (filePath: string): Map<number, string> => {
   const operators = new Map<number, string>();
   lines.forEach(line => {
     const [id, operatorKey] = line.split(',');
-    operators.set(Number(id), operatorKey);
+    operators.set(Number(id), operatorKey.replace(/(\r\n|\n|\r)/gm, ''));
   });
   return operators;
 }

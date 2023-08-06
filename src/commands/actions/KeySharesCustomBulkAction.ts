@@ -52,12 +52,6 @@ export class KeySharesCustomBulkAction extends BaseAction {
     } = this.args;
 
     // Now save to key shares file encrypted shares and validator public key
-    /*
-    const operators = operatorKeys.map((operatorKey: string, index: number) => ({
-      id: operatorIds[index],
-      operatorKey,
-    }));
-    */
     const operators = readOperatorsFile(sanitizePath(operatorsFile));
     const operatorsDistribution = readOperatorsDistributionFile(sanitizePath(operatorsDistributionFile));
 
@@ -75,7 +69,7 @@ export class KeySharesCustomBulkAction extends BaseAction {
 
       // validate data
       if (files.length !== operatorGroups.length) {
-        throw Error(`Files amoumt(${files.length}) is not equal clusters amount(${operatorGroups.length})`);
+        throw Error(`Files amount(${files.length}) is not equal clusters amount(${operatorGroups.length})`);
       }
 
       // validate all files
