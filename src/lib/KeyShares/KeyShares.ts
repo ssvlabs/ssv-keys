@@ -134,15 +134,15 @@ export class KeyShares {
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+    const pkArray = ethers.getBytes('0x' + pkSplit);
     const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item =>
-      ethers.utils.hexlify(item),
+      ethers.hexlify(item),
     );
 
     const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-    const eArray = ethers.utils.arrayify('0x' + eSplit);
+    const eArray = ethers.getBytes('0x' + eSplit);
     const encryptedKeys = this._splitArray(operatorCount, eArray).map(item =>
-      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
+      Buffer.from(ethers.hexlify(item).replace('0x', ''), 'hex').toString(
         'base64',
       ),
     );
