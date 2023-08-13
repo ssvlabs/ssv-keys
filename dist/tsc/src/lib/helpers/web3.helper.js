@@ -48,14 +48,14 @@ const hexToUint8Array = (hex) => {
 exports.hexToUint8Array = hexToUint8Array;
 /**
  * This function transforms an array of hexadecimal strings into a single Node.js Buffer.
- * It employs ethers.utils.arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
+ * It employs ethers.getBytes to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
  *
  * @param {string[]} hexArr - An array of hexadecimal strings. Each string can represent bytes of arbitrary length. *
  * @returns {Buffer} - A Node.js Buffer that concatenates the bytes represented by the hexadecimal strings in the input array.
  *
  */
 const hexArrayToBytes = (hexArr) => {
-    const uint8Array = new Uint8Array(hexArr.map(item => [...ethers.utils.arrayify(item)]).flat());
+    const uint8Array = new Uint8Array(hexArr.map(item => [...ethers.getBytes(item)]).flat());
     return Buffer.from(uint8Array);
 };
 exports.hexArrayToBytes = hexArrayToBytes;

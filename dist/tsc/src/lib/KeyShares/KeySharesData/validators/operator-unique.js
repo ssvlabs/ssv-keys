@@ -4,7 +4,7 @@ exports.OpeatorsListValidator = exports.OpeatorsListValidatorConstraint = void 0
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
 const operator_1 = require("../../../exceptions/operator");
-let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
+let OpeatorsListValidatorConstraint = exports.OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
     validate(operatorsList) {
         const operatorIds = new Set(), operatorPublicKeys = new Set();
         for (const operator of operatorsList || []) {
@@ -23,10 +23,9 @@ let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
         return 'The list of operators contains duplicate entries';
     }
 };
-OpeatorsListValidatorConstraint = tslib_1.__decorate([
+exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'uniqueList', async: false })
 ], OpeatorsListValidatorConstraint);
-exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint;
 function OpeatorsListValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

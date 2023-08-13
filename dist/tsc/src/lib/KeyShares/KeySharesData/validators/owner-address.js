@@ -6,7 +6,7 @@ const class_validator_1 = require("class-validator");
 const web3Helper = tslib_1.__importStar(require("../../../helpers/web3.helper"));
 const keystore_1 = require("../../../exceptions/keystore");
 /* Try to validate ethereum owner address. */
-let OwnerAddressValidatorConstraint = class OwnerAddressValidatorConstraint {
+let OwnerAddressValidatorConstraint = exports.OwnerAddressValidatorConstraint = class OwnerAddressValidatorConstraint {
     validate(value) {
         try {
             web3Helper.web3.utils.toChecksumAddress(value);
@@ -20,10 +20,9 @@ let OwnerAddressValidatorConstraint = class OwnerAddressValidatorConstraint {
         return 'Invalid owner address';
     }
 };
-OwnerAddressValidatorConstraint = tslib_1.__decorate([
+exports.OwnerAddressValidatorConstraint = OwnerAddressValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'ownerAddress', async: false })
 ], OwnerAddressValidatorConstraint);
-exports.OwnerAddressValidatorConstraint = OwnerAddressValidatorConstraint;
 function OwnerAddressValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

@@ -7,13 +7,10 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  setupFilesAfterEnv: [
-    "<rootDir>/src/config/jest/setupTests.ts"
-  ],
   globals: {
     Uint8Array: Uint8Array,
   },
-  testEnvironment: "./src/config/jest/TestsEnvironments",
+  testEnvironment: "node",
   watchPlugins: [
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname"

@@ -58,6 +58,7 @@ class KeySharesData {
         return this.operators.map(operator => String(operator.operatorKey));
     }
 }
+exports.KeySharesData = KeySharesData;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
@@ -79,5 +80,4 @@ tslib_1.__decorate([
     (0, class_validator_1.ValidateNested)({ each: true }),
     (0, operator_unique_1.OpeatorsListValidator)()
 ], KeySharesData.prototype, "operators", void 0);
-exports.KeySharesData = KeySharesData;
 //# sourceMappingURL=KeySharesData.js.map

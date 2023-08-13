@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
 const operator_1 = require("../../../../commands/actions/validators/operator");
 const operator_2 = require("../../../exceptions/operator");
-let OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstraint {
+let OpeatorPublicKeyValidatorConstraint = exports.OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstraint {
     validate(value) {
         const result = (0, operator_1.operatorPublicKeyValidator)(value);
         if (result !== true) {
@@ -17,10 +17,9 @@ let OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstra
         return 'Invalid operator public key';
     }
 };
-OpeatorPublicKeyValidatorConstraint = tslib_1.__decorate([
+exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'operatorKey', async: false })
 ], OpeatorPublicKeyValidatorConstraint);
-exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint;
 function OpeatorPublicKeyValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

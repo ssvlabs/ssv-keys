@@ -82,11 +82,11 @@ class KeyShares {
     buildSharesFromBytes(bytes, operatorCount) {
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-        const pkArray = ethers.utils.arrayify('0x' + pkSplit);
-        const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item => ethers.utils.hexlify(item));
+        const pkArray = ethers.getBytes('0x' + pkSplit);
+        const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item => ethers.hexlify(item));
         const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-        const eArray = ethers.utils.arrayify('0x' + eSplit);
-        const encryptedKeys = this._splitArray(operatorCount, eArray).map(item => Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString('base64'));
+        const eArray = ethers.getBytes('0x' + eSplit);
+        const encryptedKeys = this._splitArray(operatorCount, eArray).map(item => Buffer.from(ethers.hexlify(item).replace('0x', ''), 'hex').toString('base64'));
         return {
             sharesPublicKeys,
             encryptedKeys,
@@ -144,6 +144,7 @@ class KeyShares {
         return partsArr;
     }
 }
+exports.KeyShares = KeyShares;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
@@ -152,5 +153,4 @@ tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
 ], KeyShares.prototype, "payload", void 0);
-exports.KeyShares = KeyShares;
 //# sourceMappingURL=KeyShares.js.map
