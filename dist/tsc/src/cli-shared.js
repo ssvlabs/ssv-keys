@@ -32,7 +32,7 @@ function main(interactive) {
         try {
             const outputFiles = yield command.execute();
             console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's' : ''} at:`);
-            outputFiles.map((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
+            outputFiles.forEach((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
         }
         catch (error) {
             console.log(error);
