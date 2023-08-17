@@ -4,7 +4,7 @@ export default {
   options: {
     type: String,
     required: true,
-    help: 'The cluster owner address'
+    help: 'The cluster owner address (in the SSV contract)'
   },
   interactive: {
     options: {

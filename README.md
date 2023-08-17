@@ -97,8 +97,8 @@ To run you will use the "shares" command
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
 - operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible.
 - output-folder (of) = Target folder path to output the key shares file
-- owner-address (oa) = The cluster owner address
-- owner-nonce (on) = The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+- owner-address (oa) = The cluster owner address (in the SSV contract)
+- owner-nonce (on) = The validator registration nonce of the account (owner address) within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool.
 - multi-shares (ms) = Keystore path will accept multiple keystores from a folder path, all files must have the same password.
 ```bash
 # single file
