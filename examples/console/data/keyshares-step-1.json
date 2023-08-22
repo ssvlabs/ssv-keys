@@ -1,0 +1,11 @@
+{
+  "version": "v1.0.4",
+  "createdAt": "2023-08-22T06:31:02.529Z",
+  "data": {
+    "ownerNonce": null,
+    "ownerAddress": null,
+    "publicKey": null,
+    "operators": null
+  },
+  "payload": null
+}
