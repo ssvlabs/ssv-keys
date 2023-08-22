@@ -94,12 +94,12 @@ To run you will use the "shares" command
 
 - keystore-path (kp) = The validator keystore file/folder path, if a folder is provided all keystore files within the provided folder will be split according to the provided arguments
 - password (ps) = The keystore file encryption password, if a folder was provided the password will be used for all keystore files in the folder
-- operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible.
-- operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible.
+- operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible
+- operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible
 - output-folder (of) = Target folder path to output the key shares file
-- owner-address (oa) = The cluster owner address
-- owner-nonce (on) = The nonce of the owner within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
-- multi-shares (ms) = Keystore path will accept multiple keystores from a folder path, all files must have the same password.
+- owner-address (oa) = The cluster owner address (in the SSV contract)
+- owner-nonce (on) = The validator registration nonce of the account (owner address) within the SSV contract (increments after each validator registration), obtained using the ssv-scanner tool
+- multi-shares (ms) = Keystore path will accept multiple keystores from a folder path, all files must have the same password
 ```bash
 # single file
 yarn cli shares --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..

@@ -14,7 +14,7 @@ exports.default = {
         action: 'store_true',
         default: false,
         required: false,
-        help: 'Keystore path will accept multiple keystores from a folder path, all files must have the same password.'
+        help: 'Keystore path will accept multiple keystores from a folder path, all files must have the same password'
     }
 };
 //# sourceMappingURL=multi-shares.js.map
