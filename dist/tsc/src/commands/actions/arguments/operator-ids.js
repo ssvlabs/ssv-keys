@@ -8,7 +8,7 @@ exports.default = {
     options: {
         type: String,
         required: true,
-        help: 'Comma-separated list of operator IDs. The amount must be 3f+1 compatible.'
+        help: 'Comma-separated list of operator IDs. The amount must be 3f+1 compatible'
     },
     interactive: {
         repeat: 'Input another operator?',
@@ -31,7 +31,7 @@ exports.default = {
         },
         validateList: (items) => {
             if (!(0, operator_ids_1.isOperatorsLengthValid)(items.length)) {
-                throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
+                throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids');
             }
         }
     }
