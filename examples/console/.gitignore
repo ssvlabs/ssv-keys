@@ -1,6 +1,5 @@
 /node_modules/
 *.log
 dist
-data
 .parcel-cache
 yarn.lock
