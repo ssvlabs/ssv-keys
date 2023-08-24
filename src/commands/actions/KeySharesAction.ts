@@ -67,26 +67,30 @@ export class KeySharesAction extends BaseAction {
     if (multiShares) {
       const { files } = await getKeyStoreFiles(keystorePath);
       // validate all files
+      console.debug('Validating keystore files, do not terminate process!');
+      const validatedFiles = [];
+      let failedValidation = 0;
       for (const file of files) {
         const isKeyStoreValid = await keystorePathArgument.interactive.options.validateSingle(file);
-        if (isKeyStoreValid !== true) {
-          throw Error(String(isKeyStoreValid));
-        }
         const isValidPassword = await keystorePasswordValidator.validatePassword(password, file);
-        if (isValidPassword !== true) {
-          throw Error(String(isValidPassword));
+        if (isKeyStoreValid === true && isValidPassword === true) {
+          validatedFiles.push(file);
+        } else {
+          failedValidation++;
         }
+        process.stdout.write(`\r${validatedFiles.length}/${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
       }
+      process.stdout.write('\n');
       const outputFiles = [];
       let nextNonce = ownerNonce;
       let processedFilesCount = 0;
       console.debug('Splitting keystore files to shares, do not terminate process!');
-      for (const file of files) {
+      for (const file of validatedFiles) {
         const keySharesFilePath = await this._processFile(file, password, outputFolder, operators, ownerAddress, nextNonce);
         outputFiles.push(keySharesFilePath);
 
         processedFilesCount++;
-        process.stdout.write(`\r${processedFilesCount}/${files.length} keystore files successfully split into shares`);
+        process.stdout.write(`\r${processedFilesCount}/${validatedFiles.length} keystore files successfully split into shares`);
 
         nextNonce++;
       }
