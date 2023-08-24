@@ -20,7 +20,7 @@ export declare const createSSVDir: (outputFolder: string) => Promise<any>;
  */
 export declare const getSSVDir: (outputFolder: string) => Promise<string>;
 export declare const getFilePath: (name: string, outputFolder: string, withTime?: boolean) => Promise<string>;
-export type KeyStoreFilesResult = {
+export declare type KeyStoreFilesResult = {
     files: string[];
     isFolder: boolean;
 };

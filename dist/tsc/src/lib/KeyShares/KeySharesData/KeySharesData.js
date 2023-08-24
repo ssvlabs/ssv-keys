@@ -19,7 +19,7 @@ class KeySharesData {
         if (data.ownerAddress) {
             this.ownerAddress = data.ownerAddress;
         }
-        if (data.ownerNonce) {
+        if (typeof data.ownerNonce === 'number') {
             this.ownerNonce = data.ownerNonce;
         }
         if (data.publicKey) {
