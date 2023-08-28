@@ -3,10 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.sanitizePath = exports.jsonFileValidator = exports.fileExistsValidator = void 0;
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
-const path = tslib_1.__importStar(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(filePath);
-    if (!path.basename(filePath).includes('keystore') || !fs_1.default.existsSync(filePath.trim())) {
+    if (!fs_1.default.existsSync(filePath.trim())) {
         return message || 'Couldn’t locate keystore file or directory.';
     }
     return true;
