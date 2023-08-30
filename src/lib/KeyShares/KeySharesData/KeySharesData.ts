@@ -40,7 +40,7 @@ export class KeySharesData implements IKeySharesData {
     if (data.ownerAddress) {
       this.ownerAddress = data.ownerAddress;
     }
-    if (data.ownerNonce) {
+    if (typeof data.ownerNonce === 'number') {
       this.ownerNonce = data.ownerNonce;
     }
     if (data.publicKey) {

@@ -11,7 +11,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-scripts": "5.0.1",
-    "ssv-keys": "https://github.com/bloxapp/ssv-keys.git#v3",
+    "ssv-keys": "https://github.com/bloxapp/ssv-keys.git",
     "web-vitals": "^2.1.0",
     "crypto": "npm:crypto-browserify",
     "stream": "npm:stream-browserify",

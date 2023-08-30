@@ -39,8 +39,8 @@ you need to make `POST` request with `json` body like in example:
 ```http request
 POST http://localhost:3000/key-shares/generate
 {
-    "operators_ids": [1, 2, 3, 4],
-    "operators_keys": [
+    "operator_ids": [1, 2, 3, 4],
+    "operator_keys": [
         "LS0t...LS0K",
         "LS0t...LS0K",
         "LS0t...LS0K",

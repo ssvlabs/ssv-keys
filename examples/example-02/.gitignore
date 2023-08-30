@@ -1,6 +1,0 @@
-/node_modules/
-*.log
-dist
-.parcel-cache
-yarn.lock
-data/*
