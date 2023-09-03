@@ -21,4 +21,14 @@ describe('KeyShares', () => {
   it('Should not throw error the semantic versioning test', async () => {
     expect(() => keyShares.fromJson(keySharesWithOperators)).not.toThrowError();
   });
+
+  it('should initialize from JSON', () => {
+    const result = keyShares.fromJson(emptyKeyShares);
+    expect(result).toBeDefined();
+  });
+
+  it('should stringify to JSON', () => {
+    const result = keyShares.toJson();
+    expect(result).toBeDefined();
+  });
 });
