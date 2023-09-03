@@ -117,20 +117,23 @@ yarn cli shares --keystore=./keystore-files --password=test --operator-ids=1,2,3
 To run an example of a NodeJS project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
 
 ```bash
-cd examples/example-02
+cd examples/console
 yarn install
 ```
 
 To run a JavaScript example:
 
 ```bash
-node example-simple.js
+# example 1
+yarn start:basic:js
+# example 2
+yarn start:complex:js
 ```
 
 To run a TypeScript example:
 
 ```bash
-yarn start
+yarn start:ts
 ```
 
 ### Browser project (web application)
