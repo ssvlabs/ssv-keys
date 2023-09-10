@@ -49,7 +49,7 @@ const sanitizePath = (inputPath) => {
     // Remove any characters that are not typically allowed or are problematic in file paths.
     // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
     // You can adjust the regex as needed.
-    sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9_\-\.\/\\ ]/g, '');
+    sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9_\-./\\ ]/g, '');
     // On Windows, paths might start with a drive letter. We can check and ensure it's a valid drive letter.
     if (process.platform === 'win32') {
         const match = sanitizedPath.match(/^([a-zA-Z]:)/);
