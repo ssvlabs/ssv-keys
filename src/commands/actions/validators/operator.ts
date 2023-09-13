@@ -1,34 +1,61 @@
 import { decode } from 'js-base64';
 import JSEncrypt from '../../../lib/JSEncrypt';
-import { InvalidOperatorKeyException } from '../../../lib/Encryption/Encryption';
+import { OperatorPublicKeyError } from '../../../lib/exceptions/operator';
 
-export const operatorPublicKeyValidator = (publicKey: string): string | boolean => {
+export const operatorPublicKeyValidator = (publicKey: string): boolean => {
+  publicKey = publicKey.trim();
+
+  const begin = '-----BEGIN RSA PUBLIC KEY-----';
+  const end = '-----END RSA PUBLIC KEY-----';
+
+  const encrypt = new JSEncrypt({});
+  let decodedOperator = '';
   try {
-    const errorMessage = 'Invalid operator key format, make sure the operator exists in the network';
-    const decodedOperator = decode(publicKey);
-    if (publicKey.length < 98) {
-      throw Error('The length of the operator public key must be at least 98 characters.');
+    let decodedPublicKey = '';
+
+    if (!publicKey.startsWith(begin)) {
+      if (publicKey.length < 98) {
+        throw Error('The length of the operator public key must be at least 98 characters.');
+      }
+
+      try {
+        decodedPublicKey = decode(publicKey).trim();
+      } catch (error) {
+        throw new Error("Failed to decode the operator public key. Ensure it's correctly base64 encoded.");
+      }
+
+      if (!decodedPublicKey.startsWith(begin)) {
+        throw new Error(`Operator public key does not start with '${begin}'`);
+      }
+    } else {
+      decodedPublicKey = publicKey;
     }
-    if (!decodedOperator.startsWith('-----BEGIN RSA PUBLIC KEY-----')) {
-      throw Error(errorMessage);
+
+    if (!decodedPublicKey.endsWith(end)) {
+        throw new Error(`Operator public key does not end with '${end}'`);
     }
-    const encrypt = new JSEncrypt({});
+
+    try {
+      // Get the content without the header and footer
+      const content = decodedPublicKey.slice(begin.length, publicKey.length - end.length).trim();
+      decodedOperator = decode(content);
+    } catch (error) {
+      throw new Error("Failed to decode the RSA public key. Ensure it's correctly base64 encoded.");
+    }
+
     try {
       encrypt.setPublicKey(decodedOperator);
-    } catch (error) {
-      throw new InvalidOperatorKeyException(
-        {
-          rsa: decodedOperator,
-          base64: publicKey,
-        },
-        errorMessage,
-      );
+    } catch (error: any) {
+      throw new Error("Invalid operator key format, make sure the operator exists in the network.");
     }
-    return true;
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { message } = e;
-    return message;
+  } catch (error: any) {
+    throw new OperatorPublicKeyError(
+      {
+        rsa: decodedOperator,
+        base64: publicKey,
+      },
+      error.message,
+    );
   }
+  return true;
 }

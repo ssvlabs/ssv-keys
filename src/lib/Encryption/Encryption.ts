@@ -2,14 +2,7 @@ import JSEncrypt from '../JSEncrypt';
 
 import { IShares } from '../Threshold';
 
-export class InvalidOperatorKeyException extends Error {
-  public operator: any;
-
-  constructor(operator: { rsa: string, base64: string }, message: string) {
-    super(message);
-    this.operator = operator;
-  }
-}
+import { operatorPublicKeyValidator } from '../../commands/actions/validators/operator';
 
 export interface EncryptShare {
     operatorPublicKey: string,
@@ -30,6 +23,7 @@ export default class Encryption {
   encrypt(): EncryptShare[] {
     const encryptedShares: EncryptShare[] = [];
     for (const [idx, operatorPublicKey] of this.operatorPublicKeys.entries()) {
+      operatorPublicKeyValidator(operatorPublicKey);
       const jsEncrypt = new JSEncrypt({});
       jsEncrypt.setPublicKey(operatorPublicKey)
       const encryptedPrivateKey = jsEncrypt.encrypt(this.shares[idx].privateKey);

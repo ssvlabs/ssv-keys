@@ -18,11 +18,12 @@ export default {
         if (uniqueOperators[value]) {
           return 'This operator already used';
         }
-        const returnValue = operatorPublicKeyValidator(value);
-        if (returnValue === true) {
-          uniqueOperators[value] = true;
+        try {
+          uniqueOperators[value] = operatorPublicKeyValidator(value);
+          return true;
+        } catch (e: any) {
+          return e.message;
         }
-        return returnValue;
       }
     }
   }

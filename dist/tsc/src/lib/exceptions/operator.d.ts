@@ -13,6 +13,9 @@ export declare class OperatorsCountsMismatchError extends Error {
     constructor(propertyListOne: any[] | null | undefined, propertyListTwo: any[] | null | undefined, message: string);
 }
 export declare class OperatorPublicKeyError extends Error {
-    publicKey: string;
-    constructor(publicKey: string, message: string);
+    operator: any;
+    constructor(operator: {
+        rsa: string;
+        base64: string;
+    }, message: string);
 }

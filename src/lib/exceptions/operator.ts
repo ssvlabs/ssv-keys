@@ -30,10 +30,10 @@ export class OperatorsCountsMismatchError extends Error {
 }
 
 export class OperatorPublicKeyError extends Error {
-  public publicKey: string;
+  public operator: any;
 
-  constructor(publicKey: string, message: string) {
+  constructor(operator: { rsa: string, base64: string }, message: string) {
     super(message);
-    this.publicKey = publicKey;
+    this.operator = operator;
   }
 }

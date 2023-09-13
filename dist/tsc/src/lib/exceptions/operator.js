@@ -24,9 +24,9 @@ class OperatorsCountsMismatchError extends Error {
 }
 exports.OperatorsCountsMismatchError = OperatorsCountsMismatchError;
 class OperatorPublicKeyError extends Error {
-    constructor(publicKey, message) {
+    constructor(operator, message) {
         super(message);
-        this.publicKey = publicKey;
+        this.operator = operator;
     }
 }
 exports.OperatorPublicKeyError = OperatorPublicKeyError;

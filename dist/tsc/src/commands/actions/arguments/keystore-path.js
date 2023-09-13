@@ -10,11 +10,12 @@ exports.default = {
     options: {
         required: true,
         type: String,
-        help: 'The validator keystore file(s) path'
+        help: 'The validator keystore file/folder path, if a folder is provided all keystore files within the provided folder will be split according to the provided arguments'
     },
     interactive: {
         options: {
             type: 'text',
+            message: 'Provide the keystore file path',
             validateSingle: (filePath) => {
                 filePath = (0, file_1.sanitizePath)(String(filePath).trim());
                 let isValid = (0, file_1.fileExistsValidator)(filePath);
