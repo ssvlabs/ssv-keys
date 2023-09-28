@@ -17,7 +17,7 @@
         "ssv-keys": "./dist/tsc/src/cli.js"
     },
     "engines": {
-        "node": ">=12"
+        "node": ">=10"
     },
     "scripts": {
         "dev:cli": "ts-node src/cli.ts",
