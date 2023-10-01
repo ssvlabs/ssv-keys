@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-export {};
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
