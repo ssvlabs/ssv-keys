@@ -3,6 +3,7 @@ import JSEncrypt from '../JSEncrypt';
 import { IShares } from '../Threshold';
 
 import { operatorPublicKeyValidator } from '../../commands/actions/validators/operator';
+import { OperatorPublicKeyError } from '../exceptions/operator';
 
 export interface EncryptShare {
     operatorPublicKey: string,
@@ -27,6 +28,15 @@ export default class Encryption {
       const jsEncrypt = new JSEncrypt({});
       jsEncrypt.setPublicKey(operatorPublicKey)
       const encryptedPrivateKey = jsEncrypt.encrypt(this.shares[idx].privateKey);
+      if (!encryptedPrivateKey) {
+        throw new OperatorPublicKeyError(
+          {
+            rsa: operatorPublicKey,
+            base64: encryptedPrivateKey,
+          },
+          'Private key encryption failed.',
+        );
+      }
       const encryptedShare: EncryptShare = {
           operatorPublicKey,
           privateKey: encryptedPrivateKey,
