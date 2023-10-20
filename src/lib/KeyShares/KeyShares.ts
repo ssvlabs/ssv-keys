@@ -1,5 +1,6 @@
-import * as ethers from 'ethers';
 import semver from 'semver';
+import { toBytes, toHex } from 'viem';
+
 import * as web3Helper from '../helpers/web3.helper';
 
 import pkg from '../../../package.json';
@@ -134,15 +135,15 @@ export class KeyShares {
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+    const pkArray = toBytes('0x' + pkSplit);
     const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item =>
-      ethers.utils.hexlify(item),
+      toHex(item),
     );
 
     const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-    const eArray = ethers.utils.arrayify('0x' + eSplit);
+    const eArray = toBytes('0x' + eSplit);
     const encryptedKeys = this._splitArray(operatorCount, eArray).map(item =>
-      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
+      Buffer.from(toHex(item).replace('0x', ''), 'hex').toString(
         'base64',
       ),
     );
