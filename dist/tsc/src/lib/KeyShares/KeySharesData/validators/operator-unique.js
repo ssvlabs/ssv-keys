@@ -23,10 +23,10 @@ let OpeatorsListValidatorConstraint = class OpeatorsListValidatorConstraint {
         return 'The list of operators contains duplicate entries';
     }
 };
-OpeatorsListValidatorConstraint = tslib_1.__decorate([
+exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint;
+exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'uniqueList', async: false })
 ], OpeatorsListValidatorConstraint);
-exports.OpeatorsListValidatorConstraint = OpeatorsListValidatorConstraint;
 function OpeatorsListValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

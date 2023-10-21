@@ -26,10 +26,10 @@ let MatchLengthValidatorConstraint = class MatchLengthValidatorConstraint {
         return 'The length of the entries lists are not equal';
     }
 };
-MatchLengthValidatorConstraint = tslib_1.__decorate([
+exports.MatchLengthValidatorConstraint = MatchLengthValidatorConstraint;
+exports.MatchLengthValidatorConstraint = MatchLengthValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'matchLength', async: false })
 ], MatchLengthValidatorConstraint);
-exports.MatchLengthValidatorConstraint = MatchLengthValidatorConstraint;
 function MatchLengthValidator(property, validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

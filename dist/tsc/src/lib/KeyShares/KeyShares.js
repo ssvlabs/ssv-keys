@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyShares = void 0;
 const tslib_1 = require("tslib");
-const ethers = tslib_1.__importStar(require("ethers"));
 const semver_1 = tslib_1.__importDefault(require("semver"));
+const viem_1 = require("viem");
 const web3Helper = tslib_1.__importStar(require("../helpers/web3.helper"));
 const package_json_1 = tslib_1.__importDefault(require("../../../package.json"));
 const class_validator_1 = require("class-validator");
@@ -82,11 +82,11 @@ class KeyShares {
     buildSharesFromBytes(bytes, operatorCount) {
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-        const pkArray = ethers.utils.arrayify('0x' + pkSplit);
-        const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item => ethers.utils.hexlify(item));
+        const pkArray = (0, viem_1.toBytes)('0x' + pkSplit);
+        const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item => (0, viem_1.toHex)(item));
         const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-        const eArray = ethers.utils.arrayify('0x' + eSplit);
-        const encryptedKeys = this._splitArray(operatorCount, eArray).map(item => Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString('base64'));
+        const eArray = (0, viem_1.toBytes)('0x' + eSplit);
+        const encryptedKeys = this._splitArray(operatorCount, eArray).map(item => Buffer.from((0, viem_1.toHex)(item).replace('0x', ''), 'hex').toString('base64'));
         return {
             sharesPublicKeys,
             encryptedKeys,
@@ -144,6 +144,7 @@ class KeyShares {
         return partsArr;
     }
 }
+exports.KeyShares = KeyShares;
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
@@ -152,5 +153,4 @@ tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
 ], KeyShares.prototype, "payload", void 0);
-exports.KeyShares = KeyShares;
 //# sourceMappingURL=KeyShares.js.map

@@ -16,10 +16,10 @@ let OwnerNonceValidatorConstraint = class OwnerNonceValidatorConstraint {
         return 'Invalid owner nonce';
     }
 };
-OwnerNonceValidatorConstraint = tslib_1.__decorate([
+exports.OwnerNonceValidatorConstraint = OwnerNonceValidatorConstraint;
+exports.OwnerNonceValidatorConstraint = OwnerNonceValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'ownerNonce', async: false })
 ], OwnerNonceValidatorConstraint);
-exports.OwnerNonceValidatorConstraint = OwnerNonceValidatorConstraint;
 function OwnerNonceValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

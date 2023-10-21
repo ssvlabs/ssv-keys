@@ -20,10 +20,10 @@ let OwnerAddressValidatorConstraint = class OwnerAddressValidatorConstraint {
         return 'Invalid owner address';
     }
 };
-OwnerAddressValidatorConstraint = tslib_1.__decorate([
+exports.OwnerAddressValidatorConstraint = OwnerAddressValidatorConstraint;
+exports.OwnerAddressValidatorConstraint = OwnerAddressValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'ownerAddress', async: false })
 ], OwnerAddressValidatorConstraint);
-exports.OwnerAddressValidatorConstraint = OwnerAddressValidatorConstraint;
 function OwnerAddressValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

@@ -26,10 +26,10 @@ let EncryptedKeyValidatorConstraint = class EncryptedKeyValidatorConstraint {
         return 'Filed ABI decode shares encrypted key';
     }
 };
-EncryptedKeyValidatorConstraint = tslib_1.__decorate([
+exports.EncryptedKeyValidatorConstraint = EncryptedKeyValidatorConstraint;
+exports.EncryptedKeyValidatorConstraint = EncryptedKeyValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'encryptedKey', async: false })
 ], EncryptedKeyValidatorConstraint);
-exports.EncryptedKeyValidatorConstraint = EncryptedKeyValidatorConstraint;
 function EncryptedKeyValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

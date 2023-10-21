@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.privateToPublicKey = exports.validateSignature = exports.buildSignature = exports.hexArrayToBytes = exports.hexToUint8Array = exports.abiEncode = exports.web3 = void 0;
 const tslib_1 = require("tslib");
 const web3_1 = tslib_1.__importDefault(require("web3"));
-const ethers = tslib_1.__importStar(require("ethers"));
+const viem_1 = require("viem");
 const ethUtil = tslib_1.__importStar(require("ethereumjs-util"));
 const BLS_1 = tslib_1.__importDefault(require("../BLS"));
 const bls_1 = require("../exceptions/bls");
@@ -48,14 +48,14 @@ const hexToUint8Array = (hex) => {
 exports.hexToUint8Array = hexToUint8Array;
 /**
  * This function transforms an array of hexadecimal strings into a single Node.js Buffer.
- * It employs ethers.utils.arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
+ * It employs toBytes to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
  *
  * @param {string[]} hexArr - An array of hexadecimal strings. Each string can represent bytes of arbitrary length. *
  * @returns {Buffer} - A Node.js Buffer that concatenates the bytes represented by the hexadecimal strings in the input array.
  *
  */
 const hexArrayToBytes = (hexArr) => {
-    const uint8Array = new Uint8Array(hexArr.map(item => [...ethers.utils.arrayify(item)]).flat());
+    const uint8Array = new Uint8Array(hexArr.map(item => [...(0, viem_1.toBytes)(item)]).flat());
     return Buffer.from(uint8Array);
 };
 exports.hexArrayToBytes = hexArrayToBytes;

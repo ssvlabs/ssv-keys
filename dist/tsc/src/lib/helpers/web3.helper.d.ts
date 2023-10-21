@@ -18,7 +18,7 @@ export declare const abiEncode: (encryptedShares: any[], field?: string) => stri
 export declare const hexToUint8Array: (hex: string) => Uint8Array;
 /**
  * This function transforms an array of hexadecimal strings into a single Node.js Buffer.
- * It employs ethers.utils.arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
+ * It employs toBytes to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
  *
  * @param {string[]} hexArr - An array of hexadecimal strings. Each string can represent bytes of arbitrary length. *
  * @returns {Buffer} - A Node.js Buffer that concatenates the bytes represented by the hexadecimal strings in the input array.

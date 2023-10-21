@@ -27,10 +27,10 @@ let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
         return 'Invalid public key';
     }
 };
-PublicKeyValidatorConstraint = tslib_1.__decorate([
+exports.PublicKeyValidatorConstraint = PublicKeyValidatorConstraint;
+exports.PublicKeyValidatorConstraint = PublicKeyValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'publicKey', async: true })
 ], PublicKeyValidatorConstraint);
-exports.PublicKeyValidatorConstraint = PublicKeyValidatorConstraint;
 function PublicKeyValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

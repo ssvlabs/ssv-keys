@@ -17,10 +17,10 @@ let OpeatorPublicKeyValidatorConstraint = class OpeatorPublicKeyValidatorConstra
         return 'Invalid operator public key';
     }
 };
-OpeatorPublicKeyValidatorConstraint = tslib_1.__decorate([
+exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint;
+exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint = tslib_1.__decorate([
     (0, class_validator_1.ValidatorConstraint)({ name: 'operatorKey', async: false })
 ], OpeatorPublicKeyValidatorConstraint);
-exports.OpeatorPublicKeyValidatorConstraint = OpeatorPublicKeyValidatorConstraint;
 function OpeatorPublicKeyValidator(validationOptions) {
     return function (object, propertyName) {
         (0, class_validator_1.registerDecorator)({

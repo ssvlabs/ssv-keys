@@ -17,6 +17,7 @@ class OperatorData {
         (0, class_validator_1.validateSync)(this);
     }
 }
+exports.OperatorData = OperatorData;
 tslib_1.__decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'The operator id is null' }),
     (0, class_validator_1.IsDefined)({ message: 'The operator id is undefined' }),
@@ -28,5 +29,4 @@ tslib_1.__decorate([
     (0, class_validator_1.IsString)({ message: 'The operator public key must be a string' }),
     (0, operator_public_key_1.OpeatorPublicKeyValidator)()
 ], OperatorData.prototype, "operatorKey", void 0);
-exports.OperatorData = OperatorData;
 //# sourceMappingURL=OperatorData.js.map
