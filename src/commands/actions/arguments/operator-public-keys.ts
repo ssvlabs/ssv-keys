@@ -1,4 +1,4 @@
-import { operatorPublicKeyValidator } from '../validators/operator';
+import { operatorPublicKeyValidator } from '../validators';
 
 const uniqueOperators: any = {};
 

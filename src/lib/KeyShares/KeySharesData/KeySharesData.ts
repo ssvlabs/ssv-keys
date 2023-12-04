@@ -1,18 +1,8 @@
-import {
-  IsString,
-  Length,
-  ValidateNested,
-  IsOptional,
-  validateSync,
-  IsNumber,
-} from 'class-validator';
-import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
+import { IsString, Length, ValidateNested, IsOptional, validateSync, IsNumber } from 'class-validator';
 import { OperatorData } from './OperatorData';
-import { OpeatorsListValidator } from './validators/operator-unique';
-import { PublicKeyValidator } from './validators/public-key';
+import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
+import { OpeatorsListValidator, PublicKeyValidator, OwnerAddressValidator, OwnerNonceValidator } from './validators';
 import { operatorSortedList } from '../../helpers/operator.helper';
-import { OwnerAddressValidator } from './validators/owner-address';
-import { OwnerNonceValidator } from './validators/owner-nonce';
 
 export class KeySharesData implements IKeySharesData {
   @IsOptional()

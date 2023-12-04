@@ -1,7 +1,7 @@
 import { IsDefined, IsInt, IsNotEmpty, IsString, validateSync } from 'class-validator';
-import { IOperatorData } from './IOperatorData';
-import { OpeatorPublicKeyValidator } from './validators/operator-public-key';
 import { IOperator } from './IOperator';
+import { IOperatorData } from './IOperatorData';
+import { OpeatorPublicKeyValidator } from './validators';
 
 export class OperatorData implements IOperatorData {
   @IsNotEmpty({ message: 'The operator id is null'})

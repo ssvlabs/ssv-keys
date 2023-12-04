@@ -1,4 +1,4 @@
-import { isOperatorsLengthValid } from "../validators/operator-ids";
+import { isOperatorsLengthValid } from "../validators";
 
 const uniqueOperatorIds: any = {};
 

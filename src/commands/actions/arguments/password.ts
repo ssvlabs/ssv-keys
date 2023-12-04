@@ -1,5 +1,3 @@
-// import { keystorePasswordValidator } from '../validators/keystore-password';
-
 export default {
   arg1: '-ps',
   arg2: '--password',
@@ -12,11 +10,6 @@ export default {
     options: {
       type: 'password',
       message: 'Provide the keystore file password',
-      /*
-      validate: async (password: string): Promise<boolean | string> => {
-        return await keystorePasswordValidator.validatePassword(password, true);
-      },
-      */
     }
   }
 };

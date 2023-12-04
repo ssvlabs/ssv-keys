@@ -2,7 +2,7 @@ import JSEncrypt from '../JSEncrypt';
 
 import { IShares } from '../Threshold';
 
-import { operatorPublicKeyValidator } from '../../commands/actions/validators/operator';
+import { operatorPublicKeyValidator } from '../../commands/actions/validators';
 import { OperatorPublicKeyError } from '../exceptions/operator';
 
 export interface EncryptShare {
