@@ -1,19 +1,8 @@
-import keystoreArgument from './keystore';
-import keystorePathArgument from './keystore-path';
-import ownerNonceArgument from './owner-nonce';
-import operatorIdsArgument from './operator-ids';
-import ownerAddressArgument from './owner-address';
-import keystorePasswordArgument from './password';
-import outputFolderArgument from './output-folder';
-import operatorPublicKeysArgument from './operator-public-keys';
-
-export {
-  keystoreArgument,
-  keystorePathArgument,
-  ownerNonceArgument,
-  operatorIdsArgument,
-  ownerAddressArgument,
-  keystorePasswordArgument,
-  outputFolderArgument,
-  operatorPublicKeysArgument
-};
+export { default as keystoreArgument } from './keystore';
+export { default as keystorePathArgument } from './keystore-path';
+export { default as ownerNonceArgument } from './owner-nonce';
+export { default as operatorIdsArgument } from './operator-ids';
+export { default as ownerAddressArgument } from './owner-address';
+export { default as keystorePasswordArgument } from './password';
+export { default as outputFolderArgument } from './output-folder';
+export { default as operatorPublicKeysArgument } from './operator-public-keys';
