@@ -1,4 +1,4 @@
-import { SSVKeys, KeyShares, KeySharesItem } from '../../src/main';
+import { SSVKeys, KeyShares, KeySharesItem } from 'ssv-keys';
 
 const path = require('path');
 const fsp = require('fs').promises;
@@ -68,9 +68,7 @@ async function main() {
   const keyShares2 = new KeyShares();
   await keyShares2.fromJson(jsonKeyShares);
 
-  const keySharesItems = keyShares2.list();
-
-  console.log('KeyShares list', keySharesItems.map(item => item.toJson()));
+  console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
 }
 
 void main();

@@ -30,12 +30,12 @@ function main(interactive) {
         }
         const command = new SSVKeysCommand_1.SSVKeysCommand(interactive);
         try {
-            const outputFiles = yield command.execute();
-            console.debug(`\nKey distribution successful! Find your key shares file${outputFiles.length > 1 ? 's' : ''} at:`);
-            outputFiles.forEach((file) => console.debug(`${safe_1.default.bgYellow(safe_1.default.black(file))}`));
+            const outputFile = yield command.execute();
+            console.debug('\nKey distribution successful! Find your key shares file at:');
+            console.debug(`${safe_1.default.bgYellow(safe_1.default.black(outputFile))}`);
         }
         catch (error) {
-            console.log(error);
+            console.error(`${safe_1.default.red('Error:')} ${safe_1.default.bold(error.message)}`);
         }
     });
 }

@@ -4,9 +4,15 @@ import { BaseAction } from './BaseAction';
  */
 export declare class KeySharesAction extends BaseAction {
     static get options(): any;
-    /**
-     * Decrypt and return private key.
-     */
-    execute(): Promise<any>;
-    private _processFile;
+    execute(): Promise<string>;
+    private getKeySharesList;
+    private validateKeystoreArguments;
+    private isDirectory;
+    private processKeystorePath;
+    private processKeystore;
+    private validateKeystoreFiles;
+    private validateSingleKeystore;
+    private getOperators;
+    private processFile;
+    private saveKeyShares;
 }

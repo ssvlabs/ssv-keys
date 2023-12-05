@@ -1,47 +1,48 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OwnerNonceFormatError = exports.OwnerAddressFormatError = exports.PrivateKeyFormatError = exports.EthereumWalletError = exports.KeyStorePasswordError = exports.KeyStoreInvalidError = exports.KeyStoreDataFormatError = void 0;
-class KeyStoreDataFormatError extends Error {
+const base_1 = require("./base");
+class KeyStoreDataFormatError extends base_1.BaseCustomError {
     constructor(data, message) {
         super(message);
         this.data = data;
     }
 }
 exports.KeyStoreDataFormatError = KeyStoreDataFormatError;
-class KeyStoreInvalidError extends Error {
+class KeyStoreInvalidError extends base_1.BaseCustomError {
     constructor(data, message) {
         super(message);
         this.data = data;
     }
 }
 exports.KeyStoreInvalidError = KeyStoreInvalidError;
-class KeyStorePasswordError extends Error {
+class KeyStorePasswordError extends base_1.BaseCustomError {
     constructor(message) {
         super(message);
     }
 }
 exports.KeyStorePasswordError = KeyStorePasswordError;
-class EthereumWalletError extends Error {
+class EthereumWalletError extends base_1.BaseCustomError {
     constructor(message) {
         super(message);
     }
 }
 exports.EthereumWalletError = EthereumWalletError;
-class PrivateKeyFormatError extends Error {
+class PrivateKeyFormatError extends base_1.BaseCustomError {
     constructor(data, message) {
         super(message);
         this.data = data;
     }
 }
 exports.PrivateKeyFormatError = PrivateKeyFormatError;
-class OwnerAddressFormatError extends Error {
+class OwnerAddressFormatError extends base_1.BaseCustomError {
     constructor(data, message) {
         super(message);
         this.data = data;
     }
 }
 exports.OwnerAddressFormatError = OwnerAddressFormatError;
-class OwnerNonceFormatError extends Error {
+class OwnerNonceFormatError extends base_1.BaseCustomError {
     constructor(data, message) {
         super(message);
         this.data = data;

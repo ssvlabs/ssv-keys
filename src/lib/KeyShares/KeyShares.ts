@@ -68,15 +68,25 @@ export class KeyShares {
       throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
     }
 
-    if (!Array.isArray(body.shares)) {
-      throw new Error(`The key shares array shouldn't be empty`);
-    }
-
     this.shares = [];
-    for (const item of body.shares) {
+
+    // Using a helper function to process each item
+    const processItem = async (item: any) => {
       const keySharesItem = new KeySharesItem();
       await keySharesItem.fromJson(item);
-      this.shares.push(keySharesItem);
+      return keySharesItem;
+    };
+
+    if (Array.isArray(body.shares)) {
+      // Process each item in the array
+      for (const item of body.shares) {
+        const processedItem = await processItem(item);
+        this.shares.push(processedItem);
+      }
+    } else {
+      // Handle old format (single item)
+      const processedItem = await processItem(body);
+      this.shares.push(processedItem);
     }
 
     return this;

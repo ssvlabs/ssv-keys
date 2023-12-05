@@ -1,60 +1,32 @@
-import { KeySharesData } from './KeySharesData/KeySharesData';
-import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
-import { EncryptShare } from '../Encryption/Encryption';
-import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
-import { IOperator } from './KeySharesData/IOperator';
-export interface IKeySharesPayloadData {
-    publicKey: string;
-    operators: IOperator[];
-    encryptedShares: EncryptShare[];
-}
-export interface IKeySharesToSignatureData {
-    ownerAddress: string;
-    ownerNonce: number;
-    privateKey: string;
-}
-export interface IKeySharesFromSignatureData {
-    ownerAddress: string;
-    ownerNonce: number;
-    publicKey: string;
-}
+import { KeySharesItem } from './KeySharesItem';
 /**
- * Key shares file data interface.
+ * Represents a collection of KeyShares items with functionality for serialization,
+ * deserialization, and validation.
  */
 export declare class KeyShares {
-    data: KeySharesData;
-    payload: KeySharesPayload;
+    private shares;
     constructor();
     /**
-     * Build payload from operators list, encrypted shares and validator public key
-     * @param publicKey
-     * @param operatorIds
-     * @param encryptedShares
+     * Add a single KeyShares item to the collection.
+     * @param keySharesItem The KeyShares item to add.
      */
-    buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any>;
-    validateSingleShares(shares: string, fromSignatureData: IKeySharesFromSignatureData): Promise<void>;
+    add(keySharesItem: KeySharesItem): void;
+    list(): KeySharesItem[];
     /**
-     * Build shares from bytes string and operators list length
-     * @param bytes
-     * @param operatorCount
-     */
-    buildSharesFromBytes(bytes: string, operatorCount: number): any;
-    /**
-     * Set new data and validate it.
-     * @param data
-     */
-    update(data: IKeySharesPartitialData): void;
-    /**
-     * Validate everything
+     * Validate the KeyShares instance using class-validator.
+     * @returns The validation result.
      */
     validate(): any;
     /**
-     * Initialise from JSON or object data.
-     */
-    fromJson(content: string | any): KeyShares;
-    /**
-     * Stringify key shares to be ready for saving in file.
+     * Converts the KeyShares instance to a JSON string.
+     * @returns The JSON string representation of the KeyShares instance.
      */
     toJson(): string;
-    private _splitArray;
+    /**
+     * Initialize the KeyShares instance from JSON or object data.
+     * @param content The JSON string or object to initialize from.
+     * @returns The KeyShares instance.
+     * @throws Error if the version is incompatible or the shares array is invalid.
+     */
+    fromJson(content: string | any): Promise<KeyShares>;
 }

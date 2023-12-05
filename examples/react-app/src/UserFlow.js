@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { SSVKeys, KeyShares } from 'ssv-keys';
+import { SSVKeys, KeyShares, KeySharesItem } from 'ssv-keys';
 import "./index.css";
 import "./App.css";
 import Dropzone from "./Dropzone";
@@ -21,6 +21,7 @@ function UserFlow() {
   // Initialize SSVKeys SDK
   const ssvKeys = new SSVKeys();
   const keyShares = new KeyShares();
+  const keySharesItem = new KeySharesItem();
 
   // States
   const [step, setStep] = useState(STEPS.START);
@@ -67,7 +68,7 @@ function UserFlow() {
     const TEST_OWNER_ADDRESS = '0x81592c3de184a3e2c0dcb5a261bc107bfa91f494';
 
     // Build final web3 transaction payload and update keyshares file with payload data
-    const payload = await keyShares.buildPayload({
+    const payload = await keySharesItem.buildPayload({
       publicKey,
       operators,
       encryptedShares,
@@ -81,12 +82,15 @@ function UserFlow() {
     console.log('Payload ready');
 
     // Keyshares
-    keyShares.update({
+    keySharesItem.update({
       ownerAddress: TEST_OWNER_ADDRESS,
       ownerNonce: TEST_OWNER_NONCE,
       operators,
       publicKey
     });
+
+    keyShares.add(keySharesItem);
+
     setKeyShares(keyShares.toJson());
     console.log('KeyShares ready');
     setStep(STEPS.FINISH);

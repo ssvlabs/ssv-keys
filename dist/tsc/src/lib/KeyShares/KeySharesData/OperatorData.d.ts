@@ -1,5 +1,5 @@
-import { IOperatorData } from './IOperatorData';
 import { IOperator } from './IOperator';
+import { IOperatorData } from './IOperatorData';
 export declare class OperatorData implements IOperatorData {
     id: number;
     operatorKey: string;
