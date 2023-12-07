@@ -2,7 +2,7 @@ import bls from '../BLS';
 
 import { SecretKeyType } from 'bls-eth-wasm';
 
-import { BaseCustomError } from '../exceptions/base';
+import { SSVKeysException } from '../exceptions/base';
 import { PrivateKeyFormatError } from '../exceptions/keystore';
 import { isOperatorsLengthValid } from '../../commands/actions/validators';
 
@@ -18,7 +18,7 @@ export interface ISharesKeyPairs {
     shares: IShares[]
 }
 
-export class ThresholdInvalidOperatorsLengthError extends BaseCustomError {
+export class ThresholdInvalidOperatorsLengthError extends SSVKeysException {
   public operators: number[];
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -28,7 +28,7 @@ export class ThresholdInvalidOperatorsLengthError extends BaseCustomError {
   }
 }
 
-export class ThresholdInvalidOperatorIdError extends BaseCustomError {
+export class ThresholdInvalidOperatorIdError extends SSVKeysException {
   public operator: any;
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -1,6 +1,6 @@
-import { BaseCustomError } from './base';
+import { SSVKeysException } from './base';
 
-export class KeyStoreDataFormatError extends BaseCustomError {
+export class KeyStoreDataFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -9,7 +9,7 @@ export class KeyStoreDataFormatError extends BaseCustomError {
   }
 }
 
-export class KeyStoreInvalidError extends BaseCustomError {
+export class KeyStoreInvalidError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -18,19 +18,19 @@ export class KeyStoreInvalidError extends BaseCustomError {
   }
 }
 
-export class KeyStorePasswordError extends BaseCustomError {
+export class KeyStorePasswordError extends SSVKeysException {
   constructor(message: string) {
     super(message);
   }
 }
 
-export class EthereumWalletError extends BaseCustomError {
+export class EthereumWalletError extends SSVKeysException {
   constructor(message: string) {
     super(message);
   }
 }
 
-export class PrivateKeyFormatError extends BaseCustomError {
+export class PrivateKeyFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -39,7 +39,7 @@ export class PrivateKeyFormatError extends BaseCustomError {
   }
 }
 
-export class OwnerAddressFormatError extends BaseCustomError {
+export class OwnerAddressFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -48,7 +48,7 @@ export class OwnerAddressFormatError extends BaseCustomError {
   }
 }
 
-export class OwnerNonceFormatError extends BaseCustomError {
+export class OwnerNonceFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {

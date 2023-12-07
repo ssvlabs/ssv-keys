@@ -1,4 +1,4 @@
-import { BaseCustomError } from '../exceptions/base';
+import { SSVKeysException } from '../exceptions/base';
 export interface IShares {
     privateKey: string;
     publicKey: string;
@@ -9,11 +9,11 @@ export interface ISharesKeyPairs {
     publicKey: string;
     shares: IShares[];
 }
-export declare class ThresholdInvalidOperatorsLengthError extends BaseCustomError {
+export declare class ThresholdInvalidOperatorsLengthError extends SSVKeysException {
     operators: number[];
     constructor(operators: number[], message: string);
 }
-export declare class ThresholdInvalidOperatorIdError extends BaseCustomError {
+export declare class ThresholdInvalidOperatorIdError extends SSVKeysException {
     operator: any;
     constructor(operator: any, message: string);
 }

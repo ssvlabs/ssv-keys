@@ -1,5 +1,5 @@
-import { BaseCustomError } from './base';
-export class KeySharesAbiDecodeError extends BaseCustomError {
+import { SSVKeysException } from './base';
+export class KeySharesAbiDecodeError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {

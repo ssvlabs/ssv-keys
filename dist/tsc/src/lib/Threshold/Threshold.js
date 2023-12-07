@@ -6,7 +6,7 @@ const BLS_1 = tslib_1.__importDefault(require("../BLS"));
 const base_1 = require("../exceptions/base");
 const keystore_1 = require("../exceptions/keystore");
 const validators_1 = require("../../commands/actions/validators");
-class ThresholdInvalidOperatorsLengthError extends base_1.BaseCustomError {
+class ThresholdInvalidOperatorsLengthError extends base_1.SSVKeysException {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operators, message) {
         super(message);
@@ -14,7 +14,7 @@ class ThresholdInvalidOperatorsLengthError extends base_1.BaseCustomError {
     }
 }
 exports.ThresholdInvalidOperatorsLengthError = ThresholdInvalidOperatorsLengthError;
-class ThresholdInvalidOperatorIdError extends base_1.BaseCustomError {
+class ThresholdInvalidOperatorIdError extends base_1.SSVKeysException {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operator, message) {
         super(message);

@@ -1,5 +1,5 @@
-import { BaseCustomError } from './base';
-export class BLSDeserializeError extends BaseCustomError {
+import { SSVKeysException } from './base';
+export class BLSDeserializeError extends SSVKeysException {
   public publicKey: string;
 
   constructor(publicKey: string, message: string) {
@@ -8,7 +8,7 @@ export class BLSDeserializeError extends BaseCustomError {
   }
 }
 
-export class SingleSharesSignatureInvalid extends BaseCustomError {
+export class SingleSharesSignatureInvalid extends SSVKeysException {
   public data: string;
 
   constructor(data: string, message: string) {

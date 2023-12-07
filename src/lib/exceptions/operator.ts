@@ -1,8 +1,8 @@
-import { BaseCustomError } from './base';
+import { SSVKeysException } from './base';
 
 import { IOperatorData } from '../KeyShares/KeySharesData/IOperatorData';
 
-export class DuplicatedOperatorIdError extends BaseCustomError {
+export class DuplicatedOperatorIdError extends SSVKeysException {
   public operator: IOperatorData;
 
   constructor(operator: IOperatorData, message: string) {
@@ -11,7 +11,7 @@ export class DuplicatedOperatorIdError extends BaseCustomError {
   }
 }
 
-export class DuplicatedOperatorPublicKeyError extends BaseCustomError {
+export class DuplicatedOperatorPublicKeyError extends SSVKeysException {
   public operator: IOperatorData;
 
   constructor(operator: IOperatorData, message: string) {
@@ -20,7 +20,7 @@ export class DuplicatedOperatorPublicKeyError extends BaseCustomError {
   }
 }
 
-export class OperatorsCountsMismatchError extends BaseCustomError {
+export class OperatorsCountsMismatchError extends SSVKeysException {
   public listOne: any[] | null | undefined;
   public listTwo: any[] | null | undefined;
 
@@ -31,7 +31,7 @@ export class OperatorsCountsMismatchError extends BaseCustomError {
   }
 }
 
-export class OperatorPublicKeyError extends BaseCustomError {
+export class OperatorPublicKeyError extends SSVKeysException {
   public operator: any;
 
   constructor(operator: { rsa: string, base64: string }, message: string) {

@@ -1,3 +1,4 @@
-export declare class BaseCustomError extends Error {
+export declare class SSVKeysException extends Error {
+    trace: any;
     constructor(message: string);
 }

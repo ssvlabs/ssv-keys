@@ -1,4 +1,4 @@
-import { SSVKeys, KeyShares, KeySharesItem } from 'ssv-keys';
+import { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } from 'ssv-keys';
 
 const path = require('path');
 const fsp = require('fs').promises;
@@ -66,9 +66,19 @@ async function main() {
   const jsonKeyShares = await fsp.readFile(getKeySharesFilePath(4), { encoding: 'utf-8' });
 
   const keyShares2 = new KeyShares();
-  await keyShares2.fromJson(jsonKeyShares);
-
-  console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
+  try {
+    await keyShares2.fromJson(jsonKeyShares);
+    console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
+  } catch (e: any) {
+    if (e instanceof SSVKeysException) {
+      console.log('SSVKeys Error name:', e.name);
+      console.log('SSVKeys Error message:', e.message);
+      console.log('SSVKeys Error trace:', e.trace);
+    } else {
+      // Handle other types of errors
+      console.log('Other Error caught:', e.message);
+    }
+  }
 }
 
 void main();
