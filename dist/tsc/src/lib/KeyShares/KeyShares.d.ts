@@ -28,5 +28,5 @@ export declare class KeyShares {
      * @returns The KeyShares instance.
      * @throws Error if the version is incompatible or the shares array is invalid.
      */
-    fromJson(content: string | any): Promise<KeyShares>;
+    static fromJson(content: string | any): Promise<KeyShares>;
 }

@@ -48,7 +48,7 @@ class KeyShares {
      * @returns The KeyShares instance.
      * @throws Error if the version is incompatible or the shares array is invalid.
      */
-    fromJson(content) {
+    static fromJson(content) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const body = typeof content === 'string' ? JSON.parse(content) : content;
             const extVersion = semver_1.default.parse(body.version);
@@ -59,26 +59,19 @@ class KeyShares {
             if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
                 throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
             }
-            this.shares = [];
-            // Using a helper function to process each item
-            const processItem = (item) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-                const keySharesItem = new KeySharesItem_1.KeySharesItem();
-                yield keySharesItem.fromJson(item);
-                return keySharesItem;
-            });
+            const instance = new KeyShares();
+            instance.shares = [];
             if (Array.isArray(body.shares)) {
                 // Process each item in the array
                 for (const item of body.shares) {
-                    const processedItem = yield processItem(item);
-                    this.shares.push(processedItem);
+                    instance.shares.push(yield KeySharesItem_1.KeySharesItem.fromJson(item));
                 }
             }
             else {
                 // Handle old format (single item)
-                const processedItem = yield processItem(body);
-                this.shares.push(processedItem);
+                instance.shares.push(yield KeySharesItem_1.KeySharesItem.fromJson(body));
             }
-            return this;
+            return instance;
         });
     }
 }

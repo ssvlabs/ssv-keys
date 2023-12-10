@@ -50,12 +50,12 @@ export declare class KeySharesItem {
      */
     validate(): any;
     /**
-     * Initialise from JSON or object data.
-     */
-    fromJson(content: string | any): Promise<KeySharesItem>;
-    /**
      * Stringify key shares to be ready for saving in file.
      */
     toJson(): string;
     private splitArray;
+    /**
+     * Initialise from JSON or object data.
+     */
+    static fromJson(content: string | any): Promise<KeySharesItem>;
 }

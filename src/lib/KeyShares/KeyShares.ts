@@ -55,7 +55,7 @@ export class KeyShares {
    * @returns The KeyShares instance.
    * @throws Error if the version is incompatible or the shares array is invalid.
    */
-  async fromJson(content: string | any): Promise<KeyShares> {
+  static async fromJson(content: string | any): Promise<KeyShares> {
     const body = typeof content === 'string' ? JSON.parse(content) : content;
     const extVersion = semver.parse(body.version);
     const currentVersion = semver.parse(pkg.version);
@@ -68,27 +68,19 @@ export class KeyShares {
       throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
     }
 
-    this.shares = [];
-
-    // Using a helper function to process each item
-    const processItem = async (item: any) => {
-      const keySharesItem = new KeySharesItem();
-      await keySharesItem.fromJson(item);
-      return keySharesItem;
-    };
+    const instance = new KeyShares();
+    instance.shares = [];
 
     if (Array.isArray(body.shares)) {
       // Process each item in the array
       for (const item of body.shares) {
-        const processedItem = await processItem(item);
-        this.shares.push(processedItem);
+        instance.shares.push(await KeySharesItem.fromJson(item));
       }
     } else {
       // Handle old format (single item)
-      const processedItem = await processItem(body);
-      this.shares.push(processedItem);
+      instance.shares.push(await KeySharesItem.fromJson(body));
     }
 
-    return this;
+    return instance;
   }
 }

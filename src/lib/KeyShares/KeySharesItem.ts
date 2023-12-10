@@ -117,6 +117,16 @@ export class KeySharesItem {
    * @param operatorCount
    */
   buildSharesFromBytes(bytes: string, operatorCount: number): any {
+    // Validate the byte string format (hex string starting with '0x')
+    if (!bytes.startsWith('0x') || !/^(0x)?[0-9a-fA-F]*$/.test(bytes)) {
+      throw new Error('Invalid byte string format');
+    }
+
+    // Validate the operator count (positive integer)
+    if (operatorCount <= 0 || !Number.isInteger(operatorCount)) {
+      throw new Error('Invalid operator count');
+    }
+
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
@@ -153,24 +163,6 @@ export class KeySharesItem {
   }
 
   /**
-   * Initialise from JSON or object data.
-   */
-  async fromJson(content: string | any): Promise<KeySharesItem> {
-    const body = typeof content === 'string' ? JSON.parse(content) : content;
-    this.data.update(body.data);
-    this.payload.update(body.payload);
-    this.validate();
-    // Custom validation: verify signature
-    await this.validateSingleShares(this.payload.sharesData, {
-      ownerAddress: this.data.ownerAddress as string,
-      ownerNonce: this.data.ownerNonce as number,
-      publicKey: this.data.publicKey as string,
-    });
-
-    return this;
-  }
-
-  /**
    * Stringify key shares to be ready for saving in file.
    */
   toJson(): string {
@@ -189,5 +181,24 @@ export class KeySharesItem {
       partsArr.push(arr.slice(start, end));
     }
     return partsArr;
+  }
+
+  /**
+   * Initialise from JSON or object data.
+   */
+  static async fromJson(content: string | any): Promise<KeySharesItem> {
+    const body = typeof content === 'string' ? JSON.parse(content) : content;
+    const instance = new KeySharesItem();
+    instance.data.update(body.data);
+    instance.payload.update(body.payload);
+    instance.validate();
+    // Custom validation: verify signature
+    await instance.validateSingleShares(instance.payload.sharesData, {
+      ownerAddress: instance.data.ownerAddress as string,
+      ownerNonce: instance.data.ownerNonce as number,
+      publicKey: instance.data.publicKey as string,
+    });
+
+    return instance;
   }
 }

@@ -72,6 +72,14 @@ class KeySharesItem {
      * @param operatorCount
      */
     buildSharesFromBytes(bytes, operatorCount) {
+        // Validate the byte string format (hex string starting with '0x')
+        if (!bytes.startsWith('0x') || !/^(0x)?[0-9a-fA-F]*$/.test(bytes)) {
+            throw new Error('Invalid byte string format');
+        }
+        // Validate the operator count (positive integer)
+        if (operatorCount <= 0 || !Number.isInteger(operatorCount)) {
+            throw new Error('Invalid operator count');
+        }
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
         const pkArray = ethers.utils.arrayify('0x' + pkSplit);
@@ -98,24 +106,6 @@ class KeySharesItem {
         (0, class_validator_1.validateSync)(this);
     }
     /**
-     * Initialise from JSON or object data.
-     */
-    fromJson(content) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const body = typeof content === 'string' ? JSON.parse(content) : content;
-            this.data.update(body.data);
-            this.payload.update(body.payload);
-            this.validate();
-            // Custom validation: verify signature
-            yield this.validateSingleShares(this.payload.sharesData, {
-                ownerAddress: this.data.ownerAddress,
-                ownerNonce: this.data.ownerNonce,
-                publicKey: this.data.publicKey,
-            });
-            return this;
-        });
-    }
-    /**
      * Stringify key shares to be ready for saving in file.
      */
     toJson() {
@@ -133,6 +123,25 @@ class KeySharesItem {
             partsArr.push(arr.slice(start, end));
         }
         return partsArr;
+    }
+    /**
+     * Initialise from JSON or object data.
+     */
+    static fromJson(content) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const body = typeof content === 'string' ? JSON.parse(content) : content;
+            const instance = new KeySharesItem();
+            instance.data.update(body.data);
+            instance.payload.update(body.payload);
+            instance.validate();
+            // Custom validation: verify signature
+            yield instance.validateSingleShares(instance.payload.sharesData, {
+                ownerAddress: instance.data.ownerAddress,
+                ownerNonce: instance.data.ownerNonce,
+                publicKey: instance.data.publicKey,
+            });
+            return instance;
+        });
     }
 }
 tslib_1.__decorate([

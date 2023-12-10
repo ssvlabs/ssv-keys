@@ -65,8 +65,7 @@ async function main() {
   // example to work with keyshares from file
   const jsonKeyShares = await fsp.readFile(getKeySharesFilePath(4), { encoding: 'utf-8' });
 
-  const keyShares2 = new KeyShares();
-  await keyShares2.fromJson(jsonKeyShares);
+  const keyShares2 = await KeyShares.fromJson(jsonKeyShares);
 
   console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
 }
