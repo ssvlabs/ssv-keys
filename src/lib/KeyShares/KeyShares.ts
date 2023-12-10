@@ -1,180 +1,65 @@
-import * as ethers from 'ethers';
 import semver from 'semver';
-import * as web3Helper from '../helpers/web3.helper';
-
 import pkg from '../../../package.json';
 
-import {
-  IsOptional,
-  ValidateNested,
-  validateSync
-} from 'class-validator';
-
-import { KeySharesData } from './KeySharesData/KeySharesData';
-import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
-import { EncryptShare } from '../Encryption/Encryption';
-import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
-import { IOperator } from './KeySharesData/IOperator';
-import { operatorSortedList } from '../helpers/operator.helper';
-import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
-
-export interface IKeySharesPayloadData {
-  publicKey: string,
-  operators: IOperator[],
-  encryptedShares: EncryptShare[],
-}
-
-export interface IKeySharesToSignatureData {
-  ownerAddress: string,
-  ownerNonce: number,
-  privateKey: string,
-}
-
-export interface IKeySharesFromSignatureData {
-  ownerAddress: string,
-  ownerNonce: number,
-  publicKey: string,
-}
-
-const SIGNATURE_LENGHT = 192;
-const PUBLIC_KEY_LENGHT = 96;
+import { IsOptional, ValidateNested, validateSync } from 'class-validator';
+import { KeySharesItem } from './KeySharesItem';
 
 /**
- * Key shares file data interface.
+ * Represents a collection of KeyShares items with functionality for serialization,
+ * deserialization, and validation.
  */
 export class KeyShares {
   @IsOptional()
-  @ValidateNested()
-  public data: KeySharesData;
+  @ValidateNested({ each: true })
+  private shares: KeySharesItem[];
 
-  @IsOptional()
-  @ValidateNested()
-  public payload: KeySharesPayload;
-
-  constructor() {
-    this.data = new KeySharesData();
-    this.payload = new KeySharesPayload();
+  constructor(shares: KeySharesItem[] = []) {
+    this.shares = [...shares];
   }
 
   /**
-   * Build payload from operators list, encrypted shares and validator public key
-   * @param publicKey
-   * @param operatorIds
-   * @param encryptedShares
+   * Add a single KeyShares item to the collection.
+   * @param keySharesItem The KeyShares item to add.
    */
-  async buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any> {
-    const {
-      ownerAddress,
-      ownerNonce,
-      privateKey,
-    } = toSignatureData;
-
-    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
-    }
-
-    let address;
-    try {
-      address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
-    } catch {
-      throw new OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
-    }
-
-    const payload = this.payload.build({
-      publicKey: metaData.publicKey,
-      operatorIds: operatorSortedList(metaData.operators).map(operator => operator.id),
-      encryptedShares: metaData.encryptedShares,
-    });
-
-    const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
-
-    payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
-
-    // verify signature
-    await this.validateSingleShares(payload.sharesData, {
-      ownerAddress,
-      ownerNonce,
-      publicKey: await web3Helper.privateToPublicKey(privateKey),
-    });
-
-    return payload;
+  add(keySharesItem: KeySharesItem): void {
+    this.shares.push(keySharesItem);
   }
 
-
-  async validateSingleShares(shares: string, fromSignatureData: IKeySharesFromSignatureData): Promise<void> {
-    const {
-      ownerAddress,
-      ownerNonce,
-      publicKey,
-    } = fromSignatureData;
-
-    if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-      throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
-    }
-
-    let address;
-    try {
-      address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
-    } catch {
-      throw new OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
-    }
-
-    const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
-
-    await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
+  list(): KeySharesItem[] {
+    return this.shares;
   }
 
   /**
-   * Build shares from bytes string and operators list length
-   * @param bytes
-   * @param operatorCount
-   */
-  buildSharesFromBytes(bytes: string, operatorCount: number): any {
-    const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
-
-    const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
-    const sharesPublicKeys = this._splitArray(operatorCount, pkArray).map(item =>
-      ethers.utils.hexlify(item),
-    );
-
-    const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-    const eArray = ethers.utils.arrayify('0x' + eSplit);
-    const encryptedKeys = this._splitArray(operatorCount, eArray).map(item =>
-      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
-        'base64',
-      ),
-    );
-    return {
-      sharesPublicKeys,
-      encryptedKeys,
-    };
-  }
-
-  /**
-   * Set new data and validate it.
-   * @param data
-   */
-  update(data: IKeySharesPartitialData) {
-    this.data.update(data);
-    this.validate();
-  }
-
-  /**
-   * Validate everything
+   * Validate the KeyShares instance using class-validator.
+   * @returns The validation result.
    */
   validate(): any {
     validateSync(this);
   }
 
   /**
-   * Initialise from JSON or object data.
+   * Converts the KeyShares instance to a JSON string.
+   * @returns The JSON string representation of the KeyShares instance.
    */
-  fromJson(content: string | any): KeyShares {
+  toJson(): string {
+    return JSON.stringify({
+      version: `v${pkg.version}`,
+      createdAt: new Date().toISOString(),
+      shares: this.shares.length > 0 ? this.shares : null,
+    }, null, 2);
+  }
+
+  /**
+   * Initialize the KeyShares instance from JSON or object data.
+   * @param content The JSON string or object to initialize from.
+   * @returns The KeyShares instance.
+   * @throws Error if the version is incompatible or the shares array is invalid.
+   */
+  static async fromJson(content: string | any): Promise<KeyShares> {
     const body = typeof content === 'string' ? JSON.parse(content) : content;
     const extVersion = semver.parse(body.version);
     const currentVersion = semver.parse(pkg.version);
+
     if (!extVersion || !currentVersion) {
       throw new Error(`The file for keyshares must contain a version mark provided by ssv-keys.`);
     }
@@ -183,30 +68,19 @@ export class KeyShares {
       throw new Error(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
     }
 
-    this.update(body.data);
-    return this;
-  }
+    const instance = new KeyShares();
+    instance.shares = [];
 
-  /**
-   * Stringify key shares to be ready for saving in file.
-   */
-  toJson(): string {
-    return JSON.stringify({
-      version: `v${pkg.version}`,
-      createdAt: new Date().toISOString(),
-      data: this.data || null,
-      payload: this.payload.readable || null,
-    }, null, '  ');
-  }
-
-  private _splitArray(parts: number, arr: Uint8Array) {
-    const partLength = Math.floor(arr.length / parts);
-    const partsArr = [];
-    for (let i = 0; i < parts; i++) {
-      const start = i * partLength;
-      const end = start + partLength;
-      partsArr.push(arr.slice(start, end));
+    if (Array.isArray(body.shares)) {
+      // Process each item in the array
+      for (const item of body.shares) {
+        instance.shares.push(await KeySharesItem.fromJson(item));
+      }
+    } else {
+      // Handle old format (single item)
+      instance.shares.push(await KeySharesItem.fromJson(body));
     }
-    return partsArr;
+
+    return instance;
   }
 }

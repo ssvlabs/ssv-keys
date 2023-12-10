@@ -3,11 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesData = void 0;
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
-const operator_unique_1 = require("./validators/operator-unique");
-const public_key_1 = require("./validators/public-key");
+const validators_1 = require("./validators");
 const operator_helper_1 = require("../../helpers/operator.helper");
-const owner_address_1 = require("./validators/owner-address");
-const owner_nonce_1 = require("./validators/owner-nonce");
 class KeySharesData {
     constructor() {
         this.ownerNonce = null;
@@ -61,23 +58,23 @@ class KeySharesData {
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
-    (0, owner_nonce_1.OwnerNonceValidator)()
+    (0, validators_1.OwnerNonceValidator)()
 ], KeySharesData.prototype, "ownerNonce", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, owner_address_1.OwnerAddressValidator)()
+    (0, validators_1.OwnerAddressValidator)()
 ], KeySharesData.prototype, "ownerAddress", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(98, 98),
-    (0, public_key_1.PublicKeyValidator)()
+    (0, validators_1.PublicKeyValidator)()
 ], KeySharesData.prototype, "publicKey", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
-    (0, operator_unique_1.OpeatorsListValidator)()
+    (0, validators_1.OpeatorsListValidator)()
 ], KeySharesData.prototype, "operators", void 0);
 exports.KeySharesData = KeySharesData;
 //# sourceMappingURL=KeySharesData.js.map

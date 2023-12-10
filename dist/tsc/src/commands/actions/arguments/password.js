@@ -1,5 +1,4 @@
 "use strict";
-// import { keystorePasswordValidator } from '../validators/keystore-password';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     arg1: '-ps',
@@ -13,11 +12,6 @@ exports.default = {
         options: {
             type: 'password',
             message: 'Provide the keystore file password',
-            /*
-            validate: async (password: string): Promise<boolean | string> => {
-              return await keystorePasswordValidator.validatePassword(password, true);
-            },
-            */
         }
     }
 };

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { constants } from 'http2';
 import bodyParser from 'body-parser';
-import { SSVKeys, KeyShares, EncryptShare } from 'ssv-keys';
+import { SSVKeys, KeyShares, KeySharesItem } from 'ssv-keys';
 import express, { Express, Request, Response } from 'express';
 
 dotenv.config();
@@ -80,8 +80,8 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
   // Build final web3 transaction payload and update keyshares file with payload data
-  const keyShares = new KeyShares();
-  keyShares.update({
+  const keySharesItem = new KeySharesItem();
+  keySharesItem.update({
     ownerAddress: owner_address,
     ownerNonce: nonce,
     operators,
@@ -89,7 +89,7 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
   });
 
   // The cluster owner address
-  await keyShares.buildPayload({
+  await keySharesItem.buildPayload({
     publicKey,
     operators,
     encryptedShares,
@@ -98,6 +98,9 @@ app.post('/key-shares/generate', async (req: Request, res: Response) => {
     ownerNonce: nonce,
     privateKey
   });
+
+  const keyShares = new KeyShares();
+  keyShares.add(keySharesItem);
 
   console.log(`Built key shares for operators: ${String(operator_ids)} and public key: ${keystore.pubkey}`);
   res.json(JSON.parse(keyShares.toJson()));

@@ -1,32 +1,70 @@
 import * as web3Helper from '../../helpers/web3.helper';
 
-import { IKeySharesPayload } from './IKeySharesPayload';
+import { IsString, Length, validateSync, IsNumber } from 'class-validator';
+import { PublicKeyValidator } from './validators';
+
+import { IKeySharesPartitialPayload, IKeySharesPayload } from './IKeySharesPayload';
 import { EncryptShare } from '../../Encryption/Encryption';
 
 /**
  * Key Shares Payload
  */
 export class KeySharesPayload implements IKeySharesPayload {
-  public readable: any;
+  @IsString()
+  public sharesData!: string;
 
+  @IsString()
+  @Length(98, 98)
+  @PublicKeyValidator()
+  public publicKey!: string;
+
+  @IsNumber({}, { each: true })
+  public operatorIds!: number[];
+
+  /**
+   * Converts arrays of public and private keys to a single hexadecimal string.
+   * @param publicKeys Array of public keys.
+   * @param privateKeys Array of private keys.
+   * @returns Hexadecimal string representation of keys.
+   */
   private _sharesToBytes(publicKeys: string[], privateKeys: string[]) {
     const encryptedShares = [...privateKeys].map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
-    const pkPsBytes = web3Helper.hexArrayToBytes([
-      ...publicKeys,
-      ...encryptedShares,
-    ]);
+    const pkPsBytes = web3Helper.hexArrayToBytes([...publicKeys, ...encryptedShares]);
     return `0x${pkPsBytes.toString('hex')}`;
   }
 
-  build(data: any): any {
-    this.readable = {
-      publicKey: data.publicKey,
-      operatorIds: data.operatorIds,
-      sharesData: this._sharesToBytes(
-        data.encryptedShares.map((share: EncryptShare) => share.publicKey),
-        data.encryptedShares.map((share: EncryptShare) => share.privateKey)
-      ),
-    };
-    return this.readable;
+  /**
+   * Updates the payload with new data and validates it.
+   * @param data Partial key shares payload to update.
+   */
+  update(data: IKeySharesPartitialPayload): void {
+    this.publicKey = data.publicKey;
+    this.sharesData = data.sharesData;
+    this.operatorIds = data.operatorIds;
+    this.validate();
+  }
+
+  /**
+   * Validates the current state of the instance.
+   * @returns {void | ValidationError[]} Validation errors if any, otherwise undefined.
+   */
+  validate(): any {
+    validateSync(this);
+  }
+
+  /**
+   * Builds the payload from the given data.
+   * @param data Data to build the payload.
+   * @returns {KeySharesPayload} The current instance for chaining.
+   */
+  build(data: any): KeySharesPayload {
+    this.publicKey = data.publicKey;
+    this.operatorIds = data.operatorIds;
+    this.sharesData = this._sharesToBytes(
+      data.encryptedShares.map((share: EncryptShare) => share.publicKey),
+      data.encryptedShares.map((share: EncryptShare) => share.privateKey)
+    );
+
+    return this;
   }
 }
