@@ -11,8 +11,8 @@ const KeySharesItem_1 = require("./KeySharesItem");
  * deserialization, and validation.
  */
 class KeyShares {
-    constructor() {
-        this.shares = [];
+    constructor(shares = []) {
+        this.shares = [...shares];
     }
     /**
      * Add a single KeyShares item to the collection.

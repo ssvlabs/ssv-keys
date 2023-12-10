@@ -14,6 +14,22 @@ describe('KeyShares.fromJson/toJson', () => {
     keySharesItem = new KeySharesItem();
   });
 
+  it('should initialize with passed KeySharesItems', () => {
+    // Create mock KeySharesItems
+    const mockShares = [new KeySharesItem(), new KeySharesItem()];
+
+    // Initialize KeyShares with the mock items
+    const keyShares = new KeyShares(mockShares);
+
+    // Check if the KeyShares instance contains the mock items
+    expect(keyShares.list()).toEqual(mockShares);
+  });
+
+  it('should initialize with empty array when no items passed', () => {
+    const keyShares = new KeyShares();
+    expect(keyShares.list()).toEqual([]);
+  });
+
   it('Should create empty data with version', async () => {
     const keySharesString = keySharesItem.toJson();
     const keySharesObject = JSON.parse(keySharesString);

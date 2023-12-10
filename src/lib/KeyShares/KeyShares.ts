@@ -13,8 +13,8 @@ export class KeyShares {
   @ValidateNested({ each: true })
   private shares: KeySharesItem[];
 
-  constructor() {
-    this.shares = [];
+  constructor(shares: KeySharesItem[] = []) {
+    this.shares = [...shares];
   }
 
   /**

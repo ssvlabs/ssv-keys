@@ -5,7 +5,7 @@ import { KeySharesItem } from './KeySharesItem';
  */
 export declare class KeyShares {
     private shares;
-    constructor();
+    constructor(shares?: KeySharesItem[]);
     /**
      * Add a single KeyShares item to the collection.
      * @param keySharesItem The KeyShares item to add.

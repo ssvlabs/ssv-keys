@@ -92,7 +92,7 @@ To run you will use the "shares" command
 
 **Input parameters:**
 - keystore (ks) = The validator keystore file path. Only one keystore file can be specified using this argument
-- keystore-path (kp) = The path to the folder containing validator keystore files. If a folder is provided, all keystore files within the provided folder will be split according to the provided arguments. This argument should not be used together with the `keystore`` argument
+- keystore-path (kp) = The path to the folder containing validator keystore files. If a folder is provided, all keystore files within the provided folder will be split according to the provided arguments. This argument should not be used together with the `keystore` argument
 - password (ps) = The keystore file encryption password, if a folder was provided the password will be used for all keystore files in the folder
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible
 - operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible
