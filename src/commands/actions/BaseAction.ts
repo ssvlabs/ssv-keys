@@ -1,5 +1,5 @@
 import { ArgumentOptions, Namespace } from 'argparse';
-
+import { SSVKeysException } from '../../lib/exceptions/base';
 
 export interface ActionArgument {
   arg1: string,
@@ -22,11 +22,11 @@ export class BaseAction {
   }
 
   async execute(): Promise<any> {
-    throw Error('Should implement "execute"')
+    throw new SSVKeysException('Should implement "execute"')
   }
 
   static get options(): any {
-    throw Error('Should implement static "options"');
+    throw new SSVKeysException('Should implement static "options"');
   }
 
   get options(): any {

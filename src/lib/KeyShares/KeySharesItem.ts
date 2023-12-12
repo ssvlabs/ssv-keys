@@ -13,6 +13,7 @@ import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
 import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
+import { SSVKeysException } from '../../lib/exceptions/base';
 
 export interface IKeySharesPayloadData {
   publicKey: string,
@@ -119,12 +120,12 @@ export class KeySharesItem {
   buildSharesFromBytes(bytes: string, operatorCount: number): any {
     // Validate the byte string format (hex string starting with '0x')
     if (!bytes.startsWith('0x') || !/^(0x)?[0-9a-fA-F]*$/.test(bytes)) {
-      throw new Error('Invalid byte string format');
+      throw new SSVKeysException('Invalid byte string format');
     }
 
     // Validate the operator count (positive integer)
     if (operatorCount <= 0 || !Number.isInteger(operatorCount)) {
-      throw new Error('Invalid operator count');
+      throw new SSVKeysException('Invalid operator count');
     }
 
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);

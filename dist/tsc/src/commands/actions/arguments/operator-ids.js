@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validators_1 = require("../validators");
+const base_1 = require("../../../lib/exceptions/base");
 const uniqueOperatorIds = {};
 exports.default = {
     arg1: '-oids',
@@ -31,7 +32,7 @@ exports.default = {
         },
         validateList: (items) => {
             if (!(0, validators_1.isOperatorsLengthValid)(items.length)) {
-                throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids');
+                throw new base_1.SSVKeysException('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids');
             }
         }
     }

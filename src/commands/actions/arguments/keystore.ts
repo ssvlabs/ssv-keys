@@ -1,4 +1,18 @@
-import { fileExistsValidator, jsonFileValidator, sanitizePath } from '../validators';
+import { fileExistsValidator, jsonFileValidator } from '../validators';
+
+const validateKeystoreFile = (filePath: string) => {
+  let validation = fileExistsValidator(filePath);
+  if (validation !== true) {
+    return { isValid: false, error: validation };
+  }
+
+  validation = jsonFileValidator(filePath);
+  if (validation !== true) {
+    return { isValid: false, error: validation };
+  }
+
+  return { isValid: true };
+};
 
 /**
  * Keystore argument validates if keystore file exists and is valid keystore file.
@@ -15,17 +29,9 @@ export default {
     options: {
       type: 'text',
       message: 'Provide the keystore file path',
-      validateSingle: (filePath: string): any => {
-        filePath = sanitizePath(String(filePath).trim());
-        let isValid = fileExistsValidator(filePath);
-        if (isValid !== true) {
-          return isValid;
-        }
-        isValid = jsonFileValidator(filePath);
-        if (isValid !== true) {
-          return isValid;
-        }
-        return true;
+      validate: (filePath: string) => {
+        const result = validateKeystoreFile(filePath);
+        return result.isValid || result.error;
       },
     }
   }

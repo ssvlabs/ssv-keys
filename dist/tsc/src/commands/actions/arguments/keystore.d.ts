@@ -13,7 +13,7 @@ declare const _default: {
         options: {
             type: string;
             message: string;
-            validateSingle: (filePath: string) => any;
+            validate: (filePath: string) => string | boolean | undefined;
         };
     };
 };

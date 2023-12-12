@@ -9,13 +9,7 @@ exports.default = {
     options: {
         required: false,
         type: String,
-        help: 'The validator keystore file/folder path, if a folder is provided all keystore files within the provided folder will be split according to the provided arguments'
-    },
-    interactive: {
-        options: {
-            type: 'text',
-            message: 'Provide the keystore file path',
-        }
+        help: 'The path to the folder containing validator keystore files'
     }
 };
 //# sourceMappingURL=keystore-path.js.map

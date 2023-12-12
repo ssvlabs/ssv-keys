@@ -2,18 +2,20 @@ import fs from 'fs';
 import path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
-  filePath = sanitizePath(filePath);
+  filePath = sanitizePath(String(filePath).trim());
 
-  if (!fs.existsSync(filePath.trim())) {
-    return message || 'Couldn’t locate keystore file or directory.';
+  try {
+    const stat = fs.statSync(filePath);
+
+    if (!stat.isFile()) {
+      return 'The specified keystore path is not a file.';
+    }
+
+    return true;
+  } catch (error) {
+    // Handle the error when the file does not exist
+    return message || 'Couldn’t locate the keystore file.';
   }
-  if (!fs.existsSync(filePath.trim())) {
-    return message || 'Couldn’t locate keystore file or directory.';
-  }
-  if (!fs.existsSync(filePath.trim())) {
-    return message || 'Couldn’t locate keystore file or directory.';
-  }
-  return true;
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {
@@ -23,7 +25,7 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   try {
     fileContents = fs.readFileSync(filePath, { encoding: 'utf-8' });
   } catch (e) {
-    return message || 'Couldn’t read a file';
+    return message || 'Couldn’t read a validator keystore file';
   }
   try {
     JSON.parse(fileContents);

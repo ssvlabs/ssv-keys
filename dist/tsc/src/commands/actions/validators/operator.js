@@ -15,7 +15,7 @@ const operatorPublicKeyValidator = (publicKey) => {
         let decodedPublicKey = '';
         if (!publicKey.startsWith(begin)) {
             if (publicKey.length < 98) {
-                throw Error('The length of the operator public key must be at least 98 characters.');
+                throw new Error('The length of the operator public key must be at least 98 characters.');
             }
             try {
                 decodedPublicKey = (0, js_base64_1.decode)(publicKey).trim();

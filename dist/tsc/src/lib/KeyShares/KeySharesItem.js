@@ -9,6 +9,7 @@ const KeySharesData_1 = require("./KeySharesData/KeySharesData");
 const KeySharesPayload_1 = require("./KeySharesData/KeySharesPayload");
 const operator_helper_1 = require("../helpers/operator.helper");
 const keystore_1 = require("../exceptions/keystore");
+const base_1 = require("../../lib/exceptions/base");
 const SIGNATURE_LENGHT = 192;
 const PUBLIC_KEY_LENGHT = 96;
 /**
@@ -74,11 +75,11 @@ class KeySharesItem {
     buildSharesFromBytes(bytes, operatorCount) {
         // Validate the byte string format (hex string starting with '0x')
         if (!bytes.startsWith('0x') || !/^(0x)?[0-9a-fA-F]*$/.test(bytes)) {
-            throw new Error('Invalid byte string format');
+            throw new base_1.SSVKeysException('Invalid byte string format');
         }
         // Validate the operator count (positive integer)
         if (operatorCount <= 0 || !Number.isInteger(operatorCount)) {
-            throw new Error('Invalid operator count');
+            throw new base_1.SSVKeysException('Invalid operator count');
         }
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);

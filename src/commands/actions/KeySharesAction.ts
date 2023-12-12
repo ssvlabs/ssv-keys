@@ -4,6 +4,7 @@ import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
 import { KeySharesItem } from '../../lib/KeyShares/KeySharesItem';
 import { KeyShares } from '../../lib/KeyShares/KeyShares';
+import { SSVKeysException } from '../../lib/exceptions/base';
 
 import { sanitizePath, keystorePasswordValidator } from './validators';
 
@@ -19,6 +20,7 @@ import {
 } from './arguments';
 
 import { getFilePath, getKeyStoreFiles, readFile, writeFile } from '../../lib/helpers/file.helper';
+import { OperatorsCountsMismatchError } from '../../lib/exceptions/operator';
 
 type Operator = {
   id: number;
@@ -61,7 +63,7 @@ export class KeySharesAction extends BaseAction {
       return await this.processKeystorePath();
     }
 
-    throw new Error('Either --keystore or --keystore-path must be provided.');
+    throw new SSVKeysException('Either --keystore or --keystore-path must be provided.');
   }
 
   private validateKeystoreArguments(): void {
@@ -69,11 +71,11 @@ export class KeySharesAction extends BaseAction {
     const hasKeystorePath = !!this.args.keystore_path;
 
     if (hasKeystore && hasKeystorePath) {
-      throw new Error('Only one of --keystore or --keystore-path should be provided.');
+      throw new SSVKeysException('Only one of --keystore or --keystore-path should be provided.');
     }
 
     if (hasKeystorePath && !this.isDirectory(this.args.keystore_path)) {
-      throw new Error('--keystore-path must be a directory.');
+      throw new SSVKeysException('--keystore-path must be a directory.');
     }
   }
 
@@ -111,7 +113,7 @@ export class KeySharesAction extends BaseAction {
     const validatedFiles = [];
     let failedValidation = 0;
     for (const file of files) {
-      const isKeyStoreValid = await keystoreArgument.interactive.options.validateSingle(file);
+      const isKeyStoreValid = await keystoreArgument.interactive.options.validate(file);
       const isValidPassword = await keystorePasswordValidator.validatePassword(this.args.password, file);
       if (isKeyStoreValid === true && isValidPassword === true) {
         validatedFiles.push(file);
@@ -125,17 +127,33 @@ export class KeySharesAction extends BaseAction {
   }
 
   private async validateSingleKeystore(keystore: string): Promise<void> {
-    const isKeyStoreValid = await keystoreArgument.interactive.options.validateSingle(keystore);
+    const isKeyStoreValid = await keystoreArgument.interactive.options.validate(keystore);
     if (isKeyStoreValid !== true) {
-      throw Error(String(isKeyStoreValid));
+      throw new SSVKeysException(String(isKeyStoreValid));
     }
   }
 
   private getOperators(): Operator[] {
-    return this.args.operator_keys.split(',').map((operatorKey: string, index: number) => ({
-      id: parseInt(this.args.operator_ids.split(',')[index], 10),
-      operatorKey,
-    }));
+    const operatorIds = this.args.operator_ids.split(',');
+    const operatorKeys = this.args.operator_keys.split(',');
+
+    if (operatorIds.length !== operatorKeys.length) {
+      throw new OperatorsCountsMismatchError(operatorIds, operatorKeys, 'Mismatch amount of operator ids and operator keys.');
+    }
+
+    if (operatorIds.includes('') || operatorKeys.includes('')) {
+      throw new SSVKeysException('Operator IDs or keys cannot contain empty strings.');
+    }
+
+    return operatorIds.map((idString: string, index: number) => {
+      const id = parseInt(idString, 10);
+      if (isNaN(id)) {
+        throw new SSVKeysException(`Invalid operator ID at position ${index}: ${idString}`);
+      }
+
+      const operatorKey = operatorKeys[index];
+      return { id, operatorKey };
+    });
   }
 
   private async processFile(keystoreFilePath: string, password: string, operators: Operator[], ownerAddress: string, ownerNonce: number): Promise<KeySharesItem> {

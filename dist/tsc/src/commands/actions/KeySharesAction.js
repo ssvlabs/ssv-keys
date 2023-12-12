@@ -7,9 +7,11 @@ const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeySharesItem_1 = require("../../lib/KeyShares/KeySharesItem");
 const KeyShares_1 = require("../../lib/KeyShares/KeyShares");
+const base_1 = require("../../lib/exceptions/base");
 const validators_1 = require("./validators");
 const arguments_1 = require("./arguments");
 const file_helper_1 = require("../../lib/helpers/file.helper");
+const operator_1 = require("../../lib/exceptions/operator");
 /**
  * Command to build keyshares from user input.
  */
@@ -46,17 +48,17 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             else if (this.args.keystore_path) {
                 return yield this.processKeystorePath();
             }
-            throw new Error('Either --keystore or --keystore-path must be provided.');
+            throw new base_1.SSVKeysException('Either --keystore or --keystore-path must be provided.');
         });
     }
     validateKeystoreArguments() {
         const hasKeystore = !!this.args.keystore;
         const hasKeystorePath = !!this.args.keystore_path;
         if (hasKeystore && hasKeystorePath) {
-            throw new Error('Only one of --keystore or --keystore-path should be provided.');
+            throw new base_1.SSVKeysException('Only one of --keystore or --keystore-path should be provided.');
         }
         if (hasKeystorePath && !this.isDirectory(this.args.keystore_path)) {
-            throw new Error('--keystore-path must be a directory.');
+            throw new base_1.SSVKeysException('--keystore-path must be a directory.');
         }
     }
     isDirectory(path) {
@@ -92,7 +94,7 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             const validatedFiles = [];
             let failedValidation = 0;
             for (const file of files) {
-                const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validateSingle(file);
+                const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validate(file);
                 const isValidPassword = yield validators_1.keystorePasswordValidator.validatePassword(this.args.password, file);
                 if (isKeyStoreValid === true && isValidPassword === true) {
                     validatedFiles.push(file);
@@ -108,17 +110,29 @@ class KeySharesAction extends BaseAction_1.BaseAction {
     }
     validateSingleKeystore(keystore) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validateSingle(keystore);
+            const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validate(keystore);
             if (isKeyStoreValid !== true) {
-                throw Error(String(isKeyStoreValid));
+                throw new base_1.SSVKeysException(String(isKeyStoreValid));
             }
         });
     }
     getOperators() {
-        return this.args.operator_keys.split(',').map((operatorKey, index) => ({
-            id: parseInt(this.args.operator_ids.split(',')[index], 10),
-            operatorKey,
-        }));
+        const operatorIds = this.args.operator_ids.split(',');
+        const operatorKeys = this.args.operator_keys.split(',');
+        if (operatorIds.length !== operatorKeys.length) {
+            throw new operator_1.OperatorsCountsMismatchError(operatorIds, operatorKeys, 'Mismatch amount of operator ids and operator keys.');
+        }
+        if (operatorIds.includes('') || operatorKeys.includes('')) {
+            throw new base_1.SSVKeysException('Operator IDs or keys cannot contain empty strings.');
+        }
+        return operatorIds.map((idString, index) => {
+            const id = parseInt(idString, 10);
+            if (isNaN(id)) {
+                throw new base_1.SSVKeysException(`Invalid operator ID at position ${index}: ${idString}`);
+            }
+            const operatorKey = operatorKeys[index];
+            return { id, operatorKey };
+        });
     }
     processFile(keystoreFilePath, password, operators, ownerAddress, ownerNonce) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {

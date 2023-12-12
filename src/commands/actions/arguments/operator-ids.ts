@@ -1,4 +1,5 @@
 import { isOperatorsLengthValid } from "../validators";
+import { SSVKeysException } from '../../../lib/exceptions/base';
 
 const uniqueOperatorIds: any = {};
 
@@ -31,7 +32,7 @@ export default {
     },
     validateList: (items: []) => {
       if (!isOperatorsLengthValid(items.length)) {
-        throw new Error('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids');
+        throw new SSVKeysException('Invalid operators amount. Enter an 3f+1 compatible amount of operator ids');
       }
     }
   }
