@@ -1,4 +1,6 @@
-export class KeyStoreDataFormatError extends Error {
+import { SSVKeysException } from './base';
+
+export class KeyStoreDataFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -7,7 +9,7 @@ export class KeyStoreDataFormatError extends Error {
   }
 }
 
-export class KeyStoreInvalidError extends Error {
+export class KeyStoreInvalidError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -16,19 +18,19 @@ export class KeyStoreInvalidError extends Error {
   }
 }
 
-export class KeyStorePasswordError extends Error {
+export class KeyStorePasswordError extends SSVKeysException {
   constructor(message: string) {
     super(message);
   }
 }
 
-export class EthereumWalletError extends Error {
+export class EthereumWalletError extends SSVKeysException {
   constructor(message: string) {
     super(message);
   }
 }
 
-export class PrivateKeyFormatError extends Error {
+export class PrivateKeyFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -37,7 +39,7 @@ export class PrivateKeyFormatError extends Error {
   }
 }
 
-export class OwnerAddressFormatError extends Error {
+export class OwnerAddressFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {
@@ -46,7 +48,7 @@ export class OwnerAddressFormatError extends Error {
   }
 }
 
-export class OwnerNonceFormatError extends Error {
+export class OwnerNonceFormatError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {

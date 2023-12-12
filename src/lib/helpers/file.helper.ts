@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
 import { promises as fsp } from 'fs';
+import { SSVKeysException } from '../../lib/exceptions/base';
 
 /**
  * Read file contents and return json data from it.
@@ -58,7 +59,7 @@ export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFi
   if (isFolder) {
     const folderContent = await fsp.readdir(keystorePath);
     if (folderContent.length === 0) {
-      throw Error ('No keystore files detected please provide a folder with correct keystore files and try again');
+      throw new SSVKeysException('No keystore files detected. Please provide a folder with correct keystore files and try again.');
     }
     files = folderContent.map(file => path.join(keystorePath, file)).sort();
   } else {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const operator_1 = require("../validators/operator");
+const validators_1 = require("../validators");
 const uniqueOperators = {};
 exports.default = {
     arg1: '-oks',
@@ -18,11 +18,13 @@ exports.default = {
                 if (uniqueOperators[value]) {
                     return 'This operator already used';
                 }
-                const returnValue = (0, operator_1.operatorPublicKeyValidator)(value);
-                if (returnValue === true) {
-                    uniqueOperators[value] = true;
+                try {
+                    uniqueOperators[value] = (0, validators_1.operatorPublicKeyValidator)(value);
+                    return true;
                 }
-                return returnValue;
+                catch (e) {
+                    return e.message;
+                }
             }
         }
     }

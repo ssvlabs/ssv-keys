@@ -1,4 +1,4 @@
-const { SSVKeys, KeyShares } = require('ssv-keys');
+const { SSVKeys, KeySharesItem } = require('ssv-keys');
 
 const keystore = require('./test.keystore.json');
 const operatorKeys = require('./operators.json');
@@ -25,8 +25,8 @@ async function main() {
   const encryptedShares = await ssvKeys.encryptShares(operators, threshold.shares);
 
   // Step 3: Build final web3 transaction payload and update keyshares file with payload data
-  const keyShares = new KeyShares();
-  const payload = await keyShares.buildPayload({
+  const keySharesItem = new KeySharesItem();
+  const payload = await keySharesItem.buildPayload({
     publicKey,
     operators,
     encryptedShares,

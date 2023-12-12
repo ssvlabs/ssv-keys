@@ -9,7 +9,7 @@ const options = {
     "src/main.ts",
     "src/lib/JSEncrypt/jsencrypt.bundle.js"
   ],
-  platform: 'browser',
+  platform: 'node',
   minify: true,
   bundle: true,
   outdir: "dist/esbuild",

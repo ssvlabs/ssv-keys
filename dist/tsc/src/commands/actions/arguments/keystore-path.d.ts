@@ -9,11 +9,5 @@ declare const _default: {
         type: StringConstructor;
         help: string;
     };
-    interactive: {
-        options: {
-            type: string;
-            validateSingle: (filePath: string) => any;
-        };
-    };
 };
 export default _default;

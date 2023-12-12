@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ThresholdInvalidOperatorIdError = exports.ThresholdInvalidOperatorsLengthError = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../BLS"));
-const operator_ids_1 = require("../../commands/actions/validators/operator-ids");
+const base_1 = require("../exceptions/base");
 const keystore_1 = require("../exceptions/keystore");
-class ThresholdInvalidOperatorsLengthError extends Error {
+const validators_1 = require("../../commands/actions/validators");
+class ThresholdInvalidOperatorsLengthError extends base_1.SSVKeysException {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operators, message) {
         super(message);
@@ -13,7 +14,7 @@ class ThresholdInvalidOperatorsLengthError extends Error {
     }
 }
 exports.ThresholdInvalidOperatorsLengthError = ThresholdInvalidOperatorsLengthError;
-class ThresholdInvalidOperatorIdError extends Error {
+class ThresholdInvalidOperatorIdError extends base_1.SSVKeysException {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     constructor(operator, message) {
         super(message);
@@ -49,7 +50,7 @@ class Threshold {
                     throw new ThresholdInvalidOperatorIdError(operatorId, `Operator must be integer. Got: ${operatorId}`);
                 }
             });
-            if (!(0, operator_ids_1.isOperatorsLengthValid)(operatorIds.length)) {
+            if (!(0, validators_1.isOperatorsLengthValid)(operatorIds.length)) {
                 throw new ThresholdInvalidOperatorsLengthError(operatorIds, 'Invalid operators amount. Enter an 3f+1 compatible amount of operator ids.');
             }
             const msk = [];

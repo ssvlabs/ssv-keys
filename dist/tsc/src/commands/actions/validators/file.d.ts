@@ -5,4 +5,4 @@ export declare const jsonFileValidator: (filePath: string, message?: string) => 
  * @param path
  * @param regex
  */
-export declare const sanitizePath: (path: string, regex?: RegExp) => string;
+export declare const sanitizePath: (inputPath: string) => string;

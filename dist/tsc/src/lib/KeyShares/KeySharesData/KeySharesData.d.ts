@@ -1,5 +1,5 @@
-import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
 import { OperatorData } from './OperatorData';
+import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
 export declare class KeySharesData implements IKeySharesData {
     ownerNonce?: number | null;
     ownerAddress?: string | null;

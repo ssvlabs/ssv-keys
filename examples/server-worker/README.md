@@ -39,19 +39,22 @@ you need to make `POST` request with `json` body like in example:
 ```http request
 POST http://localhost:3000/key-shares/generate
 {
-    "operator_ids": [1, 2, 3, 4],
-    "operator_keys": [
-        "LS0t...LS0K",
-        "LS0t...LS0K",
-        "LS0t...LS0K",
-        "LS0t...LS0K",
-    ],
-    "keystore": {
-        ...
-        "pubkey": "a063fa1434f4ae9bb63488cd79e2f76dea59e0e2d6cdec7236c2bb49ffb37da37cb7966be74eca5a171f659fee7bc501",
-        "version": 4
-    },
-    "password": "testtest"
+  "nonce": 2,
+  "owner_address": "0x...",
+  "public_key": "0x...",
+  "operator_ids": [1, 2, 3, 4],
+  "operator_keys": [
+      "LS0t...LS0K",
+      "LS0t...LS0K",
+      "LS0t...LS0K",
+      "LS0t...LS0K",
+  ],
+  "keystore": {
+      ...
+      "pubkey": "a063fa1434f4ae9bb63488cd79e2f76dea59e0e2d6cdec7236c2bb49ffb37da37cb7966be74eca5a171f659fee7bc501",
+      "version": 4
+  },
+  "password": "testtest"
 }
 ```
 

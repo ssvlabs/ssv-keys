@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OperatorData = void 0;
 const tslib_1 = require("tslib");
 const class_validator_1 = require("class-validator");
-const operator_public_key_1 = require("./validators/operator-public-key");
+const validators_1 = require("./validators");
 class OperatorData {
     constructor(data) {
         this.id = data.id;
@@ -26,7 +26,7 @@ tslib_1.__decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'The operator public key is null' }),
     (0, class_validator_1.IsDefined)({ message: 'The operator public key is undefined' }),
     (0, class_validator_1.IsString)({ message: 'The operator public key must be a string' }),
-    (0, operator_public_key_1.OpeatorPublicKeyValidator)()
+    (0, validators_1.OpeatorPublicKeyValidator)()
 ], OperatorData.prototype, "operatorKey", void 0);
 exports.OperatorData = OperatorData;
 //# sourceMappingURL=OperatorData.js.map

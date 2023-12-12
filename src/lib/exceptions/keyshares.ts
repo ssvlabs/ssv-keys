@@ -1,4 +1,5 @@
-export class KeySharesAbiDecodeError extends Error {
+import { SSVKeysException } from './base';
+export class KeySharesAbiDecodeError extends SSVKeysException {
   public data: any;
 
   constructor(data: any, message: string) {

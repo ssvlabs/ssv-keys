@@ -1,14 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SingleSharesSignatureInvalid = exports.BLSDeserializeError = void 0;
-class BLSDeserializeError extends Error {
+const base_1 = require("./base");
+class BLSDeserializeError extends base_1.SSVKeysException {
     constructor(publicKey, message) {
         super(message);
         this.publicKey = publicKey;
     }
 }
 exports.BLSDeserializeError = BLSDeserializeError;
-class SingleSharesSignatureInvalid extends Error {
+class SingleSharesSignatureInvalid extends base_1.SSVKeysException {
     constructor(data, message) {
         super(message);
         this.data = data;

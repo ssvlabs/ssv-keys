@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseAction = void 0;
 const tslib_1 = require("tslib");
+const base_1 = require("../../lib/exceptions/base");
 class BaseAction {
     constructor() {
         this.args = {};
@@ -12,11 +13,11 @@ class BaseAction {
     }
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            throw Error('Should implement "execute"');
+            throw new base_1.SSVKeysException('Should implement "execute"');
         });
     }
     static get options() {
-        throw Error('Should implement static "options"');
+        throw new base_1.SSVKeysException('Should implement static "options"');
     }
     get options() {
         return BaseAction.options;

@@ -1,6 +1,6 @@
 const path = require('path');
 const fsp = require('fs').promises;
-const { SSVKeys, KeyShares } = require('ssv-keys');
+const { SSVKeys, KeyShares, KeySharesItem } = require('ssv-keys');
 
 const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -31,22 +31,23 @@ async function main() {
     operatorKey,
   }));
 
-  const keyShares = new KeyShares();
-  // Save it with version only and with no any data.
-  await fsp.writeFile(getKeySharesFilePath(1), keyShares.toJson(), { encoding: 'utf-8' });
+  const keySharesItem = new KeySharesItem();
 
-  await keyShares.update({ operators });
-  await fsp.writeFile(getKeySharesFilePath(2), keyShares.toJson(), { encoding: 'utf-8' });
+  // Save it with version only and with no any data.
+  await fsp.writeFile(getKeySharesFilePath(1), keySharesItem.toJson(), { encoding: 'utf-8' });
+
+  await keySharesItem.update({ operators });
+  await fsp.writeFile(getKeySharesFilePath(2), keySharesItem.toJson(), { encoding: 'utf-8' });
 
   // Now save to key shares file encrypted shares and validator public key
-  await keyShares.update({ ownerAddress: TEST_OWNER_ADDRESS, ownerNonce: TEST_OWNER_NONCE, publicKey });
-  await fsp.writeFile(getKeySharesFilePath(3), keyShares.toJson(), { encoding: 'utf-8' });
+  await keySharesItem.update({ ownerAddress: TEST_OWNER_ADDRESS, ownerNonce: TEST_OWNER_NONCE, publicKey });
+  await fsp.writeFile(getKeySharesFilePath(3), keySharesItem.toJson(), { encoding: 'utf-8' });
 
   // Build shares from operator IDs and public keys
   const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
   // Build final web3 transaction payload and update keyshares file with payload data
-  await keyShares.buildPayload({
+  await keySharesItem.buildPayload({
     publicKey,
     operators,
     encryptedShares,
@@ -56,7 +57,17 @@ async function main() {
     privateKey
   });
 
+  const keyShares = new KeyShares();
+  keyShares.add(keySharesItem);
+
   await fsp.writeFile(getKeySharesFilePath(4), keyShares.toJson(), { encoding: 'utf-8' });
+
+  // example to work with keyshares from file
+  const jsonKeyShares = await fsp.readFile(getKeySharesFilePath(4), { encoding: 'utf-8' });
+
+  const keyShares2 = await KeyShares.fromJson(jsonKeyShares);
+
+  console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
 }
 
 void main();

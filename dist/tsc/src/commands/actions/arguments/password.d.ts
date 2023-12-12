@@ -9,6 +9,7 @@ declare const _default: {
     interactive: {
         options: {
             type: string;
+            message: string;
         };
     };
 };

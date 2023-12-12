@@ -1,4 +1,5 @@
-export class BLSDeserializeError extends Error {
+import { SSVKeysException } from './base';
+export class BLSDeserializeError extends SSVKeysException {
   public publicKey: string;
 
   constructor(publicKey: string, message: string) {
@@ -7,7 +8,7 @@ export class BLSDeserializeError extends Error {
   }
 }
 
-export class SingleSharesSignatureInvalid extends Error {
+export class SingleSharesSignatureInvalid extends SSVKeysException {
   public data: string;
 
   constructor(data: string, message: string) {

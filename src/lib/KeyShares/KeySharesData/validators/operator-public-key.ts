@@ -4,17 +4,12 @@ import {
   ValidatorConstraintInterface,
   ValidationOptions,
 } from 'class-validator';
-import { operatorPublicKeyValidator } from '../../../../commands/actions/validators/operator';
-import { OperatorPublicKeyError } from '../../../exceptions/operator';
+import { operatorPublicKeyValidator } from '../../../../commands/actions/validators';
 
 @ValidatorConstraint({ name: 'operatorKey', async: false })
 export class OpeatorPublicKeyValidatorConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
-    const result = operatorPublicKeyValidator(value);
-    if (result !== true) {
-      throw new OperatorPublicKeyError(value, `${result}`);
-    }
-    return true;
+    return operatorPublicKeyValidator(value);
   }
 
   defaultMessage() {
