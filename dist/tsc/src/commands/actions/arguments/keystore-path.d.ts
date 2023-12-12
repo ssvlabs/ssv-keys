@@ -9,11 +9,5 @@ declare const _default: {
         type: StringConstructor;
         help: string;
     };
-    interactive: {
-        options: {
-            type: string;
-            message: string;
-        };
-    };
 };
 export default _default;

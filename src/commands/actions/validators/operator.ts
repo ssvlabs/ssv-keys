@@ -15,7 +15,7 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
 
     if (!publicKey.startsWith(begin)) {
       if (publicKey.length < 98) {
-        throw Error('The length of the operator public key must be at least 98 characters.');
+        throw new Error('The length of the operator public key must be at least 98 characters.');
       }
 
       try {
@@ -32,7 +32,7 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
     }
 
     if (!decodedPublicKey.endsWith(end)) {
-        throw new Error(`Operator public key does not end with '${end}'`);
+      throw new Error(`Operator public key does not end with '${end}'`);
     }
 
     try {

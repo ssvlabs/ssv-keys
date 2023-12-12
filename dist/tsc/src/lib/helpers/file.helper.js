@@ -6,6 +6,7 @@ const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
 const moment_1 = tslib_1.__importDefault(require("moment"));
 const fs_2 = require("fs");
+const base_1 = require("../../lib/exceptions/base");
 /**
  * Read file contents and return json data from it.
  * @param filePath
@@ -55,7 +56,7 @@ const getKeyStoreFiles = (keystorePath) => tslib_1.__awaiter(void 0, void 0, voi
     if (isFolder) {
         const folderContent = yield fs_2.promises.readdir(keystorePath);
         if (folderContent.length === 0) {
-            throw Error('No keystore files detected please provide a folder with correct keystore files and try again');
+            throw new base_1.SSVKeysException('No keystore files detected. Please provide a folder with correct keystore files and try again.');
         }
         files = folderContent.map(file => path_1.default.join(keystorePath, file)).sort();
     }

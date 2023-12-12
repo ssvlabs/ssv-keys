@@ -1,19 +1,16 @@
 import { KeyShares, KeySharesItem } from '../../../main';
 
 import mockKeyShares from './mock-key-shares/multi-shares.json';
+import mockOldKeyShares from './mock-key-shares/old-shares.json';
 import mockKeySharesInvalidStruct from './mock-key-shares/multi-shares-invalid-struct.json';
 import mockKeySharesItemEmpty from './mock-key-shares/item-empty.json';
 import mockKeySharesItemWithOperators from './mock-key-shares/item-with-operators.json';
-
-let keySharesItem: KeySharesItem;
-let keyShares: KeyShares;
+import mockKeySharesItemWithWrongOperatorId from './mock-key-shares/item-with-wrong-operator-id.json';
+import mockKeySharesItemWithMissedOperatorKey from './mock-key-shares/item-with-missed-operator-key.json';
+import mockKeySharesItemWithDuplicatedOperatorKey from './mock-key-shares/item-with-duplicated-operator-key.json';
+import { DuplicatedOperatorPublicKeyError, OperatorsCountsMismatchError } from '../../exceptions/operator';
 
 describe('KeyShares.fromJson/toJson', () => {
-  beforeAll(async () => {
-    keyShares = new KeyShares();
-    keySharesItem = new KeySharesItem();
-  });
-
   it('should initialize with passed KeySharesItems', () => {
     // Create mock KeySharesItems
     const mockShares = [new KeySharesItem(), new KeySharesItem()];
@@ -31,6 +28,7 @@ describe('KeyShares.fromJson/toJson', () => {
   });
 
   it('Should create empty data with version', async () => {
+    const keySharesItem = new KeySharesItem();
     const keySharesString = keySharesItem.toJson();
     const keySharesObject = JSON.parse(keySharesString);
     expect(keySharesObject.data.operators).toEqual(mockKeySharesItemEmpty.data.operators);
@@ -38,28 +36,43 @@ describe('KeyShares.fromJson/toJson', () => {
     expect(keySharesObject.payload).toEqual(mockKeySharesItemEmpty.payload);
   });
 
-  it('Should not throw error the semantic versioning test', async () => {
+  it('Should throw an error for invalid operator data', async () => {
+    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithMissedOperatorKey)).rejects.toThrow(OperatorsCountsMismatchError);
+    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithWrongOperatorId)).rejects.toThrow(OperatorsCountsMismatchError);
+    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithDuplicatedOperatorKey)).rejects.toThrow(DuplicatedOperatorPublicKeyError);
+  });
+
+  it('Should create KeyShares Item', async () => {
     expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithOperators)).not.toThrowError();
   });
 
   it('Should create multi-shares file', async () => {
-    keyShares.add(keySharesItem);
-    keyShares.toJson();
+    const keySharesItem = new KeySharesItem();
+    const keyShares = new KeyShares([keySharesItem]);
+    expect(keyShares.list()).toContain(keySharesItem);
   });
 
   it('should add a KeyShares item', () => {
     const item = new KeySharesItem();
+    const keyShares = new KeyShares();
     keyShares.add(item);
     expect(keyShares.list()).toContain(item);
   });
 
   it('should serialize to JSON', () => {
+    const keyShares = new KeyShares();
     const json = keyShares.toJson();
     expect(json).toBeDefined();
     expect(typeof json).toBe('string');
   });
 
-  it('should create KeyShares from valid JSON', async () => {
+  it('should create KeyShares from single shares as valid JSON', async () => {
+    const keyShares = await KeyShares.fromJson(mockOldKeyShares);
+    expect(keyShares).toBeInstanceOf(KeyShares);
+    expect(keyShares.list().length).toEqual(1);
+  });
+
+  it('should create KeyShares from multi shares valid JSON', async () => {
     const keyShares = await KeyShares.fromJson(mockKeyShares);
     expect(keyShares).toBeInstanceOf(KeyShares);
     expect(keyShares.list().length).toEqual(mockKeyShares.shares.length);

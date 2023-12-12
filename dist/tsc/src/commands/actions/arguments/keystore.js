@@ -1,6 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validators_1 = require("../validators");
+const validateKeystoreFile = (filePath) => {
+    let validation = (0, validators_1.fileExistsValidator)(filePath);
+    if (validation !== true) {
+        return { isValid: false, error: validation };
+    }
+    validation = (0, validators_1.jsonFileValidator)(filePath);
+    if (validation !== true) {
+        return { isValid: false, error: validation };
+    }
+    return { isValid: true };
+};
 /**
  * Keystore argument validates if keystore file exists and is valid keystore file.
  */
@@ -16,17 +27,9 @@ exports.default = {
         options: {
             type: 'text',
             message: 'Provide the keystore file path',
-            validateSingle: (filePath) => {
-                filePath = (0, validators_1.sanitizePath)(String(filePath).trim());
-                let isValid = (0, validators_1.fileExistsValidator)(filePath);
-                if (isValid !== true) {
-                    return isValid;
-                }
-                isValid = (0, validators_1.jsonFileValidator)(filePath);
-                if (isValid !== true) {
-                    return isValid;
-                }
-                return true;
+            validate: (filePath) => {
+                const result = validateKeystoreFile(filePath);
+                return result.isValid || result.error;
             },
         }
     }

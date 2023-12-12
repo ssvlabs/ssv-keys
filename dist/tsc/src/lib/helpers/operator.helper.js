@@ -8,14 +8,24 @@ const operator_1 = require("../exceptions/operator");
  * @param operators list
  */
 const operatorSortedList = (operators) => {
-    return operators
-        .sort((a, b) => +a.id - +b.id)
-        .map((operator) => {
-        if (!operator.id || !operator.operatorKey) {
-            throw new operator_1.OperatorsCountsMismatchError(operators, operators, 'Mismatch amount of operator ids and operator keys.');
+    // Extracting IDs and operatorKeys for error reporting
+    const ids = operators.map(op => op.id);
+    const operatorKeys = operators.map(op => op.operatorKey);
+    // Validate and convert IDs to numbers for sorting
+    const validatedOperators = operators.map((operator) => {
+        const id = parseInt(operator.id, 10);
+        if (isNaN(id)) {
+            throw new operator_1.OperatorsCountsMismatchError(ids, operatorKeys, `Invalid operator ID: ${operator.id}`);
         }
-        return new OperatorData_1.OperatorData(operator);
+        if (!operator.operatorKey) {
+            throw new operator_1.OperatorsCountsMismatchError(ids, operatorKeys, `Operator key is missing for operator ID: ${id}`);
+        }
+        return Object.assign(Object.assign({}, operator), { id });
     });
+    // Sort operators by ID
+    validatedOperators.sort((a, b) => a.id - b.id);
+    // Map to OperatorData objects
+    return validatedOperators.map(operator => new OperatorData_1.OperatorData(operator));
 };
 exports.operatorSortedList = operatorSortedList;
 //# sourceMappingURL=operator.helper.js.map

@@ -12,12 +12,12 @@ export class OpeatorsListValidatorConstraint implements ValidatorConstraintInter
     const operatorIds = new Set(), operatorPublicKeys = new Set();
     for (const operator of operatorsList || []) {
       if (operatorIds.has(operator.id)) {
-        throw new DuplicatedOperatorIdError(operator, `Operator ID already exists`);
+        throw new DuplicatedOperatorIdError(operator, `The operator ID '${operator.id}' is duplicated in the list`);
       }
       operatorIds.add(operator.id);
 
       if (operatorPublicKeys.has(operator.operatorKey)) {
-        throw new DuplicatedOperatorPublicKeyError(operator, `Operator public key already exists`);
+        throw new DuplicatedOperatorPublicKeyError(operator, `The public key for operator ID ${operator.id} is duplicated in the list`);
       }
       operatorPublicKeys.add(operator.operatorKey);
     }
