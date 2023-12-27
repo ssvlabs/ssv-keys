@@ -81,7 +81,6 @@ export class KeyShares {
       // Handle old format (single item)
       instance.shares.push(await KeySharesItem.fromJson(body));
     }
-
     return instance;
   }
 }

@@ -37,9 +37,9 @@ describe('KeyShares.fromJson/toJson', () => {
   });
 
   it('Should throw an error for invalid operator data', async () => {
-    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithMissedOperatorKey)).rejects.toThrow(OperatorsCountsMismatchError);
-    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithWrongOperatorId)).rejects.toThrow(OperatorsCountsMismatchError);
-    expect(async() => await KeySharesItem.fromJson(mockKeySharesItemWithDuplicatedOperatorKey)).rejects.toThrow(DuplicatedOperatorPublicKeyError);
+    expect((await KeySharesItem.fromJson(mockKeySharesItemWithMissedOperatorKey)).error).toBeInstanceOf(OperatorsCountsMismatchError);
+    expect((await KeySharesItem.fromJson(mockKeySharesItemWithWrongOperatorId)).error).toBeInstanceOf(OperatorsCountsMismatchError);
+    expect((await KeySharesItem.fromJson(mockKeySharesItemWithDuplicatedOperatorKey)).error).toBeInstanceOf(DuplicatedOperatorPublicKeyError);
   });
 
   it('Should create KeyShares Item', async () => {
@@ -79,7 +79,8 @@ describe('KeyShares.fromJson/toJson', () => {
   });
 
   it('should throw error on invalid JSON format', async () => {
-    await expect(KeyShares.fromJson(mockKeySharesInvalidStruct)).rejects.toThrow();
+    const keyShares = await KeyShares.fromJson(mockKeySharesInvalidStruct);
+    expect(keyShares.list()[0].error).not.toBeNull();
   });
 
   it('should throw error on version incompatibility', async () => {
@@ -95,6 +96,7 @@ describe('KeyShares.fromJson/toJson', () => {
       ...mockKeyShares,
       shares: [{ "invalid": "data" }],
     };
-    await expect(KeyShares.fromJson(invalidSharesJson)).rejects.toThrow();
+    const keyShares = await KeyShares.fromJson(invalidSharesJson);
+    expect(keyShares.list()[0].error).not.toBeNull();
   });
 });
