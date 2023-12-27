@@ -17,6 +17,7 @@ const PUBLIC_KEY_LENGHT = 96;
  */
 class KeySharesItem {
     constructor() {
+        this.error = null;
         this.data = new KeySharesData_1.KeySharesData();
         this.payload = new KeySharesPayload_1.KeySharesPayload();
     }
@@ -113,6 +114,7 @@ class KeySharesItem {
         return JSON.stringify({
             data: this.data || null,
             payload: this.payload || null,
+            error: this.error || null,
         }, null, 2);
     }
     splitArray(parts, arr) {
@@ -132,15 +134,26 @@ class KeySharesItem {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const body = typeof content === 'string' ? JSON.parse(content) : content;
             const instance = new KeySharesItem();
-            instance.data.update(body.data);
-            instance.payload.update(body.payload);
-            instance.validate();
-            // Custom validation: verify signature
-            yield instance.validateSingleShares(instance.payload.sharesData, {
-                ownerAddress: instance.data.ownerAddress,
-                ownerNonce: instance.data.ownerNonce,
-                publicKey: instance.data.publicKey,
-            });
+            try {
+                instance.data.update(body.data);
+                instance.payload.update(body.payload);
+                instance.validate();
+                // Custom validation: verify signature
+                yield instance.validateSingleShares(instance.payload.sharesData, {
+                    ownerAddress: instance.data.ownerAddress,
+                    ownerNonce: instance.data.ownerNonce,
+                    publicKey: instance.data.publicKey,
+                });
+            }
+            catch (e) {
+                // Assuming SSVKeysException is a class or interface you've defined
+                if (e instanceof base_1.SSVKeysException) {
+                    instance.error = e;
+                }
+                else {
+                    instance.error = e;
+                }
+            }
             return instance;
         });
     }
@@ -153,5 +166,8 @@ tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)()
 ], KeySharesItem.prototype, "payload", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)()
+], KeySharesItem.prototype, "error", void 0);
 exports.KeySharesItem = KeySharesItem;
 //# sourceMappingURL=KeySharesItem.js.map
