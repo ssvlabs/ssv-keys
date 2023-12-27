@@ -205,12 +205,7 @@ export class KeySharesItem {
         publicKey: instance.data.publicKey as string,
       });
     } catch (e: any) {
-      // Assuming SSVKeysException is a class or interface you've defined
-      if (e instanceof SSVKeysException) {
-        instance.error = e;
-      } else {
-        instance.error = e;
-      }
+      instance.error = e;
     }
     return instance;
   }
