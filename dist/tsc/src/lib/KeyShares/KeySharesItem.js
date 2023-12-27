@@ -114,7 +114,6 @@ class KeySharesItem {
         return JSON.stringify({
             data: this.data || null,
             payload: this.payload || null,
-            error: this.error || null,
         }, null, 2);
     }
     splitArray(parts, arr) {
@@ -146,13 +145,7 @@ class KeySharesItem {
                 });
             }
             catch (e) {
-                // Assuming SSVKeysException is a class or interface you've defined
-                if (e instanceof base_1.SSVKeysException) {
-                    instance.error = e;
-                }
-                else {
-                    instance.error = e;
-                }
+                instance.error = e;
             }
             return instance;
         });

@@ -173,7 +173,6 @@ export class KeySharesItem {
     return JSON.stringify({
       data: this.data || null,
       payload: this.payload || null,
-      error: this.error || null,
     }, null, 2);
   }
 
