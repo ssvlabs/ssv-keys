@@ -1,4 +1,4 @@
-import { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } from '../../src/main';
+import { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } from 'ssv-keys';
 
 const path = require('path');
 const fsp = require('fs').promises;
