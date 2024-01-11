@@ -63,20 +63,21 @@ async function main() {
   await fsp.writeFile(getKeySharesFilePath(4), keyShares.toJson(), { encoding: 'utf-8' });
 
   // example to work with keyshares from file
-  const jsonKeyShares = await fsp.readFile(getKeySharesFilePath(4), { encoding: 'utf-8' });
+  const jsonKeyShares = await fsp.readFile('./data/test-error.json', { encoding: 'utf-8' });
 
-  try {
-    const keyShares2 = await KeyShares.fromJson(jsonKeyShares);
-    console.log('Created keyShares list from json', keyShares2.list().map(item => item.toJson()));
-  } catch (e: any) {
-    if (e instanceof SSVKeysException) {
-      console.log('SSVKeys Error name:', e.name);
-      console.log('SSVKeys Error message:', e.message);
-      console.log('SSVKeys Error trace:', e.trace);
-    } else {
-      // Handle other types of errors
-      console.log('Other Error caught:', e.message);
+  const keyShares2 = await KeyShares.fromJson(jsonKeyShares);
+  for (const keySharesItem of keyShares2.list()) {
+    if (keySharesItem.error) {
+      if (keySharesItem.error instanceof SSVKeysException) {
+        console.log('SSVKeys Error name:', keySharesItem.error.name);
+        console.log('SSVKeys Error message:', keySharesItem.error.message);
+        console.log('SSVKeys Error trace:', keySharesItem.error.trace);
+      } else {
+        // Handle other types of errors
+        console.log('Other Error caught:', keySharesItem.error);
+      }
     }
+    console.log(keySharesItem.toJson());
   }
 }
 

@@ -48,6 +48,9 @@ export class KeySharesItem {
   @ValidateNested()
   public payload: KeySharesPayload;
 
+  @IsOptional()
+  public error: SSVKeysException | null = null;
+
   constructor() {
     this.data = new KeySharesData();
     this.payload = new KeySharesPayload();
@@ -190,16 +193,19 @@ export class KeySharesItem {
   static async fromJson(content: string | any): Promise<KeySharesItem> {
     const body = typeof content === 'string' ? JSON.parse(content) : content;
     const instance = new KeySharesItem();
-    instance.data.update(body.data);
-    instance.payload.update(body.payload);
-    instance.validate();
-    // Custom validation: verify signature
-    await instance.validateSingleShares(instance.payload.sharesData, {
-      ownerAddress: instance.data.ownerAddress as string,
-      ownerNonce: instance.data.ownerNonce as number,
-      publicKey: instance.data.publicKey as string,
-    });
-
+    try {
+      instance.data.update(body.data);
+      instance.payload.update(body.payload);
+      instance.validate();
+      // Custom validation: verify signature
+      await instance.validateSingleShares(instance.payload.sharesData, {
+        ownerAddress: instance.data.ownerAddress as string,
+        ownerNonce: instance.data.ownerNonce as number,
+        publicKey: instance.data.publicKey as string,
+      });
+    } catch (e: any) {
+      instance.error = e;
+    }
     return instance;
   }
 }

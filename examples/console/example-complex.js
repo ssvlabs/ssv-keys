@@ -1,6 +1,6 @@
 const path = require('path');
 const fsp = require('fs').promises;
-const { SSVKeys, KeyShares, KeySharesItem } = require('ssv-keys');
+const { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } = require('ssv-keys');
 
 const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
@@ -66,8 +66,19 @@ async function main() {
   const jsonKeyShares = await fsp.readFile(getKeySharesFilePath(4), { encoding: 'utf-8' });
 
   const keyShares2 = await KeyShares.fromJson(jsonKeyShares);
-
-  console.log('KeyShares list', keyShares2.list().map(item => item.toJson()));
+  for (const keySharesItem of keyShares2.list()) {
+    if (keySharesItem.error) {
+      if (keySharesItem.error instanceof SSVKeysException) {
+        console.log('SSVKeys Error name:', keySharesItem.error.name);
+        console.log('SSVKeys Error message:', keySharesItem.error.message);
+        console.log('SSVKeys Error trace:', keySharesItem.error.trace);
+      } else {
+        // Handle other types of errors
+        console.log('Other Error caught:', keySharesItem.error);
+      }
+    }
+    console.log(keySharesItem.toJson());
+  }
 }
 
 void main();

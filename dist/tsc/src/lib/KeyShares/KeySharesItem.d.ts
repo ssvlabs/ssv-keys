@@ -3,6 +3,7 @@ import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
 import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
+import { SSVKeysException } from '../../lib/exceptions/base';
 export interface IKeySharesPayloadData {
     publicKey: string;
     operators: IOperator[];
@@ -24,6 +25,7 @@ export interface IKeySharesFromSignatureData {
 export declare class KeySharesItem {
     data: KeySharesData;
     payload: KeySharesPayload;
+    error: SSVKeysException | null;
     constructor();
     /**
      * Build payload from operators list, encrypted shares and validator public key
