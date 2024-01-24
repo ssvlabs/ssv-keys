@@ -3,18 +3,12 @@ import path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
-
   try {
-    const stat = fs.statSync(filePath);
-
-    if (!stat.isFile()) {
-      return 'The specified keystore path is not a file.';
-    }
-
+    fs.statSync(filePath);
     return true;
-  } catch (error) {
+  } catch (error: any) {
     // Handle the error when the file does not exist
-    return message || 'Couldn’t locate the keystore file.';
+    return message || error.message || 'Couldn’t locate the keystore file.';
   }
 };
 

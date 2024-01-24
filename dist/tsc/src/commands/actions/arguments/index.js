@@ -3,11 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.operatorPublicKeysArgument = exports.outputFolderArgument = exports.keystorePasswordArgument = exports.ownerAddressArgument = exports.operatorIdsArgument = exports.ownerNonceArgument = exports.keystorePathArgument = exports.keystoreArgument = void 0;
+exports.operatorPublicKeysArgument = exports.outputFolderArgument = exports.keystorePasswordArgument = exports.ownerAddressArgument = exports.operatorIdsArgument = exports.ownerNonceArgument = exports.keystoreArgument = void 0;
 var keystore_1 = require("./keystore");
 Object.defineProperty(exports, "keystoreArgument", { enumerable: true, get: function () { return __importDefault(keystore_1).default; } });
-var keystore_path_1 = require("./keystore-path");
-Object.defineProperty(exports, "keystorePathArgument", { enumerable: true, get: function () { return __importDefault(keystore_path_1).default; } });
 var owner_nonce_1 = require("./owner-nonce");
 Object.defineProperty(exports, "ownerNonceArgument", { enumerable: true, get: function () { return __importDefault(owner_nonce_1).default; } });
 var operator_ids_1 = require("./operator-ids");

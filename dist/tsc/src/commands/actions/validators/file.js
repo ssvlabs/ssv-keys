@@ -7,15 +7,12 @@ const path_1 = tslib_1.__importDefault(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(String(filePath).trim());
     try {
-        const stat = fs_1.default.statSync(filePath);
-        if (!stat.isFile()) {
-            return 'The specified keystore path is not a file.';
-        }
+        fs_1.default.statSync(filePath);
         return true;
     }
     catch (error) {
         // Handle the error when the file does not exist
-        return message || 'Couldn’t locate the keystore file.';
+        return message || error.message || 'Couldn’t locate the keystore file.';
     }
 };
 exports.fileExistsValidator = fileExistsValidator;

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesAction = void 0;
 const tslib_1 = require("tslib");
-const fs_1 = tslib_1.__importDefault(require("fs"));
 const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeySharesItem_1 = require("../../lib/KeyShares/KeySharesItem");
@@ -22,7 +21,6 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             description: 'Generate shares for a list of operators from a validator keystore file',
             arguments: [
                 arguments_1.keystoreArgument,
-                arguments_1.keystorePathArgument,
                 arguments_1.keystorePasswordArgument,
                 arguments_1.operatorIdsArgument,
                 arguments_1.operatorPublicKeysArgument,
@@ -35,58 +33,24 @@ class KeySharesAction extends BaseAction_1.BaseAction {
     execute() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             this.validateKeystoreArguments(); // Validate keystore arguments
-            const keySharesList = yield this.getKeySharesList();
+            const keySharesList = yield this.processKeystorePath();
             const keySharesFilePath = yield this.saveKeyShares(keySharesList, this.args.output_folder);
             return keySharesFilePath;
         });
     }
-    getKeySharesList() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (this.args.keystore) {
-                return [yield this.processKeystore()];
-            }
-            else if (this.args.keystore_path) {
-                return yield this.processKeystorePath();
-            }
-            throw new base_1.SSVKeysException('Either --keystore or --keystore-path must be provided.');
-        });
-    }
     validateKeystoreArguments() {
         const hasKeystore = !!this.args.keystore;
-        const hasKeystorePath = !!this.args.keystore_path;
-        if (hasKeystore && hasKeystorePath) {
-            throw new base_1.SSVKeysException('Only one of --keystore or --keystore-path should be provided.');
-        }
-        if (hasKeystorePath && !this.isDirectory(this.args.keystore_path)) {
-            throw new base_1.SSVKeysException('--keystore-path must be a directory.');
-        }
-    }
-    isDirectory(path) {
-        try {
-            const stats = fs_1.default.statSync(path);
-            return stats.isDirectory();
-        }
-        catch (error) {
-            // Handle errors (like path does not exist)
-            console.error(`Error checking if path is a directory: ${error.message}`);
-            return false;
+        if (!hasKeystore) {
+            throw new base_1.SSVKeysException('Please provide a path to the validator keystore file or to the folder containing multiple validator keystore files.');
         }
     }
     processKeystorePath() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keystorePath = (0, validators_1.sanitizePath)(String(this.args.keystore_path).trim());
+            const keystorePath = (0, validators_1.sanitizePath)(String(this.args.keystore).trim());
             const { files } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
             const validatedFiles = yield this.validateKeystoreFiles(files);
             const singleKeySharesList = yield Promise.all(validatedFiles.map((file, index) => this.processFile(file, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)));
             return singleKeySharesList;
-        });
-    }
-    processKeystore() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keystore = this.args.keystore;
-            yield this.validateSingleKeystore(keystore);
-            const singleKeyShares = yield this.processFile(keystore, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce);
-            return singleKeyShares;
         });
     }
     validateKeystoreFiles(files) {
@@ -106,14 +70,6 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             }
             process.stdout.write('\n');
             return validatedFiles;
-        });
-    }
-    validateSingleKeystore(keystore) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validate(keystore);
-            if (isKeyStoreValid !== true) {
-                throw new base_1.SSVKeysException(String(isKeyStoreValid));
-            }
         });
     }
     getOperators() {
