@@ -18,7 +18,7 @@ export default {
   options: {
     required: false,
     type: String,
-    help: 'Path to a validator keystore file or a directory of keystore files for bulk processing'
+    help: 'The path to either a validator keystore file or a folder that contains multiple validator keystore files. If a folder is provided, it will split in bulk all the keystore files within it according to the additional arguments provided'
   },
   interactive: {
     options: {

@@ -104,7 +104,7 @@ To run you will use the "shares" command
 yarn cli shares --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 
 # folder with multiple keystore files
-yarn cli shares --keystore-path=./keystore-files --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+yarn cli shares --keystore=./keystore-files --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json
