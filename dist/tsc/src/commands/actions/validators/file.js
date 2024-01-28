@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sanitizePath = exports.jsonFileValidator = exports.fileExistsValidator = void 0;
 const tslib_1 = require("tslib");
+/* eslint-disable no-useless-escape */
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
 const fileExistsValidator = (filePath, message = '') => {
