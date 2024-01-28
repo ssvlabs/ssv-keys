@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import fs from 'fs';
 import path from 'path';
 
@@ -30,30 +29,33 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   return true;
 };
 
+/**
+ * Make sure the path contains
+ * @param path
+ * @param regex
+ */
 export const sanitizePath = (inputPath: string): string => {
-  // Strip quotes from the beginning or end of the path.
+  // Strip quotes from the beginning or end.
   const strippedPath = inputPath.replace(/^["']|["']$/g, '');
 
-  // Normalize the path to handle different OS path formats and resolve '..' and '.' segments.
+  // Normalize the path to resolve '..' and '.' segments.
   let sanitizedPath = path.normalize(strippedPath);
 
-  // Optionally, expand the regex to allow additional valid characters as needed.
-  // The current regex allows alphanumeric, spaces, hyphens, underscores, periods, and path separators.
-  // Modify this regex based on your specific requirements.
-  sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9 _\-.\\\/]/g, '');
+  // Remove any characters that are not typically allowed or are problematic in file paths.
+  // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
+  // You can adjust the regex as needed.
+  sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9_\-./\\ ]/g, '');
 
-  console.log(`Current platform: ${process.platform}`);
-
-  // Handle Windows-specific path formatting (like drive letters).
+  // On Windows, paths might start with a drive letter. We can check and ensure it's a valid drive letter.
+  /*
   if (process.platform === 'win32') {
-    console.log('[debug] windows');
-    const driveLetterMatch = sanitizedPath.match(/^([a-zA-Z]:)/);
-    if (driveLetterMatch) {
-      // Normalize the drive letter to uppercase.
-      sanitizedPath = driveLetterMatch[1].toUpperCase() + sanitizedPath.substring(driveLetterMatch[1].length);
+    const match = sanitizedPath.match(/^([a-zA-Z]:)/);
+    if (match) {
+      // Ensure the drive letter is uppercase (just a normalization step; not strictly necessary).
+      sanitizedPath = match[1].toUpperCase() + sanitizedPath.substring(match[1].length);
     }
-    console.log('[debug] windows sanitizedPath:', sanitizedPath);
   }
+  */
 
   return sanitizedPath;
 };
