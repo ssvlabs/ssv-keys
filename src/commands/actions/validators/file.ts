@@ -42,6 +42,8 @@ export const sanitizePath = (inputPath: string): string => {
   // Modify this regex based on your specific requirements.
   sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9 _\-.\\\/]/g, '');
 
+  console.log(`Current platform: ${process.platform}`);
+
   // Handle Windows-specific path formatting (like drive letters).
   if (process.platform === 'win32') {
     console.log('[debug] windows');

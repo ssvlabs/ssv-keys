@@ -44,6 +44,7 @@ const sanitizePath = (inputPath) => {
     // The current regex allows alphanumeric, spaces, hyphens, underscores, periods, and path separators.
     // Modify this regex based on your specific requirements.
     sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9 _\-.\\\/]/g, '');
+    console.log(`Current platform: ${process.platform}`);
     // Handle Windows-specific path formatting (like drive letters).
     if (process.platform === 'win32') {
         console.log('[debug] windows');
