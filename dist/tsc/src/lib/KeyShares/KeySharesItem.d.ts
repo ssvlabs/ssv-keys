@@ -25,7 +25,7 @@ export interface IKeySharesFromSignatureData {
 export declare class KeySharesItem {
     data: KeySharesData;
     payload: KeySharesPayload;
-    error: SSVKeysException | null;
+    error: SSVKeysException | undefined;
     constructor();
     /**
      * Build payload from operators list, encrypted shares and validator public key

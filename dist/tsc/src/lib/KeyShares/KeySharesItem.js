@@ -17,7 +17,7 @@ const PUBLIC_KEY_LENGHT = 96;
  */
 class KeySharesItem {
     constructor() {
-        this.error = null;
+        this.error = undefined;
         this.data = new KeySharesData_1.KeySharesData();
         this.payload = new KeySharesPayload_1.KeySharesPayload();
     }
