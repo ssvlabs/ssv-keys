@@ -34,27 +34,24 @@ const jsonFileValidator = (filePath, message = '') => {
     return true;
 };
 exports.jsonFileValidator = jsonFileValidator;
-/**
- * Make sure the path contains
- * @param path
- * @param regex
- */
 const sanitizePath = (inputPath) => {
-    // Strip quotes from the beginning or end.
+    // Strip quotes from the beginning or end of the path.
     const strippedPath = inputPath.replace(/^["']|["']$/g, '');
-    // Normalize the path to resolve '..' and '.' segments.
+    // Normalize the path to handle different OS path formats and resolve '..' and '.' segments.
     let sanitizedPath = path_1.default.normalize(strippedPath);
-    // Remove any characters that are not typically allowed or are problematic in file paths.
-    // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
-    // You can adjust the regex as needed.
-    sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9_\-./\\ ]/g, '');
-    // On Windows, paths might start with a drive letter. We can check and ensure it's a valid drive letter.
+    // Optionally, expand the regex to allow additional valid characters as needed.
+    // The current regex allows alphanumeric, spaces, hyphens, underscores, periods, and path separators.
+    // Modify this regex based on your specific requirements.
+    sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9 _\-.\\\/]/g, '');
+    // Handle Windows-specific path formatting (like drive letters).
     if (process.platform === 'win32') {
-        const match = sanitizedPath.match(/^([a-zA-Z]:)/);
-        if (match) {
-            // Ensure the drive letter is uppercase (just a normalization step; not strictly necessary).
-            sanitizedPath = match[1].toUpperCase() + sanitizedPath.substring(match[1].length);
+        console.log('[debug] windows');
+        const driveLetterMatch = sanitizedPath.match(/^([a-zA-Z]:)/);
+        if (driveLetterMatch) {
+            // Normalize the drive letter to uppercase.
+            sanitizedPath = driveLetterMatch[1].toUpperCase() + sanitizedPath.substring(driveLetterMatch[1].length);
         }
+        console.log('[debug] windows sanitizedPath:', sanitizedPath);
     }
     return sanitizedPath;
 };
