@@ -5,7 +5,7 @@ try {
     window.crypto;
     index = require('bls-eth-wasm/browser');
 }
-catch (_a) {
+catch {
     index = require('bls-eth-wasm');
 }
 exports.default = index;

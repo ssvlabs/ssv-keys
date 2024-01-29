@@ -70,16 +70,16 @@ exports.hexArrayToBytes = hexArrayToBytes;
  * computes the Keccak-256 hash of the data, signs the hashed data using the deserialized private key,
  * and returns the signature in hexadecimal format, prefixed with '0x'.
  */
-const buildSignature = (dataToSign, privateKeyHex) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const buildSignature = async (dataToSign, privateKeyHex) => {
     if (!BLS_1.default.deserializeHexStrToSecretKey) {
-        yield BLS_1.default.init(BLS_1.default.BLS12_381);
+        await BLS_1.default.init(BLS_1.default.BLS12_381);
     }
     const privateKey = BLS_1.default.deserializeHexStrToSecretKey(privateKeyHex.replace('0x', ''));
     const messageHash = ethUtil.keccak256(Buffer.from(dataToSign));
     const signature = privateKey.sign(new Uint8Array(messageHash));
     const signatureHex = signature.serializeToHexStr();
     return `0x${signatureHex}`;
-});
+};
 exports.buildSignature = buildSignature;
 /**
  * Asynchronously validates a BLS signature for given signed data.
@@ -93,9 +93,9 @@ exports.buildSignature = buildSignature;
  * The function initializes the BLS library if needed, deserializes the public key and signature from hexadecimal strings,
  * computes the Keccak-256 hash of the signed data, and verifies the signature using the deserialized public key.
  */
-const validateSignature = (signedData, signatureHex, publicKey) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const validateSignature = async (signedData, signatureHex, publicKey) => {
     if (!BLS_1.default.deserializeHexStrToSecretKey) {
-        yield BLS_1.default.init(BLS_1.default.BLS12_381);
+        await BLS_1.default.init(BLS_1.default.BLS12_381);
     }
     const blsPublicKey = BLS_1.default.deserializeHexStrToPublicKey(publicKey.replace('0x', ''));
     const signature = BLS_1.default.deserializeHexStrToSignature(signatureHex.replace('0x', ''));
@@ -103,13 +103,13 @@ const validateSignature = (signedData, signatureHex, publicKey) => tslib_1.__awa
     if (!blsPublicKey.verify(signature, new Uint8Array(messageHash))) {
         throw new bls_1.SingleSharesSignatureInvalid(signatureHex, 'Single shares signature is invalid');
     }
-});
+};
 exports.validateSignature = validateSignature;
-const privateToPublicKey = (privateKey) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const privateToPublicKey = async (privateKey) => {
     if (!BLS_1.default.deserializeHexStrToSecretKey) {
-        yield BLS_1.default.init(BLS_1.default.BLS12_381);
+        await BLS_1.default.init(BLS_1.default.BLS12_381);
     }
     return `0x${BLS_1.default.deserializeHexStrToSecretKey(privateKey.replace('0x', '')).getPublicKey().serializeToHexStr()}`;
-});
+};
 exports.privateToPublicKey = privateToPublicKey;
 //# sourceMappingURL=web3.helper.js.map

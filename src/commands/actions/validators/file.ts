@@ -3,13 +3,8 @@ import path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
-  try {
-    fs.statSync(filePath);
-    return true;
-  } catch (error: any) {
-    // Handle the error when the file does not exist
-    return message || error.message || 'Couldn’t locate the keystore file.';
-  }
+  const exists = fs.existsSync(filePath);
+  return exists || message || 'Couldn’t locate the keystore file.';
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {

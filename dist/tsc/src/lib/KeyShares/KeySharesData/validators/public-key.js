@@ -7,21 +7,19 @@ const class_validator_1 = require("class-validator");
 const bls_1 = require("../../../exceptions/bls");
 /* Try to BLS deserialize validator public key. */
 let PublicKeyValidatorConstraint = class PublicKeyValidatorConstraint {
-    validate(value) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            try {
-                if (typeof value === 'string') {
-                    BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
-                }
-                else {
-                    value.forEach((item) => BLS_1.default.deserializeHexStrToPublicKey(item.replace('0x', '')));
-                }
+    async validate(value) {
+        try {
+            if (typeof value === 'string') {
+                BLS_1.default.deserializeHexStrToPublicKey(value.replace('0x', ''));
             }
-            catch (e) {
-                throw new bls_1.BLSDeserializeError(value, 'Failed to BLS deserialize validator public key');
+            else {
+                value.forEach((item) => BLS_1.default.deserializeHexStrToPublicKey(item.replace('0x', '')));
             }
-            return true;
-        });
+        }
+        catch (e) {
+            throw new bls_1.BLSDeserializeError(value, 'Failed to BLS deserialize validator public key');
+        }
+        return true;
     }
     defaultMessage() {
         return 'Invalid public key';

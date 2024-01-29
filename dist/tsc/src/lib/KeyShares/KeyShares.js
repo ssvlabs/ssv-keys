@@ -49,31 +49,29 @@ class KeyShares {
      * @returns The KeyShares instance.
      * @throws Error if the version is incompatible or the shares array is invalid.
      */
-    static fromJson(content) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const body = typeof content === 'string' ? JSON.parse(content) : content;
-            const extVersion = semver_1.default.parse(body.version);
-            const currentVersion = semver_1.default.parse(package_json_1.default.version);
-            if (!extVersion || !currentVersion) {
-                throw new base_1.SSVKeysException(`The file for keyshares must contain a version mark provided by ssv-keys.`);
+    static async fromJson(content) {
+        const body = typeof content === 'string' ? JSON.parse(content) : content;
+        const extVersion = semver_1.default.parse(body.version);
+        const currentVersion = semver_1.default.parse(package_json_1.default.version);
+        if (!extVersion || !currentVersion) {
+            throw new base_1.SSVKeysException(`The file for keyshares must contain a version mark provided by ssv-keys.`);
+        }
+        if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
+            throw new base_1.SSVKeysException(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
+        }
+        const instance = new KeyShares();
+        instance.shares = [];
+        if (Array.isArray(body.shares)) {
+            // Process each item in the array
+            for (const item of body.shares) {
+                instance.shares.push(await KeySharesItem_1.KeySharesItem.fromJson(item));
             }
-            if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
-                throw new base_1.SSVKeysException(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
-            }
-            const instance = new KeyShares();
-            instance.shares = [];
-            if (Array.isArray(body.shares)) {
-                // Process each item in the array
-                for (const item of body.shares) {
-                    instance.shares.push(yield KeySharesItem_1.KeySharesItem.fromJson(item));
-                }
-            }
-            else {
-                // Handle old format (single item)
-                instance.shares.push(yield KeySharesItem_1.KeySharesItem.fromJson(body));
-            }
-            return instance;
-        });
+        }
+        else {
+            // Handle old format (single item)
+            instance.shares.push(await KeySharesItem_1.KeySharesItem.fromJson(body));
+        }
+        return instance;
     }
 }
 tslib_1.__decorate([

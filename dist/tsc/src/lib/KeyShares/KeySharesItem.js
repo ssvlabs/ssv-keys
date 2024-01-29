@@ -27,46 +27,42 @@ class KeySharesItem {
      * @param operatorIds
      * @param encryptedShares
      */
-    buildPayload(metaData, toSignatureData) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { ownerAddress, ownerNonce, privateKey, } = toSignatureData;
-            if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-                throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
-            }
-            let address;
-            try {
-                address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
-            }
-            catch (_a) {
-                throw new keystore_1.OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
-            }
-            const payload = this.payload.build({
-                publicKey: metaData.publicKey,
-                operatorIds: (0, operator_helper_1.operatorSortedList)(metaData.operators).map(operator => operator.id),
-                encryptedShares: metaData.encryptedShares,
-            });
-            const signature = yield web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-            const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
-            payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
-            // verify signature
-            yield this.validateSingleShares(payload.sharesData, {
-                ownerAddress,
-                ownerNonce,
-                publicKey: yield web3Helper.privateToPublicKey(privateKey),
-            });
-            return payload;
+    async buildPayload(metaData, toSignatureData) {
+        const { ownerAddress, ownerNonce, privateKey, } = toSignatureData;
+        if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
+            throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+        }
+        let address;
+        try {
+            address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+        }
+        catch {
+            throw new keystore_1.OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
+        }
+        const payload = this.payload.build({
+            publicKey: metaData.publicKey,
+            operatorIds: (0, operator_helper_1.operatorSortedList)(metaData.operators).map(operator => operator.id),
+            encryptedShares: metaData.encryptedShares,
         });
+        const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
+        const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+        payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
+        // verify signature
+        await this.validateSingleShares(payload.sharesData, {
+            ownerAddress,
+            ownerNonce,
+            publicKey: await web3Helper.privateToPublicKey(privateKey),
+        });
+        return payload;
     }
-    validateSingleShares(shares, fromSignatureData) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const { ownerAddress, ownerNonce, publicKey } = fromSignatureData;
-            if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
-                throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
-            }
-            const address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
-            const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
-            yield web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
-        });
+    async validateSingleShares(shares, fromSignatureData) {
+        const { ownerAddress, ownerNonce, publicKey } = fromSignatureData;
+        if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
+            throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
+        }
+        const address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+        const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
+        await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
     }
     /**
      * Build shares from bytes string and operators list length
@@ -129,26 +125,24 @@ class KeySharesItem {
     /**
      * Initialise from JSON or object data.
      */
-    static fromJson(content) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const body = typeof content === 'string' ? JSON.parse(content) : content;
-            const instance = new KeySharesItem();
-            try {
-                instance.data.update(body.data);
-                instance.payload.update(body.payload);
-                instance.validate();
-                // Custom validation: verify signature
-                yield instance.validateSingleShares(instance.payload.sharesData, {
-                    ownerAddress: instance.data.ownerAddress,
-                    ownerNonce: instance.data.ownerNonce,
-                    publicKey: instance.data.publicKey,
-                });
-            }
-            catch (e) {
-                instance.error = e;
-            }
-            return instance;
-        });
+    static async fromJson(content) {
+        const body = typeof content === 'string' ? JSON.parse(content) : content;
+        const instance = new KeySharesItem();
+        try {
+            instance.data.update(body.data);
+            instance.payload.update(body.payload);
+            instance.validate();
+            // Custom validation: verify signature
+            await instance.validateSingleShares(instance.payload.sharesData, {
+                ownerAddress: instance.data.ownerAddress,
+                ownerNonce: instance.data.ownerNonce,
+                publicKey: instance.data.publicKey,
+            });
+        }
+        catch (e) {
+            instance.error = e;
+        }
+        return instance;
     }
 }
 tslib_1.__decorate([

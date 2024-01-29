@@ -20,7 +20,7 @@ const operatorSortedList = (operators) => {
         if (!operator.operatorKey) {
             throw new operator_1.OperatorsCountsMismatchError(ids, operatorKeys, `Operator key is missing for operator ID: ${id}`);
         }
-        return Object.assign(Object.assign({}, operator), { id });
+        return { ...operator, id };
     });
     // Sort operators by ID
     validatedOperators.sort((a, b) => a.id - b.id);

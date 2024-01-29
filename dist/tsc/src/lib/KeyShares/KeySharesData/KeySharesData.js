@@ -29,10 +29,8 @@ class KeySharesData {
     /**
      * Do all possible validations.
      */
-    validate() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            (0, class_validator_1.validateSync)(this);
-        });
+    async validate() {
+        (0, class_validator_1.validateSync)(this);
     }
     /**
      * Get the list of operators IDs.
