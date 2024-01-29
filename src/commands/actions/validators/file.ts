@@ -2,7 +2,7 @@ import fs from 'fs';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
-  console.log('same as old:::', filePath);
+  console.log('new as old:::', filePath);
   const exists = fs.existsSync(filePath);
   return exists || message || 'Couldn’t locate the keystore file.';
 };
@@ -36,7 +36,7 @@ export const sanitizePath = (inputPath: string): string => {
   // Remove any characters that are not typically allowed or are problematic in file paths.
   // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
   // You can adjust the regex as needed.
-  const sanitizedPath = strippedPath.replace(/[^a-zA-Z0-9_\-./\\ ]/g, '');
+  const sanitizedPath = strippedPath.replace(/\\([^a-zA-Z0-9_])/g, "$1");
 
   // On Windows, paths might start with a drive letter. We can check and ensure it's a valid drive letter.
   /*
