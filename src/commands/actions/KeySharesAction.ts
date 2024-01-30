@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
 import { KeySharesItem } from '../../lib/KeyShares/KeySharesItem';
@@ -74,16 +76,21 @@ export class KeySharesAction extends BaseAction {
   private async validateKeystoreFiles(files: string[]): Promise<string[]> {
     const validatedFiles = [];
     let failedValidation = 0;
-    for (const file of files) {
+    for (const [index, file] of files.entries()) {
       const isKeyStoreValid = await keystoreArgument.interactive.options.validate(file);
       const isValidPassword = await keystorePasswordValidator.validatePassword(this.args.password, file);
+      let status = '✅';
       if (isKeyStoreValid === true && isValidPassword === true) {
         validatedFiles.push(file);
       } else {
         failedValidation++;
+        status = '❌';
       }
-      process.stdout.write(`\r${validatedFiles.length}/${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+      const fileName = path.basename(file); // Extract the file name
+      process.stdout.write(`\r\n${index+ 1}/${files.length} ${status} ${fileName}`);
     }
+    process.stdout.write(`\n\n${files.length - failedValidation} of ${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+
     process.stdout.write('\n');
     return validatedFiles;
   }

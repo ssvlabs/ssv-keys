@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesAction = void 0;
+const tslib_1 = require("tslib");
+const path_1 = tslib_1.__importDefault(require("path"));
 const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeySharesItem_1 = require("../../lib/KeyShares/KeySharesItem");
@@ -51,17 +53,21 @@ class KeySharesAction extends BaseAction_1.BaseAction {
     async validateKeystoreFiles(files) {
         const validatedFiles = [];
         let failedValidation = 0;
-        for (const file of files) {
+        for (const [index, file] of files.entries()) {
             const isKeyStoreValid = await arguments_1.keystoreArgument.interactive.options.validate(file);
             const isValidPassword = await validators_1.keystorePasswordValidator.validatePassword(this.args.password, file);
+            let status = '✅';
             if (isKeyStoreValid === true && isValidPassword === true) {
                 validatedFiles.push(file);
             }
             else {
                 failedValidation++;
+                status = '❌';
             }
-            process.stdout.write(`\r${validatedFiles.length}/${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+            const fileName = path_1.default.basename(file); // Extract the file name
+            process.stdout.write(`\r\n${index + 1}/${files.length} ${status} ${fileName}`);
         }
+        process.stdout.write(`\n\n${files.length - failedValidation} of ${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
         process.stdout.write('\n');
         return validatedFiles;
     }
