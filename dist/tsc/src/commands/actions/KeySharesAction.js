@@ -94,6 +94,9 @@ class KeySharesAction extends BaseAction_1.BaseAction {
         return keySharesItem;
     }
     async saveKeyShares(keySharesItems, outputFolder) {
+        if (keySharesItems.length === 0) {
+            throw new base_1.SSVKeysException('Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.');
+        }
         const keyShares = new KeyShares_1.KeyShares();
         keySharesItems.forEach(keySharesItem => keyShares.add(keySharesItem));
         const keySharesFilePath = await (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());

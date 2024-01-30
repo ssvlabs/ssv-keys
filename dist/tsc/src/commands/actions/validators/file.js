@@ -5,9 +5,8 @@ const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const fileExistsValidator = (filePath, message = '') => {
     filePath = (0, exports.sanitizePath)(String(filePath).trim());
-    console.log('same as old:::', filePath);
     const exists = fs_1.default.existsSync(filePath);
-    return exists || message || 'Couldn’t locate the keystore file.';
+    return exists || message || 'Couldn’t locate the keystores file path. Please provide a valid path.';
 };
 exports.fileExistsValidator = fileExistsValidator;
 const jsonFileValidator = (filePath, message = '') => {

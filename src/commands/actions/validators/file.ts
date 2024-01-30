@@ -2,9 +2,8 @@ import fs from 'fs';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
-  console.log('new as old:::', filePath);
   const exists = fs.existsSync(filePath);
-  return exists || message || 'Couldn’t locate the keystore file.';
+  return exists || message || 'Couldn’t locate the keystores file path. Please provide a valid path.';
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {

@@ -126,6 +126,10 @@ export class KeySharesAction extends BaseAction {
   }
 
   private async saveKeyShares(keySharesItems: KeySharesItem[], outputFolder: string): Promise<string> {
+    if (keySharesItems.length === 0) {
+      throw new SSVKeysException('Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.')
+    }
+
     const keyShares = new KeyShares();
     keySharesItems.forEach(keySharesItem => keyShares.add(keySharesItem));
 
