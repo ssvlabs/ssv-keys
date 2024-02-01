@@ -11,7 +11,7 @@ let OwnerAddressValidatorConstraint = class OwnerAddressValidatorConstraint {
         try {
             web3Helper.web3.utils.toChecksumAddress(value);
         }
-        catch (_a) {
+        catch {
             throw new keystore_1.OwnerAddressFormatError(value, 'Owner address is not a valid Ethereum address');
         }
         return true;

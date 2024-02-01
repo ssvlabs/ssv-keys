@@ -1,12 +1,7 @@
-import { fileExistsValidator, jsonFileValidator } from '../validators';
+import { fileExistsValidator } from '../validators';
 
-const validateKeystoreFile = (filePath: string) => {
-  let validation = fileExistsValidator(filePath);
-  if (validation !== true) {
-    return { isValid: false, error: validation };
-  }
-
-  validation = jsonFileValidator(filePath);
+const validateKeystoreFile = (path: string) => {
+  const validation = fileExistsValidator(path);
   if (validation !== true) {
     return { isValid: false, error: validation };
   }
@@ -23,12 +18,12 @@ export default {
   options: {
     required: false,
     type: String,
-    help: 'The validator keystore file path. Only one keystore file can be specified using this argument'
+    help: 'The path to either a validator keystore file or a folder that contains multiple validator keystore files. If a folder is provided, it will split in bulk all the keystore files within it according to the additional arguments provided'
   },
   interactive: {
     options: {
       type: 'text',
-      message: 'Provide the keystore file path',
+      message: 'Enter the path to your keystore file or directory containing multiple keystore files',
       validate: (filePath: string) => {
         const result = validateKeystoreFile(filePath);
         return result.isValid || result.error;

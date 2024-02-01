@@ -1,21 +1,9 @@
 import fs from 'fs';
-import path from 'path';
 
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
-
-  try {
-    const stat = fs.statSync(filePath);
-
-    if (!stat.isFile()) {
-      return 'The specified keystore path is not a file.';
-    }
-
-    return true;
-  } catch (error) {
-    // Handle the error when the file does not exist
-    return message || 'Couldn’t locate the keystore file.';
-  }
+  const exists = fs.existsSync(filePath);
+  return exists || message || 'Couldn’t locate the keystores file path. Please provide a valid path.';
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {
@@ -44,15 +32,13 @@ export const sanitizePath = (inputPath: string): string => {
   // Strip quotes from the beginning or end.
   const strippedPath = inputPath.replace(/^["']|["']$/g, '');
 
-  // Normalize the path to resolve '..' and '.' segments.
-  let sanitizedPath = path.normalize(strippedPath);
-
   // Remove any characters that are not typically allowed or are problematic in file paths.
   // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
   // You can adjust the regex as needed.
-  sanitizedPath = sanitizedPath.replace(/[^a-zA-Z0-9_\-./\\ ]/g, '');
+  const sanitizedPath = strippedPath.replace(/\\([^a-zA-Z0-9_])/g, "$1");
 
   // On Windows, paths might start with a drive letter. We can check and ensure it's a valid drive letter.
+  /*
   if (process.platform === 'win32') {
     const match = sanitizedPath.match(/^([a-zA-Z]:)/);
     if (match) {
@@ -60,6 +46,7 @@ export const sanitizePath = (inputPath: string): string => {
       sanitizedPath = match[1].toUpperCase() + sanitizedPath.substring(match[1].length);
     }
   }
+  */
 
   return sanitizedPath;
 };

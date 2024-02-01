@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseAction = void 0;
-const tslib_1 = require("tslib");
 const base_1 = require("../../lib/exceptions/base");
 class BaseAction {
     constructor() {
@@ -11,10 +10,8 @@ class BaseAction {
         this.args = args;
         return this;
     }
-    execute() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            throw new base_1.SSVKeysException('Should implement "execute"');
-        });
+    async execute() {
+        throw new base_1.SSVKeysException('Should implement "execute"');
     }
     static get options() {
         throw new base_1.SSVKeysException('Should implement static "options"');
@@ -33,10 +30,8 @@ class BaseAction {
      * Should also return options which can be changed.
      * @param options
      */
-    preOptions(options) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return options;
-        });
+    async preOptions(options) {
+        return options;
     }
 }
 exports.BaseAction = BaseAction;

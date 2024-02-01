@@ -5,7 +5,7 @@ try {
     window.crypto;
     index = require('jsencrypt').JSEncrypt;
 }
-catch (_a) {
+catch {
     index = require('./jsencrypt.bundle');
 }
 exports.default = index;

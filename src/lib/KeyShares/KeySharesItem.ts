@@ -49,7 +49,7 @@ export class KeySharesItem {
   public payload: KeySharesPayload;
 
   @IsOptional()
-  public error: SSVKeysException | null = null;
+  public error: SSVKeysException | undefined = undefined;
 
   constructor() {
     this.data = new KeySharesData();

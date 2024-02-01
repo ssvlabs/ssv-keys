@@ -52,18 +52,33 @@ export type KeyStoreFilesResult = {
 }
 
 export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFilesResult> => {
-  const stat = await fsp.stat(keystorePath);
-  const isFolder = stat.isDirectory();
-
+  let isFolder = false;
   let files;
-  if (isFolder) {
-    const folderContent = await fsp.readdir(keystorePath);
-    if (folderContent.length === 0) {
+
+  try {
+    // Attempt to open the directory to determine if the path is a folder
+    const dir = await fsp.opendir(keystorePath);
+    isFolder = true;
+    files = [];
+
+    for await (const dirent of dir) {
+      files.push(path.join(keystorePath, dirent.name));
+    }
+
+    if (files.length === 0) {
       throw new SSVKeysException('No keystore files detected. Please provide a folder with correct keystore files and try again.');
     }
-    files = folderContent.map(file => path.join(keystorePath, file)).sort();
-  } else {
-    files = [keystorePath];
+  } catch (error: any) {
+    if (error.code === 'ENOTDIR') {
+      // It's not a directory, assume it's a file path
+      isFolder = false;
+      files = [keystorePath];
+    } else {
+      // Other errors are re-thrown
+      throw new SSVKeysException(error.message);
+    }
   }
+
+  files.sort(); // Sort the files array regardless of how it was populated
   return { files, isFolder };
 }

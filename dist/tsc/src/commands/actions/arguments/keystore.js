@@ -1,12 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validators_1 = require("../validators");
-const validateKeystoreFile = (filePath) => {
-    let validation = (0, validators_1.fileExistsValidator)(filePath);
-    if (validation !== true) {
-        return { isValid: false, error: validation };
-    }
-    validation = (0, validators_1.jsonFileValidator)(filePath);
+const validateKeystoreFile = (path) => {
+    const validation = (0, validators_1.fileExistsValidator)(path);
     if (validation !== true) {
         return { isValid: false, error: validation };
     }
@@ -21,12 +17,12 @@ exports.default = {
     options: {
         required: false,
         type: String,
-        help: 'The validator keystore file path. Only one keystore file can be specified using this argument'
+        help: 'The path to either a validator keystore file or a folder that contains multiple validator keystore files. If a folder is provided, it will split in bulk all the keystore files within it according to the additional arguments provided'
     },
     interactive: {
         options: {
             type: 'text',
-            message: 'Provide the keystore file path',
+            message: 'Enter the path to your keystore file or directory containing multiple keystore files',
             validate: (filePath) => {
                 const result = validateKeystoreFile(filePath);
                 return result.isValid || result.error;

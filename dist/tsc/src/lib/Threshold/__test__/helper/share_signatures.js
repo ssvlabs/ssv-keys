@@ -4,11 +4,11 @@ exports.sharesSignatures = void 0;
 const tslib_1 = require("tslib");
 const BLS_1 = tslib_1.__importDefault(require("../../../BLS"));
 const Threshold_1 = tslib_1.__importDefault(require("../../../Threshold"));
-const sharesSignatures = (_privateKey, operators, message, isThreshold) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const sharesSignatures = async (_privateKey, operators, message, isThreshold) => {
     if (!BLS_1.default.deserializeHexStrToSecretKey) {
-        yield BLS_1.default.init(BLS_1.default.BLS12_381);
+        await BLS_1.default.init(BLS_1.default.BLS12_381);
     }
-    const threshold = yield new Threshold_1.default().create(_privateKey, operators);
+    const threshold = await new Threshold_1.default().create(_privateKey, operators);
     const privateKey = BLS_1.default.deserializeHexStrToSecretKey(_privateKey.replace('0x', ''));
     const publicKey = privateKey.getPublicKey();
     const signatures = [];
@@ -29,7 +29,7 @@ const sharesSignatures = (_privateKey, operators, message, isThreshold) => tslib
         signatures,
         ids,
     };
-});
+};
 exports.sharesSignatures = sharesSignatures;
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);

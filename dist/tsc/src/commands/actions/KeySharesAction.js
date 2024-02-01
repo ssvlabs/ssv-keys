@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesAction = void 0;
 const tslib_1 = require("tslib");
-const fs_1 = tslib_1.__importDefault(require("fs"));
+const path_1 = tslib_1.__importDefault(require("path"));
 const BaseAction_1 = require("./BaseAction");
 const SSVKeys_1 = require("../../lib/SSVKeys");
 const KeySharesItem_1 = require("../../lib/KeyShares/KeySharesItem");
@@ -22,7 +22,6 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             description: 'Generate shares for a list of operators from a validator keystore file',
             arguments: [
                 arguments_1.keystoreArgument,
-                arguments_1.keystorePathArgument,
                 arguments_1.keystorePasswordArgument,
                 arguments_1.operatorIdsArgument,
                 arguments_1.operatorPublicKeysArgument,
@@ -32,89 +31,45 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             ],
         };
     }
-    execute() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            this.validateKeystoreArguments(); // Validate keystore arguments
-            const keySharesList = yield this.getKeySharesList();
-            const keySharesFilePath = yield this.saveKeyShares(keySharesList, this.args.output_folder);
-            return keySharesFilePath;
-        });
-    }
-    getKeySharesList() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (this.args.keystore) {
-                return [yield this.processKeystore()];
-            }
-            else if (this.args.keystore_path) {
-                return yield this.processKeystorePath();
-            }
-            throw new base_1.SSVKeysException('Either --keystore or --keystore-path must be provided.');
-        });
+    async execute() {
+        this.validateKeystoreArguments(); // Validate keystore arguments
+        const keySharesList = await this.processKeystorePath();
+        const keySharesFilePath = await this.saveKeyShares(keySharesList, this.args.output_folder);
+        return keySharesFilePath;
     }
     validateKeystoreArguments() {
         const hasKeystore = !!this.args.keystore;
-        const hasKeystorePath = !!this.args.keystore_path;
-        if (hasKeystore && hasKeystorePath) {
-            throw new base_1.SSVKeysException('Only one of --keystore or --keystore-path should be provided.');
-        }
-        if (hasKeystorePath && !this.isDirectory(this.args.keystore_path)) {
-            throw new base_1.SSVKeysException('--keystore-path must be a directory.');
+        if (!hasKeystore) {
+            throw new base_1.SSVKeysException('Please provide a path to the validator keystore file or to the folder containing multiple validator keystore files.');
         }
     }
-    isDirectory(path) {
-        try {
-            const stats = fs_1.default.statSync(path);
-            return stats.isDirectory();
-        }
-        catch (error) {
-            // Handle errors (like path does not exist)
-            console.error(`Error checking if path is a directory: ${error.message}`);
-            return false;
-        }
+    async processKeystorePath() {
+        const keystorePath = (0, validators_1.sanitizePath)(String(this.args.keystore).trim());
+        const { files } = await (0, file_helper_1.getKeyStoreFiles)(keystorePath);
+        const validatedFiles = await this.validateKeystoreFiles(files);
+        const singleKeySharesList = await Promise.all(validatedFiles.map((file, index) => this.processFile(file, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)));
+        return singleKeySharesList;
     }
-    processKeystorePath() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keystorePath = (0, validators_1.sanitizePath)(String(this.args.keystore_path).trim());
-            const { files } = yield (0, file_helper_1.getKeyStoreFiles)(keystorePath);
-            const validatedFiles = yield this.validateKeystoreFiles(files);
-            const singleKeySharesList = yield Promise.all(validatedFiles.map((file, index) => this.processFile(file, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)));
-            return singleKeySharesList;
-        });
-    }
-    processKeystore() {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keystore = this.args.keystore;
-            yield this.validateSingleKeystore(keystore);
-            const singleKeyShares = yield this.processFile(keystore, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce);
-            return singleKeyShares;
-        });
-    }
-    validateKeystoreFiles(files) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const validatedFiles = [];
-            let failedValidation = 0;
-            for (const file of files) {
-                const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validate(file);
-                const isValidPassword = yield validators_1.keystorePasswordValidator.validatePassword(this.args.password, file);
-                if (isKeyStoreValid === true && isValidPassword === true) {
-                    validatedFiles.push(file);
-                }
-                else {
-                    failedValidation++;
-                }
-                process.stdout.write(`\r${validatedFiles.length}/${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+    async validateKeystoreFiles(files) {
+        const validatedFiles = [];
+        let failedValidation = 0;
+        for (const [index, file] of files.entries()) {
+            const isKeyStoreValid = await arguments_1.keystoreArgument.interactive.options.validate(file);
+            const isValidPassword = await validators_1.keystorePasswordValidator.validatePassword(this.args.password, file);
+            let status = '✅';
+            if (isKeyStoreValid === true && isValidPassword === true) {
+                validatedFiles.push(file);
             }
-            process.stdout.write('\n');
-            return validatedFiles;
-        });
-    }
-    validateSingleKeystore(keystore) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const isKeyStoreValid = yield arguments_1.keystoreArgument.interactive.options.validate(keystore);
-            if (isKeyStoreValid !== true) {
-                throw new base_1.SSVKeysException(String(isKeyStoreValid));
+            else {
+                failedValidation++;
+                status = '❌';
             }
-        });
+            const fileName = path_1.default.basename(file); // Extract the file name
+            process.stdout.write(`\r\n${index + 1}/${files.length} ${status} ${fileName}`);
+        }
+        process.stdout.write(`\n\n${files.length - failedValidation} of ${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+        process.stdout.write('\n');
+        return validatedFiles;
     }
     getOperators() {
         const operatorIds = this.args.operator_ids.split(',');
@@ -134,26 +89,25 @@ class KeySharesAction extends BaseAction_1.BaseAction {
             return { id, operatorKey };
         });
     }
-    processFile(keystoreFilePath, password, operators, ownerAddress, ownerNonce) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keystoreData = yield (0, file_helper_1.readFile)(keystoreFilePath);
-            const ssvKeys = new SSVKeys_1.SSVKeys();
-            const { privateKey, publicKey } = yield ssvKeys.extractKeys(keystoreData, password);
-            const encryptedShares = yield ssvKeys.buildShares(privateKey, operators);
-            const keySharesItem = new KeySharesItem_1.KeySharesItem();
-            yield keySharesItem.update({ ownerAddress, ownerNonce, operators, publicKey });
-            yield keySharesItem.buildPayload({ publicKey, operators, encryptedShares }, { ownerAddress, ownerNonce, privateKey });
-            return keySharesItem;
-        });
+    async processFile(keystoreFilePath, password, operators, ownerAddress, ownerNonce) {
+        const keystoreData = await (0, file_helper_1.readFile)(keystoreFilePath);
+        const ssvKeys = new SSVKeys_1.SSVKeys();
+        const { privateKey, publicKey } = await ssvKeys.extractKeys(keystoreData, password);
+        const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
+        const keySharesItem = new KeySharesItem_1.KeySharesItem();
+        await keySharesItem.update({ ownerAddress, ownerNonce, operators, publicKey });
+        await keySharesItem.buildPayload({ publicKey, operators, encryptedShares }, { ownerAddress, ownerNonce, privateKey });
+        return keySharesItem;
     }
-    saveKeyShares(keySharesItems, outputFolder) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const keyShares = new KeyShares_1.KeyShares();
-            keySharesItems.forEach(keySharesItem => keyShares.add(keySharesItem));
-            const keySharesFilePath = yield (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
-            yield (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
-            return keySharesFilePath;
-        });
+    async saveKeyShares(keySharesItems, outputFolder) {
+        if (keySharesItems.length === 0) {
+            throw new base_1.SSVKeysException('Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.');
+        }
+        const keyShares = new KeyShares_1.KeyShares();
+        keySharesItems.forEach(keySharesItem => keyShares.add(keySharesItem));
+        const keySharesFilePath = await (0, file_helper_1.getFilePath)('keyshares', outputFolder.trim());
+        await (0, file_helper_1.writeFile)(keySharesFilePath, keyShares.toJson());
+        return keySharesFilePath;
     }
 }
 exports.KeySharesAction = KeySharesAction;
