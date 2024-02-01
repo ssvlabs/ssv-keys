@@ -56,8 +56,7 @@ class KeyShares {
         if (!extVersion || !currentVersion) {
             throw new base_1.SSVKeysException(`The file for keyshares must contain a version mark provided by ssv-keys.`);
         }
-        // TODO: return minor version comparison  || (currentVersion.minor !== extVersion.minor)
-        if (!extVersion || (currentVersion.major !== extVersion.major)) {
+        if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
             throw new base_1.SSVKeysException(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
         }
         const instance = new KeyShares();
