@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesPayload = void 0;
 const tslib_1 = require("tslib");
-const web3Helper = tslib_1.__importStar(require("../../helpers/web3.helper"));
+const web3_helper_1 = require("../../helpers/web3.helper");
 const class_validator_1 = require("class-validator");
 const validators_1 = require("./validators");
 /**
@@ -17,7 +17,7 @@ class KeySharesPayload {
      */
     _sharesToBytes(publicKeys, privateKeys) {
         const encryptedShares = [...privateKeys].map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
-        const pkPsBytes = web3Helper.hexArrayToBytes([...publicKeys, ...encryptedShares]);
+        const pkPsBytes = (0, web3_helper_1.hexArrayToBytes)([...publicKeys, ...encryptedShares]);
         return `0x${pkPsBytes.toString('hex')}`;
     }
     /**

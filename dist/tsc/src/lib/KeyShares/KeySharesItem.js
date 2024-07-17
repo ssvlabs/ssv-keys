@@ -3,13 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesItem = void 0;
 const tslib_1 = require("tslib");
 const ethers = tslib_1.__importStar(require("ethers"));
-const web3Helper = tslib_1.__importStar(require("../helpers/web3.helper"));
+const web3_helper_1 = require("../helpers/web3.helper");
 const class_validator_1 = require("class-validator");
 const KeySharesData_1 = require("./KeySharesData/KeySharesData");
 const KeySharesPayload_1 = require("./KeySharesData/KeySharesPayload");
 const operator_helper_1 = require("../helpers/operator.helper");
 const keystore_1 = require("../exceptions/keystore");
-const base_1 = require("../../lib/exceptions/base");
+const base_1 = require("../exceptions/base");
 const SIGNATURE_LENGHT = 192;
 const PUBLIC_KEY_LENGHT = 96;
 /**
@@ -23,9 +23,6 @@ class KeySharesItem {
     }
     /**
      * Build payload from operators list, encrypted shares and validator public key
-     * @param publicKey
-     * @param operatorIds
-     * @param encryptedShares
      */
     async buildPayload(metaData, toSignatureData) {
         const { ownerAddress, ownerNonce, privateKey, } = toSignatureData;
@@ -34,7 +31,7 @@ class KeySharesItem {
         }
         let address;
         try {
-            address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+            address = (0, web3_helper_1.toChecksumAddress)(ownerAddress);
         }
         catch {
             throw new keystore_1.OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
@@ -44,14 +41,14 @@ class KeySharesItem {
             operatorIds: (0, operator_helper_1.operatorSortedList)(metaData.operators).map(operator => operator.id),
             encryptedShares: metaData.encryptedShares,
         });
-        const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-        const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+        const signature = await (0, web3_helper_1.buildSignature)(`${address}:${ownerNonce}`, privateKey);
+        const signSharesBytes = (0, web3_helper_1.hexArrayToBytes)([signature, payload.sharesData]);
         payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
         // verify signature
         await this.validateSingleShares(payload.sharesData, {
             ownerAddress,
             ownerNonce,
-            publicKey: await web3Helper.privateToPublicKey(privateKey),
+            publicKey: await (0, web3_helper_1.privateToPublicKey)(privateKey),
         });
         return payload;
     }
@@ -60,9 +57,9 @@ class KeySharesItem {
         if (!Number.isInteger(ownerNonce) || ownerNonce < 0) {
             throw new keystore_1.OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
         }
-        const address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+        const address = (0, web3_helper_1.toChecksumAddress)(ownerAddress);
         const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
-        await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
+        await (0, web3_helper_1.validateSignature)(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
     }
     /**
      * Build shares from bytes string and operators list length
@@ -90,8 +87,6 @@ class KeySharesItem {
     }
     /**
      * Updates the current instance with partial data and payload, and validates.
-     * @param data Partial key shares data.
-     * @param payload Partial key shares payload.
      */
     update(data) {
         this.data.update(data);

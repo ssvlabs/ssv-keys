@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import Web3 from 'web3';
-export declare const web3: Web3;
+export declare const web3: Web3<import("web3-eth").RegisteredSubscription>;
 /**
  * Encode with Web3 eth abi method any fields of shares array required for transaction.
  * @param encryptedShares
@@ -51,3 +51,6 @@ export declare const buildSignature: (dataToSign: string, privateKeyHex: string)
  */
 export declare const validateSignature: (signedData: string, signatureHex: string, publicKey: string) => Promise<void>;
 export declare const privateToPublicKey: (privateKey: string) => Promise<string>;
+declare const toChecksumAddress: (address: string) => string;
+declare const decodeParameter: (abi: import("web3").AbiInput, bytes: string) => unknown;
+export { toChecksumAddress, decodeParameter };

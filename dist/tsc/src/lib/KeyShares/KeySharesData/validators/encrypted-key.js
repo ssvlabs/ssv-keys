@@ -14,7 +14,7 @@ let EncryptedKeyValidatorConstraint = class EncryptedKeyValidatorConstraint {
             const encryptedKeys = Array.isArray(value) ? value : [value];
             encryptedKeys.forEach((key) => {
                 keyWithError = key;
-                (0, js_base64_1.decode)(key.startsWith('0x') ? web3_helper_1.web3.eth.abi.decodeParameter('string', key) : key);
+                (0, js_base64_1.decode)(key.startsWith('0x') ? (0, web3_helper_1.decodeParameter)('string', key) : key);
             });
         }
         catch (e) {

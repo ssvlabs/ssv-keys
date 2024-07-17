@@ -115,3 +115,9 @@ export const privateToPublicKey = async(privateKey: string): Promise<string> => 
   }
   return `0x${bls.deserializeHexStrToSecretKey(privateKey.replace('0x', '')).getPublicKey().serializeToHexStr()}`;
 }
+
+const toChecksumAddress = web3.utils.toChecksumAddress;
+
+const decodeParameter = web3.eth.abi.decodeParameter;
+
+export { toChecksumAddress, decodeParameter };
