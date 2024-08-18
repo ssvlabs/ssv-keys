@@ -11,14 +11,15 @@ export declare const abiEncode: (encryptedShares: any[], field?: string) => stri
  * This function converts a hexadecimal string into a Uint8Array.
  * It removes the prefix '0x' if present and maps each hexadecimal byte into a Uint8Array.
  *
- * @param {string} hex - The hexadecimal string input, it can start with '0x'.
+ * @param {string} hexString - The hexadecimal string input, it can start with '0x'.
  * @returns {Uint8Array} - It returns a Uint8Array, where each element in the array is a byte from the hexadecimal string.
  *
  */
-export declare const hexToUint8Array: (hex: string) => Uint8Array;
+export declare const arrayify: (hexString: string) => Uint8Array;
+export declare const hexlify: (value: Uint8Array) => string;
 /**
  * This function transforms an array of hexadecimal strings into a single Node.js Buffer.
- * It employs ethers.utils.arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
+ * It employs arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
  *
  * @param {string[]} hexArr - An array of hexadecimal strings. Each string can represent bytes of arbitrary length. *
  * @returns {Buffer} - A Node.js Buffer that concatenates the bytes represented by the hexadecimal strings in the input array.

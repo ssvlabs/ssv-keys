@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-import * as ethers from 'ethers';
 import * as ethUtil from 'ethereumjs-util';
 
 import bls from '../BLS';
@@ -26,35 +25,41 @@ export const abiEncode = (encryptedShares: any[], field?: string): string[] => {
  * This function converts a hexadecimal string into a Uint8Array.
  * It removes the prefix '0x' if present and maps each hexadecimal byte into a Uint8Array.
  *
- * @param {string} hex - The hexadecimal string input, it can start with '0x'.
+ * @param {string} hexString - The hexadecimal string input, it can start with '0x'.
  * @returns {Uint8Array} - It returns a Uint8Array, where each element in the array is a byte from the hexadecimal string.
  *
  */
-export const hexToUint8Array = (hex: string) => {
-  if (hex.startsWith('0x')) {
-    hex = hex.slice(2);
+export const arrayify = (hexString: string): Uint8Array => {
+  if (hexString.startsWith('0x')) {
+    hexString = hexString.slice(2);
   }
-  const length = hex.length / 2;
-  const result = new Uint8Array(length);
-  for (let i = 0; i < length; i++) {
-    const start = i * 2;
-    const end = start + 2;
-    const byte = parseInt(hex.slice(start, end), 16);
-    result[i] = byte;
+
+  if (hexString.length % 2 !== 0) {
+    hexString = '0' + hexString;
+  }
+
+  const result = new Uint8Array((hexString.length - 2) / 2);
+  let offset = 2;
+  for (let i = 0; i < result.length; i++) {
+    result[i] = parseInt(hexString.substring(offset, offset + 2), 16);
+    offset += 2;
   }
   return result;
 }
 
+export const hexlify = (value: Uint8Array) =>
+  '0x' + Array.from(value).map(byte => byte.toString(16).padStart(2, '0')).join('');
+
 /**
  * This function transforms an array of hexadecimal strings into a single Node.js Buffer.
- * It employs ethers.utils.arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
+ * It employs arrayify to convert each hex string into a Uint8Array, flattens them into a single array, and converts that to a Buffer.
  *
  * @param {string[]} hexArr - An array of hexadecimal strings. Each string can represent bytes of arbitrary length. *
  * @returns {Buffer} - A Node.js Buffer that concatenates the bytes represented by the hexadecimal strings in the input array.
  *
  */
 export const hexArrayToBytes = (hexArr: string[]): Buffer => {
-  const uint8Array = new Uint8Array(hexArr.map(item => [...ethers.utils.arrayify(item)]).flat());
+  const uint8Array = new Uint8Array(hexArr.map(item => [...arrayify(item)]).flat());
   return Buffer.from(uint8Array);
 }
 

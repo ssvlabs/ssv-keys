@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeySharesItem = void 0;
 const tslib_1 = require("tslib");
-const ethers = tslib_1.__importStar(require("ethers"));
 const web3_helper_1 = require("../helpers/web3.helper");
 const class_validator_1 = require("class-validator");
 const KeySharesData_1 = require("./KeySharesData/KeySharesData");
@@ -77,12 +76,12 @@ class KeySharesItem {
         }
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-        const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+        const pkArray = (0, web3_helper_1.arrayify)(pkSplit);
         const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
-            .map(item => ethers.utils.hexlify(item));
+            .map(item => (0, web3_helper_1.hexlify)(item));
         const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-        const eArray = ethers.utils.arrayify('0x' + eSplit);
-        const encryptedKeys = this.splitArray(operatorCount, eArray).map(item => Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString('base64'));
+        const eArray = (0, web3_helper_1.arrayify)(eSplit);
+        const encryptedKeys = this.splitArray(operatorCount, eArray).map(item => Buffer.from((0, web3_helper_1.hexlify)(item).replace('0x', ''), 'hex').toString('base64'));
         return { sharesPublicKeys, encryptedKeys };
     }
     /**
