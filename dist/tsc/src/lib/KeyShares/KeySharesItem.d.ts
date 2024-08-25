@@ -3,7 +3,7 @@ import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
 import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
-import { SSVKeysException } from '../../lib/exceptions/base';
+import { SSVKeysException } from '../exceptions/base';
 export interface IKeySharesPayloadData {
     publicKey: string;
     operators: IOperator[];
@@ -29,9 +29,6 @@ export declare class KeySharesItem {
     constructor();
     /**
      * Build payload from operators list, encrypted shares and validator public key
-     * @param publicKey
-     * @param operatorIds
-     * @param encryptedShares
      */
     buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any>;
     validateSingleShares(shares: string, fromSignatureData: IKeySharesFromSignatureData): Promise<void>;
@@ -43,8 +40,6 @@ export declare class KeySharesItem {
     buildSharesFromBytes(bytes: string, operatorCount: number): any;
     /**
      * Updates the current instance with partial data and payload, and validates.
-     * @param data Partial key shares data.
-     * @param payload Partial key shares payload.
      */
     update(data: IKeySharesPartitialData): void;
     /**

@@ -136,6 +136,7 @@ export class KeySharesAction extends BaseAction {
     if (keySharesItems.length === 0) {
       throw new SSVKeysException('Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.')
     }
+    process.stdout.write(`\n\nGenerating Keyshares file, this might take a few minutes do not close terminal.`);
 
     const keyShares = new KeyShares();
     keySharesItems.forEach(keySharesItem => keyShares.add(keySharesItem));

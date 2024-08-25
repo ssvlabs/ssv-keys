@@ -1,26 +1,25 @@
 # SSV Keys
 
-![GitHub](https://img.shields.io/github/license/bloxapp/ssv-keys)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bloxapp/ssv-keys/Lint%20and%20test)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/bloxapp/ssv-keys)
+![GitHub](https://img.shields.io/github/license/ssvlabs/ssv-keys)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ssvlabs/ssv-keys/Lint%20and%20test)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/ssvlabs/ssv-keys)
 
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/bloxapp/ssv-keys)
-![GitHub contributors](https://img.shields.io/github/contributors/bloxapp/ssv-keys)
-![GitHub last commit](https://img.shields.io/github/last-commit/bloxapp/ssv-keys)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/ssvlabs/ssv-keys)
+![GitHub contributors](https://img.shields.io/github/contributors/ssvlabs/ssv-keys)
+![GitHub last commit](https://img.shields.io/github/last-commit/ssvlabs/ssv-keys)
 
-![GitHub package.json dynamic](https://img.shields.io/github/package-json/keywords/bloxapp/ssv-keys)
-![GitHub package.json dynamic](https://img.shields.io/github/package-json/author/bloxapp/ssv-keys)
+![GitHub package.json dynamic](https://img.shields.io/github/package-json/keywords/ssvlabs/ssv-keys)
+![GitHub package.json dynamic](https://img.shields.io/github/package-json/author/ssvlabs/ssv-keys)
 
 ![Discord](https://img.shields.io/discord/723834989506068561?style=for-the-badge&label=Ask%20for%20support&logo=discord&logoColor=white)
 
 Important dependencies:
 
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/web3?style=social)
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/bls-eth-wasm?style=social)
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/bls-signatures?style=social)
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/eth2-keystore-js?style=social)
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/ethereumjs-util?style=social)
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/bloxapp/ssv-keys/ethereumjs-wallet?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/bls-eth-wasm?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/bls-signatures?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/eth2-keystore-js?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/ethereumjs-util?style=social)
+* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/ethereumjs-wallet?style=social)
 
 ---
 
@@ -33,7 +32,7 @@ Library and CLI to work with the ETH keystore file and extract latest validator 
 
 If you want to run a compiled version (easier option then CLI)
 
-1. Go to the releases section: https://github.com/bloxapp/ssv-keys/releases
+1. Go to the releases section: https://github.com/ssvlabs/ssv-keys/releases
 2. Select the latest release for the specific version of the CLI: `vX.Y.Z-v1` - for the first version of the contract, `vX.Y.Z-v2` - for second etc.
    Example: `v0.0.1-v1` or `v0.0.1-v2`.
 3. Download the native executable for your operating system:
@@ -64,7 +63,7 @@ You can download it [here](https://nodejs.org/en/download/).
 Once you have installed NodeJS, follow instructions:
 
 ```bash
-git clone https://github.com/bloxapp/ssv-keys.git
+git clone https://github.com/ssvlabs/ssv-keys.git
 cd ssv-keys
 npm install -g yarn
 yarn install
@@ -203,12 +202,6 @@ Build everything
 ```bash
 yarn build-all
 ```
-
-## Authors
-
-* [Dmitri Meshin](https://github.com/meshin-blox)
-* [Guy Muroch](https://github.com/guym-blox)
-* [Wadym C](https://github.com/vadiminc)
 
 ## License
 

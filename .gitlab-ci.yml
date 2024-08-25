@@ -12,7 +12,7 @@ lint-and-test:
   stage: test
   script:
     - yarn install
-    - yarn add -D esbuild
+    - yarn add -D esbuild@0.14.54
     - yarn test
     - yarn lint
     - yarn build-all

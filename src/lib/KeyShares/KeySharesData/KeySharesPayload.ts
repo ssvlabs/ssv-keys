@@ -1,4 +1,4 @@
-import * as web3Helper from '../../helpers/web3.helper';
+import { hexArrayToBytes } from '../../helpers/web3.helper';
 
 import { IsString, Length, validateSync, IsNumber } from 'class-validator';
 import { PublicKeyValidator } from './validators';
@@ -29,7 +29,7 @@ export class KeySharesPayload implements IKeySharesPayload {
    */
   private _sharesToBytes(publicKeys: string[], privateKeys: string[]) {
     const encryptedShares = [...privateKeys].map(item => ('0x' + Buffer.from(item, 'base64').toString('hex')));
-    const pkPsBytes = web3Helper.hexArrayToBytes([...publicKeys, ...encryptedShares]);
+    const pkPsBytes = hexArrayToBytes([...publicKeys, ...encryptedShares]);
     return `0x${pkPsBytes.toString('hex')}`;
   }
 

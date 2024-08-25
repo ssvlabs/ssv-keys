@@ -1,10 +1,13 @@
-import * as ethers from 'ethers';
-import * as web3Helper from '../helpers/web3.helper';
 import {
-  IsOptional,
-  ValidateNested,
-  validateSync
-} from 'class-validator';
+  toChecksumAddress,
+  buildSignature,
+  hexArrayToBytes,
+  privateToPublicKey,
+  validateSignature,
+  arrayify,
+  hexlify
+} from '../helpers/web3.helper';
+import { IsOptional, ValidateNested, validateSync } from 'class-validator';
 
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
@@ -13,7 +16,7 @@ import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
 import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
-import { SSVKeysException } from '../../lib/exceptions/base';
+import { SSVKeysException } from '../exceptions/base';
 
 export interface IKeySharesPayloadData {
   publicKey: string,
@@ -58,9 +61,6 @@ export class KeySharesItem {
 
   /**
    * Build payload from operators list, encrypted shares and validator public key
-   * @param publicKey
-   * @param operatorIds
-   * @param encryptedShares
    */
   async buildPayload(metaData: IKeySharesPayloadData, toSignatureData: IKeySharesToSignatureData): Promise<any> {
     const {
@@ -75,7 +75,7 @@ export class KeySharesItem {
 
     let address;
     try {
-      address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+      address = toChecksumAddress(ownerAddress);
     } catch {
       throw new OwnerAddressFormatError(ownerAddress, 'Owner address is not a valid Ethereum address');
     }
@@ -86,8 +86,8 @@ export class KeySharesItem {
       encryptedShares: metaData.encryptedShares,
     });
 
-    const signature = await web3Helper.buildSignature(`${address}:${ownerNonce}`, privateKey);
-    const signSharesBytes = web3Helper.hexArrayToBytes([signature, payload.sharesData]);
+    const signature = await buildSignature(`${address}:${ownerNonce}`, privateKey);
+    const signSharesBytes = hexArrayToBytes([signature, payload.sharesData]);
 
     payload.sharesData = `0x${signSharesBytes.toString('hex')}`;
 
@@ -95,7 +95,7 @@ export class KeySharesItem {
     await this.validateSingleShares(payload.sharesData, {
       ownerAddress,
       ownerNonce,
-      publicKey: await web3Helper.privateToPublicKey(privateKey),
+      publicKey: await privateToPublicKey(privateKey),
     });
 
     return payload;
@@ -109,10 +109,10 @@ export class KeySharesItem {
       throw new OwnerNonceFormatError(ownerNonce, 'Owner nonce is not positive integer');
     }
 
-    const address = web3Helper.web3.utils.toChecksumAddress(ownerAddress);
+    const address = toChecksumAddress(ownerAddress);
     const signaturePt = shares.replace('0x', '').substring(0, SIGNATURE_LENGHT);
 
-    await web3Helper.validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
+    await validateSignature(`${address}:${ownerNonce}`, `0x${signaturePt}`, publicKey);
   }
 
   /**
@@ -134,14 +134,14 @@ export class KeySharesItem {
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    const pkArray = ethers.utils.arrayify('0x' + pkSplit);
+    const pkArray = arrayify(pkSplit);
     const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
-      .map(item => ethers.utils.hexlify(item));
+      .map(item => hexlify(item));
 
     const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-    const eArray = ethers.utils.arrayify('0x' + eSplit);
+    const eArray = arrayify(eSplit);
     const encryptedKeys = this.splitArray(operatorCount, eArray).map(item =>
-      Buffer.from(ethers.utils.hexlify(item).replace('0x', ''), 'hex').toString(
+      Buffer.from(hexlify(item).replace('0x', ''), 'hex').toString(
         'base64',
       ),
     );
@@ -151,8 +151,6 @@ export class KeySharesItem {
 
   /**
    * Updates the current instance with partial data and payload, and validates.
-   * @param data Partial key shares data.
-   * @param payload Partial key shares payload.
    */
   update(data: IKeySharesPartitialData): void {
     this.data.update(data);
