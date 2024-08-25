@@ -15,7 +15,6 @@
 
 Important dependencies:
 
-* ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/web3?style=social)
 * ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/bls-eth-wasm?style=social)
 * ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/bls-signatures?style=social)
 * ![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/ssvlabs/ssv-keys/eth2-keystore-js?style=social)
