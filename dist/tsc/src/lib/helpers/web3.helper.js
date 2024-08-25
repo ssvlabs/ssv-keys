@@ -14,18 +14,6 @@ function isHexString(value, length) {
 function isHexable(value) {
     return !!(value.toHexString);
 }
-function addSlice(array) {
-    // @ts-ignore
-    if (array.slice) {
-        return array;
-    }
-    array.slice = function () {
-        const args = Array.prototype.slice.call(arguments);
-        // @ts-ignore
-        return addSlice(new Uint8Array(Array.prototype.slice.apply(array, args)));
-    };
-    return array;
-}
 function isInteger(value) {
     return (typeof (value) === 'number' && value == value && (value % 1) === 0);
 }
@@ -64,7 +52,7 @@ function arrayify(value, options) {
         if (result.length === 0) {
             result.push(0);
         }
-        return addSlice(new Uint8Array(result));
+        return new Uint8Array(result);
     }
     if (options.allowMissingPrefix && typeof (value) === "string" && value.substring(0, 2) !== "0x") {
         value = "0x" + value;
@@ -86,10 +74,10 @@ function arrayify(value, options) {
         for (let i = 0; i < hex.length; i += 2) {
             result.push(parseInt(hex.substring(i, i + 2), 16));
         }
-        return addSlice(new Uint8Array(result));
+        return new Uint8Array(result);
     }
     if (isBytes(value)) {
-        return addSlice(new Uint8Array(value));
+        return new Uint8Array(value);
     }
     return new Uint8Array();
 }
@@ -140,7 +128,7 @@ function hexlify(value, options) {
     if (isBytes(value)) {
         let result = "0x";
         for (let i = 0; i < value.length; i++) {
-            let v = value[i];
+            const v = value[i];
             result += HexCharacters[(v & 0xf0) >> 4] + HexCharacters[v & 0x0f];
         }
         return result;
