@@ -27,19 +27,6 @@ function isHexable(value: any): value is Hexable {
   return !!(value.toHexString);
 }
 
-function addSlice(array: Uint8Array): Uint8Array {
-  // @ts-ignore
-  if (array.slice) { return array; }
-
-  array.slice = function() {
-    const args = Array.prototype.slice.call(arguments);
-    // @ts-ignore
-    return addSlice(new Uint8Array(Array.prototype.slice.apply(array, args)));
-  }
-
-  return array;
-}
-
 function isInteger(value: number) {
   return (typeof(value) === 'number' && value == value && (value % 1) === 0);
 }
@@ -69,7 +56,7 @@ export function arrayify(value: BytesLike | Hexable | number, options?: DataOpti
     }
     if (result.length === 0) { result.push(0); }
 
-    return addSlice(new Uint8Array(result));
+    return new Uint8Array(result);
   }
 
   if (options.allowMissingPrefix && typeof(value) === "string" && value.substring(0, 2) !== "0x") {
@@ -93,17 +80,17 @@ export function arrayify(value: BytesLike | Hexable | number, options?: DataOpti
       result.push(parseInt(hex.substring(i, i + 2), 16));
     }
 
-    return addSlice(new Uint8Array(result));
+    return new Uint8Array(result);
   }
 
   if (isBytes(value)) {
-    return addSlice(new Uint8Array(value));
+    return new Uint8Array(value);
   }
 
   return new Uint8Array();
 }
 
-const HexCharacters: string = "0123456789abcdef";
+const HexCharacters = "0123456789abcdef";
 
 export function hexlify(value: BytesLike | Hexable | number | bigint, options?: DataOptions): string {
   if (!options) { options = { }; }
@@ -149,7 +136,7 @@ export function hexlify(value: BytesLike | Hexable | number | bigint, options?: 
   if (isBytes(value)) {
     let result = "0x";
     for (let i = 0; i < value.length; i++) {
-      let v = value[i];
+      const v = value[i];
       result += HexCharacters[(v & 0xf0) >> 4] + HexCharacters[v & 0x0f];
     }
     return result;
