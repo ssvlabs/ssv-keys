@@ -3,7 +3,7 @@ import pkg from '../../../package.json';
 
 import { IsOptional, ValidateNested, validateSync } from 'class-validator';
 import { KeySharesItem } from './KeySharesItem';
-import { SSVKeysException } from '../../lib/exceptions/base';
+import { SSVKeysException } from '../exceptions/base';
 
 /**
  * Represents a collection of KeyShares items with functionality for serialization,
@@ -60,11 +60,12 @@ export class KeyShares {
     const body = typeof content === 'string' ? JSON.parse(content) : content;
     const extVersion = semver.parse(body.version);
     const currentVersion = semver.parse(pkg.version);
+    const tmpPrevVersion = semver.parse('v1.1.0');
 
-    if (!extVersion || !currentVersion) {
+    if (!extVersion || !currentVersion || !tmpPrevVersion) {
       throw new SSVKeysException(`The file for keyshares must contain a version mark provided by ssv-keys.`);
     }
-    if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
+    if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor && tmpPrevVersion.minor !== extVersion.minor)) {
       throw new SSVKeysException(`The keyshares file you are attempting to reuse does not have the same version (v${pkg.version}) as supported by ssv-keys`);
     }
 
