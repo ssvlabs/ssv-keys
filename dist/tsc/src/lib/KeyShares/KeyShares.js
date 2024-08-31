@@ -6,7 +6,7 @@ const semver_1 = tslib_1.__importDefault(require("semver"));
 const package_json_1 = tslib_1.__importDefault(require("../../../package.json"));
 const class_validator_1 = require("class-validator");
 const KeySharesItem_1 = require("./KeySharesItem");
-const base_1 = require("../../lib/exceptions/base");
+const base_1 = require("../exceptions/base");
 /**
  * Represents a collection of KeyShares items with functionality for serialization,
  * deserialization, and validation.
@@ -53,10 +53,11 @@ class KeyShares {
         const body = typeof content === 'string' ? JSON.parse(content) : content;
         const extVersion = semver_1.default.parse(body.version);
         const currentVersion = semver_1.default.parse(package_json_1.default.version);
-        if (!extVersion || !currentVersion) {
+        const tmpPrevVersion = semver_1.default.parse('v1.1.0');
+        if (!extVersion || !currentVersion || !tmpPrevVersion) {
             throw new base_1.SSVKeysException(`The file for keyshares must contain a version mark provided by ssv-keys.`);
         }
-        if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor)) {
+        if (!extVersion || (currentVersion.major !== extVersion.major) || (currentVersion.minor !== extVersion.minor && tmpPrevVersion.minor !== extVersion.minor)) {
             throw new base_1.SSVKeysException(`The keyshares file you are attempting to reuse does not have the same version (v${package_json_1.default.version}) as supported by ssv-keys`);
         }
         const instance = new KeyShares();
