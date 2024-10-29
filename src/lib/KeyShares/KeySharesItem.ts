@@ -134,7 +134,6 @@ export class KeySharesItem {
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    console.log(pkSplit);
     const pkArray = arrayify('0x' + pkSplit);
     const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
       .map(item => hexlify(item));
