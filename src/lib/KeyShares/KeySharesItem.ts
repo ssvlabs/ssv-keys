@@ -134,12 +134,13 @@ export class KeySharesItem {
     const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
 
     const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-    const pkArray = arrayify(pkSplit);
+    console.log(pkSplit);
+    const pkArray = arrayify('0x' + pkSplit);
     const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
       .map(item => hexlify(item));
 
     const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-    const eArray = arrayify(eSplit);
+    const eArray = arrayify('0x' + eSplit);
     const encryptedKeys = this.splitArray(operatorCount, eArray).map(item =>
       Buffer.from(hexlify(item).replace('0x', ''), 'hex').toString(
         'base64',

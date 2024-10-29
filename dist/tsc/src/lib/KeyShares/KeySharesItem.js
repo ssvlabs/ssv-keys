@@ -76,11 +76,12 @@ class KeySharesItem {
         }
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-        const pkArray = (0, web3_helper_1.arrayify)(pkSplit);
+        console.log(pkSplit);
+        const pkArray = (0, web3_helper_1.arrayify)('0x' + pkSplit);
         const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
             .map(item => (0, web3_helper_1.hexlify)(item));
         const eSplit = bytes.substring(operatorCount * PUBLIC_KEY_LENGHT);
-        const eArray = (0, web3_helper_1.arrayify)(eSplit);
+        const eArray = (0, web3_helper_1.arrayify)('0x' + eSplit);
         const encryptedKeys = this.splitArray(operatorCount, eArray).map(item => Buffer.from((0, web3_helper_1.hexlify)(item).replace('0x', ''), 'hex').toString('base64'));
         return { sharesPublicKeys, encryptedKeys };
     }
