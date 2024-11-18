@@ -1,6 +1,6 @@
 import { IsString, Length, ValidateNested, IsOptional, validateSync, IsNumber } from 'class-validator';
 import { OperatorData } from './OperatorData';
-import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
+import { IKeySharesData, IKeySharesPartialData } from './IKeySharesData';
 import { OpeatorsListValidator, PublicKeyValidator, OwnerAddressValidator, OwnerNonceValidator } from './validators';
 import { operatorSortedList } from '../../helpers/operator.helper';
 
@@ -26,7 +26,7 @@ export class KeySharesData implements IKeySharesData {
   @OpeatorsListValidator()
   public operators?: OperatorData[] | null = null;
 
-  update(data: IKeySharesPartitialData) {
+  update(data: IKeySharesPartialData) {
     if (data.ownerAddress) {
       this.ownerAddress = data.ownerAddress;
     }

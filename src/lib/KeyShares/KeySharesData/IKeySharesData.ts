@@ -13,7 +13,7 @@ export interface IKeySharesData {
 }
 
 
-export interface IKeySharesPartitialData {
+export interface IKeySharesPartialData {
   ownerNonce?: number | null;
   ownerAddress?: string | null;
   publicKey?: string | null;

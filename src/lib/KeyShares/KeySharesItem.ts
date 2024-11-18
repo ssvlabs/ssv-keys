@@ -12,7 +12,7 @@ import { IsOptional, ValidateNested, validateSync } from 'class-validator';
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
-import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPartialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { operatorSortedList } from '../helpers/operator.helper';
 import { OwnerAddressFormatError, OwnerNonceFormatError } from '../exceptions/keystore';
@@ -152,7 +152,7 @@ export class KeySharesItem {
   /**
    * Updates the current instance with partial data and payload, and validates.
    */
-  update(data: IKeySharesPartitialData): void {
+  update(data: IKeySharesPartialData): void {
     this.data.update(data);
     this.validate();
   }

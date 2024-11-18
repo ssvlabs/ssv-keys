@@ -3,7 +3,7 @@ import { hexArrayToBytes } from '../../helpers/web3.helper';
 import { IsString, Length, validateSync, IsNumber } from 'class-validator';
 import { PublicKeyValidator } from './validators';
 
-import { IKeySharesPartitialPayload, IKeySharesPayload } from './IKeySharesPayload';
+import { IKeySharesPartialPayload, IKeySharesPayload } from './IKeySharesPayload';
 import { EncryptShare } from '../../Encryption/Encryption';
 
 /**
@@ -37,7 +37,7 @@ export class KeySharesPayload implements IKeySharesPayload {
    * Updates the payload with new data and validates it.
    * @param data Partial key shares payload to update.
    */
-  update(data: IKeySharesPartitialPayload): void {
+  update(data: IKeySharesPartialPayload): void {
     this.publicKey = data.publicKey;
     this.sharesData = data.sharesData;
     this.operatorIds = data.operatorIds;

@@ -6,10 +6,22 @@ import EthereumKeyStore from './EthereumKeyStore/EthereumKeyStore';
 import Encryption, { EncryptShare } from './Encryption/Encryption';
 import { operatorSortedList } from './helpers/operator.helper';
 import { IOperator } from './KeyShares/KeySharesData/IOperator';
+import { KeySharesItem } from "./KeyShares/KeySharesItem";
+
 
 export interface ExtractedKeys {
   privateKey: string;
   publicKey: string;
+}
+
+interface ISharesValidation {
+  shares: string;
+  operatorsCount: number;
+  validatorPublicKey: string;
+  isAccountExists: boolean;
+  ownerAddress: string;
+  ownerNonce: number;
+  blockNumber: number;
 }
 
 /**
@@ -78,5 +90,70 @@ export class SSVKeys {
    */
   getThreshold()  {
     return this.threshold;
+  }
+
+  async validateSharesPostRegistration({
+                                         shares,
+                                         operatorsCount,
+                                         validatorPublicKey,
+                                         isAccountExists,
+                                         ownerAddress,
+                                         ownerNonce,
+                                         blockNumber
+  }: ISharesValidation) {
+    const keySharesItem = new KeySharesItem();
+    let restoredSharesPublicKeys;
+    let restoredSharesEncryptedKeys;
+    let sharesError = '';
+    let sharesErrorMessage = '';
+    let signatureError = '';
+    let signatureErrorMessage = '';
+    let errorMessage = '';
+
+    try {
+      const restoredShares = keySharesItem.buildSharesFromBytes(shares, operatorsCount);
+      const { sharesPublicKeys, encryptedKeys } = restoredShares;
+      restoredSharesPublicKeys = sharesPublicKeys;
+      restoredSharesEncryptedKeys = encryptedKeys;
+    }
+    catch (e: any) {
+      sharesError = e.stack || e.trace || e;
+      sharesErrorMessage = e.message;
+      errorMessage = 'Can not extract shares from bytes';
+    }
+
+    if (!sharesError && !errorMessage) {
+      const signatureData = { ownerNonce, publicKey: validatorPublicKey, ownerAddress };
+      try {
+        await keySharesItem.validateSingleShares(shares, signatureData)
+      }
+      catch (e: any) {
+        signatureError = e.stack || e.trace || e;
+        signatureErrorMessage = e.message;
+        errorMessage = 'Failed to validate single shares';
+        if (isAccountExists) {
+          errorMessage += `. Account exist for owner address: ${ownerAddress}`;
+        } else {
+          errorMessage += `. Account is not synced for owner address: ${ownerAddress}`;
+        }
+        if (ownerNonce) {
+          errorMessage += `. Used nonce: ${ownerNonce}`;
+        }
+        errorMessage += `. Signature Data: ${JSON.stringify(signatureData)}`;
+      }
+    }
+
+    return {
+      isValid: !!sharesError && !!signatureError && !!errorMessage,
+      isSharesValid: !!sharesError,
+      sharesPublicKeys: restoredSharesPublicKeys,
+      encryptedKeys: restoredSharesEncryptedKeys,
+      memo: !!sharesError && !!signatureError ? [{
+        message: errorMessage,
+        error: sharesError || signatureError,
+        data: `${sharesErrorMessage}${signatureErrorMessage ? '. ' + signatureErrorMessage : ''}`,
+        blockNumber
+      }] : []
+    }
   }
 }

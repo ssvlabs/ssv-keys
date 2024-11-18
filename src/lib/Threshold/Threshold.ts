@@ -7,15 +7,15 @@ import { PrivateKeyFormatError } from '../exceptions/keystore';
 import { isOperatorsLengthValid } from '../../commands/actions/validators';
 
 export interface IShares {
-    privateKey: string,
-    publicKey: string,
-    id?: any
+  privateKey: string,
+  publicKey: string,
+  id?: any
 }
 
 export interface ISharesKeyPairs {
   privateKey: string,
-    publicKey: string,
-    shares: IShares[]
+  publicKey: string,
+  shares: IShares[]
 }
 
 export class ThresholdInvalidOperatorsLengthError extends SSVKeysException {
