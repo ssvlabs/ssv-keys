@@ -1,4 +1,4 @@
-import { IKeySharesPartitialPayload, IKeySharesPayload } from './IKeySharesPayload';
+import { IKeySharesPartialPayload, IKeySharesPayload } from './IKeySharesPayload';
 /**
  * Key Shares Payload
  */
@@ -17,7 +17,7 @@ export declare class KeySharesPayload implements IKeySharesPayload {
      * Updates the payload with new data and validates it.
      * @param data Partial key shares payload to update.
      */
-    update(data: IKeySharesPartitialPayload): void;
+    update(data: IKeySharesPartialPayload): void;
     /**
      * Validates the current state of the instance.
      * @returns {void | ValidationError[]} Validation errors if any, otherwise undefined.

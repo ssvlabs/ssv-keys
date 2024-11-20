@@ -1,11 +1,11 @@
 import { OperatorData } from './OperatorData';
-import { IKeySharesData, IKeySharesPartitialData } from './IKeySharesData';
+import { IKeySharesData, IKeySharesPartialData } from './IKeySharesData';
 export declare class KeySharesData implements IKeySharesData {
     ownerNonce?: number | null;
     ownerAddress?: string | null;
     publicKey?: string | null;
     operators?: OperatorData[] | null;
-    update(data: IKeySharesPartitialData): void;
+    update(data: IKeySharesPartialData): void;
     /**
      * Do all possible validations.
      */

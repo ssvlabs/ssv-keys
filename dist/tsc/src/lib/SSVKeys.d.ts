@@ -5,6 +5,15 @@ export interface ExtractedKeys {
     privateKey: string;
     publicKey: string;
 }
+interface ISharesValidation {
+    shares: string;
+    operatorsCount: number;
+    validatorPublicKey: string;
+    isAccountExists: boolean;
+    ownerAddress: string;
+    ownerNonce: number;
+    blockNumber: number;
+}
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -44,4 +53,17 @@ export declare class SSVKeys {
      * Getting threshold if it has been created before.
      */
     getThreshold(): ISharesKeyPairs | undefined;
+    validateSharesPostRegistration({ shares, operatorsCount, validatorPublicKey, isAccountExists, ownerAddress, ownerNonce, blockNumber }: ISharesValidation): Promise<{
+        isValid: boolean;
+        isSharesValid: boolean;
+        sharesPublicKeys: any;
+        encryptedKeys: any;
+        memo: {
+            message: string;
+            error: string;
+            data: string;
+            blockNumber: number;
+        }[];
+    }>;
 }
+export {};

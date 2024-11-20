@@ -1,7 +1,7 @@
 import { KeySharesData } from './KeySharesData/KeySharesData';
 import { KeySharesPayload } from './KeySharesData/KeySharesPayload';
 import { EncryptShare } from '../Encryption/Encryption';
-import { IKeySharesPartitialData } from './KeySharesData/IKeySharesData';
+import { IKeySharesPartialData } from './KeySharesData/IKeySharesData';
 import { IOperator } from './KeySharesData/IOperator';
 import { SSVKeysException } from '../exceptions/base';
 export interface IKeySharesPayloadData {
@@ -41,7 +41,7 @@ export declare class KeySharesItem {
     /**
      * Updates the current instance with partial data and payload, and validates.
      */
-    update(data: IKeySharesPartitialData): void;
+    update(data: IKeySharesPartialData): void;
     /**
      * Validate everything
      */

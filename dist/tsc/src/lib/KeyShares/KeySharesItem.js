@@ -76,7 +76,6 @@ class KeySharesItem {
         }
         const sharesPt = bytes.replace('0x', '').substring(SIGNATURE_LENGHT);
         const pkSplit = sharesPt.substring(0, operatorCount * PUBLIC_KEY_LENGHT);
-        console.log(pkSplit);
         const pkArray = (0, web3_helper_1.arrayify)('0x' + pkSplit);
         const sharesPublicKeys = this.splitArray(operatorCount, pkArray)
             .map(item => (0, web3_helper_1.hexlify)(item));

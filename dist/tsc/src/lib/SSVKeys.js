@@ -8,6 +8,7 @@ const Threshold_1 = tslib_1.__importDefault(require("./Threshold"));
 const EthereumKeyStore_1 = tslib_1.__importDefault(require("./EthereumKeyStore/EthereumKeyStore"));
 const Encryption_1 = tslib_1.__importDefault(require("./Encryption/Encryption"));
 const operator_helper_1 = require("./helpers/operator.helper");
+const KeySharesItem_1 = require("./KeyShares/KeySharesItem");
 /**
  * SSVKeys class provides high-level methods to easily work with entire flow:
  *  - getting private key from keystore file using password
@@ -66,6 +67,60 @@ class SSVKeys {
      */
     getThreshold() {
         return this.threshold;
+    }
+    async validateSharesPostRegistration({ shares, operatorsCount, validatorPublicKey, isAccountExists, ownerAddress, ownerNonce, blockNumber }) {
+        const keySharesItem = new KeySharesItem_1.KeySharesItem();
+        let restoredSharesPublicKeys;
+        let restoredSharesEncryptedKeys;
+        let sharesError = '';
+        let sharesErrorMessage = '';
+        let signatureError = '';
+        let signatureErrorMessage = '';
+        let errorMessage = '';
+        try {
+            const restoredShares = keySharesItem.buildSharesFromBytes(shares, operatorsCount);
+            const { sharesPublicKeys, encryptedKeys } = restoredShares;
+            restoredSharesPublicKeys = sharesPublicKeys;
+            restoredSharesEncryptedKeys = encryptedKeys;
+        }
+        catch (e) {
+            sharesError = e.stack || e.trace || e;
+            sharesErrorMessage = e.message;
+            errorMessage = 'Can not extract shares from bytes';
+        }
+        if (!sharesError && !errorMessage) {
+            const signatureData = { ownerNonce, publicKey: validatorPublicKey, ownerAddress };
+            try {
+                await keySharesItem.validateSingleShares(shares, signatureData);
+            }
+            catch (e) {
+                signatureError = e.stack || e.trace || e;
+                signatureErrorMessage = e.message;
+                errorMessage = 'Failed to validate single shares';
+                if (isAccountExists) {
+                    errorMessage += `. Account exist for owner address: ${ownerAddress}`;
+                }
+                else {
+                    errorMessage += `. Account is not synced for owner address: ${ownerAddress}`;
+                }
+                if (ownerNonce) {
+                    errorMessage += `. Used nonce: ${ownerNonce}`;
+                }
+                errorMessage += `. Signature Data: ${JSON.stringify(signatureData)}`;
+            }
+        }
+        return {
+            isValid: !!sharesError && !!signatureError && !!errorMessage,
+            isSharesValid: !!sharesError,
+            sharesPublicKeys: restoredSharesPublicKeys,
+            encryptedKeys: restoredSharesEncryptedKeys,
+            memo: !!sharesError && !!signatureError ? [{
+                    message: errorMessage,
+                    error: sharesError || signatureError,
+                    data: `${sharesErrorMessage}${signatureErrorMessage ? '. ' + signatureErrorMessage : ''}`,
+                    blockNumber
+                }] : []
+        };
     }
 }
 exports.SSVKeys = SSVKeys;

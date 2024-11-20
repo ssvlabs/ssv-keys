@@ -10,7 +10,7 @@ export interface IKeySharesData {
     get operatorIds(): number[];
     get operatorPublicKeys(): string[];
 }
-export interface IKeySharesPartitialData {
+export interface IKeySharesPartialData {
     ownerNonce?: number | null;
     ownerAddress?: string | null;
     publicKey?: string | null;

@@ -6,7 +6,7 @@ export interface IKeySharesPayload {
     validate(): void;
     build(data: any): any;
 }
-export interface IKeySharesPartitialPayload {
+export interface IKeySharesPartialPayload {
     sharesData: string;
     publicKey: string;
     operatorIds: number[];
