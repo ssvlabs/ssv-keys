@@ -110,16 +110,16 @@ class SSVKeys {
             }
         }
         return {
-            isValid: !!sharesError || !!signatureError || !!errorMessage,
-            isSharesValid: !!sharesError,
+            isValid: !sharesError && !signatureError && !errorMessage,
+            isSharesValid: !sharesError,
             sharesPublicKeys: restoredSharesPublicKeys,
             encryptedKeys: restoredSharesEncryptedKeys,
-            memo: !!sharesError || !!signatureError ? [{
-                    message: errorMessage,
-                    error: sharesError || signatureError,
-                    data: `${sharesErrorMessage}${signatureErrorMessage ? '. ' + signatureErrorMessage : ''}`,
-                    blockNumber
-                }] : []
+            memo: !!sharesError || !!signatureError ?
+                [{
+                        message: errorMessage,
+                        error: sharesError || signatureError,
+                        data: `${sharesErrorMessage}${signatureErrorMessage ? '. ' + signatureErrorMessage : ''}`, blockNumber
+                    }] : []
         };
     }
 }
