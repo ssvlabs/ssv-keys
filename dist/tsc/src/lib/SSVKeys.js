@@ -110,11 +110,11 @@ class SSVKeys {
             }
         }
         return {
-            isValid: !!sharesError && !!signatureError && !!errorMessage,
+            isValid: !!sharesError || !!signatureError || !!errorMessage,
             isSharesValid: !!sharesError,
             sharesPublicKeys: restoredSharesPublicKeys,
             encryptedKeys: restoredSharesEncryptedKeys,
-            memo: !!sharesError && !!signatureError ? [{
+            memo: !!sharesError || !!signatureError ? [{
                     message: errorMessage,
                     error: sharesError || signatureError,
                     data: `${sharesErrorMessage}${signatureErrorMessage ? '. ' + signatureErrorMessage : ''}`,
