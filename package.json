@@ -1,9 +1,9 @@
 {
   "name": "ssv-keys",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Tool for splitting a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them with a set of operator keys.",
   "author": "SSV.Network",
-  "repository": "https://github.com/bloxapp/ssv-keys",
+  "repository": "https://github.com/ssvlabs/ssv-keys",
   "license": "MIT",
   "keywords": [
     "ssv",
