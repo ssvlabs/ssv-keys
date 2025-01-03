@@ -85,6 +85,7 @@ export class KeySharesAction extends BaseAction {
           } else {
             keystoreFile = path.join(file, dirent.name);
           }
+        }
       }
       else {
         keystorePassword = await fsp.readFile(this.args.password, 'utf-8');
