@@ -100,7 +100,7 @@ To run you will use the "shares" command
 
 ```bash
 # single file
-yarn cli shares --keystore=./keystore.json --password=./password.txt --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+yarn cli shares --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 
 # folder with multiple keystore files
 ## folder structure for keystore files with the same password
@@ -110,29 +110,28 @@ keystore-files
 ├── keystore3.json
 ├── keystore4.json
 └── keystore5.json
-password.txt
 
-yarn cli shares --keystore=./keystore_files --password=./password.txt --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+yarn cli shares --keystore=./keystore_files --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 
 ## folder structure for keystore files with diffent passwords
 keystore_folders
 ├── validator1
 │   ├── keystore.json
-│   └── password.txt
+│   └── password
 ├── validator2
 │   ├── keystore.json
-│   └── password.txt
+│   └── password
 ├── validator3
 │   ├── keystore.json
-│   └── password.txt
+│   └── password
 ├── validator4
 │   ├── keystore.json
-│   └── password.txt
+│   └── password
 └── validator5
     ├── keystore.json
-    └── password.txt
+    └── password
 
-yarn cli shares --keystore=./keystore_folders --password=password.txt --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+yarn cli shares --keystore=./keystore_folders --password=password --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json
