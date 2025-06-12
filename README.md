@@ -91,7 +91,7 @@ To run you will use the "shares" command
 
 **Input parameters:**
 - keystore (ks) = The path to either a validator keystore file or a folder that contains multiple validator keystore files. If a folder is provided, it will split in bulk all the keystore files within it according to the additional arguments provided
-- password (ps) = The keystore file encryption password, if a folder was provided the password will be used for all keystore files in the folder
+- password (ps) = The keystore file encryption password. For one keystore, enter the absolute path. For multiple keystores, enter only the password file name.
 - operator-ids (oids) = Comma-separated list of operator IDs. The amount must be 3f+1 compatible
 - operator-keys (oks) = Comma-separated list of operator keys (same sequence as operator ids). The amount must be 3f+1 compatible
 - output-folder (of) = Target folder path to output the key shares file
@@ -103,7 +103,35 @@ To run you will use the "shares" command
 yarn cli shares --keystore=keystore.json --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 
 # folder with multiple keystore files
-yarn cli shares --keystore=./keystore-files --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+## folder structure for keystore files with the same password
+keystore-files
+├── keystore1.json
+├── keystore2.json
+├── keystore3.json
+├── keystore4.json
+└── keystore5.json
+
+yarn cli shares --keystore=./keystore_files --password=test --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
+
+## folder structure for keystore files with diffent passwords
+keystore_folders
+├── validator1
+│   ├── keystore.json
+│   └── password
+├── validator2
+│   ├── keystore.json
+│   └── password
+├── validator3
+│   ├── keystore.json
+│   └── password
+├── validator4
+│   ├── keystore.json
+│   └── password
+└── validator5
+    ├── keystore.json
+    └── password
+
+yarn cli shares --keystore=./keystore_folders --password=password --operator-ids=1,2,3,4 --operator-keys=LS..,LS..,LS..,LS.. --output-folder=./ --owner-address=... --owner-nonce=..
 ```
 
 **Output:**  Name will start with keyshares-timestamp.json

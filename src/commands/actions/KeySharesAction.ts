@@ -1,4 +1,5 @@
 import path from 'path';
+import { promises as fsp } from 'fs';
 
 import { BaseAction } from './BaseAction';
 import { SSVKeys } from '../../lib/SSVKeys';
@@ -26,6 +27,11 @@ type Operator = {
   operatorKey: string;
 };
 
+type KeystoresArgs = {
+  keystoreFile: string;
+  keystorePassword: string;
+};
+
 /**
  * Command to build keyshares from user input.
  */
@@ -48,7 +54,6 @@ export class KeySharesAction extends BaseAction {
 
   override async execute(): Promise<string> {
     this.validateKeystoreArguments(); // Validate keystore arguments
-
     const keySharesList = await this.processKeystorePath();
     const keySharesFilePath = await this.saveKeyShares(keySharesList, this.args.output_folder);
     return keySharesFilePath;
@@ -64,35 +69,60 @@ export class KeySharesAction extends BaseAction {
   private async processKeystorePath(): Promise<KeySharesItem[]> {
     const keystorePath = sanitizePath(String(this.args.keystore).trim());
     const { files } = await getKeyStoreFiles(keystorePath);
-    const validatedFiles = await this.validateKeystoreFiles(files);
 
-    const singleKeySharesList = await Promise.all(validatedFiles.map((file, index) =>
-      this.processFile(file, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)
+    const keystoreSet : KeystoresArgs[] = [];
+
+    for (const file of files) {
+      const isDir = (await fsp.stat(file)).isDirectory();
+      keystoreFile = file;
+      keystorePassword = this.args.password;
+
+      if (isDir) {
+        const dir = await fsp.opendir(file);
+        for await (const dirent of dir) {
+          if (dirent.name.includes(this.args.password)) {
+            keystorePassword = await fsp.readFile(path.join(file, dirent.name), 'utf-8');
+          } else {
+            keystoreFile = path.join(file, dirent.name);
+          }
+        }
+      }
+
+      keystoreSet.push({ keystoreFile, keystorePassword });
+    }
+
+    const validatedFiles = await this.validateKeystoreFiles(keystoreSet);
+
+    const singleKeySharesList = await Promise.all(validatedFiles.map((keystore, index) =>
+      this.processFile(keystore.keystoreFile, keystore.keystorePassword, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)
     ));
 
     return singleKeySharesList;
   }
 
-  private async validateKeystoreFiles(files: string[]): Promise<string[]> {
-    const validatedFiles = [];
+  private async validateKeystoreFiles(keystores: KeystoresArgs[]): Promise<KeystoresArgs[]> {
+    const validatedKeystoreSet : KeystoresArgs[] = [];
     let failedValidation = 0;
-    for (const [index, file] of files.entries()) {
-      const isKeyStoreValid = await keystoreArgument.interactive.options.validate(file);
-      const isValidPassword = await keystorePasswordValidator.validatePassword(this.args.password, file);
+
+    for (const [index, { keystoreFile, keystorePassword }] of keystores.entries()) {
+      const isKeyStoreValid = await keystoreArgument.interactive.options.validate(keystoreFile);
+      const isValidPassword = await keystorePasswordValidator.validatePassword(keystorePassword, keystoreFile);
+
       let status = '✅';
       if (isKeyStoreValid === true && isValidPassword === true) {
-        validatedFiles.push(file);
+        validatedKeystoreSet.push({ keystoreFile, keystorePassword });
       } else {
         failedValidation++;
         status = '❌';
       }
-      const fileName = path.basename(file); // Extract the file name
-      process.stdout.write(`\r\n${index+ 1}/${files.length} ${status} ${fileName}`);
+      const fileName = path.basename(keystoreFile); // Extract the file name
+      process.stdout.write(`\r\n${index+ 1}/${keystores.length} ${status} ${fileName}`);
     }
-    process.stdout.write(`\n\n${files.length - failedValidation} of ${files.length} keystore files successfully validated. ${failedValidation} failed validation`);
+
+    process.stdout.write(`\n\n${keystores.length - failedValidation} of ${keystores.length} keystore files successfully validated. ${failedValidation} failed validation`);
 
     process.stdout.write('\n');
-    return validatedFiles;
+    return validatedKeystoreSet;
   }
 
   private getOperators(): Operator[] {
