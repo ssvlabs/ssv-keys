@@ -45,7 +45,7 @@
     "@types/btoa": "^1.2.3",
     "@types/jest": "^26.0.24",
     "@types/node": "^15.14.9",
-    "@types/prompts": "^2.0.14",
+    "@types/prompts": "^2.4.4",
     "@types/semver": "^7.5.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
