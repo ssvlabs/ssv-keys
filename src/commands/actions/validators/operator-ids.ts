@@ -6,11 +6,6 @@ export class OperatorIdsValidator {
   }
 }
 
-export const isOperatorsLengthValid = (length: number) => {
-  if (length < 4 || length > 13 || length % 3 != 1) {
-    return false;
-  }
-  return true;
-}
+export const isOperatorsLengthValid = (length: number) => !(length < 4 || length > 13 || length % 3 != 1);
 
 export const operatorIdsValidator = new OperatorIdsValidator();

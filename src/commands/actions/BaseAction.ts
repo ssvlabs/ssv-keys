@@ -1,5 +1,5 @@
 import { ArgumentOptions, Namespace } from 'argparse';
-import { SSVKeysException } from '../../lib/exceptions/base';
+import { SSVKeysException } from '../../main';
 
 export interface ActionArgument {
   arg1: string,

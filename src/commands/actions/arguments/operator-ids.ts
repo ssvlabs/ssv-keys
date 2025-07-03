@@ -1,5 +1,5 @@
 import { isOperatorsLengthValid } from "../validators";
-import { SSVKeysException } from '../../../lib/exceptions/base';
+import { SSVKeysException } from '../../../main';
 
 const uniqueOperatorIds: any = {};
 

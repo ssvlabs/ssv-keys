@@ -1,10 +1,7 @@
 import path from 'path';
 
 import { BaseAction } from './BaseAction';
-import { SSVKeys } from '../../lib/SSVKeys';
-import { KeySharesItem } from '../../lib/KeyShares/KeySharesItem';
-import { KeyShares } from '../../lib/KeyShares/KeyShares';
-import { SSVKeysException } from '../../lib/exceptions/base';
+import { SSVKeys, KeySharesItem, KeyShares, SSVKeysException, OperatorsCountsMismatchError } from '../../main';
 
 import { sanitizePath, keystorePasswordValidator } from './validators';
 
@@ -18,8 +15,7 @@ import {
   operatorPublicKeysArgument,
 } from './arguments';
 
-import { getFilePath, getKeyStoreFiles, readFile, writeFile } from '../../lib/helpers/file.helper';
-import { OperatorsCountsMismatchError } from '../../lib/exceptions/operator';
+import { getFilePath, getKeyStoreFiles, readFile, writeFile } from '../../file.helper';
 
 type Operator = {
   id: number;
@@ -50,8 +46,7 @@ export class KeySharesAction extends BaseAction {
     this.validateKeystoreArguments(); // Validate keystore arguments
 
     const keySharesList = await this.processKeystorePath();
-    const keySharesFilePath = await this.saveKeyShares(keySharesList, this.args.output_folder);
-    return keySharesFilePath;
+    return await this.saveKeyShares(keySharesList, this.args.output_folder);
   }
 
   private validateKeystoreArguments(): void {
@@ -66,11 +61,9 @@ export class KeySharesAction extends BaseAction {
     const { files } = await getKeyStoreFiles(keystorePath);
     const validatedFiles = await this.validateKeystoreFiles(files);
 
-    const singleKeySharesList = await Promise.all(validatedFiles.map((file, index) =>
+    return await Promise.all(validatedFiles.map((file, index) =>
       this.processFile(file, this.args.password, this.getOperators(), this.args.owner_address, this.args.owner_nonce + index)
     ));
-
-    return singleKeySharesList;
   }
 
   private async validateKeystoreFiles(files: string[]): Promise<string[]> {

@@ -1,16 +1,14 @@
 /.github/
 /.vscode/
+/.idea/
 /node_modules/
 /build/
 /tmp/
-.idea/*
 /docs/
 
 coverage
 *.log
-.gitlab-ci.yml
 
-package-lock.json
 /*.tgz
 /tmp*
 /mnt/
