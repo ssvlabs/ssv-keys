@@ -27,6 +27,7 @@ export default async function main(interactive: boolean): Promise<any> {
     }
     console.log(' ----------------------------------------------------------------------\n');
   }
+
   const command = new SSVKeysCommand(interactive);
   try {
     const outputFile = await command.execute();

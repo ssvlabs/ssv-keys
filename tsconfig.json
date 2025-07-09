@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "target": "ES2020",
     "module": "ESNext",
     "lib": ["ES2020"],

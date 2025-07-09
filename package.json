@@ -11,18 +11,33 @@
     "keystore",
     "shares"
   ],
-  "type": "module",
   "bin": {
     "ssv-keys": "./dist/cli.js"
   },
   "engines": {
     "node": ">=22"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/cli.mjs",
+      "require": "./dist/cli.js"
+    }
+  },
+  "pkg": {
+    "assets": [
+      "fonts/*.flf",
+      "node_modules/*",
+      "node_modules/lodash/**/*.js",
+      "node_modules/crypto/**/*.js",
+      "node_modules/lodash-es/**/*.js",
+      "node_modules/figlet/fonts/*.flf"
+    ]
+  },
   "scripts": {
-    "dev:cli": "ts-node src/cli.ts",
-    "dev:icli": "ts-node src/cli-interactive.ts",
+    "dev:cli": "npx tsx src/cli.ts",
+    "dev:icli": "npx tsx src/cli-interactive.ts",
     "icli": "node ./dist/tsc/src/cli-interactive.js",
-    "cli": "node ./dist/tsc/src/cli.js",
+    "cli": "node ./dist/cli.js",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "test": "jest",
     "clean": "rm -rf dist build package",
@@ -31,42 +46,40 @@
     "build": "vite build",
     "build-all": "pnpm run clean && pnpm run build",
     "pre-commit": "pnpm run lint && pnpm run build-all",
-    "package-all": "ts-node build-binaries.ts"
+    "build:ts": "tsc",
+    "package-all": "tsx build-binaries.ts",
+    "package-all-nexe": "tsx build-binaries-nexe.ts",
+    "build:cli": "ncc build dist/src/cli.js -o build",
+    "build:ncc": "ncc build src/cli.ts -o dist"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
-    "@types/argparse": "^2.0.17",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.10",
     "@types/prompts": "^2.4.9",
+    "@yao-pkg/pkg": "^6.5.1",
     "husky": "^9.1.7",
-    "jest": "^30.0.3",
-    "jest-environment-jsdom": "^30.0.2",
-    "jest-environment-node": "^30.0.2",
-    "jest-environment-uint8array": "^1.0.0",
-    "jest-watch-typeahead": "3.0.1",
-    "jsdom": "^26.1.0",
-    "jsdom-global": "^3.0.2",
-    "pkg": "^5.8.1",
-    "ts-jest": "^29.4.0",
+    "node-sea": "^0.3.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typedoc": "^0.28.7",
     "typescript": "^5.8.3",
     "vite": "^7.0.0"
   },
   "dependencies": {
-    "@ssv-labs/ssv-sdk": "https://github.com/ssvlabs/ssv-sdk.git#ssv-keys-migration-1",
+    "@chainsafe/bls-keystore": "^3.1.0",
+    "@ssv-labs/ssv-sdk": "0.1.0",
     "@types/figlet": "^1.7.0",
     "@types/node-forge": "^1.3.11",
-    "argparse": "^2.0.1",
+    "@types/yargs": "^17.0.33",
     "assert": "^2.1.0",
     "colors": "^1.4.0",
-    "eth2-keystore-js": "^1.0.8",
     "events": "^3.3.0",
     "figlet": "^1.8.1",
     "moment": "^2.30.1",
     "node-forge": "^1.3.1",
     "prompts": "https://github.com/ssvlabs/prompts.git",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "vite-plugin-dts": "^4.5.4",
+    "yargs": "^18.0.0"
   }
 }

@@ -1,36 +1,42 @@
-import { ArgumentOptions, Namespace } from 'argparse';
+import { Arguments } from 'yargs';
 import { SSVKeysException } from '../../main';
 
 export interface ActionArgument {
-  arg1: string,
-  arg2: string,
-  options: ArgumentOptions
+  arg1: string;
+  arg2: string;
+  options: {
+    alias?: string;
+    describe?: string;
+    type?: 'string' | 'number' | 'boolean';
+    demandOption?: boolean;
+    default?: any;
+  };
 }
 
 export interface ActionOptions {
-  action: string,
-  // shortAction: string,
-  arguments: ActionArgument[]
+  action: string;
+  arguments: ActionArgument[];
+  description?: string;
 }
 
 export class BaseAction {
-  protected args: Namespace = {};
+  protected args: Arguments = {};
 
-  setArgs(args: Namespace): BaseAction {
+  setArgs(args: Arguments): BaseAction {
     this.args = args;
     return this;
   }
 
   async execute(): Promise<any> {
-    throw new SSVKeysException('Should implement "execute"')
+    throw new SSVKeysException('Should implement "execute"');
   }
 
-  static get options(): any {
+  static get options(): ActionOptions {
     throw new SSVKeysException('Should implement static "options"');
   }
 
-  get options(): any {
-    return BaseAction.options;
+  get options(): ActionOptions {
+    return (this.constructor as typeof BaseAction).options;
   }
 
   /**
@@ -48,4 +54,9 @@ export class BaseAction {
   async preOptions(options: any): Promise<any> {
     return options;
   }
+
+  /**
+   * Optional help footer that can be used by CLI classes
+   */
+  static helpFooter: string = '';
 }

@@ -1,14 +1,18 @@
 import { execSync } from 'child_process'
 import { mkdirSync, renameSync } from 'fs'
-import { join } from 'path'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const targets = {
-  linux: 'node20-linux-x64',
-  macos: 'node20-macos-x64',
-  win: 'node20-win-x64',
+  // linux: 'node22-linux-x64',
+  macos: 'node22-macos-x64',
+  // win: 'node22-win-x64',
 }
 
-const outputBase = join(__dirname, '../bin')
+const outputBase = join(__dirname, '../1234444')
 
 for (const [platform, target] of Object.entries(targets)) {
   const outputName = platform === 'win' ? 'cli.exe' : 'cli'
@@ -16,7 +20,8 @@ for (const [platform, target] of Object.entries(targets)) {
   const finalOutput = join(outputBase, platform, outputName)
 
   console.log(`Packaging for ${platform}...`)
-  execSync(`pkg . --target ${target} --output ${tempOutput}`, { stdio: 'inherit' })
+  console.log(`Packaging for ${platform}...`)
+  execSync(`pkg ./dist/cli.js --target ${target} --output ${tempOutput}`,  { stdio: 'inherit' })
 
   mkdirSync(join(outputBase, platform), { recursive: true })
   renameSync(tempOutput, finalOutput)

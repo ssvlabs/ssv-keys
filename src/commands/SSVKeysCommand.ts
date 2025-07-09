@@ -1,22 +1,13 @@
 import { BaseCommand } from './BaseCommand';
 import { KeySharesAction } from './actions/KeySharesAction';
+import { BaseAction } from './actions/BaseAction';
 
 export class SSVKeysCommand extends BaseCommand {
-  /**
-   * List of all supported command actions.
-   * @protected
-   */
-  protected actions = [
-    KeySharesAction,
-  ]
-
+  protected actions = [KeySharesAction];
   protected useAction = 'shares';
 
-  /**
-   * Add more specific help.
-   */
-  constructor(interactive= false, options = undefined) {
-    super(interactive, options);
-    this.subParserOptions.help += 'Example: "yarn cli shares --help"'
+  constructor(interactive = false) {
+    super(interactive);
+    BaseAction.helpFooter = 'To get more detailed help: "<action> --help". Example: "pnpm cli shares --help"';
   }
 }

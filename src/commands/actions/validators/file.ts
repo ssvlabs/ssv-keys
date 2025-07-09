@@ -3,7 +3,7 @@ import fs from 'fs';
 export const fileExistsValidator = (filePath: string, message = ''): boolean | string => {
   filePath = sanitizePath(String(filePath).trim());
   const exists = fs.existsSync(filePath);
-  return exists || message || 'Couldn’t locate the keystores file path. Please provide a valid path.';
+  return exists || message || 'Could not locate the keystores file path. Please provide a valid path.';
 };
 
 export const jsonFileValidator = (filePath: string, message = ''): boolean | string => {
@@ -13,7 +13,7 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   try {
     fileContents = fs.readFileSync(filePath, { encoding: 'utf-8' });
   } catch (e) {
-    return message || 'Couldn’t read a validator keystore file';
+    return message || 'Could not read a validator keystore file';
   }
   try {
     JSON.parse(fileContents);
@@ -23,11 +23,6 @@ export const jsonFileValidator = (filePath: string, message = ''): boolean | str
   return true;
 };
 
-/**
- * Make sure the path contains
- * @param path
- * @param regex
- */
 export const sanitizePath = (inputPath: string): string => {
   // Strip quotes from the beginning or end.
   const strippedPath = inputPath.replace(/^["']|["']$/g, '');

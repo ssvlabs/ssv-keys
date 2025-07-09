@@ -50,7 +50,6 @@
     "btoa": "^1.2.1",
     "class-validator": "^0.14.1",
     "colors": "^1.4.0",
-    "crypto": "^1.0.1",
     "elliptic": "^6.5.7",
     "eth2-keystore-js": "^1.0.8",
     "ethereumjs-util": "^7.1.5",

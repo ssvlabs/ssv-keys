@@ -7,7 +7,7 @@ export default {
   arg1: '-oids',
   arg2: '--operator-ids',
   options: {
-    type: String,
+    type: 'number',
     required: true,
     help: 'Comma-separated list of operator IDs. The amount must be 3f+1 compatible'
   },
