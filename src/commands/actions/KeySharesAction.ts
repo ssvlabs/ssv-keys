@@ -1,7 +1,9 @@
-import path from 'path';
-import { Arguments } from 'yargs';
-import { SSVKeys, KeySharesItem, KeyShares, SSVKeysException, OperatorsCountsMismatchError } from '../../main';
-import { sanitizePath, keystorePasswordValidator } from './validators';
+import path from "path";
+
+import { BaseAction } from "./BaseAction";
+
+import { sanitizePath, keystorePasswordValidator } from "./validators";
+
 import {
   keystoreArgument,
   ownerNonceArgument,
@@ -10,68 +12,30 @@ import {
   keystorePasswordArgument,
   outputFolderArgument,
   operatorPublicKeysArgument,
-} from './arguments';
-import { getFilePath, getKeyStoreFiles, readFile, writeFile } from '../../file.helper';
+} from "./arguments";
 
-export interface ActionArgument {
-  arg1: string;
-  arg2: string;
-  options: {
-    alias?: string;
-    describe?: string;
-    type?: 'string' | 'number' | 'boolean';
-    demandOption?: boolean;
-    default?: any;
-  };
-}
-
-export interface ActionOptions {
-  action: string;
-  arguments: ActionArgument[];
-  description?: string;
-}
-
-export class BaseAction {
-  protected args: Arguments = <Arguments>{};
-
-  setArgs(args: Arguments): BaseAction {
-    this.args = args;
-    return this;
-  }
-
-  async execute(): Promise<any> {
-    throw new SSVKeysException('Should implement "execute"');
-  }
-
-  static get options(): ActionOptions {
-    throw new SSVKeysException('Should implement static "options"');
-  }
-
-  get options(): ActionOptions {
-    return (this.constructor as typeof BaseAction).options;
-  }
-
-  preExecute(): void {
-    return;
-  }
-
-  async preOptions(options: any): Promise<any> {
-    return options;
-  }
-
-  static helpFooter: string = '';
-}
+import {
+  getFilePath,
+  getKeyStoreFiles,
+  readFile,
+  writeFile,
+} from "../../file.helper";
+import { KeyShares, KeySharesItem, OperatorsCountsMismatchError, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
 
 type Operator = {
   id: number;
   operatorKey: string;
 };
 
+/**
+ * Command to build keyshares from user input.
+ */
 export class KeySharesAction extends BaseAction {
-  static override get options(): ActionOptions {
+  static override get options(): any {
     return {
-      action: 'shares',
-      description: 'Generate shares for a list of operators from a validator keystore file',
+      action: "shares",
+      description:
+        "Generate shares for a list of operators from a validator keystore file",
       arguments: [
         keystoreArgument,
         keystorePasswordArgument,
@@ -85,14 +49,22 @@ export class KeySharesAction extends BaseAction {
   }
 
   override async execute(): Promise<string> {
-    this.validateKeystoreArguments();
+    this.validateKeystoreArguments(); // Validate keystore arguments
+
     const keySharesList = await this.processKeystorePath();
-    return await this.saveKeyShares(keySharesList, this.args.output_folder as string);
+    const keySharesFilePath = await this.saveKeyShares(
+      keySharesList,
+      this.args.output_folder
+    );
+    return keySharesFilePath;
   }
 
   private validateKeystoreArguments(): void {
-    if (!this.args.keystore) {
-      throw new SSVKeysException('Please provide a path to the validator keystore file or folder containing multiple files.');
+    const hasKeystore = !!this.args.keystore;
+    if (!hasKeystore) {
+      throw new SSVKeysException(
+        "Please provide a path to the validator keystore file or to the folder containing multiple validator keystore files."
+      );
     }
   }
 
@@ -101,51 +73,81 @@ export class KeySharesAction extends BaseAction {
     const { files } = await getKeyStoreFiles(keystorePath);
     const validatedFiles = await this.validateKeystoreFiles(files);
 
-    return await Promise.all(validatedFiles.map((file, index) =>
-      this.processFile(
-        file,
-        this.args.password as string,
-        this.getOperators(),
-        this.args.owner_address as string,
-        this.args.owner_nonce as number + index
+    const singleKeySharesList = await Promise.all(
+      validatedFiles.map((file, index) =>
+        this.processFile(
+          file,
+          this.args.password,
+          this.getOperators(),
+          this.args.owner_address,
+          this.args.owner_nonce + index
+        )
       )
-    ));
+    );
+
+    return singleKeySharesList;
   }
 
   private async validateKeystoreFiles(files: string[]): Promise<string[]> {
-    const validatedFiles: string[] = [];
+    const validatedFiles = [];
     let failedValidation = 0;
     for (const [index, file] of files.entries()) {
-      const isKeyStoreValid = await keystoreArgument.interactive.options.validate(file);
-      const isValidPassword = await keystorePasswordValidator.validatePassword(this.args.password as string, file);
-      let status = '✅';
+      const isKeyStoreValid =
+        await keystoreArgument.interactive.options.validate(file);
+      const isValidPassword = await keystorePasswordValidator.validatePassword(
+        this.args.password,
+        file
+      );
+      let status = "✅";
       if (isKeyStoreValid === true && isValidPassword === true) {
         validatedFiles.push(file);
       } else {
         failedValidation++;
-        status = '❌';
+        status = "❌";
       }
-      const fileName = path.basename(file);
-      process.stdout.write(`\r\n${index + 1}/${files.length} ${status} ${fileName}`);
+      const fileName = path.basename(file); // Extract the file name
+      process.stdout.write(
+        `\r\n${index + 1}/${files.length} ${status} ${fileName}`
+      );
     }
-    process.stdout.write(`\n\n${files.length - failedValidation} of ${files.length} files validated, ${failedValidation} failed.\n`);
+    process.stdout.write(
+      `\n\n${files.length - failedValidation} of ${
+        files.length
+      } keystore files successfully validated. ${failedValidation} failed validation`
+    );
+
+    process.stdout.write("\n");
     return validatedFiles;
   }
 
   private getOperators(): Operator[] {
-    const operatorIds = this.args.operator_ids.split(',');
-    const operatorKeys = this.args.operator_keys.split(',');
+    const operatorIds = this.args.operator_ids.split(",");
+    const operatorKeys = this.args.operator_keys.split(",");
 
     if (operatorIds.length !== operatorKeys.length) {
-      throw new OperatorsCountsMismatchError(operatorIds, operatorKeys, 'Mismatch in number of operator IDs and keys.');
+      throw new OperatorsCountsMismatchError(
+        operatorIds,
+        operatorKeys,
+        "Mismatch amount of operator ids and operator keys."
+      );
+    }
+
+    if (operatorIds.includes("") || operatorKeys.includes("")) {
+      throw new SSVKeysException(
+        "Operator IDs or keys cannot contain empty strings."
+      );
     }
 
     return operatorIds.map((idString: string, index: number) => {
       const id = parseInt(idString, 10);
       if (isNaN(id)) {
-        throw new SSVKeysException(`Invalid operator ID at index ${index}: ${idString}`);
+        throw new SSVKeysException(
+          `Invalid operator ID at position ${index}: ${idString}`
+        );
       }
-      return { id, operatorKey: operatorKeys[index] };
+
+      const operatorKey = operatorKeys[index];
+      return { id, operatorKey };
     });
   }
 
@@ -157,29 +159,51 @@ export class KeySharesAction extends BaseAction {
     ownerNonce: number
   ): Promise<KeySharesItem> {
     const keystoreData = await readFile(keystoreFilePath);
+
     const ssvKeys = new SSVKeys();
-    const { privateKey, publicKey } = await ssvKeys.extractKeys(keystoreData, password);
+    const { privateKey, publicKey } = await ssvKeys.extractKeys(
+      keystoreData,
+      password
+    );
     const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
 
     const keySharesItem = new KeySharesItem();
-    await keySharesItem.update({ ownerAddress, ownerNonce, operators, publicKey });
+    await keySharesItem.update({
+      ownerAddress,
+      ownerNonce,
+      operators,
+      publicKey,
+    });
     await keySharesItem.buildPayload(
       { publicKey, operators, encryptedShares },
       { ownerAddress, ownerNonce, privateKey }
     );
+
     return keySharesItem;
   }
 
-  private async saveKeyShares(keySharesItems: KeySharesItem[], outputFolder: string): Promise<string> {
+  private async saveKeyShares(
+    keySharesItems: KeySharesItem[],
+    outputFolder: string
+  ): Promise<string> {
     if (keySharesItems.length === 0) {
-      throw new SSVKeysException('No valid keystore files found.');
+      throw new SSVKeysException(
+        "Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct."
+      );
     }
-    process.stdout.write(`\n\nGenerating keyshares file...\n`);
-    const keyShares = new KeyShares();
-    keySharesItems.forEach(item => keyShares.add(item));
+    process.stdout.write(
+      `\n\nGenerating Keyshares file, this might take a few minutes do not close terminal.`
+    );
 
-    const keySharesFilePath = await getFilePath('keyshares', outputFolder.trim());
+    const keyShares = new KeyShares();
+    keySharesItems.forEach((keySharesItem) => keyShares.add(keySharesItem));
+
+    const keySharesFilePath = await getFilePath(
+      "keyshares",
+      outputFolder.trim()
+    );
     await writeFile(keySharesFilePath, keyShares.toJson());
+
     return keySharesFilePath;
   }
 }

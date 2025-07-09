@@ -7,14 +7,14 @@ export default {
   arg1: '-of',
   arg2: '--output-folder',
   options: {
-    type: 'string',
+    type: String,
     required: false,
     default: defaultTargetPath,
     help: `Target folder path to output the key shares file. Default: ${defaultTargetPath}`
   },
   interactive: {
     options: {
-      type: 'string',
+      type: 'text',
       message: 'Please provide a target path to generate the output to',
       initial: defaultTargetPath,
       validate: (value: string) => {

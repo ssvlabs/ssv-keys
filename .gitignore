@@ -7,4 +7,3 @@ coverage
 /data/*
 bin/**/*
 /.idea/
-/.vscode/

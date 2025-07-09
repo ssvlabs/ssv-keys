@@ -3,7 +3,7 @@ export default {
   arg2: '--password',
   options: {
     required: true,
-    type: 'string',
+    type: String,
     help: 'The keystore file encryption password, if a folder was provided the password will be used for all keystore files in the folder'
   },
   interactive: {

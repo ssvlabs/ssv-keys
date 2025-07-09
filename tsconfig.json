@@ -8,8 +8,17 @@
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "outDir": "dist",
-    "baseUrl": "."
+    "outDir": "./dist/tsc/",
+
+    "baseUrl": ".",
+    "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "examples",
+    "**/node_modules",
+    "**/*.d.ts"
+  ]
 }

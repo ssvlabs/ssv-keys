@@ -1,3 +1,3 @@
 import main from './cli-shared';
 
-main(true);
+main(false);
