@@ -37,6 +37,7 @@
     "dev:icli": "npx tsx src/cli-interactive.ts",
     "icli": "node ./dist/cli-interactive.js",
     "cli": "node ./dist/cli.js",
+    "test": "vitest",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
@@ -77,6 +78,7 @@
     "events": "^3.3.0",
     "moment": "^2.30.1",
     "node-forge": "^1.3.1",
-    "prompts": "https://github.com/ssvlabs/prompts.git"
+    "prompts": "https://github.com/ssvlabs/prompts.git",
+    "vitest": "^3.2.4"
   }
 }
