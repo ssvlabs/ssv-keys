@@ -72,6 +72,7 @@
     "@ssv-labs/ssv-sdk": "0.1.0",
     "@types/node-forge": "^1.3.11",
     "argparse": "^2.0.1",
+    "assert": "^2.1.0",
     "colors": "^1.4.0",
     "events": "^3.3.0",
     "moment": "^2.30.1",

@@ -38,6 +38,6 @@ export default async function main(interactive: boolean): Promise<any> {
     );
     console.debug(`${colors.bgYellow(colors.black(outputFile))}`);
   } catch (error: any) {
-    console.error(`${colors.red("Error:")} ${colors.bold(error.message)}`);
+    console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }
 }

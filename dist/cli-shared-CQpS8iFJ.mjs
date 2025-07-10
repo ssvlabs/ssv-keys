@@ -11209,7 +11209,9 @@ class BaseCommand extends argparseExports.ArgumentParser {
    */
   async executeInteractive() {
     const selectedAction = await this.askAction();
-    selectedAction || process.exit(1);
+    if (!selectedAction) {
+      process.exit(1);
+    }
     const preFilledValues = this.prefillFromArguments(selectedAction, true);
     process.argv.push(selectedAction);
     const processedArguments = {};
@@ -46672,7 +46674,7 @@ class KeystorePasswordValidator {
       const keystore = libExports$1.Keystore.fromObject(parsed);
       const isValid2 = await keystore.verifyPassword(password2);
       return isValid2;
-    } catch (e) {
+    } catch {
       return errorMessage;
     }
   }
@@ -64472,7 +64474,7 @@ const operatorPublicKeyValidator = (publicKey) => {
     }
     try {
       libExports.pki.publicKeyFromPem(decodedPublicKey);
-    } catch (error) {
+    } catch {
       throw new Error(
         "Invalid operator key format, make sure the operator exists in the network."
       );
@@ -64802,7 +64804,7 @@ class SSVKeysCommand extends BaseCommand {
     this.subParserOptions.help += 'Example: "yarn cli shares --help"';
   }
 }
-const BannerMessage = async (message) => {
+const BannerMessage = async () => {
   const banner = `
 ███████╗███████╗██╗   ██╗    ██╗  ██╗███████╗██╗   ██╗███████╗
 ██╔════╝██╔════╝██║   ██║    ██║ ██╔╝██╔════╝╚██╗ ██╔╝██╔════╝
@@ -64835,6 +64837,7 @@ async function main(interactive) {
     );
     console.debug(`${colors.bgYellow(colors.black(outputFile))}`);
   } catch (error) {
+    console.trace(error);
     console.error(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }
 }
