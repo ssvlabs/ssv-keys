@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 "use strict";
 const cliShared = require("./cli-shared-CtP5KYGB.js");
-void cliShared.main(true);
+cliShared.main(false);

@@ -77,9 +77,11 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     lib: {
-      entry: resolve(__dirname, "src/cli-interactive.ts"),
+      entry: {
+        cli: resolve(__dirname, "src/cli.ts"),
+        "cli-interactive": resolve(__dirname, "src/cli-interactive.ts"),
+      },
       formats: ["cjs"],
-      fileName: () => "cli-interactive.js",
     },
     rollupOptions: {
       external: [
