@@ -81,7 +81,13 @@ export default defineConfig({
         cli: resolve(__dirname, "src/cli.ts"),
         "cli-interactive": resolve(__dirname, "src/cli-interactive.ts"),
       },
-      formats: ["cjs"],
+      formats: ["cjs", "es"],
+      // fileName: (format, entryName) => {
+      //   if (entryName === "cli" && format === "es") {
+      //     return `${entryName}.mjs`;
+      //   }
+      //   return `${entryName}.js`;
+      // },
     },
     rollupOptions: {
       external: [
