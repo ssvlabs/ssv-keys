@@ -38,7 +38,7 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
 
     try {
       pki.publicKeyFromPem(decodedPublicKey);
-    } catch (error: any) {
+    } catch {
       throw new Error(
         "Invalid operator key format, make sure the operator exists in the network."
       );

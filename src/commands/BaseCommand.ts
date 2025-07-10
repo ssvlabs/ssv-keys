@@ -190,7 +190,9 @@ export class BaseCommand extends ArgumentParser {
   async executeInteractive(): Promise<any> {
     // Ask for action
     const selectedAction = await this.askAction();
-    selectedAction || process.exit(1);
+    if (!selectedAction) {
+      process.exit(1);
+    }
     const preFilledValues = this.prefillFromArguments(selectedAction, true);
     process.argv.push(selectedAction);
     const processedArguments: any = {};

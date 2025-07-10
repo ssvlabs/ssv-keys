@@ -16,7 +16,7 @@ export class KeystorePasswordValidator {
       const keystore = Keystore.fromObject(parsed);
       const isValid = await keystore.verifyPassword(password);
       return isValid;
-    } catch (e) {
+    } catch {
       return errorMessage;
     }
   }

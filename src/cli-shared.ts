@@ -3,7 +3,7 @@ import pkg from "../package.json";
 
 import { SSVKeysCommand } from "./commands/SSVKeysCommand";
 
-const BannerMessage = async (message: string) => {
+const BannerMessage = async () => {
   const banner = `
 ███████╗███████╗██╗   ██╗    ██╗  ██╗███████╗██╗   ██╗███████╗
 ██╔════╝██╔════╝██║   ██║    ██║ ██╔╝██╔════╝╚██╗ ██╔╝██╔════╝
@@ -18,8 +18,7 @@ const BannerMessage = async (message: string) => {
 };
 
 export default async function main(interactive: boolean): Promise<any> {
-  const messageText = `🗝️ SSV Keys v${pkg.version}`;
-  const message = await BannerMessage(messageText);
+  const message = await BannerMessage();
   console.log(
     " ----------------------------------------------------------------------"
   );
