@@ -37,7 +37,7 @@
     "dev:icli": "npx tsx src/cli-interactive.ts",
     "icli": "node ./dist/cli-interactive.js",
     "cli": "node ./dist/cli.js",
-    "test": "vitest",
+    "test": "vitest run",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
