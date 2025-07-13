@@ -15,6 +15,6 @@ export class SSVKeysCommand extends BaseCommand {
    */
   constructor(interactive = false, options = undefined) {
     super(interactive, options);
-    this.subParserOptions.help += 'Example: "yarn cli shares --help"';
+    this.subParserOptions.help += 'Example: "pnpm cli shares --help"';
   }
 }

@@ -19,8 +19,8 @@ Or running it locally:
 
 ```bash
 cd examples/server-worker
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
 While building, it compiles all the TypeScript sources into vanilla JavaScript
