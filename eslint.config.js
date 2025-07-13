@@ -1,7 +1,4 @@
-const {
-    defineConfig,
-    globalIgnores,
-} = require("eslint/config");
+const { defineConfig } = require("eslint/config");
 
 const tsParser = require("@typescript-eslint/parser");
 const typescriptEslint = require("@typescript-eslint/eslint-plugin");
@@ -33,4 +30,4 @@ module.exports = defineConfig([{
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
     },
-}, globalIgnores(["**/jsencrypt.bundle.js"])]);
+}]);

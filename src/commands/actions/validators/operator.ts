@@ -1,5 +1,5 @@
 import { util, pki } from "node-forge";
-import { OperatorPublicKeyError } from "../../../main";
+import { OperatorPublicKeyError } from "@ssv-labs/ssv-sdk";
 
 export const operatorPublicKeyValidator = (publicKey: string): boolean => {
   publicKey = publicKey.trim();

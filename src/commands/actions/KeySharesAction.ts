@@ -1,9 +1,8 @@
 import path from "path";
+import { KeyShares, KeySharesItem, OperatorsCountsMismatchError, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
 
 import { BaseAction } from "./BaseAction";
-
 import { sanitizePath, keystorePasswordValidator } from "./validators";
-
 import {
   keystoreArgument,
   ownerNonceArgument,
@@ -13,14 +12,7 @@ import {
   outputFolderArgument,
   operatorPublicKeysArgument,
 } from "./arguments";
-
-import {
-  getFilePath,
-  getKeyStoreFiles,
-  readFile,
-  writeFile,
-} from "../../file.helper";
-import { KeyShares, KeySharesItem, OperatorsCountsMismatchError, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
+import { getFilePath, getKeyStoreFiles, readFile, writeFile } from "../../file.helper";
 
 type Operator = {
   id: number;

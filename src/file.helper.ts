@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
 import { promises as fsp } from 'fs';
-import { SSVKeysException } from './main';
+import { SSVKeysException } from "@ssv-labs/ssv-sdk";
 
 /**
  * Read file contents and return json data from it.

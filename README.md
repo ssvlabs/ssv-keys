@@ -104,7 +104,7 @@ pnpm run cli shares --keystore=./keystore-files --password=test --operator-ids=1
 
 ### Node Project
 
-To run an example of a NodeJS project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
+To run an example of a Node.js project containing all the code snippets to build the share and transaction payload, simply follow these instructions!
 
 ```bash
 cd examples/console
@@ -124,21 +124,6 @@ To run a TypeScript example:
 
 ```bash
 pnpm run start:ts
-```
-
-### Browser project (web application)
-
-Go to the example folder and then install all the dependencies:
-
-```bash
-cd examples/react-app
-pnpm install
-```
-
-Start the web app:
-
-```bash
-pnpm run start
 ```
 
 Open the developer console to see how it works in a browser environment.

@@ -1,4 +1,4 @@
-const { SSVKeys, KeySharesItem } = require('ssv-keys');
+import { KeySharesItem, SSVKeys } from "@ssv-labs/ssv-sdk";
 
 const keystore = require('./test.keystore.json');
 const operatorKeys = require('./operators.json');

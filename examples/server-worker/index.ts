@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { constants } from 'http2';
 import bodyParser from 'body-parser';
-import { SSVKeys, KeyShares, KeySharesItem } from 'ssv-keys';
+import { KeyShares, KeySharesItem, SSVKeys } from "@ssv-labs/ssv-sdk";
 import express, { Express, Request, Response } from 'express';
 
 dotenv.config();

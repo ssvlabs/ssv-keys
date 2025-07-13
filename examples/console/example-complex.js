@@ -1,6 +1,6 @@
 const path = require('path');
 const fsp = require('fs').promises;
-const { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } = require('ssv-keys');
+import { KeyShares, KeySharesItem, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
 
 const operatorKeys = require('./operators.json');
 const keystore = require('./test.keystore.json');
