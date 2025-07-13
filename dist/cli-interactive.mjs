@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import { m as main } from "./cli-shared-5wXj2i4T.mjs";
+import { m as main } from "./cli-shared-BydCVWS8.mjs";
 void main(true);

@@ -41,7 +41,6 @@
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
-    "docs": "typedoc",
     "build": "vite build",
     "build-all": "pnpm run clean && pnpm run build",
     "pre-commit": "pnpm run lint && pnpm run build-all",
@@ -62,7 +61,6 @@
     "husky": "^9.1.7",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
-    "typedoc": "^0.28.7",
     "typescript": "^5.8.3",
     "vite": "^7.0.0"
   },

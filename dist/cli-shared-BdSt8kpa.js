@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import require$$0$1 from "util";
-import require$$0 from "os";
-import require$$0$2 from "readline";
-import fs$2, { promises } from "fs";
-import path$1 from "path";
-import crypto$1$1 from "crypto";
+"use strict";
+const require$$0$1 = require("util");
+const require$$0 = require("os");
+const require$$0$2 = require("readline");
+const fs$2 = require("fs");
+const path$1 = require("path");
+const crypto$1$1 = require("crypto");
 var commonjsGlobal$1 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs$1(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -698,8 +699,8 @@ function requireSafe() {
 }
 var safeExports = requireSafe();
 const colors = /* @__PURE__ */ getDefaultExportFromCjs$1(safeExports);
-const version$4 = "1.3.0";
-const description = "Tool for splitting a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them with a set of operator keys.";
+const version$4 = "2.0.0";
+const description = "CLI Tool for splitting a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them with a set of operator keys.";
 const pkg = {
   version: version$4,
   description
@@ -3245,8 +3246,8 @@ var hasRequiredPrompts$1;
 function requirePrompts$1() {
   if (hasRequiredPrompts$1) return prompts$2;
   hasRequiredPrompts$1 = 1;
-  (function(exports) {
-    const $ = exports;
+  (function(exports2) {
+    const $ = exports2;
     const el = requireElements();
     const noop = (v) => v;
     function toPrompt(type2, args, opts = {}) {
@@ -4895,7 +4896,7 @@ var hasRequiredTypes$1;
 function requireTypes$1() {
   if (hasRequiredTypes$1) return types$1;
   hasRequiredTypes$1 = 1;
-  (function(exports) {
+  (function(exports2) {
     var isArgumentsObject = /* @__PURE__ */ requireIsArguments$1();
     var isGeneratorFunction2 = requireIsGeneratorFunction();
     var whichTypedArray2 = /* @__PURE__ */ requireWhichTypedArray();
@@ -4926,64 +4927,64 @@ function requireTypes$1() {
         return false;
       }
     }
-    exports.isArgumentsObject = isArgumentsObject;
-    exports.isGeneratorFunction = isGeneratorFunction2;
-    exports.isTypedArray = isTypedArray2;
+    exports2.isArgumentsObject = isArgumentsObject;
+    exports2.isGeneratorFunction = isGeneratorFunction2;
+    exports2.isTypedArray = isTypedArray2;
     function isPromise2(input) {
       return typeof Promise !== "undefined" && input instanceof Promise || input !== null && typeof input === "object" && typeof input.then === "function" && typeof input.catch === "function";
     }
-    exports.isPromise = isPromise2;
+    exports2.isPromise = isPromise2;
     function isArrayBufferView(value) {
       if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView) {
         return ArrayBuffer.isView(value);
       }
       return isTypedArray2(value) || isDataView(value);
     }
-    exports.isArrayBufferView = isArrayBufferView;
+    exports2.isArrayBufferView = isArrayBufferView;
     function isUint8Array(value) {
       return whichTypedArray2(value) === "Uint8Array";
     }
-    exports.isUint8Array = isUint8Array;
+    exports2.isUint8Array = isUint8Array;
     function isUint8ClampedArray(value) {
       return whichTypedArray2(value) === "Uint8ClampedArray";
     }
-    exports.isUint8ClampedArray = isUint8ClampedArray;
+    exports2.isUint8ClampedArray = isUint8ClampedArray;
     function isUint16Array(value) {
       return whichTypedArray2(value) === "Uint16Array";
     }
-    exports.isUint16Array = isUint16Array;
+    exports2.isUint16Array = isUint16Array;
     function isUint32Array(value) {
       return whichTypedArray2(value) === "Uint32Array";
     }
-    exports.isUint32Array = isUint32Array;
+    exports2.isUint32Array = isUint32Array;
     function isInt8Array(value) {
       return whichTypedArray2(value) === "Int8Array";
     }
-    exports.isInt8Array = isInt8Array;
+    exports2.isInt8Array = isInt8Array;
     function isInt16Array(value) {
       return whichTypedArray2(value) === "Int16Array";
     }
-    exports.isInt16Array = isInt16Array;
+    exports2.isInt16Array = isInt16Array;
     function isInt32Array(value) {
       return whichTypedArray2(value) === "Int32Array";
     }
-    exports.isInt32Array = isInt32Array;
+    exports2.isInt32Array = isInt32Array;
     function isFloat32Array(value) {
       return whichTypedArray2(value) === "Float32Array";
     }
-    exports.isFloat32Array = isFloat32Array;
+    exports2.isFloat32Array = isFloat32Array;
     function isFloat64Array(value) {
       return whichTypedArray2(value) === "Float64Array";
     }
-    exports.isFloat64Array = isFloat64Array;
+    exports2.isFloat64Array = isFloat64Array;
     function isBigInt64Array(value) {
       return whichTypedArray2(value) === "BigInt64Array";
     }
-    exports.isBigInt64Array = isBigInt64Array;
+    exports2.isBigInt64Array = isBigInt64Array;
     function isBigUint64Array(value) {
       return whichTypedArray2(value) === "BigUint64Array";
     }
-    exports.isBigUint64Array = isBigUint64Array;
+    exports2.isBigUint64Array = isBigUint64Array;
     function isMapToString(value) {
       return ObjectToString(value) === "[object Map]";
     }
@@ -4994,7 +4995,7 @@ function requireTypes$1() {
       }
       return isMapToString.working ? isMapToString(value) : value instanceof Map;
     }
-    exports.isMap = isMap;
+    exports2.isMap = isMap;
     function isSetToString(value) {
       return ObjectToString(value) === "[object Set]";
     }
@@ -5005,7 +5006,7 @@ function requireTypes$1() {
       }
       return isSetToString.working ? isSetToString(value) : value instanceof Set;
     }
-    exports.isSet = isSet;
+    exports2.isSet = isSet;
     function isWeakMapToString(value) {
       return ObjectToString(value) === "[object WeakMap]";
     }
@@ -5016,7 +5017,7 @@ function requireTypes$1() {
       }
       return isWeakMapToString.working ? isWeakMapToString(value) : value instanceof WeakMap;
     }
-    exports.isWeakMap = isWeakMap;
+    exports2.isWeakMap = isWeakMap;
     function isWeakSetToString(value) {
       return ObjectToString(value) === "[object WeakSet]";
     }
@@ -5024,7 +5025,7 @@ function requireTypes$1() {
     function isWeakSet(value) {
       return isWeakSetToString(value);
     }
-    exports.isWeakSet = isWeakSet;
+    exports2.isWeakSet = isWeakSet;
     function isArrayBufferToString(value) {
       return ObjectToString(value) === "[object ArrayBuffer]";
     }
@@ -5035,7 +5036,7 @@ function requireTypes$1() {
       }
       return isArrayBufferToString.working ? isArrayBufferToString(value) : value instanceof ArrayBuffer;
     }
-    exports.isArrayBuffer = isArrayBuffer;
+    exports2.isArrayBuffer = isArrayBuffer;
     function isDataViewToString(value) {
       return ObjectToString(value) === "[object DataView]";
     }
@@ -5046,7 +5047,7 @@ function requireTypes$1() {
       }
       return isDataViewToString.working ? isDataViewToString(value) : value instanceof DataView;
     }
-    exports.isDataView = isDataView;
+    exports2.isDataView = isDataView;
     var SharedArrayBufferCopy = typeof SharedArrayBuffer !== "undefined" ? SharedArrayBuffer : void 0;
     function isSharedArrayBufferToString(value) {
       return ObjectToString(value) === "[object SharedArrayBuffer]";
@@ -5060,57 +5061,57 @@ function requireTypes$1() {
       }
       return isSharedArrayBufferToString.working ? isSharedArrayBufferToString(value) : value instanceof SharedArrayBufferCopy;
     }
-    exports.isSharedArrayBuffer = isSharedArrayBuffer;
+    exports2.isSharedArrayBuffer = isSharedArrayBuffer;
     function isAsyncFunction(value) {
       return ObjectToString(value) === "[object AsyncFunction]";
     }
-    exports.isAsyncFunction = isAsyncFunction;
+    exports2.isAsyncFunction = isAsyncFunction;
     function isMapIterator(value) {
       return ObjectToString(value) === "[object Map Iterator]";
     }
-    exports.isMapIterator = isMapIterator;
+    exports2.isMapIterator = isMapIterator;
     function isSetIterator(value) {
       return ObjectToString(value) === "[object Set Iterator]";
     }
-    exports.isSetIterator = isSetIterator;
+    exports2.isSetIterator = isSetIterator;
     function isGeneratorObject(value) {
       return ObjectToString(value) === "[object Generator]";
     }
-    exports.isGeneratorObject = isGeneratorObject;
+    exports2.isGeneratorObject = isGeneratorObject;
     function isWebAssemblyCompiledModule(value) {
       return ObjectToString(value) === "[object WebAssembly.Module]";
     }
-    exports.isWebAssemblyCompiledModule = isWebAssemblyCompiledModule;
+    exports2.isWebAssemblyCompiledModule = isWebAssemblyCompiledModule;
     function isNumberObject(value) {
       return checkBoxedPrimitive(value, numberValue);
     }
-    exports.isNumberObject = isNumberObject;
+    exports2.isNumberObject = isNumberObject;
     function isStringObject(value) {
       return checkBoxedPrimitive(value, stringValue);
     }
-    exports.isStringObject = isStringObject;
+    exports2.isStringObject = isStringObject;
     function isBooleanObject(value) {
       return checkBoxedPrimitive(value, booleanValue);
     }
-    exports.isBooleanObject = isBooleanObject;
+    exports2.isBooleanObject = isBooleanObject;
     function isBigIntObject(value) {
       return BigIntSupported && checkBoxedPrimitive(value, bigIntValue);
     }
-    exports.isBigIntObject = isBigIntObject;
+    exports2.isBigIntObject = isBigIntObject;
     function isSymbolObject(value) {
       return SymbolSupported && checkBoxedPrimitive(value, symbolValue);
     }
-    exports.isSymbolObject = isSymbolObject;
+    exports2.isSymbolObject = isSymbolObject;
     function isBoxedPrimitive(value) {
       return isNumberObject(value) || isStringObject(value) || isBooleanObject(value) || isBigIntObject(value) || isSymbolObject(value);
     }
-    exports.isBoxedPrimitive = isBoxedPrimitive;
+    exports2.isBoxedPrimitive = isBoxedPrimitive;
     function isAnyArrayBuffer(value) {
       return typeof Uint8Array !== "undefined" && (isArrayBuffer(value) || isSharedArrayBuffer(value));
     }
-    exports.isAnyArrayBuffer = isAnyArrayBuffer;
+    exports2.isAnyArrayBuffer = isAnyArrayBuffer;
     ["isProxy", "isExternal", "isModuleNamespaceObject"].forEach(function(method) {
-      Object.defineProperty(exports, method, {
+      Object.defineProperty(exports2, method, {
         enumerable: false,
         value: function() {
           throw new Error(method + " is not supported in userland");
@@ -5167,7 +5168,7 @@ var hasRequiredUtil$1;
 function requireUtil$1() {
   if (hasRequiredUtil$1) return util$4;
   hasRequiredUtil$1 = 1;
-  (function(exports) {
+  (function(exports2) {
     var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors || function getOwnPropertyDescriptors2(obj) {
       var keys2 = Object.keys(obj);
       var descriptors = {};
@@ -5177,7 +5178,7 @@ function requireUtil$1() {
       return descriptors;
     };
     var formatRegExp = /%[sdj%]/g;
-    exports.format = function(f) {
+    exports2.format = function(f) {
       if (!isString2(f)) {
         var objects = [];
         for (var i = 0; i < arguments.length; i++) {
@@ -5215,13 +5216,13 @@ function requireUtil$1() {
       }
       return str;
     };
-    exports.deprecate = function(fn, msg) {
+    exports2.deprecate = function(fn, msg) {
       if (typeof process !== "undefined" && process.noDeprecation === true) {
         return fn;
       }
       if (typeof process === "undefined") {
         return function() {
-          return exports.deprecate(fn, msg).apply(this, arguments);
+          return exports2.deprecate(fn, msg).apply(this, arguments);
         };
       }
       var warned = false;
@@ -5247,13 +5248,13 @@ function requireUtil$1() {
       debugEnv = debugEnv.replace(/[|\\{}()[\]^$+?.]/g, "\\$&").replace(/\*/g, ".*").replace(/,/g, "$|^").toUpperCase();
       debugEnvRegex = new RegExp("^" + debugEnv + "$", "i");
     }
-    exports.debuglog = function(set2) {
+    exports2.debuglog = function(set2) {
       set2 = set2.toUpperCase();
       if (!debugs[set2]) {
         if (debugEnvRegex.test(set2)) {
           var pid = process.pid;
           debugs[set2] = function() {
-            var msg = exports.format.apply(exports, arguments);
+            var msg = exports2.format.apply(exports2, arguments);
             console.error("%s %d: %s", set2, pid, msg);
           };
         } else {
@@ -5273,7 +5274,7 @@ function requireUtil$1() {
       if (isBoolean(opts)) {
         ctx.showHidden = opts;
       } else if (opts) {
-        exports._extend(ctx, opts);
+        exports2._extend(ctx, opts);
       }
       if (isUndefined2(ctx.showHidden)) ctx.showHidden = false;
       if (isUndefined2(ctx.depth)) ctx.depth = 2;
@@ -5282,7 +5283,7 @@ function requireUtil$1() {
       if (ctx.colors) ctx.stylize = stylizeWithColor;
       return formatValue(ctx, obj, ctx.depth);
     }
-    exports.inspect = inspect2;
+    exports2.inspect = inspect2;
     inspect2.colors = {
       "bold": [1, 22],
       "italic": [3, 23],
@@ -5329,7 +5330,7 @@ function requireUtil$1() {
     }
     function formatValue(ctx, value, recurseTimes) {
       if (ctx.customInspect && value && isFunction2(value.inspect) && // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect && // Also filter out any prototype objects using the circular check.
+      value.inspect !== exports2.inspect && // Also filter out any prototype objects using the circular check.
       !(value.constructor && value.constructor.prototype === value)) {
         var ret = value.inspect(recurseTimes, ctx);
         if (!isString2(ret)) {
@@ -5515,68 +5516,68 @@ function requireUtil$1() {
       }
       return braces[0] + base + " " + output.join(", ") + " " + braces[1];
     }
-    exports.types = requireTypes$1();
+    exports2.types = requireTypes$1();
     function isArray2(ar) {
       return Array.isArray(ar);
     }
-    exports.isArray = isArray2;
+    exports2.isArray = isArray2;
     function isBoolean(arg) {
       return typeof arg === "boolean";
     }
-    exports.isBoolean = isBoolean;
+    exports2.isBoolean = isBoolean;
     function isNull(arg) {
       return arg === null;
     }
-    exports.isNull = isNull;
+    exports2.isNull = isNull;
     function isNullOrUndefined(arg) {
       return arg == null;
     }
-    exports.isNullOrUndefined = isNullOrUndefined;
+    exports2.isNullOrUndefined = isNullOrUndefined;
     function isNumber2(arg) {
       return typeof arg === "number";
     }
-    exports.isNumber = isNumber2;
+    exports2.isNumber = isNumber2;
     function isString2(arg) {
       return typeof arg === "string";
     }
-    exports.isString = isString2;
+    exports2.isString = isString2;
     function isSymbol(arg) {
       return typeof arg === "symbol";
     }
-    exports.isSymbol = isSymbol;
+    exports2.isSymbol = isSymbol;
     function isUndefined2(arg) {
       return arg === void 0;
     }
-    exports.isUndefined = isUndefined2;
+    exports2.isUndefined = isUndefined2;
     function isRegExp(re2) {
       return isObject2(re2) && objectToString(re2) === "[object RegExp]";
     }
-    exports.isRegExp = isRegExp;
-    exports.types.isRegExp = isRegExp;
+    exports2.isRegExp = isRegExp;
+    exports2.types.isRegExp = isRegExp;
     function isObject2(arg) {
       return typeof arg === "object" && arg !== null;
     }
-    exports.isObject = isObject2;
+    exports2.isObject = isObject2;
     function isDate2(d) {
       return isObject2(d) && objectToString(d) === "[object Date]";
     }
-    exports.isDate = isDate2;
-    exports.types.isDate = isDate2;
+    exports2.isDate = isDate2;
+    exports2.types.isDate = isDate2;
     function isError(e) {
       return isObject2(e) && (objectToString(e) === "[object Error]" || e instanceof Error);
     }
-    exports.isError = isError;
-    exports.types.isNativeError = isError;
+    exports2.isError = isError;
+    exports2.types.isNativeError = isError;
     function isFunction2(arg) {
       return typeof arg === "function";
     }
-    exports.isFunction = isFunction2;
+    exports2.isFunction = isFunction2;
     function isPrimitive(arg) {
       return arg === null || typeof arg === "boolean" || typeof arg === "number" || typeof arg === "string" || typeof arg === "symbol" || // ES6 symbol
       typeof arg === "undefined";
     }
-    exports.isPrimitive = isPrimitive;
-    exports.isBuffer = requireIsBufferBrowser();
+    exports2.isPrimitive = isPrimitive;
+    exports2.isBuffer = requireIsBufferBrowser();
     function objectToString(o) {
       return Object.prototype.toString.call(o);
     }
@@ -5606,11 +5607,11 @@ function requireUtil$1() {
       ].join(":");
       return [d.getDate(), months2[d.getMonth()], time].join(" ");
     }
-    exports.log = function() {
-      console.log("%s - %s", timestamp(), exports.format.apply(exports, arguments));
+    exports2.log = function() {
+      console.log("%s - %s", timestamp(), exports2.format.apply(exports2, arguments));
     };
-    exports.inherits = requireInherits_browser();
-    exports._extend = function(origin, add2) {
+    exports2.inherits = requireInherits_browser();
+    exports2._extend = function(origin, add2) {
       if (!add2 || !isObject2(add2)) return origin;
       var keys2 = Object.keys(add2);
       var i = keys2.length;
@@ -5623,7 +5624,7 @@ function requireUtil$1() {
       return Object.prototype.hasOwnProperty.call(obj, prop);
     }
     var kCustomPromisifiedSymbol = typeof Symbol !== "undefined" ? Symbol("util.promisify.custom") : void 0;
-    exports.promisify = function promisify(original) {
+    exports2.promisify = function promisify(original) {
       if (typeof original !== "function")
         throw new TypeError('The "original" argument must be of type Function');
       if (kCustomPromisifiedSymbol && original[kCustomPromisifiedSymbol]) {
@@ -5675,7 +5676,7 @@ function requireUtil$1() {
         getOwnPropertyDescriptors(original)
       );
     };
-    exports.promisify.custom = kCustomPromisifiedSymbol;
+    exports2.promisify.custom = kCustomPromisifiedSymbol;
     function callbackifyOnRejected(reason, cb) {
       if (!reason) {
         var newReason = new Error("Promise was rejected with a falsy value");
@@ -5717,7 +5718,7 @@ function requireUtil$1() {
       );
       return callbackified;
     }
-    exports.callbackify = callbackify;
+    exports2.callbackify = callbackify;
   })(util$4);
   return util$4;
 }
@@ -16095,7 +16096,7 @@ var hasRequiredBls_c;
 function requireBls_c() {
   if (hasRequiredBls_c) return bls_c.exports;
   hasRequiredBls_c = 1;
-  (function(module2, exports) {
+  (function(module2, exports2) {
     var Module = (() => {
       var _scriptName = typeof document != "undefined" ? document.currentScript?.src : void 0;
       if (typeof __filename != "undefined") _scriptName = _scriptName || __filename;
@@ -16756,29 +16757,29 @@ function requireBls() {
   hasRequiredBls = 1;
   const ETH_MODE = true;
   const _blsSetupFactory = (createModule) => {
-    const exports = {};
-    exports.BN254 = 0;
-    exports.BN381_1 = 1;
-    exports.BN_SNARK1 = 4;
-    exports.BLS12_381 = 5;
-    exports.ethMode = ETH_MODE;
-    exports.ETH_MODE_DRAFT_05 = 1;
-    exports.ETH_MODE_DRAFT_06 = 2;
-    exports.ETH_MODE_DRAFT_07 = 3;
-    exports.MAP_TO_MODE_ORIGINAL = 0;
-    exports.MAP_TO_MODE_HASH_TO_CURVE = 5;
-    function blsSetup(exports2, curveType) {
-      const mod2 = exports2.mod;
+    const exports2 = {};
+    exports2.BN254 = 0;
+    exports2.BN381_1 = 1;
+    exports2.BN_SNARK1 = 4;
+    exports2.BLS12_381 = 5;
+    exports2.ethMode = ETH_MODE;
+    exports2.ETH_MODE_DRAFT_05 = 1;
+    exports2.ETH_MODE_DRAFT_06 = 2;
+    exports2.ETH_MODE_DRAFT_07 = 3;
+    exports2.MAP_TO_MODE_ORIGINAL = 0;
+    exports2.MAP_TO_MODE_HASH_TO_CURVE = 5;
+    function blsSetup(exports3, curveType) {
+      const mod2 = exports3.mod;
       const MCLBN_FP_UNIT_SIZE = 6;
       const MCLBN_FP_SIZE = MCLBN_FP_UNIT_SIZE * 8;
       const MCLBN_FR_UNIT_SIZE = 4;
       const MCLBN_FR_SIZE = MCLBN_FR_UNIT_SIZE * 8;
-      const BLS_COMPILER_TIME_VAR_ADJ = exports2.ethMode ? 200 : 0;
+      const BLS_COMPILER_TIME_VAR_ADJ = exports3.ethMode ? 200 : 0;
       const MCLBN_COMPILED_TIME_VAR = MCLBN_FR_UNIT_SIZE * 10 + MCLBN_FP_UNIT_SIZE + BLS_COMPILER_TIME_VAR_ADJ;
       const BLS_ID_SIZE = MCLBN_FR_SIZE;
       const BLS_SECRETKEY_SIZE = MCLBN_FR_SIZE;
-      const BLS_PUBLICKEY_SIZE = MCLBN_FP_SIZE * 3 * (exports2.ethMode ? 1 : 2);
-      const BLS_SIGNATURE_SIZE = MCLBN_FP_SIZE * 3 * (exports2.ethMode ? 2 : 1);
+      const BLS_PUBLICKEY_SIZE = MCLBN_FP_SIZE * 3 * (exports3.ethMode ? 1 : 2);
+      const BLS_SIGNATURE_SIZE = MCLBN_FP_SIZE * 3 * (exports3.ethMode ? 2 : 1);
       const _malloc = (size2) => {
         return mod2._blsMalloc(size2);
       };
@@ -16797,17 +16798,17 @@ function requireBls() {
           mod2.HEAP8[pos + i] = s2.charCodeAt(i);
         }
       };
-      exports2.toHex = (a, start, n) => {
+      exports3.toHex = (a, start, n) => {
         let s2 = "";
         for (let i = 0; i < n; i++) {
           s2 += ("0" + a[start + i].toString(16)).slice(-2);
         }
         return s2;
       };
-      exports2.toHexStr = (a) => {
-        return exports2.toHex(a, 0, a.length);
+      exports3.toHexStr = (a) => {
+        return exports3.toHex(a, 0, a.length);
       };
-      exports2.fromHexStr = (s2) => {
+      exports3.fromHexStr = (s2) => {
         if (s2.length & 1) throw new Error("fromHexStr:length must be even " + s2.length);
         const n = s2.length / 2;
         const a = new Uint8Array(n);
@@ -16898,56 +16899,56 @@ function requireBls() {
         a._saveAndFree(secPos);
         if (r) throw "callRecover";
       };
-      exports2.blsInit = (curveType2 = exports2.ethMode ? exports2.BLS12_381 : exports2.BN254) => {
+      exports3.blsInit = (curveType2 = exports3.ethMode ? exports3.BLS12_381 : exports3.BN254) => {
         const r = mod2._blsInit(curveType2, MCLBN_COMPILED_TIME_VAR);
         if (r) throw "blsInit err " + r;
       };
-      exports2.mclBnFr_setLittleEndian = _wrapInput(mod2._mclBnFr_setLittleEndian, 1);
-      exports2.mclBnFr_setLittleEndianMod = _wrapInput(mod2._mclBnFr_setLittleEndianMod, 1);
-      exports2.mclBnFr_setBigEndianMod = _wrapInput(mod2._mclBnFr_setBigEndianMod, 1);
-      exports2.mclBnFr_setStr = _wrapInput(mod2._mclBnFr_setStr, 1);
-      exports2.mclBnFr_getStr = _wrapGetStr(mod2._mclBnFr_getStr);
-      exports2.mclBnFr_deserialize = _wrapDeserialize(mod2._mclBnFr_deserialize);
-      exports2.mclBnFr_serialize = _wrapSerialize(mod2._mclBnFr_serialize);
-      exports2.mclBnFr_setHashOf = _wrapInput(mod2._mclBnFr_setHashOf, 1);
-      exports2.mclBnG1_setStr = _wrapInput(mod2._mclBnG1_setStr, 1);
-      exports2.mclBnG1_getStr = _wrapGetStr(mod2._mclBnG1_getStr);
-      exports2.mclBnG2_setStr = _wrapInput(mod2._mclBnG2_setStr, 1);
-      exports2.mclBnG2_getStr = _wrapGetStr(mod2._mclBnG2_getStr);
-      exports2.getCurveOrder = _wrapGetStr(mod2._blsGetCurveOrder);
-      exports2.getFieldOrder = _wrapGetStr(mod2._blsGetFieldOrder);
-      exports2.setDstG1 = _wrapInput(mod2._mclBnG1_setDst, 0);
-      exports2.setDstG2 = _wrapInput(mod2._mclBnG2_setDst, 0);
-      exports2.blsIdSetDecStr = _wrapInput(mod2._blsIdSetDecStr, 1);
-      exports2.blsIdSetHexStr = _wrapInput(mod2._blsIdSetHexStr, 1);
-      exports2.blsIdGetDecStr = _wrapGetStr(mod2._blsIdGetDecStr);
-      exports2.blsIdGetHexStr = _wrapGetStr(mod2._blsIdGetHexStr);
-      exports2.blsIdSerialize = _wrapSerialize(mod2._blsIdSerialize);
-      exports2.blsSecretKeySerialize = _wrapSerialize(mod2._blsSecretKeySerialize);
-      exports2.blsPublicKeySerialize = _wrapSerialize(mod2._blsPublicKeySerialize);
-      exports2.blsSignatureSerialize = _wrapSerialize(mod2._blsSignatureSerialize);
-      exports2.blsIdDeserialize = _wrapDeserialize(mod2._blsIdDeserialize);
-      exports2.blsSecretKeyDeserialize = _wrapDeserialize(mod2._blsSecretKeyDeserialize);
-      exports2.blsPublicKeyDeserialize = _wrapDeserialize(mod2._blsPublicKeyDeserialize);
-      exports2.blsSignatureDeserialize = _wrapDeserialize(mod2._blsSignatureDeserialize);
-      exports2.blsPublicKeySerializeUncompressed = _wrapSerialize(mod2._blsPublicKeySerializeUncompressed);
-      exports2.blsSignatureSerializeUncompressed = _wrapSerialize(mod2._blsSignatureSerializeUncompressed);
-      exports2.blsPublicKeyDeserializeUncompressed = _wrapDeserialize(mod2._blsPublicKeyDeserializeUncompressed);
-      exports2.blsSignatureDeserializeUncompressed = _wrapDeserialize(mod2._blsSignatureDeserializeUncompressed);
-      exports2.blsSecretKeySetLittleEndian = _wrapInput(mod2._blsSecretKeySetLittleEndian, 1);
-      exports2.blsSecretKeySetLittleEndianMod = _wrapInput(mod2._blsSecretKeySetLittleEndianMod, 1);
-      exports2.blsHashToSecretKey = _wrapInput(mod2._blsHashToSecretKey, 1);
-      exports2.blsSign = _wrapInput(mod2._blsSign, 2);
-      exports2.blsVerify = _wrapInput(mod2._blsVerify, 2, true);
+      exports3.mclBnFr_setLittleEndian = _wrapInput(mod2._mclBnFr_setLittleEndian, 1);
+      exports3.mclBnFr_setLittleEndianMod = _wrapInput(mod2._mclBnFr_setLittleEndianMod, 1);
+      exports3.mclBnFr_setBigEndianMod = _wrapInput(mod2._mclBnFr_setBigEndianMod, 1);
+      exports3.mclBnFr_setStr = _wrapInput(mod2._mclBnFr_setStr, 1);
+      exports3.mclBnFr_getStr = _wrapGetStr(mod2._mclBnFr_getStr);
+      exports3.mclBnFr_deserialize = _wrapDeserialize(mod2._mclBnFr_deserialize);
+      exports3.mclBnFr_serialize = _wrapSerialize(mod2._mclBnFr_serialize);
+      exports3.mclBnFr_setHashOf = _wrapInput(mod2._mclBnFr_setHashOf, 1);
+      exports3.mclBnG1_setStr = _wrapInput(mod2._mclBnG1_setStr, 1);
+      exports3.mclBnG1_getStr = _wrapGetStr(mod2._mclBnG1_getStr);
+      exports3.mclBnG2_setStr = _wrapInput(mod2._mclBnG2_setStr, 1);
+      exports3.mclBnG2_getStr = _wrapGetStr(mod2._mclBnG2_getStr);
+      exports3.getCurveOrder = _wrapGetStr(mod2._blsGetCurveOrder);
+      exports3.getFieldOrder = _wrapGetStr(mod2._blsGetFieldOrder);
+      exports3.setDstG1 = _wrapInput(mod2._mclBnG1_setDst, 0);
+      exports3.setDstG2 = _wrapInput(mod2._mclBnG2_setDst, 0);
+      exports3.blsIdSetDecStr = _wrapInput(mod2._blsIdSetDecStr, 1);
+      exports3.blsIdSetHexStr = _wrapInput(mod2._blsIdSetHexStr, 1);
+      exports3.blsIdGetDecStr = _wrapGetStr(mod2._blsIdGetDecStr);
+      exports3.blsIdGetHexStr = _wrapGetStr(mod2._blsIdGetHexStr);
+      exports3.blsIdSerialize = _wrapSerialize(mod2._blsIdSerialize);
+      exports3.blsSecretKeySerialize = _wrapSerialize(mod2._blsSecretKeySerialize);
+      exports3.blsPublicKeySerialize = _wrapSerialize(mod2._blsPublicKeySerialize);
+      exports3.blsSignatureSerialize = _wrapSerialize(mod2._blsSignatureSerialize);
+      exports3.blsIdDeserialize = _wrapDeserialize(mod2._blsIdDeserialize);
+      exports3.blsSecretKeyDeserialize = _wrapDeserialize(mod2._blsSecretKeyDeserialize);
+      exports3.blsPublicKeyDeserialize = _wrapDeserialize(mod2._blsPublicKeyDeserialize);
+      exports3.blsSignatureDeserialize = _wrapDeserialize(mod2._blsSignatureDeserialize);
+      exports3.blsPublicKeySerializeUncompressed = _wrapSerialize(mod2._blsPublicKeySerializeUncompressed);
+      exports3.blsSignatureSerializeUncompressed = _wrapSerialize(mod2._blsSignatureSerializeUncompressed);
+      exports3.blsPublicKeyDeserializeUncompressed = _wrapDeserialize(mod2._blsPublicKeyDeserializeUncompressed);
+      exports3.blsSignatureDeserializeUncompressed = _wrapDeserialize(mod2._blsSignatureDeserializeUncompressed);
+      exports3.blsSecretKeySetLittleEndian = _wrapInput(mod2._blsSecretKeySetLittleEndian, 1);
+      exports3.blsSecretKeySetLittleEndianMod = _wrapInput(mod2._blsSecretKeySetLittleEndianMod, 1);
+      exports3.blsHashToSecretKey = _wrapInput(mod2._blsHashToSecretKey, 1);
+      exports3.blsSign = _wrapInput(mod2._blsSign, 2);
+      exports3.blsVerify = _wrapInput(mod2._blsVerify, 2, true);
       class Common {
         constructor(size2) {
           this.a_ = new Uint32Array(size2 / 4);
         }
         deserializeHexStr(s2) {
-          this.deserialize(exports2.fromHexStr(s2));
+          this.deserialize(exports3.fromHexStr(s2));
         }
         serializeToHexStr() {
-          return exports2.toHexStr(this.serialize());
+          return exports3.toHexStr(this.serialize());
         }
         dump(msg = "") {
           console.log(msg + this.serializeToHexStr());
@@ -17032,7 +17033,7 @@ function requireBls() {
           this._saveAndFree(xPos);
         }
       }
-      exports2.Fr = class extends Common {
+      exports3.Fr = class extends Common {
         constructor() {
           super(MCLBN_FR_SIZE);
         }
@@ -17040,16 +17041,16 @@ function requireBls() {
           this._setter(mod2._mclBnFr_setInt32, x);
         }
         deserialize(s2) {
-          this._setter(exports2.mclBnFr_deserialize, s2);
+          this._setter(exports3.mclBnFr_deserialize, s2);
         }
         serialize() {
-          return this._getter(exports2.mclBnFr_serialize);
+          return this._getter(exports3.mclBnFr_serialize);
         }
         setStr(s2, base = 0) {
-          this._setter(exports2.mclBnFr_setStr, s2, base);
+          this._setter(exports3.mclBnFr_setStr, s2, base);
         }
         getStr(base = 0) {
-          return this._getter(exports2.mclBnFr_getStr, base);
+          return this._getter(exports3.mclBnFr_getStr, base);
         }
         isZero() {
           return this._getter(mod2._mclBnFr_isZero) === 1;
@@ -17061,29 +17062,29 @@ function requireBls() {
           return this._isEqual(mod2._mclBnFr_isEqual, rhs);
         }
         setLittleEndian(s2) {
-          this._setter(exports2.mclBnFr_setLittleEndian, s2);
+          this._setter(exports3.mclBnFr_setLittleEndian, s2);
         }
         setLittleEndianMod(s2) {
-          this._setter(exports2.mclBnFr_setLittleEndianMod, s2);
+          this._setter(exports3.mclBnFr_setLittleEndianMod, s2);
         }
         setBigEndianMod(s2) {
-          this._setter(exports2.mclBnFr_setBigEndianMod, s2);
+          this._setter(exports3.mclBnFr_setBigEndianMod, s2);
         }
         setByCSPRNG() {
           const a = new Uint8Array(MCLBN_FR_SIZE);
-          exports2.getRandomValues(a);
+          exports3.getRandomValues(a);
           this.setLittleEndian(a);
         }
         setHashOf(s2) {
-          this._setter(exports2.mclBnFr_setHashOf, s2);
+          this._setter(exports3.mclBnFr_setHashOf, s2);
         }
       };
-      exports2.deserializeHexStrToFr = (s2) => {
-        const r = new exports2.Fr();
+      exports3.deserializeHexStrToFr = (s2) => {
+        const r = new exports3.Fr();
         r.deserializeHexStr(s2);
         return r;
       };
-      exports2.Id = class extends Common {
+      exports3.Id = class extends Common {
         constructor() {
           super(BLS_ID_SIZE);
         }
@@ -17094,18 +17095,18 @@ function requireBls() {
           return this._isEqual(mod2._blsIdIsEqual, rhs);
         }
         deserialize(s2) {
-          this._setter(exports2.blsIdDeserialize, s2);
+          this._setter(exports3.blsIdDeserialize, s2);
         }
         serialize() {
-          return this._getter(exports2.blsIdSerialize);
+          return this._getter(exports3.blsIdSerialize);
         }
         setStr(s2, base = 10) {
           switch (base) {
             case 10:
-              this._setter(exports2.blsIdSetDecStr, s2);
+              this._setter(exports3.blsIdSetDecStr, s2);
               return;
             case 16:
-              this._setter(exports2.blsIdSetHexStr, s2);
+              this._setter(exports3.blsIdSetHexStr, s2);
               return;
             default:
               throw "BlsId.setStr:bad base:" + base;
@@ -17114,31 +17115,31 @@ function requireBls() {
         getStr(base = 10) {
           switch (base) {
             case 10:
-              return this._getter(exports2.blsIdGetDecStr);
+              return this._getter(exports3.blsIdGetDecStr);
             case 16:
-              return this._getter(exports2.blsIdGetHexStr);
+              return this._getter(exports3.blsIdGetHexStr);
             default:
               throw "BlsId.getStr:bad base:" + base;
           }
         }
         setLittleEndian(s2) {
-          this._setter(exports2.blsSecretKeySetLittleEndian, s2);
+          this._setter(exports3.blsSecretKeySetLittleEndian, s2);
         }
         setLittleEndianMod(s2) {
-          this._setter(exports2.blsSecretKeySetLittleEndianMod, s2);
+          this._setter(exports3.blsSecretKeySetLittleEndianMod, s2);
         }
         setByCSPRNG() {
           const a = new Uint8Array(BLS_ID_SIZE);
-          exports2.getRandomValues(a);
+          exports3.getRandomValues(a);
           this.setLittleEndian(a);
         }
       };
-      exports2.deserializeHexStrToId = (s2) => {
-        const r = new exports2.Id();
+      exports3.deserializeHexStrToId = (s2) => {
+        const r = new exports3.Id();
         r.deserializeHexStr(s2);
         return r;
       };
-      exports2.SecretKey = class extends Common {
+      exports3.SecretKey = class extends Common {
         constructor() {
           super(BLS_SECRETKEY_SIZE);
         }
@@ -17152,10 +17153,10 @@ function requireBls() {
           return this._isEqual(mod2._blsSecretKeyIsEqual, rhs);
         }
         deserialize(s2) {
-          this._setter(exports2.blsSecretKeyDeserialize, s2);
+          this._setter(exports3.blsSecretKeyDeserialize, s2);
         }
         serialize() {
-          return this._getter(exports2.blsSecretKeySerialize);
+          return this._getter(exports3.blsSecretKeySerialize);
         }
         add(rhs) {
           this._update(mod2._blsSecretKeyAdd, rhs);
@@ -17167,21 +17168,21 @@ function requireBls() {
           callRecover(mod2._blsSecretKeyRecover, this, BLS_SECRETKEY_SIZE, secVec, idVec);
         }
         setHashOf(s2) {
-          this._setter(exports2.blsHashToSecretKey, s2);
+          this._setter(exports3.blsHashToSecretKey, s2);
         }
         setLittleEndian(s2) {
-          this._setter(exports2.blsSecretKeySetLittleEndian, s2);
+          this._setter(exports3.blsSecretKeySetLittleEndian, s2);
         }
         setLittleEndianMod(s2) {
-          this._setter(exports2.blsSecretKeySetLittleEndianMod, s2);
+          this._setter(exports3.blsSecretKeySetLittleEndianMod, s2);
         }
         setByCSPRNG() {
           const a = new Uint8Array(BLS_SECRETKEY_SIZE);
-          exports2.getRandomValues(a);
+          exports3.getRandomValues(a);
           this.setLittleEndian(a);
         }
         getPublicKey() {
-          const pub = new exports2.PublicKey();
+          const pub = new exports3.PublicKey();
           const secPos = this._allocAndCopy();
           const pubPos = pub._alloc();
           mod2._blsGetPublicKey(pubPos, secPos);
@@ -17196,21 +17197,21 @@ function requireBls() {
           BlsSignature
         */
         sign(m) {
-          const sig = new exports2.Signature();
+          const sig = new exports3.Signature();
           const secPos = this._allocAndCopy();
           const sigPos = sig._alloc();
-          exports2.blsSign(sigPos, secPos, m);
+          exports3.blsSign(sigPos, secPos, m);
           sig._saveAndFree(sigPos);
           _free(secPos);
           return sig;
         }
       };
-      exports2.deserializeHexStrToSecretKey = (s2) => {
-        const r = new exports2.SecretKey();
+      exports3.deserializeHexStrToSecretKey = (s2) => {
+        const r = new exports3.SecretKey();
         r.deserializeHexStr(s2);
         return r;
       };
-      exports2.PublicKey = class extends Common {
+      exports3.PublicKey = class extends Common {
         constructor() {
           super(BLS_PUBLICKEY_SIZE);
         }
@@ -17221,24 +17222,24 @@ function requireBls() {
           return this._isEqual(mod2._blsPublicKeyIsEqual, rhs);
         }
         deserialize(s2) {
-          this._setter(exports2.blsPublicKeyDeserialize, s2);
+          this._setter(exports3.blsPublicKeyDeserialize, s2);
         }
         serialize() {
-          return this._getter(exports2.blsPublicKeySerialize);
+          return this._getter(exports3.blsPublicKeySerialize);
         }
         setStr(s2, base = 0) {
-          const func = exports2.mclBnG1_setStr;
+          const func = exports3.mclBnG1_setStr;
           this._setter(func, s2, base);
         }
         getStr(base = 0) {
-          const func = exports2.mclBnG1_getStr;
+          const func = exports3.mclBnG1_getStr;
           return this._getter(func, base);
         }
         deserializeUncompressed(s2) {
-          this._setter(exports2.blsPublicKeyDeserializeUncompressed, s2);
+          this._setter(exports3.blsPublicKeyDeserializeUncompressed, s2);
         }
         serializeUncompressed() {
-          return this._getter(exports2.blsPublicKeySerializeUncompressed);
+          return this._getter(exports3.blsPublicKeySerializeUncompressed);
         }
         add(rhs) {
           this._update(mod2._blsPublicKeyAdd, rhs);
@@ -17258,35 +17259,35 @@ function requireBls() {
         verify(sig, m) {
           const pubPos = this._allocAndCopy();
           const sigPos = sig._allocAndCopy();
-          const r = exports2.blsVerify(sigPos, pubPos, m);
+          const r = exports3.blsVerify(sigPos, pubPos, m);
           _free(sigPos);
           _free(pubPos);
           return r != 0;
         }
       };
-      exports2.deserializeHexStrToPublicKey = (s2) => {
-        const r = new exports2.PublicKey();
+      exports3.deserializeHexStrToPublicKey = (s2) => {
+        const r = new exports3.PublicKey();
         r.deserializeHexStr(s2);
         return r;
       };
-      exports2.setGeneratorOfPublicKey = (pub) => {
+      exports3.setGeneratorOfPublicKey = (pub) => {
         const pubPos = pub._allocAndCopy();
         const r = mod2._blsSetGeneratorOfPublicKey(pubPos);
         _free(pubPos);
         if (r !== 0) throw new Error("bad public key");
       };
-      exports2.getGeneratorOfPublicKey = () => {
-        const pub = new exports2.PublicKey();
+      exports3.getGeneratorOfPublicKey = () => {
+        const pub = new exports3.PublicKey();
         const pubPos = _malloc(BLS_SIGNATURE_SIZE);
         mod2._blsGetGeneratorOfPublicKey(pubPos);
         pub._saveAndFree(pubPos);
         return pub;
       };
-      exports2.getGeneratorofPublicKey = () => {
+      exports3.getGeneratorofPublicKey = () => {
         console.log("WARNING : getGeneratorofPublicKey is renamed to getGeneratorOfPublicKey");
-        return exports2.getGeneratorOfPublicKey();
+        return exports3.getGeneratorOfPublicKey();
       };
-      exports2.Signature = class extends Common {
+      exports3.Signature = class extends Common {
         constructor() {
           super(BLS_SIGNATURE_SIZE);
         }
@@ -17297,24 +17298,24 @@ function requireBls() {
           return this._isEqual(mod2._blsSignatureIsEqual, rhs);
         }
         deserialize(s2) {
-          this._setter(exports2.blsSignatureDeserialize, s2);
+          this._setter(exports3.blsSignatureDeserialize, s2);
         }
         serialize() {
-          return this._getter(exports2.blsSignatureSerialize);
+          return this._getter(exports3.blsSignatureSerialize);
         }
         deserializeUncompressed(s2) {
-          this._setter(exports2.blsSignatureDeserializeUncompressed, s2);
+          this._setter(exports3.blsSignatureDeserializeUncompressed, s2);
         }
         setStr(s2, base = 0) {
-          const func = exports2.mclBnG2_setStr;
+          const func = exports3.mclBnG2_setStr;
           this._setter(func, s2, base);
         }
         getStr(base = 0) {
-          const func = exports2.mclBnG2_getStr;
+          const func = exports3.mclBnG2_getStr;
           return this._getter(func, base);
         }
         serializeUncompressed() {
-          return this._getter(exports2.blsSignatureSerializeUncompressed);
+          return this._getter(exports3.blsSignatureSerializeUncompressed);
         }
         add(rhs) {
           this._update(mod2._blsSignatureAdd, rhs);
@@ -17377,27 +17378,27 @@ function requireBls() {
           return r == 1;
         }
       };
-      exports2.deserializeHexStrToSignature = (s2) => {
-        const r = new exports2.Signature();
+      exports3.deserializeHexStrToSignature = (s2) => {
+        const r = new exports3.Signature();
         r.deserializeHexStr(s2);
         return r;
       };
-      exports2.setETHmode = (mode) => {
+      exports3.setETHmode = (mode) => {
         if (mod2._blsSetETHmode(mode) != 0) throw new Error(`bad setETHmode ${mode}`);
       };
-      exports2.setETHserialiation = (enable) => {
+      exports3.setETHserialiation = (enable) => {
         mod2._mclBn_setETHserialization(enable ? 1 : 0);
       };
-      exports2.setMapToMode = (mode) => {
+      exports3.setMapToMode = (mode) => {
         if (mod2._mclBn_setMapToMode(mode) != 0) throw new Error(`bad setMapToMode ${mode}`);
       };
-      exports2.verifySignatureOrder = (doVerify) => {
+      exports3.verifySignatureOrder = (doVerify) => {
         mod2._blsSignatureVerifyOrder(doVerify);
       };
-      exports2.verifyPublicKeyOrder = (doVerify) => {
+      exports3.verifyPublicKeyOrder = (doVerify) => {
         mod2._blsPublicKeyVerifyOrder(doVerify);
       };
-      exports2.areAllMsgDifferent = (msgs, msgSize) => {
+      exports3.areAllMsgDifferent = (msgs, msgSize) => {
         const n = msgs.length / msgSize;
         if (msgs.length != n * msgSize) return false;
         const h = {};
@@ -17408,7 +17409,7 @@ function requireBls() {
         }
         return true;
       };
-      exports2.multiVerify = (pubs, sigs, msgs) => {
+      exports3.multiVerify = (pubs, sigs, msgs) => {
         const MSG_SIZE = 32;
         const RAND_SIZE = 8;
         const threadNum = 0;
@@ -17423,7 +17424,7 @@ function requireBls() {
         const randPos = _malloc(RAND_SIZE * n);
         const rai = mod2.HEAP8.subarray(randPos, randPos + RAND_SIZE * n);
         const rau = new Uint8Array(rai.buffer, randPos, rai.length);
-        exports2.getRandomValues(rau);
+        exports3.getRandomValues(rau);
         for (let i = 0; i < n; i++) {
           mod2.HEAP32.set(sigs[i].a_, (sigPos + BLS_SIGNATURE_SIZE * i) / 4);
           mod2.HEAP32.set(pubs[i].a_, (pubPos + BLS_PUBLICKEY_SIZE * i) / 4);
@@ -17436,80 +17437,80 @@ function requireBls() {
         _free(sigPos);
         return r == 1;
       };
-      exports2.blsInit(curveType);
-      if (exports2.ethMode) {
-        exports2.setETHmode(exports2.ETH_MODE_DRAFT_07);
+      exports3.blsInit(curveType);
+      if (exports3.ethMode) {
+        exports3.setETHmode(exports3.ETH_MODE_DRAFT_07);
       }
-      exports2.neg = (x) => {
-        if (x instanceof exports2.Fr) {
+      exports3.neg = (x) => {
+        if (x instanceof exports3.Fr) {
           return x._op1(mod2._mclBnFr_neg);
         }
         throw new Error("neg:bad type");
       };
-      exports2.sqr = (x) => {
-        if (x instanceof exports2.Fr) {
+      exports3.sqr = (x) => {
+        if (x instanceof exports3.Fr) {
           return x._op1(mod2._mclBnFr_sqr);
         }
         throw new Error("sqr:bad type");
       };
-      exports2.inv = (x) => {
-        if (x instanceof exports2.Fr) {
+      exports3.inv = (x) => {
+        if (x instanceof exports3.Fr) {
           return x._op1(mod2._mclBnFr_inv);
         }
         throw new Error("inv:bad type");
       };
-      exports2.add = (x, y) => {
+      exports3.add = (x, y) => {
         if (x.constructor !== y.constructor) throw new Error("add:mismatch type");
-        if (x instanceof exports2.Fr) {
+        if (x instanceof exports3.Fr) {
           return x._op2(mod2._mclBnFr_add, y);
         }
         throw new Error("add:bad type");
       };
-      exports2.sub = (x, y) => {
+      exports3.sub = (x, y) => {
         if (x.constructor !== y.constructor) throw new Error("sub:mismatch type");
-        if (x instanceof exports2.Fr) {
+        if (x instanceof exports3.Fr) {
           return x._op2(mod2._mclBnFr_sub, y);
         }
         throw new Error("sub:bad type");
       };
-      exports2.mul = (x, y) => {
-        if (x instanceof exports2.Fr && y instanceof exports2.Fr) {
+      exports3.mul = (x, y) => {
+        if (x instanceof exports3.Fr && y instanceof exports3.Fr) {
           return x._op2(mod2._mclBnFr_mul, y);
         }
         throw new Error("mul:mismatch type");
       };
-      exports2.div = (x, y) => {
+      exports3.div = (x, y) => {
         if (x.constructor !== y.constructor) throw new Error("div:mismatch type");
-        if (x instanceof exports2.Fr) {
+        if (x instanceof exports3.Fr) {
           return x._op2(mod2._mclBnFr_div, y);
         }
         throw new Error("div:bad type");
       };
-      exports2.hashToFr = (s2) => {
-        const x = new exports2.Fr();
+      exports3.hashToFr = (s2) => {
+        const x = new exports3.Fr();
         x.setHashOf(s2);
         return x;
       };
     }
     const _cryptoGetRandomValues = function(p, n) {
       const a = new Uint8Array(n);
-      exports.getRandomValues(a);
+      exports2.getRandomValues(a);
       for (let i = 0; i < n; i++) {
-        exports.mod.HEAP8[p + i] = a[i];
+        exports2.mod.HEAP8[p + i] = a[i];
       }
     };
-    exports.setRandFunc = (f) => {
-      exports.getRandomValues = f;
+    exports2.setRandFunc = (f) => {
+      exports2.getRandomValues = f;
     };
-    exports.init = async (curveType = exports.ethMode ? exports.BLS12_381 : exports.BN254) => {
-      exports.curveType = curveType;
-      exports.getRandomValues = crypto.getRandomValues.bind(crypto);
-      exports.mod = await createModule({
+    exports2.init = async (curveType = exports2.ethMode ? exports2.BLS12_381 : exports2.BN254) => {
+      exports2.curveType = curveType;
+      exports2.getRandomValues = crypto.getRandomValues.bind(crypto);
+      exports2.mod = await createModule({
         cryptoGetRandomValues: _cryptoGetRandomValues
       });
-      blsSetup(exports, curveType);
+      blsSetup(exports2, curveType);
     };
-    return exports;
+    return exports2;
   };
   bls$1 = _blsSetupFactory;
   return bls$1;
@@ -18517,17 +18518,17 @@ var hasRequiredAssertString;
 function requireAssertString() {
   if (hasRequiredAssertString) return assertString.exports;
   hasRequiredAssertString = 1;
-  (function(module2, exports) {
-    Object.defineProperty(exports, "__esModule", {
+  (function(module2, exports2) {
+    Object.defineProperty(exports2, "__esModule", {
       value: true
     });
-    exports.default = assertString2;
+    exports2.default = assertString2;
     function assertString2(input) {
       if (input === void 0 || input === null) throw new TypeError("Expected a string but received a ".concat(input));
       if (input.constructor.name !== "String") throw new TypeError("Expected a string but received a ".concat(input.constructor.name));
     }
-    module2.exports = exports.default;
-    module2.exports.default = exports.default;
+    module2.exports = exports2.default;
+    module2.exports.default = exports2.default;
   })(assertString, assertString.exports);
   return assertString.exports;
 }
@@ -18553,11 +18554,11 @@ var hasRequiredIsLength;
 function requireIsLength() {
   if (hasRequiredIsLength) return isLength.exports;
   hasRequiredIsLength = 1;
-  (function(module2, exports) {
-    Object.defineProperty(exports, "__esModule", {
+  (function(module2, exports2) {
+    Object.defineProperty(exports2, "__esModule", {
       value: true
     });
-    exports.default = isLength2;
+    exports2.default = isLength2;
     var _assertString = _interopRequireDefault(/* @__PURE__ */ requireAssertString());
     function _interopRequireDefault(e) {
       return e && e.__esModule ? e : { default: e };
@@ -18592,8 +18593,8 @@ function requireIsLength() {
       }
       return isInsideRange;
     }
-    module2.exports = exports.default;
-    module2.exports.default = exports.default;
+    module2.exports = exports2.default;
+    module2.exports.default = exports2.default;
   })(isLength, isLength.exports);
   return isLength.exports;
 }
@@ -36310,7 +36311,7 @@ class Threshold {
   }
 }
 var scrypt$3 = { exports: {} };
-(function(module2, exports) {
+(function(module2, exports2) {
   (function(root) {
     const MAX_VALUE = 2147483647;
     function SHA2562(m) {
@@ -37646,19 +37647,19 @@ var constants = {
   MAX_SAFE_INTEGER: MAX_SAFE_INTEGER$1
 };
 var re$1 = { exports: {} };
-(function(module2, exports) {
+(function(module2, exports2) {
   const {
     MAX_SAFE_COMPONENT_LENGTH: MAX_SAFE_COMPONENT_LENGTH2,
     MAX_SAFE_BUILD_LENGTH: MAX_SAFE_BUILD_LENGTH2,
     MAX_LENGTH: MAX_LENGTH2
   } = constants;
   const debug2 = debug_1;
-  exports = module2.exports = {};
-  const re2 = exports.re = [];
-  const safeRe = exports.safeRe = [];
-  const src2 = exports.src = [];
-  const safeSrc = exports.safeSrc = [];
-  const t2 = exports.t = {};
+  exports2 = module2.exports = {};
+  const re2 = exports2.re = [];
+  const safeRe = exports2.safeRe = [];
+  const src2 = exports2.src = [];
+  const safeSrc = exports2.safeSrc = [];
+  const t2 = exports2.t = {};
   let R = 0;
   const LETTERDASHNUMBER = "[a-zA-Z0-9-]";
   const safeRegexReplacements = [
@@ -37711,18 +37712,18 @@ var re$1 = { exports: {} };
   createToken("COERCERTLFULL", src2[t2.COERCEFULL], true);
   createToken("LONETILDE", "(?:~>?)");
   createToken("TILDETRIM", `(\\s*)${src2[t2.LONETILDE]}\\s+`, true);
-  exports.tildeTrimReplace = "$1~";
+  exports2.tildeTrimReplace = "$1~";
   createToken("TILDE", `^${src2[t2.LONETILDE]}${src2[t2.XRANGEPLAIN]}$`);
   createToken("TILDELOOSE", `^${src2[t2.LONETILDE]}${src2[t2.XRANGEPLAINLOOSE]}$`);
   createToken("LONECARET", "(?:\\^)");
   createToken("CARETTRIM", `(\\s*)${src2[t2.LONECARET]}\\s+`, true);
-  exports.caretTrimReplace = "$1^";
+  exports2.caretTrimReplace = "$1^";
   createToken("CARET", `^${src2[t2.LONECARET]}${src2[t2.XRANGEPLAIN]}$`);
   createToken("CARETLOOSE", `^${src2[t2.LONECARET]}${src2[t2.XRANGEPLAINLOOSE]}$`);
   createToken("COMPARATORLOOSE", `^${src2[t2.GTLT]}\\s*(${src2[t2.LOOSEPLAIN]})$|^$`);
   createToken("COMPARATOR", `^${src2[t2.GTLT]}\\s*(${src2[t2.FULLPLAIN]})$|^$`);
   createToken("COMPARATORTRIM", `(\\s*)${src2[t2.GTLT]}\\s*(${src2[t2.LOOSEPLAIN]}|${src2[t2.XRANGEPLAIN]})`, true);
-  exports.comparatorTrimReplace = "$1$2$3";
+  exports2.comparatorTrimReplace = "$1$2$3";
   createToken("HYPHENRANGE", `^\\s*(${src2[t2.XRANGEPLAIN]})\\s+-\\s+(${src2[t2.XRANGEPLAIN]})\\s*$`);
   createToken("HYPHENRANGELOOSE", `^\\s*(${src2[t2.XRANGEPLAINLOOSE]})\\s+-\\s+(${src2[t2.XRANGEPLAINLOOSE]})\\s*$`);
   createToken("STAR", "(<|>)?=?\\s*\\*");
@@ -42485,15 +42486,15 @@ hooks.HTML5_FMT = {
   // <input type="month" />
 };
 const readFile = async (filePath, json = true) => {
-  return promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
+  return fs$2.promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
     return json ? JSON.parse(data) : data;
   });
 };
 const writeFile = async (filePath, data) => {
-  promises.writeFile(filePath, data, { encoding: "utf-8" });
+  fs$2.promises.writeFile(filePath, data, { encoding: "utf-8" });
 };
 const createSSVDir = async (outputFolder) => {
-  return promises.mkdir(outputFolder, { recursive: true });
+  return fs$2.promises.mkdir(outputFolder, { recursive: true });
 };
 const getSSVDir = async (outputFolder) => {
   if (!fs$2.existsSync(outputFolder)) {
@@ -42508,7 +42509,7 @@ const getKeyStoreFiles = async (keystorePath) => {
   let isFolder = false;
   let files;
   try {
-    const dir = await promises.opendir(keystorePath);
+    const dir = await fs$2.promises.opendir(keystorePath);
     isFolder = true;
     files = [];
     for await (const dirent of dir) {
@@ -43169,59 +43170,59 @@ var hasRequiredCommonjsBrowser;
 function requireCommonjsBrowser() {
   if (hasRequiredCommonjsBrowser) return commonjsBrowser;
   hasRequiredCommonjsBrowser = 1;
-  (function(exports) {
-    Object.defineProperty(exports, "__esModule", {
+  (function(exports2) {
+    Object.defineProperty(exports2, "__esModule", {
       value: true
     });
-    Object.defineProperty(exports, "NIL", {
+    Object.defineProperty(exports2, "NIL", {
       enumerable: true,
       get: function get2() {
         return _nil.default;
       }
     });
-    Object.defineProperty(exports, "parse", {
+    Object.defineProperty(exports2, "parse", {
       enumerable: true,
       get: function get2() {
         return _parse.default;
       }
     });
-    Object.defineProperty(exports, "stringify", {
+    Object.defineProperty(exports2, "stringify", {
       enumerable: true,
       get: function get2() {
         return _stringify.default;
       }
     });
-    Object.defineProperty(exports, "v1", {
+    Object.defineProperty(exports2, "v1", {
       enumerable: true,
       get: function get2() {
         return _v.default;
       }
     });
-    Object.defineProperty(exports, "v3", {
+    Object.defineProperty(exports2, "v3", {
       enumerable: true,
       get: function get2() {
         return _v2.default;
       }
     });
-    Object.defineProperty(exports, "v4", {
+    Object.defineProperty(exports2, "v4", {
       enumerable: true,
       get: function get2() {
         return _v3.default;
       }
     });
-    Object.defineProperty(exports, "v5", {
+    Object.defineProperty(exports2, "v5", {
       enumerable: true,
       get: function get2() {
         return _v4.default;
       }
     });
-    Object.defineProperty(exports, "validate", {
+    Object.defineProperty(exports2, "validate", {
       enumerable: true,
       get: function get2() {
         return _validate.default;
       }
     });
-    Object.defineProperty(exports, "version", {
+    Object.defineProperty(exports2, "version", {
       enumerable: true,
       get: function get2() {
         return _version.default;
@@ -43313,36 +43314,36 @@ var hasRequiredUtils$1;
 function requireUtils$1() {
   if (hasRequiredUtils$1) return utils$2;
   hasRequiredUtils$1 = 1;
-  (function(exports) {
+  (function(exports2) {
     /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.randomBytes = exports.wrapXOFConstructorWithOpts = exports.wrapConstructorWithOpts = exports.wrapConstructor = exports.checkOpts = exports.Hash = exports.concatBytes = exports.toBytes = exports.utf8ToBytes = exports.asyncLoop = exports.nextTick = exports.hexToBytes = exports.bytesToHex = exports.byteSwap32 = exports.byteSwapIfBE = exports.byteSwap = exports.isLE = exports.rotl = exports.rotr = exports.createView = exports.u32 = exports.u8 = exports.isBytes = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.randomBytes = exports2.wrapXOFConstructorWithOpts = exports2.wrapConstructorWithOpts = exports2.wrapConstructor = exports2.checkOpts = exports2.Hash = exports2.concatBytes = exports2.toBytes = exports2.utf8ToBytes = exports2.asyncLoop = exports2.nextTick = exports2.hexToBytes = exports2.bytesToHex = exports2.byteSwap32 = exports2.byteSwapIfBE = exports2.byteSwap = exports2.isLE = exports2.rotl = exports2.rotr = exports2.createView = exports2.u32 = exports2.u8 = exports2.isBytes = void 0;
     const crypto_1 = /* @__PURE__ */ requireCrypto();
     const _assert_js_1 = /* @__PURE__ */ require_assert();
     function isBytes2(a) {
       return a instanceof Uint8Array || a != null && typeof a === "object" && a.constructor.name === "Uint8Array";
     }
-    exports.isBytes = isBytes2;
+    exports2.isBytes = isBytes2;
     const u8 = (arr) => new Uint8Array(arr.buffer, arr.byteOffset, arr.byteLength);
-    exports.u8 = u8;
+    exports2.u8 = u8;
     const u322 = (arr) => new Uint32Array(arr.buffer, arr.byteOffset, Math.floor(arr.byteLength / 4));
-    exports.u32 = u322;
+    exports2.u32 = u322;
     const createView2 = (arr) => new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
-    exports.createView = createView2;
+    exports2.createView = createView2;
     const rotr2 = (word, shift) => word << 32 - shift | word >>> shift;
-    exports.rotr = rotr2;
+    exports2.rotr = rotr2;
     const rotl = (word, shift) => word << shift | word >>> 32 - shift >>> 0;
-    exports.rotl = rotl;
-    exports.isLE = new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68;
+    exports2.rotl = rotl;
+    exports2.isLE = new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68;
     const byteSwap2 = (word) => word << 24 & 4278190080 | word << 8 & 16711680 | word >>> 8 & 65280 | word >>> 24 & 255;
-    exports.byteSwap = byteSwap2;
-    exports.byteSwapIfBE = exports.isLE ? (n) => n : (n) => (0, exports.byteSwap)(n);
+    exports2.byteSwap = byteSwap2;
+    exports2.byteSwapIfBE = exports2.isLE ? (n) => n : (n) => (0, exports2.byteSwap)(n);
     function byteSwap322(arr) {
       for (let i = 0; i < arr.length; i++) {
-        arr[i] = (0, exports.byteSwap)(arr[i]);
+        arr[i] = (0, exports2.byteSwap)(arr[i]);
       }
     }
-    exports.byteSwap32 = byteSwap322;
+    exports2.byteSwap32 = byteSwap322;
     const hexes2 = /* @__PURE__ */ Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, "0"));
     function bytesToHex2(bytes) {
       (0, _assert_js_1.bytes)(bytes);
@@ -43352,7 +43353,7 @@ function requireUtils$1() {
       }
       return hex;
     }
-    exports.bytesToHex = bytesToHex2;
+    exports2.bytesToHex = bytesToHex2;
     const asciis = { _0: 48, _9: 57, _A: 65, _F: 70, _a: 97, _f: 102 };
     function asciiToBase16(char) {
       if (char >= asciis._0 && char <= asciis._9)
@@ -43382,10 +43383,10 @@ function requireUtils$1() {
       }
       return array;
     }
-    exports.hexToBytes = hexToBytes2;
+    exports2.hexToBytes = hexToBytes2;
     const nextTick = async () => {
     };
-    exports.nextTick = nextTick;
+    exports2.nextTick = nextTick;
     async function asyncLoop(iters, tick, cb) {
       let ts = Date.now();
       for (let i = 0; i < iters; i++) {
@@ -43393,24 +43394,24 @@ function requireUtils$1() {
         const diff2 = Date.now() - ts;
         if (diff2 >= 0 && diff2 < tick)
           continue;
-        await (0, exports.nextTick)();
+        await (0, exports2.nextTick)();
         ts += diff2;
       }
     }
-    exports.asyncLoop = asyncLoop;
+    exports2.asyncLoop = asyncLoop;
     function utf8ToBytes2(str) {
       if (typeof str !== "string")
         throw new Error(`utf8ToBytes expected string, got ${typeof str}`);
       return new Uint8Array(new TextEncoder().encode(str));
     }
-    exports.utf8ToBytes = utf8ToBytes2;
+    exports2.utf8ToBytes = utf8ToBytes2;
     function toBytes2(data) {
       if (typeof data === "string")
         data = utf8ToBytes2(data);
       (0, _assert_js_1.bytes)(data);
       return data;
     }
-    exports.toBytes = toBytes2;
+    exports2.toBytes = toBytes2;
     function concatBytes(...arrays) {
       let sum = 0;
       for (let i = 0; i < arrays.length; i++) {
@@ -43426,14 +43427,14 @@ function requireUtils$1() {
       }
       return res;
     }
-    exports.concatBytes = concatBytes;
+    exports2.concatBytes = concatBytes;
     class Hash2 {
       // Safe version that clones internal state
       clone() {
         return this._cloneInto();
       }
     }
-    exports.Hash = Hash2;
+    exports2.Hash = Hash2;
     const toStr = {}.toString;
     function checkOpts(defaults2, opts) {
       if (opts !== void 0 && toStr.call(opts) !== "[object Object]")
@@ -43441,7 +43442,7 @@ function requireUtils$1() {
       const merged = Object.assign(defaults2, opts);
       return merged;
     }
-    exports.checkOpts = checkOpts;
+    exports2.checkOpts = checkOpts;
     function wrapConstructor(hashCons) {
       const hashC = (msg) => hashCons().update(toBytes2(msg)).digest();
       const tmp = hashCons();
@@ -43450,7 +43451,7 @@ function requireUtils$1() {
       hashC.create = () => hashCons();
       return hashC;
     }
-    exports.wrapConstructor = wrapConstructor;
+    exports2.wrapConstructor = wrapConstructor;
     function wrapConstructorWithOpts(hashCons) {
       const hashC = (msg, opts) => hashCons(opts).update(toBytes2(msg)).digest();
       const tmp = hashCons({});
@@ -43459,7 +43460,7 @@ function requireUtils$1() {
       hashC.create = (opts) => hashCons(opts);
       return hashC;
     }
-    exports.wrapConstructorWithOpts = wrapConstructorWithOpts;
+    exports2.wrapConstructorWithOpts = wrapConstructorWithOpts;
     function wrapXOFConstructorWithOpts(hashCons) {
       const hashC = (msg, opts) => hashCons(opts).update(toBytes2(msg)).digest();
       const tmp = hashCons({});
@@ -43468,14 +43469,14 @@ function requireUtils$1() {
       hashC.create = (opts) => hashCons(opts);
       return hashC;
     }
-    exports.wrapXOFConstructorWithOpts = wrapXOFConstructorWithOpts;
+    exports2.wrapXOFConstructorWithOpts = wrapXOFConstructorWithOpts;
     function randomBytes(bytesLength = 32) {
       if (crypto_1.crypto && typeof crypto_1.crypto.getRandomValues === "function") {
         return crypto_1.crypto.getRandomValues(new Uint8Array(bytesLength));
       }
       throw new Error("crypto.getRandomValues must be defined");
     }
-    exports.randomBytes = randomBytes;
+    exports2.randomBytes = randomBytes;
   })(utils$2);
   return utils$2;
 }
@@ -43504,36 +43505,36 @@ var hasRequiredUtils;
 function requireUtils() {
   if (hasRequiredUtils) return utils$1.exports;
   hasRequiredUtils = 1;
-  (function(module2, exports) {
+  (function(module2, exports2) {
     var __importDefault = utils && utils.__importDefault || function(mod2) {
       return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.crypto = exports.utf8ToBytes = exports.createView = exports.concatBytes = exports.toHex = exports.bytesToHex = exports.assertBytes = exports.assertBool = void 0;
-    exports.bytesToUtf8 = bytesToUtf8;
-    exports.hexToBytes = hexToBytes2;
-    exports.equalsBytes = equalsBytes;
-    exports.wrapHash = wrapHash;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.crypto = exports2.utf8ToBytes = exports2.createView = exports2.concatBytes = exports2.toHex = exports2.bytesToHex = exports2.assertBytes = exports2.assertBool = void 0;
+    exports2.bytesToUtf8 = bytesToUtf8;
+    exports2.hexToBytes = hexToBytes2;
+    exports2.equalsBytes = equalsBytes;
+    exports2.wrapHash = wrapHash;
     const _assert_1 = __importDefault(/* @__PURE__ */ require_assert());
     const utils_1 = /* @__PURE__ */ requireUtils$1();
     const assertBool = _assert_1.default.bool;
-    exports.assertBool = assertBool;
+    exports2.assertBool = assertBool;
     const assertBytes = _assert_1.default.bytes;
-    exports.assertBytes = assertBytes;
+    exports2.assertBytes = assertBytes;
     var utils_2 = /* @__PURE__ */ requireUtils$1();
-    Object.defineProperty(exports, "bytesToHex", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "bytesToHex", { enumerable: true, get: function() {
       return utils_2.bytesToHex;
     } });
-    Object.defineProperty(exports, "toHex", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "toHex", { enumerable: true, get: function() {
       return utils_2.bytesToHex;
     } });
-    Object.defineProperty(exports, "concatBytes", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "concatBytes", { enumerable: true, get: function() {
       return utils_2.concatBytes;
     } });
-    Object.defineProperty(exports, "createView", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "createView", { enumerable: true, get: function() {
       return utils_2.createView;
     } });
-    Object.defineProperty(exports, "utf8ToBytes", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "utf8ToBytes", { enumerable: true, get: function() {
       return utils_2.utf8ToBytes;
     } });
     function bytesToUtf8(data) {
@@ -43563,7 +43564,7 @@ function requireUtils() {
         return hash2(msg);
       };
     }
-    exports.crypto = (() => {
+    exports2.crypto = (() => {
       const webCrypto = typeof globalThis === "object" && "crypto" in globalThis ? globalThis.crypto : void 0;
       const nodeRequire = typeof commonjsRequire === "function" && commonjsRequire.bind(module2);
       return {
@@ -43582,9 +43583,9 @@ var hasRequiredHmac$1;
 function requireHmac$1() {
   if (hasRequiredHmac$1) return hmac$1;
   hasRequiredHmac$1 = 1;
-  (function(exports) {
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.hmac = exports.HMAC = void 0;
+  (function(exports2) {
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.hmac = exports2.HMAC = void 0;
     const _assert_js_1 = /* @__PURE__ */ require_assert();
     const utils_js_1 = /* @__PURE__ */ requireUtils$1();
     class HMAC extends utils_js_1.Hash {
@@ -43648,10 +43649,10 @@ function requireHmac$1() {
         this.iHash.destroy();
       }
     }
-    exports.HMAC = HMAC;
+    exports2.HMAC = HMAC;
     const hmac2 = (hash2, key, message) => new HMAC(hash2, key).update(message).digest();
-    exports.hmac = hmac2;
-    exports.hmac.create = (hash2, key) => new HMAC(hash2, key);
+    exports2.hmac = hmac2;
+    exports2.hmac.create = (hash2, key) => new HMAC(hash2, key);
   })(hmac$1);
   return hmac$1;
 }
@@ -45235,7 +45236,7 @@ var hasRequiredFunctional;
 function requireFunctional() {
   if (hasRequiredFunctional) return functional;
   hasRequiredFunctional = 1;
-  (function(exports) {
+  (function(exports2) {
     var __awaiter2 = functional && functional.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function(resolve) {
@@ -45263,22 +45264,22 @@ function requireFunctional() {
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.decrypt = exports.verifyPassword = exports.create = exports.defaultAes128CtrModule = exports.defaultSha256Module = exports.defaultScryptModule = exports.defaultPbkdfModule = void 0;
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.decrypt = exports2.verifyPassword = exports2.create = exports2.defaultAes128CtrModule = exports2.defaultSha256Module = exports2.defaultScryptModule = exports2.defaultPbkdfModule = void 0;
     const uuid_1 = /* @__PURE__ */ requireCommonjsBrowser();
     const kdf_1 = requireKdf();
-    Object.defineProperty(exports, "defaultPbkdfModule", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "defaultPbkdfModule", { enumerable: true, get: function() {
       return kdf_1.defaultPbkdfModule;
     } });
-    Object.defineProperty(exports, "defaultScryptModule", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "defaultScryptModule", { enumerable: true, get: function() {
       return kdf_1.defaultScryptModule;
     } });
     const checksum_1 = requireChecksum();
-    Object.defineProperty(exports, "defaultSha256Module", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "defaultSha256Module", { enumerable: true, get: function() {
       return checksum_1.defaultSha256Module;
     } });
     const cipher_1 = requireCipher$1();
-    Object.defineProperty(exports, "defaultAes128CtrModule", { enumerable: true, get: function() {
+    Object.defineProperty(exports2, "defaultAes128CtrModule", { enumerable: true, get: function() {
       return cipher_1.defaultAes128CtrModule;
     } });
     const password_1 = requirePassword();
@@ -45313,7 +45314,7 @@ function requireFunctional() {
         };
       });
     }
-    exports.create = create;
+    exports2.create = create;
     function verifyPassword(keystore, password2) {
       return __awaiter2(this, void 0, void 0, function* () {
         const decryptionKey = yield (0, kdf_1.kdf)(keystore.crypto.kdf, (0, password_1.normalizePassword)(password2));
@@ -45321,7 +45322,7 @@ function requireFunctional() {
         return (0, checksum_1.verifyChecksum)(keystore.crypto.checksum, decryptionKey, ciphertext);
       });
     }
-    exports.verifyPassword = verifyPassword;
+    exports2.verifyPassword = verifyPassword;
     function decrypt2(keystore, password2) {
       return __awaiter2(this, void 0, void 0, function* () {
         const decryptionKey = yield (0, kdf_1.kdf)(keystore.crypto.kdf, (0, password_1.normalizePassword)(password2));
@@ -45332,7 +45333,7 @@ function requireFunctional() {
         return (0, cipher_1.cipherDecrypt)(keystore.crypto.cipher, decryptionKey.slice(0, 16));
       });
     }
-    exports.decrypt = decrypt2;
+    exports2.decrypt = decrypt2;
   })(functional);
   return functional;
 }
@@ -46637,7 +46638,7 @@ var hasRequiredLib$1;
 function requireLib$1() {
   if (hasRequiredLib$1) return lib$1;
   hasRequiredLib$1 = 1;
-  (function(exports) {
+  (function(exports2) {
     var __createBinding = lib$1 && lib$1.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -46651,14 +46652,14 @@ function requireLib$1() {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
     });
-    var __exportStar = lib$1 && lib$1.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
+    var __exportStar = lib$1 && lib$1.__exportStar || function(m, exports3) {
+      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports3, p)) __createBinding(exports3, m, p);
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    __exportStar(requireTypes(), exports);
-    __exportStar(requireFunctional(), exports);
-    __exportStar(require_class(), exports);
-    __exportStar(requireSchemaValidation(), exports);
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    __exportStar(requireTypes(), exports2);
+    __exportStar(requireFunctional(), exports2);
+    __exportStar(require_class(), exports2);
+    __exportStar(requireSchemaValidation(), exports2);
   })(lib$1);
   return lib$1;
 }
@@ -64840,6 +64841,4 @@ async function main(interactive) {
     console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }
 }
-export {
-  main as m
-};
+exports.main = main;
