@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 "use strict";
-const cliShared = require("./cli-shared-BdSt8kpa.js");
+const cliShared = require("./cli-shared-MRS_l6OS.js");
 void cliShared.main(true);
