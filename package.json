@@ -32,6 +32,11 @@
       "node_modules/lodash-es/**/*.js"
     ]
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@ssv-labs/ssv-sdk"
+    ]
+  },
   "scripts": {
     "dev:cli": "npx tsx src/cli.ts",
     "dev:icli": "npx tsx src/cli-interactive.ts",
@@ -66,7 +71,7 @@
   },
   "dependencies": {
     "@chainsafe/bls-keystore": "^3.1.0",
-    "@ssv-labs/ssv-sdk": "0.1.0",
+    "@ssv-labs/ssv-sdk": "github:ssvlabs/ssv-sdk",
     "@types/node-forge": "^1.3.11",
     "argparse": "^2.0.1",
     "assert": "^2.1.0",
@@ -75,6 +80,7 @@
     "moment": "^2.30.1",
     "node-forge": "^1.3.1",
     "prompts": "https://github.com/ssvlabs/prompts.git",
+    "viem": "^2.47.5",
     "vitest": "^3.2.4"
   }
 }

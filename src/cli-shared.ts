@@ -32,11 +32,13 @@ export default async function main(interactive: boolean): Promise<any> {
 
   const command = new SSVKeysCommand(interactive);
   try {
-    const outputFile = await command.execute();
-    console.debug(
-      "\nKey distribution successful! Find your key shares file at:"
-    );
-    console.debug(`${colors.bgYellow(colors.black(outputFile))}`);
+    const output = await command.execute();
+    if (typeof output === "string" && output.trim().length > 0) {
+      console.debug(
+        "\nKey distribution successful! Find your key shares file at:"
+      );
+      console.debug(`${colors.bgYellow(colors.black(output))}`);
+    }
   } catch (error: any) {
     console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }

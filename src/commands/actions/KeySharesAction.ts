@@ -28,6 +28,15 @@ export class KeySharesAction extends BaseAction {
       action: "shares",
       description:
         "Generate shares for a list of operators from a validator keystore file",
+      example: `Example:
+  ssv-keys shares \\
+    -ks "./validator_keys" \\
+    -ps "KEYSTORE_PASSWORD" \\
+    -oids "5,6,7,8" \\
+    -oks "LS0...,LS0...,LS0...,LS0..." \\
+    -oa "0x1111111111111111111111111111111111111111" \\
+    -on "105" \\
+    -of "./tmp-keyshares-hoodi"`,
       arguments: [
         keystoreArgument,
         keystorePasswordArgument,

@@ -5,3 +5,7 @@ export { default as ownerAddressArgument } from './owner-address';
 export { default as keystorePasswordArgument } from './password';
 export { default as outputFolderArgument } from './output-folder';
 export { default as operatorPublicKeysArgument } from './operator-public-keys';
+export { default as networkArgument } from './network';
+export { default as nodeUrlArgument } from './node-url';
+export { default as outputPathArgument } from './output-path';
+export { default as scannerOperatorIdsArgument } from './scanner-operator-ids';

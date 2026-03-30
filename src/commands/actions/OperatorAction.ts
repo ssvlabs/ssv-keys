@@ -1,0 +1,45 @@
+import { BaseAction } from "./BaseAction";
+import {
+  nodeUrlArgument,
+  outputPathArgument,
+  networkArgument,
+  ownerAddressArgument,
+} from "./arguments";
+import { OperatorScanner } from "../../scanner";
+
+export class OperatorAction extends BaseAction {
+  static override get options(): any {
+    return {
+      action: "operator",
+      description: "Resolve owner operator public keys using SSV SDK scanner flow",
+      example: `Example:
+  ssv-keys operator \\
+    -n "https://ethereum-hoodi-rpc.publicnode.com" \\
+    -nw hoodi \\
+    -oa "0x1111111111111111111111111111111111111111" \\
+    -o "./data"`,
+      arguments: [
+        networkArgument,
+        nodeUrlArgument,
+        ownerAddressArgument,
+        outputPathArgument,
+      ],
+    };
+  }
+
+  override async execute(): Promise<void> {
+    const operatorScanner = new OperatorScanner({
+      network: this.args.network,
+      nodeUrl: this.args.node_url,
+      ownerAddress: this.args.owner_address,
+    });
+
+    const result = await operatorScanner.run(this.args.output_path, true);
+    if (result) {
+      console.log(`\nOperator data has been saved to:\n ${result}`);
+      return;
+    }
+
+    console.log("\nNo operator data found for this owner. No output file was created.");
+  }
+}

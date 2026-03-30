@@ -1,5 +1,10 @@
 import prompts from "prompts";
-import { ArgumentParser, SubParser } from "argparse";
+import {
+  ArgumentParser,
+  RawDescriptionHelpFormatter,
+  SubParser,
+} from "argparse";
+import path from "path";
 import { BaseAction } from "./actions/BaseAction";
 
 const ordinalSuffixOf = (i: number): string => {
@@ -17,6 +22,24 @@ const ordinalSuffixOf = (i: number): string => {
   return i + "th";
 };
 
+const HELP_MAX_POSITION = 56;
+
+const RawDescriptionHelpFormatterCtor =
+  RawDescriptionHelpFormatter as unknown as {
+    new (options?: Record<string, unknown>): {
+      [key: string]: unknown;
+    };
+  };
+
+class AlignedHelpFormatter extends RawDescriptionHelpFormatterCtor {
+  constructor(options: Record<string, unknown> = {}) {
+    super({
+      ...options,
+      max_help_position: HELP_MAX_POSITION,
+    });
+  }
+}
+
 export class BaseCommand extends ArgumentParser {
   /**
    * List of all supported command actions.
@@ -29,6 +52,7 @@ export class BaseCommand extends ArgumentParser {
   protected subParserOptions = {
     title: "Actions",
     description: "Possible actions",
+    metavar: "COMMAND",
     help: 'To get more detailed help: "<action> --help". ',
   };
 
@@ -44,8 +68,20 @@ export class BaseCommand extends ArgumentParser {
    * @param interactive if the command should be interactive instead of classic CLI
    * @param options argparse options
    */
-  constructor(interactive = false, options = undefined) {
-    super(options);
+  constructor(
+    interactiveOrOptions: boolean | Record<string, unknown> = false,
+    options: Record<string, unknown> | undefined = undefined
+  ) {
+    let interactive = false;
+    let parserOptions = options;
+
+    if (typeof interactiveOrOptions === "boolean") {
+      interactive = interactiveOrOptions;
+    } else {
+      parserOptions = interactiveOrOptions;
+    }
+
+    super(parserOptions);
     this.interactive = interactive;
   }
 
@@ -57,7 +93,13 @@ export class BaseCommand extends ArgumentParser {
     for (const action of this.actions) {
       const actionOptions = action.options;
       const actionParser: ArgumentParser = this.subParsers.add_parser(
-        actionOptions.action
+        actionOptions.action,
+        {
+          help: actionOptions.description || "",
+          description: actionOptions.description || "",
+          epilog: actionOptions.example || "",
+          formatter_class: AlignedHelpFormatter,
+        }
       );
       for (const argument of actionOptions.arguments) {
         actionParser.add_argument(
@@ -382,12 +424,60 @@ export class BaseCommand extends ArgumentParser {
     // Non-interactive execution
     // Add actions
     this.addActionsSubParsers();
+
+    if (this.isRootHelpRequest()) {
+      this.printRootHelp();
+      return;
+    }
+
     // Execute action
     const args = this.parse_args();
     if (!args.func) {
-      this.print_help();
+      this.printRootHelp();
       return;
     }
     return args.func(args);
+  }
+
+  private isRootHelpRequest(): boolean {
+    const userArgs = process.argv.slice(2);
+    const asksForHelp = userArgs.includes("-h") || userArgs.includes("--help");
+    if (!asksForHelp) {
+      return false;
+    }
+
+    const actionNames = this.actions.map((action: BaseAction) => action.options.action);
+    return !userArgs.some((arg) => actionNames.includes(arg));
+  }
+
+  private printRootHelp(): void {
+    const scriptName = path.basename(process.argv[1] || "cli.js");
+    const actionNames = this.actions.map((action: BaseAction) => action.options.action).join(",");
+
+    console.log(`usage: ${scriptName} [-h] <command> ...`);
+    console.log("");
+    console.log("optional arguments:");
+    console.log("  -h, --help            show this help message and exit");
+    console.log("");
+    console.log("Actions:");
+    console.log("  Possible actions");
+    console.log("");
+
+    const lines = this.actions.map((action: BaseAction) => {
+      return {
+        action: action.options.action,
+        description: action.options.description || "",
+      };
+    });
+
+    const maxActionLength = Math.max(...lines.map((line) => line.action.length), 7);
+    for (const line of lines) {
+      const paddedAction = line.action.padEnd(maxActionLength, " ");
+      console.log(`  ${paddedAction}  ${line.description}`);
+    }
+
+    console.log("");
+    console.log(`Use "${scriptName} <command> --help" for detailed options.`);
+    console.log(`Available commands: ${actionNames}.`);
   }
 }
