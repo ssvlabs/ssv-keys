@@ -1,8 +1,6 @@
 import { SSVKeysException } from "@ssv-labs/ssv-sdk";
 import { isOperatorsLengthValid } from "../validators";
 
-const uniqueOperatorIds: any = {};
-
 export default {
   arg1: "-oids",
   arg2: "--operator-ids",
@@ -18,20 +16,23 @@ export default {
       type: "number",
       message: "Enter operator ID for {{index}} operator",
       validate: (operatorId: number): boolean | string => {
-        if (uniqueOperatorIds[operatorId]) {
-          return "This operator ID is already used";
-        }
-        const returnValue = !(Number.isInteger(operatorId) && operatorId > 0)
+        return !(Number.isSafeInteger(operatorId) && operatorId > 0)
           ? "Invalid operator ID format"
           : true;
-        if (returnValue === true) {
-          uniqueOperatorIds[operatorId] = true;
-        }
-        return returnValue;
       },
     },
-    validateList: (items: []) => {
-      if (!isOperatorsLengthValid(items.length)) {
+    validateList: (items: unknown[]) => {
+      const normalizedIds = items.map((item) => Number(item));
+
+      if (normalizedIds.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
+        throw new SSVKeysException("Invalid operator ID format");
+      }
+
+      if (new Set(normalizedIds).size !== normalizedIds.length) {
+        throw new SSVKeysException("This operator ID is already used");
+      }
+
+      if (!isOperatorsLengthValid(normalizedIds.length)) {
         throw new SSVKeysException(
           "Invalid operators amount. Enter an 3f+1 compatible amount of operator ids"
         );

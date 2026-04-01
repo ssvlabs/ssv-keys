@@ -4,12 +4,12 @@ export default {
   options: {
     required: false,
     type: String,
-    help: "The output path for the operator data",
+    help: "Output directory for the operator data file",
   },
   interactive: {
     options: {
       type: "text",
-      message: "Optional output path for operator data (leave blank for default)",
+      message: "Optional output directory for operator data (leave blank for default)",
       required: false,
     },
   },

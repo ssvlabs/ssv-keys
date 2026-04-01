@@ -1,7 +1,5 @@
 import { operatorPublicKeyValidator } from '../validators';
 
-const uniqueOperators: any = {};
-
 export default {
   arg1: '-oks',
   arg2: '--operator-keys',
@@ -15,11 +13,8 @@ export default {
       type: 'text',
       message: 'Enter operator public key for {{index}} operator',
       validate: (value: string) => {
-        if (uniqueOperators[value]) {
-          return 'This operator already used';
-        }
         try {
-          uniqueOperators[value] = operatorPublicKeyValidator(value);
+          operatorPublicKeyValidator(value);
           return true;
         } catch (e: any) {
           return e.message;

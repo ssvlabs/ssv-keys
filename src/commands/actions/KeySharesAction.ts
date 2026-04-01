@@ -13,6 +13,7 @@ import {
   operatorPublicKeysArgument,
 } from "./arguments";
 import { getFilePath, getKeyStoreFiles, readFile, writeFile } from "../../file.helper";
+import { parseOperatorIdsCsv } from "../../shared/operator-ids";
 
 type Operator = {
   id: number;
@@ -73,13 +74,14 @@ export class KeySharesAction extends BaseAction {
     const keystorePath = sanitizePath(String(this.args.keystore).trim());
     const { files } = await getKeyStoreFiles(keystorePath);
     const validatedFiles = await this.validateKeystoreFiles(files);
+    const operators = this.getOperators();
 
     const singleKeySharesList = await Promise.all(
       validatedFiles.map((file, index) =>
         this.processFile(
           file,
           this.args.password,
-          this.getOperators(),
+          operators,
           this.args.owner_address,
           this.args.owner_nonce + index
         )
@@ -122,8 +124,10 @@ export class KeySharesAction extends BaseAction {
   }
 
   private getOperators(): Operator[] {
-    const operatorIds = this.args.operator_ids.split(",");
-    const operatorKeys = this.args.operator_keys.split(",");
+    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
+    const operatorKeys = String(this.args.operator_keys)
+      .split(",")
+      .map((operatorKey) => operatorKey.trim());
 
     if (operatorIds.length !== operatorKeys.length) {
       throw new OperatorsCountsMismatchError(
@@ -133,20 +137,17 @@ export class KeySharesAction extends BaseAction {
       );
     }
 
-    if (operatorIds.includes("") || operatorKeys.includes("")) {
+    if (operatorKeys.includes("")) {
       throw new SSVKeysException(
-        "Operator IDs or keys cannot contain empty strings."
+        "Operator keys cannot contain empty strings."
       );
     }
 
-    return operatorIds.map((idString: string, index: number) => {
-      const id = parseInt(idString, 10);
-      if (isNaN(id)) {
-        throw new SSVKeysException(
-          `Invalid operator ID at position ${index}: ${idString}`
-        );
-      }
+    if (new Set(operatorKeys).size !== operatorKeys.length) {
+      throw new SSVKeysException("Operator keys must be unique.");
+    }
 
+    return operatorIds.map((id: number, index: number) => {
       const operatorKey = operatorKeys[index];
       return { id, operatorKey };
     });
