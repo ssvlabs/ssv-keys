@@ -22,9 +22,7 @@ export const createSdkForNetwork = ({
 }: CreateSdkForNetworkParams): SSVSDK => {
   const normalizedNodeUrl = nodeUrl.trim();
   const subgraphApiKey = getSubgraphApiKey();
-  const cacheKey = `${network}:${normalizedNodeUrl}:${
-    subgraphApiKey ? "with-key" : "without-key"
-  }`;
+  const cacheKey = `${network}:${normalizedNodeUrl}:${subgraphApiKey ?? "without-key"}`;
 
   const cachedSdk = sdkCache.get(cacheKey);
   if (cachedSdk) {
