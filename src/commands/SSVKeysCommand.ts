@@ -11,8 +11,6 @@ export class SSVKeysCommand extends BaseCommand {
    */
   protected actions = [KeySharesAction, NonceAction, ClusterAction, OperatorAction];
 
-  protected useAction = "shares";
-
   /**
    * Add more specific help.
    */

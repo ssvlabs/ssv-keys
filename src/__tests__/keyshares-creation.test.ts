@@ -70,7 +70,7 @@ describe("Keyshares Creation", async () => {
     const ownerNonce = 1;
     const password = "123123123";
 
-    const cliPath = path.join(__dirname, "../../dist/cli-interactive.js");
+    const cliPath = path.join(__dirname, "../../dist/cli-binary.js");
 
     // Build CLI arguments
     const args = [

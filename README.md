@@ -43,6 +43,22 @@ If you want to run a compiled version (easier option than the CLI)
    ```bash
    ./ssv-keys-mac
    ```
+   The executable supports both interactive and command modes:
+   * Interactive mode (choose action from prompt):
+     ```bash
+     ./ssv-keys-mac
+     ```
+   * Command mode (explicit action):
+     ```bash
+     ./ssv-keys-mac shares --help
+     ./ssv-keys-mac nonce --help
+     ./ssv-keys-mac cluster --help
+     ./ssv-keys-mac operator --help
+     ```
+   * Legacy shares mode is still supported for backward compatibility:
+     ```bash
+     ./ssv-keys-mac --keystore=./validator_keys --password=... --operator-ids=... --operator-keys=... --owner-address=... --owner-nonce=...
+     ```
 7. If your operating system prevents you from running the executable, you can open it from the file manager (Finder in case of macOS), right-click on it, and click the `Open` menu. Once open click the `Open` or `allow` button when you are asked to do so. After this, go back to the console and try to run it again.
 
 ## Option 2: Running from the CLI
