@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-"use strict";
-const require$$0$1 = require("util");
-const require$$0 = require("os");
-const require$$0$2 = require("readline");
-const fs$2 = require("fs");
-const path$1 = require("path");
-const crypto$1$1 = require("crypto");
+import require$$0$1 from "util";
+import require$$0 from "os";
+import require$$0$2 from "readline";
+import fs$2, { promises } from "fs";
+import path$1 from "path";
+import crypto$1$1 from "crypto";
 var commonjsGlobal$1 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs$1(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -19749,7 +19748,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-B58mx37Z.js"));
+    const { offchainLookup, offchainLookupSignature } = await import("./ccip-etXuPe6N.mjs");
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -67040,15 +67039,15 @@ hooks.HTML5_FMT = {
   // <input type="month" />
 };
 const readFile = async (filePath, json = true) => {
-  return fs$2.promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
+  return promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
     return json ? JSON.parse(data) : data;
   });
 };
 const writeFile = async (filePath, data) => {
-  return fs$2.promises.writeFile(filePath, data, { encoding: "utf-8" });
+  return promises.writeFile(filePath, data, { encoding: "utf-8" });
 };
 const createSSVDir = async (outputFolder) => {
-  return fs$2.promises.mkdir(outputFolder, { recursive: true });
+  return promises.mkdir(outputFolder, { recursive: true });
 };
 const getSSVDir = async (outputFolder) => {
   if (!fs$2.existsSync(outputFolder)) {
@@ -67063,7 +67062,7 @@ const getKeyStoreFiles = async (keystorePath) => {
   let isFolder = false;
   let files;
   try {
-    const dir = await fs$2.promises.opendir(keystorePath);
+    const dir = await promises.opendir(keystorePath);
     isFolder = true;
     files = [];
     for await (const dirent of dir) {
@@ -89808,7 +89807,6 @@ class SSVKeysCommand extends BaseCommand {
   constructor(interactive = false, options2 = void 0) {
     super(interactive, options2);
     this.actions = [KeySharesAction, NonceAction, ClusterAction, OperatorAction];
-    this.useAction = "shares";
     this.subParserOptions.help += 'Example: "pnpm cli shares --help"';
   }
 }
@@ -89850,16 +89848,18 @@ async function main(interactive) {
     console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }
 }
-exports.BaseError = BaseError$1;
-exports.HttpRequestError = HttpRequestError;
-exports.call = call;
-exports.concat = concat$1;
-exports.decodeErrorResult = decodeErrorResult;
-exports.encodeAbiParameters = encodeAbiParameters;
-exports.getUrl = getUrl;
-exports.isAddressEqual = isAddressEqual;
-exports.isHex = isHex;
-exports.localBatchGatewayRequest = localBatchGatewayRequest;
-exports.localBatchGatewayUrl = localBatchGatewayUrl;
-exports.main = main;
-exports.stringify = stringify$2;
+export {
+  BaseError$1 as B,
+  HttpRequestError as H,
+  localBatchGatewayRequest as a,
+  concat$1 as b,
+  call as c,
+  decodeErrorResult as d,
+  encodeAbiParameters as e,
+  isHex as f,
+  getUrl as g,
+  isAddressEqual as i,
+  localBatchGatewayUrl as l,
+  main as m,
+  stringify$2 as s
+};
