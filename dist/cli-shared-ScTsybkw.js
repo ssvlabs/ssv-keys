@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import require$$0$1 from "util";
-import require$$0 from "os";
-import require$$0$2 from "readline";
-import fs$2, { promises } from "fs";
-import path$1 from "path";
-import crypto$1$1 from "crypto";
+"use strict";
+const require$$0$1 = require("util");
+const require$$0 = require("os");
+const require$$0$2 = require("readline");
+const fs$2 = require("fs");
+const path$1 = require("path");
+const crypto$1$1 = require("crypto");
 var commonjsGlobal$1 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs$1(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -19748,7 +19749,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await import("./ccip-B4IGCz-X.mjs");
+    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-B58mx37Z.js"));
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -67039,15 +67040,15 @@ hooks.HTML5_FMT = {
   // <input type="month" />
 };
 const readFile = async (filePath, json = true) => {
-  return promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
+  return fs$2.promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
     return json ? JSON.parse(data) : data;
   });
 };
 const writeFile = async (filePath, data) => {
-  promises.writeFile(filePath, data, { encoding: "utf-8" });
+  return fs$2.promises.writeFile(filePath, data, { encoding: "utf-8" });
 };
 const createSSVDir = async (outputFolder) => {
-  return promises.mkdir(outputFolder, { recursive: true });
+  return fs$2.promises.mkdir(outputFolder, { recursive: true });
 };
 const getSSVDir = async (outputFolder) => {
   if (!fs$2.existsSync(outputFolder)) {
@@ -67062,7 +67063,7 @@ const getKeyStoreFiles = async (keystorePath) => {
   let isFolder = false;
   let files;
   try {
-    const dir = await promises.opendir(keystorePath);
+    const dir = await fs$2.promises.opendir(keystorePath);
     isFolder = true;
     files = [];
     for await (const dirent of dir) {
@@ -89085,7 +89086,6 @@ const ownerNonceArgument = {
     }
   }
 };
-const uniqueOperatorIds = {};
 const operatorIdsArgument = {
   arg1: "-oids",
   arg2: "--operator-ids",
@@ -89101,18 +89101,18 @@ const operatorIdsArgument = {
       type: "number",
       message: "Enter operator ID for {{index}} operator",
       validate: (operatorId) => {
-        if (uniqueOperatorIds[operatorId]) {
-          return "This operator ID is already used";
-        }
-        const returnValue = !(Number.isInteger(operatorId) && operatorId > 0) ? "Invalid operator ID format" : true;
-        if (returnValue === true) {
-          uniqueOperatorIds[operatorId] = true;
-        }
-        return returnValue;
+        return !(Number.isSafeInteger(operatorId) && operatorId > 0) ? "Invalid operator ID format" : true;
       }
     },
     validateList: (items) => {
-      if (!isOperatorsLengthValid(items.length)) {
+      const normalizedIds = items.map((item) => Number(item));
+      if (normalizedIds.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
+        throw new SSVKeysException("Invalid operator ID format");
+      }
+      if (new Set(normalizedIds).size !== normalizedIds.length) {
+        throw new SSVKeysException("This operator ID is already used");
+      }
+      if (!isOperatorsLengthValid(normalizedIds.length)) {
         throw new SSVKeysException(
           "Invalid operators amount. Enter an 3f+1 compatible amount of operator ids"
         );
@@ -89172,7 +89172,6 @@ const outputFolderArgument = {
     }
   }
 };
-const uniqueOperators = {};
 const operatorPublicKeysArgument = {
   arg1: "-oks",
   arg2: "--operator-keys",
@@ -89186,11 +89185,8 @@ const operatorPublicKeysArgument = {
       type: "text",
       message: "Enter operator public key for {{index}} operator",
       validate: (value) => {
-        if (uniqueOperators[value]) {
-          return "This operator already used";
-        }
         try {
-          uniqueOperators[value] = operatorPublicKeyValidator(value);
+          operatorPublicKeyValidator(value);
           return true;
         } catch (e) {
           return e.message;
@@ -89254,16 +89250,56 @@ const outputPathArgument = {
   options: {
     required: false,
     type: String,
-    help: "The output path for the operator data"
+    help: "Output directory for the operator data file"
   },
   interactive: {
     options: {
       type: "text",
-      message: "Optional output path for operator data (leave blank for default)",
+      message: "Optional output directory for operator data (leave blank for default)",
       required: false
     }
   }
 };
+const MIN_OPERATORS_COUNT = 4;
+const MAX_OPERATORS_COUNT = 13;
+const hasValidOperatorCount = (length2) => !(length2 < MIN_OPERATORS_COUNT || length2 > MAX_OPERATORS_COUNT || length2 % 3 !== 1);
+const validateOperatorIds = (operatorIds) => {
+  if (!Array.isArray(operatorIds)) {
+    throw new Error("Operator IDs must be provided as a comma-separated list.");
+  }
+  if (operatorIds.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
+    throw new Error("Operator IDs must be positive integers.");
+  }
+  if (new Set(operatorIds).size !== operatorIds.length) {
+    throw new Error("Operator IDs must be unique.");
+  }
+  if (!hasValidOperatorCount(operatorIds.length)) {
+    throw new Error(
+      "Comma-separated list of operator IDs. The amount must be 3f+1 compatible."
+    );
+  }
+};
+const parseOperatorIdsCsv = (rawOperatorIds) => {
+  if (typeof rawOperatorIds !== "string" || !rawOperatorIds.trim()) {
+    throw new Error("Operator IDs are required.");
+  }
+  const operatorIds = rawOperatorIds.split(",").map((value) => {
+    const parsedValue = value.trim();
+    if (!parsedValue) {
+      throw new Error("Operator IDs must not include empty values.");
+    }
+    const operatorId = Number(parsedValue);
+    if (!Number.isSafeInteger(operatorId) || operatorId <= 0) {
+      throw new Error(
+        `Invalid operator ID "${parsedValue}". Operator IDs must be positive integers.`
+      );
+    }
+    return operatorId;
+  });
+  validateOperatorIds(operatorIds);
+  return operatorIds;
+};
+const normalizeOperatorIds = (operatorIds) => [...operatorIds].sort((a, b) => a - b);
 const scannerOperatorIdsArgument = {
   arg1: "-oids",
   arg2: "--operator-ids",
@@ -89276,7 +89312,14 @@ const scannerOperatorIdsArgument = {
     options: {
       type: "text",
       message: "Provide comma-separated operator IDs",
-      validate: (value) => value && value.trim().length > 0 ? true : "Operator IDs are required"
+      validate: (value) => {
+        try {
+          parseOperatorIdsCsv(value);
+          return true;
+        } catch (error) {
+          return error.message;
+        }
+      }
     }
   }
 };
@@ -89326,12 +89369,13 @@ class KeySharesAction extends BaseAction {
     const keystorePath = sanitizePath(String(this.args.keystore).trim());
     const { files } = await getKeyStoreFiles(keystorePath);
     const validatedFiles = await this.validateKeystoreFiles(files);
+    const operators = this.getOperators();
     const singleKeySharesList = await Promise.all(
       validatedFiles.map(
         (file, index2) => this.processFile(
           file,
           this.args.password,
-          this.getOperators(),
+          operators,
           this.args.owner_address,
           this.args.owner_nonce + index2
         )
@@ -89370,8 +89414,8 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
     return validatedFiles;
   }
   getOperators() {
-    const operatorIds = this.args.operator_ids.split(",");
-    const operatorKeys = this.args.operator_keys.split(",");
+    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
+    const operatorKeys = String(this.args.operator_keys).split(",").map((operatorKey) => operatorKey.trim());
     if (operatorIds.length !== operatorKeys.length) {
       throw new OperatorsCountsMismatchError(
         operatorIds,
@@ -89379,18 +89423,15 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
         "Mismatch amount of operator ids and operator keys."
       );
     }
-    if (operatorIds.includes("") || operatorKeys.includes("")) {
+    if (operatorKeys.includes("")) {
       throw new SSVKeysException(
-        "Operator IDs or keys cannot contain empty strings."
+        "Operator keys cannot contain empty strings."
       );
     }
-    return operatorIds.map((idString, index2) => {
-      const id = parseInt(idString, 10);
-      if (isNaN(id)) {
-        throw new SSVKeysException(
-          `Invalid operator ID at position ${index2}: ${idString}`
-        );
-      }
+    if (new Set(operatorKeys).size !== operatorKeys.length) {
+      throw new SSVKeysException("Operator keys must be unique.");
+    }
+    return operatorIds.map((id, index2) => {
       const operatorKey = operatorKeys[index2];
       return { id, operatorKey };
     });
@@ -89449,7 +89490,7 @@ const createSdkForNetwork = ({
 }) => {
   const normalizedNodeUrl = nodeUrl.trim();
   const subgraphApiKey = getSubgraphApiKey();
-  const cacheKey2 = `${network}:${normalizedNodeUrl}:${subgraphApiKey ? "with-key" : "without-key"}`;
+  const cacheKey2 = `${network}:${normalizedNodeUrl}:${subgraphApiKey ?? "without-key"}`;
   const cachedSdk = sdkCache.get(cacheKey2);
   if (cachedSdk) {
     return cachedSdk;
@@ -89535,8 +89576,8 @@ const DEFAULT_CLUSTER_SNAPSHOT = {
 };
 class ClusterScanner extends BaseScanner {
   async run(operatorIds, isCli) {
-    this.validateOperatorIds(operatorIds);
-    const normalizedOperatorIds = [...operatorIds].sort((a, b) => a - b);
+    validateOperatorIds(operatorIds);
+    const normalizedOperatorIds = normalizeOperatorIds(operatorIds);
     if (isCli) {
       console.log("\nScanning blockchain...");
     }
@@ -89593,24 +89634,6 @@ class ClusterScanner extends BaseScanner {
     const latestBlockNumber = await sdk.config.publicClient.getBlockNumber();
     return this.toSafeNumber(latestBlockNumber, "Latest block number");
   }
-  validateOperatorIds(operatorIds) {
-    if (!Array.isArray(operatorIds)) {
-      throw new Error(
-        "Operator IDs must be provided as a comma-separated list."
-      );
-    }
-    if (operatorIds.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
-      throw new Error("Operator IDs must be positive integers.");
-    }
-    if (new Set(operatorIds).size !== operatorIds.length) {
-      throw new Error("Operator IDs must be unique.");
-    }
-    if (operatorIds.length < 4 || operatorIds.length > 13 || operatorIds.length % 3 !== 1) {
-      throw new Error(
-        "Comma-separated list of operator IDs. The amount must be 3f+1 compatible."
-      );
-    }
-  }
 }
 class NonceScanner extends BaseScanner {
   async run(isCli) {
@@ -89649,14 +89672,14 @@ class OperatorScanner extends BaseScanner {
         operatorIdSet.add(String(operatorId));
       }
     }
-    const uniqueOperatorIds2 = Array.from(operatorIdSet).sort(
+    const uniqueOperatorIds = Array.from(operatorIdSet).sort(
       (a, b) => Number(a) - Number(b)
     );
-    if (uniqueOperatorIds2.length === 0) {
+    if (uniqueOperatorIds.length === 0) {
       return [];
     }
     const operators = await sdk.api.getOperators({
-      operatorIds: uniqueOperatorIds2
+      operatorIds: uniqueOperatorIds
     });
     const operatorEntries = operators.map((operator) => ({
       id: Number(operator.id),
@@ -89700,24 +89723,6 @@ class NonceAction extends BaseAction {
     console.log("Next Nonce:", result);
   }
 }
-const parseOperatorIds = (rawOperatorIds) => {
-  if (typeof rawOperatorIds !== "string" || !rawOperatorIds.trim()) {
-    throw new Error("Operator IDs are required.");
-  }
-  return rawOperatorIds.split(",").map((value) => {
-    const parsedValue = value.trim();
-    if (!parsedValue) {
-      throw new Error("Operator IDs must not include empty values.");
-    }
-    const operatorId = Number(parsedValue);
-    if (!Number.isSafeInteger(operatorId) || operatorId <= 0) {
-      throw new Error(
-        `Invalid operator ID "${parsedValue}". Operator IDs must be positive integers.`
-      );
-    }
-    return operatorId;
-  });
-};
 class ClusterAction extends BaseAction {
   static get options() {
     return {
@@ -89743,7 +89748,7 @@ class ClusterAction extends BaseAction {
       nodeUrl: this.args.node_url,
       ownerAddress: this.args.owner_address
     });
-    const operatorIds = parseOperatorIds(this.args.operator_ids);
+    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
     const result = await clusterScanner.run(operatorIds, true);
     console.table(result.payload);
     console.log("Cluster snapshot:");
@@ -89845,18 +89850,16 @@ async function main(interactive) {
     console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
   }
 }
-export {
-  BaseError$1 as B,
-  HttpRequestError as H,
-  localBatchGatewayRequest as a,
-  concat$1 as b,
-  call as c,
-  decodeErrorResult as d,
-  encodeAbiParameters as e,
-  isHex as f,
-  getUrl as g,
-  isAddressEqual as i,
-  localBatchGatewayUrl as l,
-  main as m,
-  stringify$2 as s
-};
+exports.BaseError = BaseError$1;
+exports.HttpRequestError = HttpRequestError;
+exports.call = call;
+exports.concat = concat$1;
+exports.decodeErrorResult = decodeErrorResult;
+exports.encodeAbiParameters = encodeAbiParameters;
+exports.getUrl = getUrl;
+exports.isAddressEqual = isAddressEqual;
+exports.isHex = isHex;
+exports.localBatchGatewayRequest = localBatchGatewayRequest;
+exports.localBatchGatewayUrl = localBatchGatewayUrl;
+exports.main = main;
+exports.stringify = stringify$2;
