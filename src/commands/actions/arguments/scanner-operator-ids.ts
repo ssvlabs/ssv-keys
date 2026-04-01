@@ -1,3 +1,5 @@
+import { parseOperatorIdsCsv } from "../../../shared/operator-ids";
+
 export default {
   arg1: "-oids",
   arg2: "--operator-ids",
@@ -10,10 +12,14 @@ export default {
     options: {
       type: "text",
       message: "Provide comma-separated operator IDs",
-      validate: (value: string) =>
-        value && value.trim().length > 0
-          ? true
-          : "Operator IDs are required",
+      validate: (value: string) => {
+        try {
+          parseOperatorIdsCsv(value);
+          return true;
+        } catch (error: any) {
+          return error.message;
+        }
+      },
     },
   },
 };

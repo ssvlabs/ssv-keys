@@ -2,6 +2,7 @@ import { SSVSDK } from "@ssv-labs/ssv-sdk";
 import { createClusterId } from "@ssv-labs/ssv-sdk/utils";
 
 import { BaseScanner } from "./BaseScanner";
+import { normalizeOperatorIds, validateOperatorIds } from "../shared/operator-ids";
 
 type SdkClusterSnapshot = NonNullable<
   Awaited<ReturnType<SSVSDK["api"]["toSolidityCluster"]>>
@@ -42,8 +43,8 @@ const DEFAULT_CLUSTER_SNAPSHOT: ClusterSnapshotData = {
 
 export class ClusterScanner extends BaseScanner {
   async run(operatorIds: number[], isCli?: boolean): Promise<ClusterData> {
-    this.validateOperatorIds(operatorIds);
-    const normalizedOperatorIds = [...operatorIds].sort((a, b) => a - b);
+    validateOperatorIds(operatorIds);
+    const normalizedOperatorIds = normalizeOperatorIds(operatorIds);
 
     if (isCli) {
       console.log("\nScanning blockchain...");
@@ -117,27 +118,5 @@ export class ClusterScanner extends BaseScanner {
   private async getLatestBlockNumber(sdk: SSVSDK): Promise<number> {
     const latestBlockNumber = await sdk.config.publicClient.getBlockNumber();
     return this.toSafeNumber(latestBlockNumber, "Latest block number");
-  }
-
-  private validateOperatorIds(operatorIds: number[]): void {
-    if (!Array.isArray(operatorIds)) {
-      throw new Error(
-        "Operator IDs must be provided as a comma-separated list."
-      );
-    }
-
-    if (operatorIds.some((id) => !Number.isSafeInteger(id) || id <= 0)) {
-      throw new Error("Operator IDs must be positive integers.");
-    }
-
-    if (new Set(operatorIds).size !== operatorIds.length) {
-      throw new Error("Operator IDs must be unique.");
-    }
-
-    if (operatorIds.length < 4 || operatorIds.length > 13 || operatorIds.length % 3 !== 1) {
-      throw new Error(
-        "Comma-separated list of operator IDs. The amount must be 3f+1 compatible."
-      );
-    }
   }
 }

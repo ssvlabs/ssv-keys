@@ -6,28 +6,7 @@ import {
   scannerOperatorIdsArgument,
 } from "./arguments";
 import { ClusterScanner } from "../../scanner";
-
-const parseOperatorIds = (rawOperatorIds: string): number[] => {
-  if (typeof rawOperatorIds !== "string" || !rawOperatorIds.trim()) {
-    throw new Error("Operator IDs are required.");
-  }
-
-  return rawOperatorIds.split(",").map((value) => {
-    const parsedValue = value.trim();
-    if (!parsedValue) {
-      throw new Error("Operator IDs must not include empty values.");
-    }
-
-    const operatorId = Number(parsedValue);
-    if (!Number.isSafeInteger(operatorId) || operatorId <= 0) {
-      throw new Error(
-        `Invalid operator ID "${parsedValue}". Operator IDs must be positive integers.`
-      );
-    }
-
-    return operatorId;
-  });
-};
+import { parseOperatorIdsCsv } from "../../shared/operator-ids";
 
 export class ClusterAction extends BaseAction {
   static override get options(): any {
@@ -56,7 +35,7 @@ export class ClusterAction extends BaseAction {
       ownerAddress: this.args.owner_address,
     });
 
-    const operatorIds = parseOperatorIds(this.args.operator_ids);
+    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
     const result = await clusterScanner.run(operatorIds, true);
 
     console.table(result.payload);
