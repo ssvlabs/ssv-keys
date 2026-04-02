@@ -16,8 +16,8 @@ export default {
         try {
           operatorPublicKeyValidator(value);
           return true;
-        } catch (e: any) {
-          return e.message;
+        } catch (error: unknown) {
+          return error instanceof Error ? error.message : String(error);
         }
       }
     }

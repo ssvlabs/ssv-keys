@@ -1,4 +1,5 @@
 import { BaseAction } from "./BaseAction";
+import type { ActionOptions } from "../types";
 import {
   nodeUrlArgument,
   networkArgument,
@@ -9,7 +10,7 @@ import { ClusterScanner } from "../../scanner";
 import { parseOperatorIdsCsv } from "../../shared/operator-ids";
 
 export class ClusterAction extends BaseAction {
-  static override get options(): any {
+  static override get options(): ActionOptions {
     return {
       action: "cluster",
       description: "Resolve latest cluster snapshot using SSV SDK scanner flow",

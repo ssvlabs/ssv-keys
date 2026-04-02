@@ -1,9 +1,10 @@
 import { BaseAction } from "./BaseAction";
+import type { ActionOptions } from "../types";
 import { nodeUrlArgument, networkArgument, ownerAddressArgument } from "./arguments";
 import { NonceScanner } from "../../scanner";
 
 export class NonceAction extends BaseAction {
-  static override get options(): any {
+  static override get options(): ActionOptions {
     return {
       action: "nonce",
       description: "Resolve owner nonce using SSV SDK scanner flow",

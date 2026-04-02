@@ -11064,17 +11064,18 @@ function requireArgparse() {
 }
 var argparseExports = requireArgparse();
 const ordinalSuffixOf = (i) => {
-  const j = i % 10, k = i % 100;
-  if (j == 1 && k != 11) {
-    return i + "st";
+  const j = i % 10;
+  const k = i % 100;
+  if (j === 1 && k !== 11) {
+    return `${i}st`;
   }
-  if (j == 2 && k != 12) {
-    return i + "nd";
+  if (j === 2 && k !== 12) {
+    return `${i}nd`;
   }
-  if (j == 3 && k != 13) {
-    return i + "rd";
+  if (j === 3 && k !== 13) {
+    return `${i}rd`;
   }
-  return i + "th";
+  return `${i}th`;
 };
 const HELP_MAX_POSITION = 56;
 const RawDescriptionHelpFormatterCtor = argparseExports.RawDescriptionHelpFormatter;
@@ -11101,7 +11102,6 @@ class BaseCommand extends argparseExports.ArgumentParser {
     }
     super(parserOptions);
     this.actions = [];
-    this.actionParsers = {};
     this.subParserOptions = {
       title: "Actions",
       description: "Possible actions",
@@ -11118,21 +11118,14 @@ class BaseCommand extends argparseExports.ArgumentParser {
     this.subParsers = this.add_subparsers(this.subParserOptions);
     for (const action2 of this.actions) {
       const actionOptions = action2.options;
-      const actionParser = this.subParsers.add_parser(
-        actionOptions.action,
-        {
-          help: actionOptions.description || "",
-          description: actionOptions.description || "",
-          epilog: actionOptions.example || "",
-          formatter_class: AlignedHelpFormatter
-        }
-      );
+      const actionParser = this.subParsers.add_parser(actionOptions.action, {
+        help: actionOptions.description || "",
+        description: actionOptions.description || "",
+        epilog: actionOptions.example || "",
+        formatter_class: AlignedHelpFormatter
+      });
       for (const argument of actionOptions.arguments) {
-        actionParser.add_argument(
-          argument.arg1,
-          argument.arg2,
-          argument.options
-        );
+        actionParser.add_argument(argument.arg1, argument.arg2, argument.options);
       }
       actionParser.set_defaults({
         func: (args) => {
@@ -11140,7 +11133,6 @@ class BaseCommand extends argparseExports.ArgumentParser {
           return executable.setArgs(args).execute();
         }
       });
-      this.actionParsers[actionOptions.action] = actionParser;
     }
     return this;
   }
@@ -11154,7 +11146,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
     const response = await prompts({
       type: "select",
       name: "action",
-      message: `Select action`,
+      message: "Select action",
       choices: this.actions.map((action2) => {
         return {
           title: action2.options.description || "",
@@ -11162,7 +11154,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
         };
       })
     });
-    return response.action;
+    return response.action || "";
   }
   /**
    * Pre-fill all values from arguments of executable
@@ -11183,17 +11175,32 @@ class BaseCommand extends argparseExports.ArgumentParser {
         }
       }
       const argumentName = this.sanitizeArgument(argData[0]);
-      parsedArgs[argumentName] = String(argData[1]).trim();
+      const argumentValue = argData.slice(1).join("=");
+      parsedArgs[argumentName] = String(argumentValue).trim();
     }
-    parsedArgs["action"] = selectedAction;
+    parsedArgs.action = selectedAction;
     prompts.override(parsedArgs);
     if (clearProcessArgs) {
       process.argv = [process.argv[0], process.argv[1]];
     }
     return parsedArgs;
   }
+  getPrefillArrayValue(preFilledValues, fieldName, dataIndex) {
+    const value = preFilledValues[fieldName];
+    if (typeof value !== "string") {
+      return void 0;
+    }
+    return value.split(",")[dataIndex];
+  }
+  getPrefillArrayLength(preFilledValues, fieldName) {
+    const value = preFilledValues[fieldName];
+    if (typeof value !== "string") {
+      return 0;
+    }
+    return value.split(",").length;
+  }
   isPrefillFromArrayExists(dataIndex, promptOptions, preFilledValues) {
-    return !!preFilledValues[promptOptions.name]?.split(",")[dataIndex];
+    return this.getPrefillArrayValue(preFilledValues, promptOptions.name, dataIndex) !== void 0;
   }
   /**
    * Pre-fill prompts from array data on specific index
@@ -11203,11 +11210,19 @@ class BaseCommand extends argparseExports.ArgumentParser {
    * @param preFilledValues
    */
   prefillFromArrayData(dataIndex, argument, promptOptions, preFilledValues) {
-    let preFilledValue = preFilledValues[promptOptions.name].split(",")[dataIndex];
-    if (argument.interactive.options.type === "number") {
-      preFilledValue = parseFloat(preFilledValue);
-      if (String(preFilledValue).endsWith(".0")) {
-        preFilledValue = parseInt(String(preFilledValue), 10);
+    const rawValue = this.getPrefillArrayValue(
+      preFilledValues,
+      promptOptions.name,
+      dataIndex
+    );
+    if (rawValue === void 0) {
+      return;
+    }
+    let preFilledValue = rawValue;
+    if (argument.interactive?.options.type === "number") {
+      const parsedValue = Number(rawValue);
+      if (!Number.isNaN(parsedValue)) {
+        preFilledValue = Number.isInteger(parsedValue) ? parsedValue : Number.parseFloat(rawValue);
       }
     }
     const override = {
@@ -11217,10 +11232,12 @@ class BaseCommand extends argparseExports.ArgumentParser {
     prompts.override(override);
   }
   async ask(promptOptions, extraOptions, required) {
-    let response = {};
-    response = await prompts(promptOptions, extraOptions);
+    let response = await prompts(
+      promptOptions,
+      extraOptions
+    );
     while (required && !response[promptOptions.name]) {
-      if (Object.keys(response).indexOf(promptOptions.name) === -1) {
+      if (!Object.prototype.hasOwnProperty.call(response, promptOptions.name)) {
         process.exit(1);
       }
       response = await prompts(promptOptions, extraOptions);
@@ -11235,6 +11252,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
     const selectedAction = await this.askAction();
     if (!selectedAction) {
       process.exit(1);
+      return;
     }
     const preFilledValues = this.prefillFromArguments(selectedAction, true);
     process.argv.push(selectedAction);
@@ -11242,24 +11260,32 @@ class BaseCommand extends argparseExports.ArgumentParser {
     const actionArguments = this.getArgumentsForAction(selectedAction);
     const multi = {};
     for (const argument of actionArguments) {
-      if (!argument.interactive) continue;
+      if (!argument.interactive) {
+        continue;
+      }
       const promptOptions = this.getPromptOptions(argument);
       if (processedArguments[promptOptions.name]) {
         continue;
       }
       processedArguments[promptOptions.name] = true;
       const message = promptOptions.message;
-      const extraOptions = { onSubmit: promptOptions.onSubmit };
-      let isRepeatable = !!argument.interactive?.repeat;
+      const extraOptions = {
+        onSubmit: promptOptions.onSubmit
+      };
+      let isRepeatable = Boolean(argument.interactive.repeat);
       if (!isRepeatable) {
         multi[promptOptions.name] = multi[promptOptions.name] || [];
         multi[promptOptions.name].push(
-          await this.ask(promptOptions, extraOptions)
+          await this.ask(
+            promptOptions,
+            extraOptions,
+            Boolean(argument.interactive.options.required)
+          )
         );
       }
       let repeatCount = 0;
       while (isRepeatable) {
-        if (preFilledValues[promptOptions.name]) {
+        if (typeof preFilledValues[promptOptions.name] === "string") {
           this.prefillFromArrayData(
             repeatCount,
             argument,
@@ -11269,14 +11295,12 @@ class BaseCommand extends argparseExports.ArgumentParser {
         }
         promptOptions.message = `${message}`.replace(
           "{{index}}",
-          `${ordinalSuffixOf(repeatCount + 1)}`
+          ordinalSuffixOf(repeatCount + 1)
         );
         multi[promptOptions.name] = multi[promptOptions.name] || [];
-        multi[promptOptions.name].push(
-          await this.ask(promptOptions, extraOptions)
-        );
+        multi[promptOptions.name].push(await this.ask(promptOptions, extraOptions));
         let filledAsParent = false;
-        for (const extraArgumentName of argument.interactive.repeatWith) {
+        for (const extraArgumentName of argument.interactive.repeatWith || []) {
           const extraArgument = this.findArgumentByName(
             extraArgumentName,
             actionArguments
@@ -11289,7 +11313,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
           const extraArgumentOptions = {
             onSubmit: extraArgumentPromptOptions.onSubmit
           };
-          if (preFilledValues[extraArgumentPromptOptions.name]) {
+          if (typeof preFilledValues[extraArgumentPromptOptions.name] === "string") {
             this.prefillFromArrayData(
               repeatCount,
               extraArgument,
@@ -11299,14 +11323,14 @@ class BaseCommand extends argparseExports.ArgumentParser {
           }
           extraArgumentPromptOptions.message = `${extraArgumentMessage}`.replace(
             "{{index}}",
-            `${ordinalSuffixOf(repeatCount + 1)}`
+            ordinalSuffixOf(repeatCount + 1)
           );
           multi[extraArgumentPromptOptions.name] = multi[extraArgumentPromptOptions.name] || [];
           multi[extraArgumentPromptOptions.name].push(
             await this.ask(extraArgumentPromptOptions, extraArgumentOptions)
           );
           processedArguments[extraArgumentPromptOptions.name] = true;
-          if (preFilledValues[promptOptions.name] && preFilledValues[promptOptions.name].split(",").length === multi[extraArgumentPromptOptions.name].length) {
+          if (typeof preFilledValues[promptOptions.name] === "string" && this.getPrefillArrayLength(preFilledValues, promptOptions.name) === multi[extraArgumentPromptOptions.name].length) {
             filledAsParent = true;
           }
         }
@@ -11317,24 +11341,23 @@ class BaseCommand extends argparseExports.ArgumentParser {
           promptOptions,
           preFilledValues
         )) {
-          isRepeatable = (await prompts({
+          const repeatResponse = await prompts({
             type: "confirm",
             name: "value",
-            message: argument.interactive?.repeat,
+            message: argument.interactive.repeat,
             initial: true
-          })).value;
+          });
+          isRepeatable = Boolean(repeatResponse.value);
         }
         repeatCount++;
       }
-      if (argument.interactive?.repeat && argument.interactive?.validateList) {
-        argument.interactive?.validateList(multi[promptOptions.name]);
+      if (argument.interactive.repeat && argument.interactive.validateList) {
+        argument.interactive.validateList(multi[promptOptions.name]);
       }
     }
     for (const argumentName of Object.keys(multi)) {
       process.argv.push(
-        `--${argumentName.replace(/(_)/gi, "-")}=${multi[argumentName].join(
-          ","
-        )}`
+        `--${argumentName.replace(/(_)/gi, "-")}=${multi[argumentName].join(",")}`
       );
     }
   }
@@ -11344,12 +11367,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
    * @param actionArguments
    */
   findArgumentByName(extraArgumentName, actionArguments) {
-    for (const argument of actionArguments) {
-      if (extraArgumentName === argument.arg2) {
-        return argument;
-      }
-    }
-    return null;
+    return actionArguments.find((argument) => extraArgumentName === argument.arg2);
   }
   /**
    * Returns list of arguments for selected user action
@@ -11361,7 +11379,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
         return action2.options.arguments;
       }
     }
-    return null;
+    return [];
   }
   /**
    * Make an argument name useful for the flow
@@ -11376,13 +11394,15 @@ class BaseCommand extends argparseExports.ArgumentParser {
    * @param argument
    */
   getPromptOptions(argument) {
-    const message = argument.interactive?.options?.message || argument.options.help;
+    const interactiveOptions = argument.interactive?.options || {};
+    const message = interactiveOptions.message || String(argument.options.help || "");
+    const promptType = typeof interactiveOptions.type === "string" ? interactiveOptions.type : "text";
     return {
-      ...argument.interactive?.options || {},
-      type: argument.interactive?.options?.type || "text",
+      ...interactiveOptions,
+      type: promptType,
       name: this.sanitizeArgument(argument.arg2),
       message,
-      onSubmit: argument.interactive.onSubmit || void 0
+      onSubmit: argument.interactive?.onSubmit
     };
   }
   async execute() {
@@ -11427,7 +11447,10 @@ class BaseCommand extends argparseExports.ArgumentParser {
         description: action2.options.description || ""
       };
     });
-    const maxActionLength = Math.max(...lines2.map((line) => line.action.length), 7);
+    const maxActionLength = Math.max(
+      ...lines2.map((line) => line.action.length),
+      7
+    );
     for (const line of lines2) {
       const paddedAction = line.action.padEnd(maxActionLength, " ");
       console.log(`  ${paddedAction}  ${line.description}`);
@@ -19748,7 +19771,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await import("./ccip-etXuPe6N.mjs");
+    const { offchainLookup, offchainLookupSignature } = await import("./ccip-CSb0GR75.mjs");
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -63016,23 +63039,6 @@ class BaseAction {
   static get options() {
     throw new SSVKeysException('Should implement static "options"');
   }
-  get options() {
-    return BaseAction.options;
-  }
-  /**
-   * Pre-execution method which can be run before execution logic.
-   */
-  preExecute() {
-    return;
-  }
-  /**
-   * Pre-options reading method which can be run before the logic where options read happened.
-   * Should also return options which can be changed.
-   * @param options
-   */
-  async preOptions(options2) {
-    return options2;
-  }
 }
 const fileExistsValidator = (filePath, message = "") => {
   filePath = sanitizePath(String(filePath).trim());
@@ -67038,16 +67044,15 @@ hooks.HTML5_FMT = {
   MONTH: "YYYY-MM"
   // <input type="month" />
 };
-const readFile = async (filePath, json = true) => {
-  return promises.readFile(filePath, { encoding: "utf-8" }).then((data) => {
-    return json ? JSON.parse(data) : data;
-  });
-};
+async function readFile(filePath, json = true) {
+  const data = await promises.readFile(filePath, { encoding: "utf-8" });
+  return json ? JSON.parse(data) : data;
+}
 const writeFile = async (filePath, data) => {
   return promises.writeFile(filePath, data, { encoding: "utf-8" });
 };
 const createSSVDir = async (outputFolder) => {
-  return promises.mkdir(outputFolder, { recursive: true });
+  await promises.mkdir(outputFolder, { recursive: true });
 };
 const getSSVDir = async (outputFolder) => {
   if (!fs$2.existsSync(outputFolder)) {
@@ -67072,11 +67077,14 @@ const getKeyStoreFiles = async (keystorePath) => {
       throw new SSVKeysException("No keystore files detected. Please provide a folder with correct keystore files and try again.");
     }
   } catch (error) {
-    if (error.code === "ENOTDIR") {
+    const fsError = error;
+    if (fsError.code === "ENOTDIR") {
       isFolder = false;
       files = [keystorePath];
     } else {
-      throw new SSVKeysException(error.message);
+      throw new SSVKeysException(
+        fsError.message || "Failed to resolve keystore path."
+      );
     }
   }
   files.sort();
@@ -89034,12 +89042,13 @@ const operatorPublicKeyValidator = (publicKey) => {
       );
     }
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new OperatorPublicKeyError(
       {
         rsa: decodedPublicKey,
         base64: publicKey
       },
-      error.message
+      errorMessage
     );
   }
   return true;
@@ -89187,8 +89196,8 @@ const operatorPublicKeysArgument = {
         try {
           operatorPublicKeyValidator(value);
           return true;
-        } catch (e) {
-          return e.message;
+        } catch (error) {
+          return error instanceof Error ? error.message : String(error);
         }
       }
     }
@@ -89316,7 +89325,7 @@ const scannerOperatorIdsArgument = {
           parseOperatorIdsCsv(value);
           return true;
         } catch (error) {
-          return error.message;
+          return error instanceof Error ? error.message : String(error);
         }
       }
     }
@@ -89436,7 +89445,7 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
     });
   }
   async processFile(keystoreFilePath, password2, operators, ownerAddress, ownerNonce) {
-    const keystoreData = await readFile(keystoreFilePath);
+    const keystoreData = await readFile(keystoreFilePath, false);
     const ssvKeys2 = new SSVKeys();
     const { privateKey, publicKey } = await ssvKeys2.extractKeys(
       keystoreData,
@@ -89845,7 +89854,8 @@ async function main(interactive) {
       console.debug(`${colors.bgYellow(colors.black(output))}`);
     }
   } catch (error) {
-    console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.trace(`${colors.red("Error:")} ${colors.bold(errorMessage)}`);
   }
 }
 export {

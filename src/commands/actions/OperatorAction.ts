@@ -1,4 +1,5 @@
 import { BaseAction } from "./BaseAction";
+import type { ActionOptions } from "../types";
 import {
   nodeUrlArgument,
   outputPathArgument,
@@ -8,7 +9,7 @@ import {
 import { OperatorScanner } from "../../scanner";
 
 export class OperatorAction extends BaseAction {
-  static override get options(): any {
+  static override get options(): ActionOptions {
     return {
       action: "operator",
       description: "Resolve owner operator public keys using SSV SDK scanner flow",

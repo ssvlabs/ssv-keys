@@ -16,8 +16,8 @@ export default {
         try {
           parseOperatorIdsCsv(value);
           return true;
-        } catch (error: any) {
-          return error.message;
+        } catch (error: unknown) {
+          return error instanceof Error ? error.message : String(error);
         }
       },
     },

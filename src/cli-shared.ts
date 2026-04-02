@@ -17,7 +17,7 @@ const BannerMessage = async () => {
   return banner;
 };
 
-export default async function main(interactive: boolean): Promise<any> {
+export default async function main(interactive: boolean): Promise<void> {
   const message = await BannerMessage();
   console.log(
     " ----------------------------------------------------------------------"
@@ -39,7 +39,8 @@ export default async function main(interactive: boolean): Promise<any> {
       );
       console.debug(`${colors.bgYellow(colors.black(output))}`);
     }
-  } catch (error: any) {
-    console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.trace(`${colors.red("Error:")} ${colors.bold(errorMessage)}`);
   }
 }

@@ -43,13 +43,14 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
         "Invalid operator key format, make sure the operator exists in the network."
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new OperatorPublicKeyError(
       {
         rsa: decodedPublicKey,
         base64: publicKey,
       },
-      error.message
+      errorMessage
     );
   }
   return true;

@@ -2,6 +2,7 @@ import path from "path";
 import { KeyShares, KeySharesItem, OperatorsCountsMismatchError, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
 
 import { BaseAction } from "./BaseAction";
+import type { ActionOptions } from "../types";
 import { sanitizePath, keystorePasswordValidator } from "./validators";
 import {
   keystoreArgument,
@@ -24,7 +25,7 @@ type Operator = {
  * Command to build keyshares from user input.
  */
 export class KeySharesAction extends BaseAction {
-  static override get options(): any {
+  static override get options(): ActionOptions {
     return {
       action: "shares",
       description:
@@ -160,7 +161,7 @@ export class KeySharesAction extends BaseAction {
     ownerAddress: string,
     ownerNonce: number
   ): Promise<KeySharesItem> {
-    const keystoreData = await readFile(keystoreFilePath);
+    const keystoreData = await readFile(keystoreFilePath, false);
 
     const ssvKeys = new SSVKeys();
     const { privateKey, publicKey } = await ssvKeys.extractKeys(
