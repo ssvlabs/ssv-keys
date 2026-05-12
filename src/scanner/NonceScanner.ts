@@ -9,11 +9,10 @@ export class NonceScanner extends BaseScanner {
       this.logScanContext(sdk);
     }
 
-    const ownerNonce = await sdk.api.getOwnerNonce({
+    const { nonce } = await sdk.api.getOwnerNonce({
       owner: this.params.ownerAddress,
     });
 
-    const parsedNonce = BigInt(ownerNonce);
-    return this.toSafeNumber(parsedNonce, "Owner nonce");
+    return nonce;
   }
 }

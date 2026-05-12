@@ -27,7 +27,7 @@ export class OperatorScanner extends BaseScanner {
   }
 
   async getOwnerOperators(sdk: SSVSDK): Promise<OperatorEntry[]> {
-    const clusters = await sdk.api.getClusters({
+    const { clusters } = await sdk.api.getClusters({
       owner: this.params.ownerAddress.toLowerCase(),
     });
 
@@ -46,7 +46,7 @@ export class OperatorScanner extends BaseScanner {
       return [];
     }
 
-    const operators = await sdk.api.getOperators({
+    const { operators } = await sdk.api.getOperators({
       operatorIds: uniqueOperatorIds,
     });
 
@@ -64,9 +64,10 @@ export class OperatorScanner extends BaseScanner {
       fs.mkdirSync(dirPath, { recursive: true });
     }
 
+    const normalizedOwnerAddress = this.params.ownerAddress.toLowerCase();
     const filePath = path.join(
       dirPath,
-      `operator-pubkeys-${this.params.network}.json`
+      `operator-pubkeys-${this.params.network}-${normalizedOwnerAddress}.json`
     );
 
     fs.writeFileSync(filePath, JSON.stringify(entries, null, 2));
