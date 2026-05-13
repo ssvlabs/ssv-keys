@@ -18,6 +18,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         "fs",
+        "fs/promises",
         "path",
         "url",
         "os",
@@ -27,6 +28,7 @@ export default defineConfig({
         "util",
         "readline",
         "node:fs",
+        "node:fs/promises",
         "node:path",
         "node:url",
         "node:os",
