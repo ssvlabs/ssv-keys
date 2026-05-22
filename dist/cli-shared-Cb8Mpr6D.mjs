@@ -1,11 +1,10 @@
 #!/usr/bin/env node
-"use strict";
-const require$$0$1 = require("util");
-const require$$0 = require("os");
-const require$$0$2 = require("readline");
-const fs$2 = require("fs");
-const path$1 = require("path");
-const crypto$1$1 = require("crypto");
+import require$$0$1 from "util";
+import require$$0 from "os";
+import require$$0$2 from "readline";
+import fs$1, { promises } from "fs";
+import path from "path";
+import crypto$1$1 from "crypto";
 var commonjsGlobal$1 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs$1(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -101,7 +100,7 @@ var hasRequiredSupportsColors;
 function requireSupportsColors() {
   if (hasRequiredSupportsColors) return supportsColors;
   hasRequiredSupportsColors = 1;
-  var os2 = require$$0;
+  var os = require$$0;
   var hasFlag2 = requireHasFlag();
   var env2 = process.env;
   var forceColor = void 0;
@@ -139,7 +138,7 @@ function requireSupportsColors() {
     }
     var min2 = forceColor ? 1 : 0;
     if (process.platform === "win32") {
-      var osRelease = os2.release().split(".");
+      var osRelease = os.release().split(".");
       if (Number(process.versions.node.split(".")[0]) >= 8 && Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
         return Number(osRelease[2]) >= 14931 ? 3 : 2;
       }
@@ -198,7 +197,7 @@ function requireTrap() {
   if (hasRequiredTrap) return trap.exports;
   hasRequiredTrap = 1;
   (function(module2) {
-    module2["exports"] = function runTheTrap(text2, options2) {
+    module2["exports"] = function runTheTrap(text2, options) {
       var result = "";
       text2 = text2 || "Run the trap, drop the bass";
       text2 = text2.split("");
@@ -270,7 +269,7 @@ function requireZalgo() {
   if (hasRequiredZalgo) return zalgo.exports;
   hasRequiredZalgo = 1;
   (function(module2) {
-    module2["exports"] = function zalgo2(text2, options2) {
+    module2["exports"] = function zalgo2(text2, options) {
       text2 = text2 || "   he is here   ";
       var soul = {
         "up": [
@@ -404,15 +403,15 @@ function requireZalgo() {
         });
         return bool;
       }
-      function heComes(text3, options3) {
+      function heComes(text3, options2) {
         var result = "";
         var counts;
         var l;
-        options3 = options3 || {};
-        options3["up"] = typeof options3["up"] !== "undefined" ? options3["up"] : true;
-        options3["mid"] = typeof options3["mid"] !== "undefined" ? options3["mid"] : true;
-        options3["down"] = typeof options3["down"] !== "undefined" ? options3["down"] : true;
-        options3["size"] = typeof options3["size"] !== "undefined" ? options3["size"] : "maxi";
+        options2 = options2 || {};
+        options2["up"] = typeof options2["up"] !== "undefined" ? options2["up"] : true;
+        options2["mid"] = typeof options2["mid"] !== "undefined" ? options2["mid"] : true;
+        options2["down"] = typeof options2["down"] !== "undefined" ? options2["down"] : true;
+        options2["size"] = typeof options2["size"] !== "undefined" ? options2["size"] : "maxi";
         text3 = text3.split("");
         for (l in text3) {
           if (isChar(l)) {
@@ -420,7 +419,7 @@ function requireZalgo() {
           }
           result = result + text3[l];
           counts = { "up": 0, "down": 0, "mid": 0 };
-          switch (options3.size) {
+          switch (options2.size) {
             case "mini":
               counts.up = randomNumber(8);
               counts.mid = randomNumber(2);
@@ -441,7 +440,7 @@ function requireZalgo() {
           for (var d in arr) {
             var index2 = arr[d];
             for (var i = 0; i <= counts[index2]; i++) {
-              if (options3[index2]) {
+              if (options2[index2]) {
                 result = result + soul[index2][randomNumber(soul[index2].length)];
               }
             }
@@ -449,7 +448,7 @@ function requireZalgo() {
         }
         return result;
       }
-      return heComes(text2, options2);
+      return heComes(text2, options);
     };
   })(zalgo);
   return zalgo.exports;
@@ -699,10 +698,10 @@ function requireSafe() {
 }
 var safeExports = requireSafe();
 const colors = /* @__PURE__ */ getDefaultExportFromCjs$1(safeExports);
-const version$6 = "2.0.0";
+const version$4 = "2.0.0";
 const description = "CLI Tool for splitting a validator key into a predefined threshold of shares via Shamir-Secret-Sharing (SSS), and encrypt them with a set of operator keys.";
 const pkg = {
-  version: version$6,
+  version: version$4,
   description
 };
 var prompts$2 = {};
@@ -2717,28 +2716,28 @@ Instructions:
       return prefix + title + color.gray(desc || "");
     }
     // shared with autocompleteMultiselect
-    paginateOptions(options2) {
-      if (options2.length === 0) {
+    paginateOptions(options) {
+      if (options.length === 0) {
         return color.red("No matches for this query.");
       }
-      let { startIndex, endIndex } = entriesToDisplay2(this.cursor, options2.length, this.optionsPerPage);
+      let { startIndex, endIndex } = entriesToDisplay2(this.cursor, options.length, this.optionsPerPage);
       let prefix, styledOptions = [];
       for (let i = startIndex; i < endIndex; i++) {
         if (i === startIndex && startIndex > 0) {
           prefix = figures.arrowUp;
-        } else if (i === endIndex - 1 && endIndex < options2.length) {
+        } else if (i === endIndex - 1 && endIndex < options.length) {
           prefix = figures.arrowDown;
         } else {
           prefix = " ";
         }
-        styledOptions.push(this.renderOption(this.cursor, options2[i], i, prefix));
+        styledOptions.push(this.renderOption(this.cursor, options[i], i, prefix));
       }
       return "\n" + styledOptions.join("\n");
     }
     // shared with autocomleteMultiselect
-    renderOptions(options2) {
+    renderOptions(options) {
       if (!this.done) {
-        return this.paginateOptions(options2);
+        return this.paginateOptions(options);
       }
       return "";
     }
@@ -6320,14 +6319,14 @@ function requireAssertion_error() {
   var AssertionError = /* @__PURE__ */ function(_Error, _inspect$custom) {
     _inherits(AssertionError2, _Error);
     var _super = _createSuper(AssertionError2);
-    function AssertionError2(options2) {
+    function AssertionError2(options) {
       var _this;
       _classCallCheck(this, AssertionError2);
-      if (_typeof(options2) !== "object" || options2 === null) {
-        throw new ERR_INVALID_ARG_TYPE("options", "Object", options2);
+      if (_typeof(options) !== "object" || options === null) {
+        throw new ERR_INVALID_ARG_TYPE("options", "Object", options);
       }
-      var message = options2.message, operator = options2.operator, stackStartFn = options2.stackStartFn;
-      var actual = options2.actual, expected = options2.expected;
+      var message = options.message, operator = options.operator, stackStartFn = options.stackStartFn;
+      var actual = options.actual, expected = options.expected;
       var limit = Error.stackTraceLimit;
       Error.stackTraceLimit = 0;
       if (message != null) {
@@ -8009,7 +8008,7 @@ function requireTextwrap() {
      *    placeholder (default: ' [...]')
      *      Append to the last line of truncated text.
      */
-    constructor(options2 = {}) {
+    constructor(options = {}) {
       let {
         width = 70,
         initial_indent = "",
@@ -8023,7 +8022,7 @@ function requireTextwrap() {
         tabsize = 8,
         max_lines = void 0,
         placeholder = " [...]"
-      } = options2;
+      } = options;
       this.width = width;
       this.initial_indent = initial_indent;
       this.subsequent_indent = subsequent_indent;
@@ -8158,13 +8157,13 @@ function requireTextwrap() {
       return this.wrap(text2).join("\n");
     }
   }
-  function wrap2(text2, options2 = {}) {
-    let { width = 70, ...kwargs } = options2;
+  function wrap2(text2, options = {}) {
+    let { width = 70, ...kwargs } = options;
     let w = new TextWrapper(Object.assign({ width }, kwargs));
     return w.wrap(text2);
   }
-  function fill(text2, options2 = {}) {
-    let { width = 70, ...kwargs } = options2;
+  function fill(text2, options = {}) {
+    let { width = 70, ...kwargs } = options;
     let w = new TextWrapper(Object.assign({ width }, kwargs));
     return w.fill(text2);
   }
@@ -8212,9 +8211,9 @@ function requireArgparse() {
     const _UNRECOGNIZED_ARGS_ATTR = "_unrecognized_args";
     const assert2 = requireAssert();
     const util2 = require$$0$1;
-    const fs2 = fs$2;
+    const fs2 = fs$1;
     const sub2 = requireSub();
-    const path2 = path$1;
+    const path$1 = path;
     const repr = util2.inspect;
     function get_argv() {
       return process.argv.slice(1);
@@ -9755,11 +9754,11 @@ function requireArgparse() {
           let message = "can't open '%(filename)s': %(error)s";
           throw new ArgumentTypeError(sub2(message, args));
         }
-        let options2 = Object.assign({ fd, flags: this._flags }, this._options);
+        let options = Object.assign({ fd, flags: this._flags }, this._options);
         if (this._flags.includes("r")) {
-          return fs2.createReadStream(void 0, options2);
+          return fs2.createReadStream(void 0, options);
         } else if (this._flags.includes("w")) {
-          return fs2.createWriteStream(void 0, options2);
+          return fs2.createWriteStream(void 0, options);
         } else {
           let msg = sub2('argument "%s" with mode %r', string, this._flags);
           throw new TypeError(msg);
@@ -9787,9 +9786,9 @@ function requireArgparse() {
        *  Implements equality by attribute names and values, and provides a simple
        *  string representation.
        */
-      constructor(options2 = {}) {
+      constructor(options = {}) {
         super();
-        Object.assign(this, options2);
+        Object.assign(this, options);
       }
     });
     Namespace.prototype[Symbol.toStringTag] = void 0;
@@ -10242,7 +10241,7 @@ function requireArgparse() {
           conflict_handler
         });
         if (prog === void 0) {
-          prog = path2.basename(get_argv()[0] || "");
+          prog = path$1.basename(get_argv()[0] || "");
         }
         this.prog = prog;
         this.usage = usage;
@@ -10690,12 +10689,12 @@ function requireArgparse() {
         }
         let option_tuples = this._get_option_tuples(arg_string);
         if (option_tuples.length > 1) {
-          let options2 = option_tuples.map(([
+          let options = option_tuples.map(([
             ,
             option_string
             /*, explicit_arg*/
           ]) => option_string).join(", ");
-          let args = { option: arg_string, matches: options2 };
+          let args = { option: arg_string, matches: options };
           let msg = "ambiguous option: %(option)s could match %(matches)s";
           this.error(sub2(msg, args));
         } else if (option_tuples.length === 1) {
@@ -11081,9 +11080,9 @@ const ordinalSuffixOf = (i) => {
 const HELP_MAX_POSITION = 56;
 const RawDescriptionHelpFormatterCtor = argparseExports.RawDescriptionHelpFormatter;
 class AlignedHelpFormatter extends RawDescriptionHelpFormatterCtor {
-  constructor(options2 = {}) {
+  constructor(options = {}) {
     super({
-      ...options2,
+      ...options,
       max_help_position: HELP_MAX_POSITION
     });
   }
@@ -11093,9 +11092,9 @@ class BaseCommand extends argparseExports.ArgumentParser {
    * @param interactive if the command should be interactive instead of classic CLI
    * @param options argparse options
    */
-  constructor(interactiveOrOptions = false, options2 = void 0) {
+  constructor(interactiveOrOptions = false, options = void 0) {
     let interactive = false;
-    let parserOptions = options2;
+    let parserOptions = options;
     if (typeof interactiveOrOptions === "boolean") {
       interactive = interactiveOrOptions;
     } else {
@@ -11432,7 +11431,7 @@ class BaseCommand extends argparseExports.ArgumentParser {
     return !userArgs.some((arg) => actionNames.includes(arg));
   }
   printRootHelp() {
-    const scriptName = path$1.basename(process.argv[1] || "cli.js");
+    const scriptName = path.basename(process.argv[1] || "cli.js");
     const actionNames = this.actions.map((action2) => action2.options.action).join(",");
     console.log(`usage: ${scriptName} [-h] <command> ...`);
     console.log("");
@@ -12644,7 +12643,7 @@ function isUndefined$1(value) {
 var merge = createAssigner(function(object, source, srcIndex) {
   baseMerge(object, source, srcIndex);
 });
-const version$5 = "1.2.3";
+const version$3 = "1.2.3";
 let BaseError$2 = class BaseError extends Error {
   constructor(shortMessage, args = {}) {
     const details = args.cause instanceof BaseError ? args.cause.details : args.cause?.message ? args.cause.message : args.details;
@@ -12655,7 +12654,7 @@ let BaseError$2 = class BaseError extends Error {
       ...args.metaMessages ? [...args.metaMessages, ""] : [],
       ...docsPath2 ? [`Docs: https://abitype.dev${docsPath2}`] : [],
       ...details ? [`Details: ${details}`] : [],
-      `Version: abitype@${version$5}`
+      `Version: abitype@${version$3}`
     ].join("\n");
     super(message);
     Object.defineProperty(this, "details", {
@@ -13186,8 +13185,8 @@ function parseFallbackSignature(signature) {
 const abiParameterWithoutTupleRegex = /^(?<type>[a-zA-Z$_][a-zA-Z0-9$_]*(?:\spayable)?)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z$_][a-zA-Z0-9$_]*))?$/;
 const abiParameterWithTupleRegex = /^\((?<type>.+?)\)(?<array>(?:\[\d*?\])+?)?(?:\s(?<modifier>calldata|indexed|memory|storage{1}))?(?:\s(?<name>[a-zA-Z$_][a-zA-Z0-9$_]*))?$/;
 const dynamicIntegerRegex = /^u?int$/;
-function parseAbiParameter(param, options2) {
-  const parameterCacheKey = getParameterCacheKey(param, options2?.type, options2?.structs);
+function parseAbiParameter(param, options) {
+  const parameterCacheKey = getParameterCacheKey(param, options?.type, options?.structs);
   if (parameterCache.has(parameterCacheKey))
     return parameterCache.get(parameterCacheKey);
   const isTuple = isTupleRegex.test(param);
@@ -13198,7 +13197,7 @@ function parseAbiParameter(param, options2) {
     throw new SolidityProtectedKeywordError({ param, name: match.name });
   const name = match.name ? { name: match.name } : {};
   const indexed = match.modifier === "indexed" ? { indexed: true } : {};
-  const structs = options2?.structs ?? {};
+  const structs = options?.structs ?? {};
   let type2;
   let components = {};
   if (isTuple) {
@@ -13219,20 +13218,20 @@ function parseAbiParameter(param, options2) {
     type2 = "address";
   } else {
     type2 = match.type;
-    if (!(options2?.type === "struct") && !isSolidityType(type2))
+    if (!(options?.type === "struct") && !isSolidityType(type2))
       throw new UnknownSolidityTypeError({ type: type2 });
   }
   if (match.modifier) {
-    if (!options2?.modifiers?.has?.(match.modifier))
+    if (!options?.modifiers?.has?.(match.modifier))
       throw new InvalidModifierError({
         param,
-        type: options2?.type,
+        type: options?.type,
         modifier: match.modifier
       });
     if (functionModifiers.has(match.modifier) && !isValidDataLocation(type2, !!match.array))
       throw new InvalidFunctionModifierError({
         param,
-        type: options2?.type,
+        type: options?.type,
         modifier: match.modifier
       });
   }
@@ -13440,10 +13439,10 @@ function size$3(value) {
     return Math.ceil((value.length - 2) / 2);
   return value.length;
 }
-const version$4 = "2.47.6";
+const version$2 = "2.47.6";
 let errorConfig = {
   getDocsUrl: ({ docsBaseUrl, docsPath: docsPath2 = "", docsSlug }) => docsPath2 ? `${docsBaseUrl ?? "https://viem.sh"}${docsPath2}${docsSlug ? `#${docsSlug}` : ""}` : void 0,
-  version: `viem@${version$4}`
+  version: `viem@${version$2}`
 };
 let BaseError$1 = class BaseError2 extends Error {
   constructor(shortMessage, args = {}) {
@@ -13510,7 +13509,7 @@ let BaseError$1 = class BaseError2 extends Error {
     this.metaMessages = args.metaMessages;
     this.name = args.name ?? this.name;
     this.shortMessage = shortMessage;
-    this.version = version$4;
+    this.version = version$2;
   }
   walk(fn) {
     return walk$1(this, fn);
@@ -14138,7 +14137,7 @@ const rotlSH = (h, l, s2) => h << s2 | l >>> 32 - s2;
 const rotlSL = (h, l, s2) => l << s2 | h >>> 32 - s2;
 const rotlBH = (h, l, s2) => l << s2 - 32 | h >>> 64 - s2;
 const rotlBL = (h, l, s2) => h << s2 - 32 | l >>> 64 - s2;
-const crypto$4 = typeof globalThis === "object" && "crypto" in globalThis ? globalThis.crypto : void 0;
+const crypto$3 = typeof globalThis === "object" && "crypto" in globalThis ? globalThis.crypto : void 0;
 /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */
 function isBytes$1(a) {
   return a instanceof Uint8Array || ArrayBuffer.isView(a) && a.constructor.name === "Uint8Array";
@@ -14234,11 +14233,11 @@ function createHasher(hashCons) {
   return hashC;
 }
 function randomBytes(bytesLength = 32) {
-  if (crypto$4 && typeof crypto$4.getRandomValues === "function") {
-    return crypto$4.getRandomValues(new Uint8Array(bytesLength));
+  if (crypto$3 && typeof crypto$3.getRandomValues === "function") {
+    return crypto$3.getRandomValues(new Uint8Array(bytesLength));
   }
-  if (crypto$4 && typeof crypto$4.randomBytes === "function") {
-    return Uint8Array.from(crypto$4.randomBytes(bytesLength));
+  if (crypto$3 && typeof crypto$3.randomBytes === "function") {
+    return Uint8Array.from(crypto$3.randomBytes(bytesLength));
   }
   throw new Error("crypto.getRandomValues must be defined");
 }
@@ -14554,8 +14553,8 @@ function getAddress(address, chainId) {
 }
 const addressRegex$1 = /^0x[a-fA-F0-9]{40}$/;
 const isAddressCache = /* @__PURE__ */ new LruMap$1(8192);
-function isAddress(address, options2) {
-  const { strict = true } = options2 ?? {};
+function isAddress(address, options) {
+  const { strict = true } = options ?? {};
   const cacheKey2 = `${address}.${strict}`;
   if (isAddressCache.has(cacheKey2))
     return isAddressCache.get(cacheKey2);
@@ -16062,15 +16061,15 @@ class RpcError extends BaseError$1 {
   }
 }
 class ProviderRpcError extends RpcError {
-  constructor(cause, options2) {
-    super(cause, options2);
+  constructor(cause, options) {
+    super(cause, options);
     Object.defineProperty(this, "data", {
       enumerable: true,
       configurable: true,
       writable: true,
       value: void 0
     });
-    this.data = options2.data;
+    this.data = options.data;
   }
 }
 class ParseRpcError extends RpcError {
@@ -18621,42 +18620,42 @@ function memoized(fn) {
     return computed;
   };
 }
-const version$3 = "0.1.1";
+const version$1 = "0.1.1";
 function getVersion() {
-  return version$3;
+  return version$1;
 }
 class BaseError3 extends Error {
-  static setStaticOptions(options2) {
-    BaseError3.prototype.docsOrigin = options2.docsOrigin;
-    BaseError3.prototype.showVersion = options2.showVersion;
-    BaseError3.prototype.version = options2.version;
+  static setStaticOptions(options) {
+    BaseError3.prototype.docsOrigin = options.docsOrigin;
+    BaseError3.prototype.showVersion = options.showVersion;
+    BaseError3.prototype.version = options.version;
   }
-  constructor(shortMessage, options2 = {}) {
+  constructor(shortMessage, options = {}) {
     const details = (() => {
-      if (options2.cause instanceof BaseError3) {
-        if (options2.cause.details)
-          return options2.cause.details;
-        if (options2.cause.shortMessage)
-          return options2.cause.shortMessage;
+      if (options.cause instanceof BaseError3) {
+        if (options.cause.details)
+          return options.cause.details;
+        if (options.cause.shortMessage)
+          return options.cause.shortMessage;
       }
-      if (options2.cause && "details" in options2.cause && typeof options2.cause.details === "string")
-        return options2.cause.details;
-      if (options2.cause?.message)
-        return options2.cause.message;
-      return options2.details;
+      if (options.cause && "details" in options.cause && typeof options.cause.details === "string")
+        return options.cause.details;
+      if (options.cause?.message)
+        return options.cause.message;
+      return options.details;
     })();
     const docsPath2 = (() => {
-      if (options2.cause instanceof BaseError3)
-        return options2.cause.docsPath || options2.docsPath;
-      return options2.docsPath;
+      if (options.cause instanceof BaseError3)
+        return options.cause.docsPath || options.docsPath;
+      return options.docsPath;
     })();
-    const docsBaseUrl = options2.docsOrigin ?? BaseError3.prototype.docsOrigin;
+    const docsBaseUrl = options.docsOrigin ?? BaseError3.prototype.docsOrigin;
     const docs = `${docsBaseUrl}${docsPath2 ?? ""}`;
-    const showVersion = Boolean(options2.version ?? BaseError3.prototype.showVersion);
-    const version2 = options2.version ?? BaseError3.prototype.version;
+    const showVersion = Boolean(options.version ?? BaseError3.prototype.showVersion);
+    const version2 = options.version ?? BaseError3.prototype.version;
     const message = [
       shortMessage || "An error occurred.",
-      ...options2.metaMessages ? ["", ...options2.metaMessages] : [],
+      ...options.metaMessages ? ["", ...options.metaMessages] : [],
       ...details || docsPath2 || showVersion ? [
         "",
         details ? `Details: ${details}` : void 0,
@@ -18664,7 +18663,7 @@ class BaseError3 extends Error {
         showVersion ? `Version: ${version2}` : void 0
       ] : []
     ].filter((x) => typeof x === "string").join("\n");
-    super(message, options2.cause ? { cause: options2.cause } : void 0);
+    super(message, options.cause ? { cause: options.cause } : void 0);
     Object.defineProperty(this, "details", {
       enumerable: true,
       configurable: true,
@@ -18719,7 +18718,7 @@ class BaseError3 extends Error {
       writable: true,
       value: "BaseError"
     });
-    this.cause = options2.cause;
+    this.cause = options.cause;
     this.details = details;
     this.docs = docs;
     this.docsOrigin = docsBaseUrl;
@@ -18776,8 +18775,8 @@ function charCodeToBase16(char) {
     return char - (charCodeMap.a - 10);
   return void 0;
 }
-function pad$1(bytes, options2 = {}) {
-  const { dir, size: size2 = 32 } = options2;
+function pad$1(bytes, options = {}) {
+  const { dir, size: size2 = 32 } = options;
   if (size2 === 0)
     return bytes;
   if (bytes.length > size2)
@@ -18793,8 +18792,8 @@ function pad$1(bytes, options2 = {}) {
   }
   return paddedBytes;
 }
-function trim(value, options2 = {}) {
-  const { dir = "left" } = options2;
+function trim(value, options = {}) {
+  const { dir = "left" } = options;
   let data = value;
   let sliceLength = 0;
   for (let i = 0; i < data.length - 1; i++) {
@@ -18830,8 +18829,8 @@ function assertEndOffset(value, start, end) {
     });
   }
 }
-function pad(hex_, options2 = {}) {
-  const { dir, size: size2 = 32 } = options2;
+function pad(hex_, options = {}) {
+  const { dir, size: size2 = 32 } = options;
   if (size2 === 0)
     return hex_;
   const hex = hex_.replace("0x", "");
@@ -18863,8 +18862,8 @@ function from$8(value) {
 function fromArray(value) {
   return value instanceof Uint8Array ? value : new Uint8Array(value);
 }
-function fromHex$1(value, options2 = {}) {
-  const { size: size2 } = options2;
+function fromHex$1(value, options = {}) {
+  const { size: size2 } = options;
   let hex = value;
   if (size2) {
     assertSize(value, size2);
@@ -18885,8 +18884,8 @@ function fromHex$1(value, options2 = {}) {
   }
   return bytes;
 }
-function fromString$1(value, options2 = {}) {
-  const { size: size2 } = options2;
+function fromString$1(value, options = {}) {
+  const { size: size2 } = options;
   const bytes = encoder$1.encode(value);
   if (typeof size2 === "number") {
     assertSize$1(bytes, size2);
@@ -18900,20 +18899,20 @@ function padRight$1(value, size2) {
 function size$2(value) {
   return value.length;
 }
-function slice$1(value, start, end, options2 = {}) {
-  const { strict } = options2;
+function slice$1(value, start, end, options = {}) {
+  const { strict } = options;
   const value_ = value.slice(start, end);
   return value_;
 }
-function toBigInt$1(bytes, options2 = {}) {
-  const { size: size2 } = options2;
+function toBigInt$1(bytes, options = {}) {
+  const { size: size2 } = options;
   if (typeof size2 !== "undefined")
     assertSize$1(bytes, size2);
-  const hex = fromBytes$1(bytes, options2);
-  return toBigInt(hex, options2);
+  const hex = fromBytes$1(bytes, options);
+  return toBigInt(hex, options);
 }
-function toBoolean(bytes, options2 = {}) {
-  const { size: size2 } = options2;
+function toBoolean(bytes, options = {}) {
+  const { size: size2 } = options;
   let bytes_ = bytes;
   if (typeof size2 !== "undefined") {
     assertSize$1(bytes_, size2);
@@ -18923,15 +18922,15 @@ function toBoolean(bytes, options2 = {}) {
     throw new InvalidBytesBooleanError2(bytes_);
   return Boolean(bytes_[0]);
 }
-function toNumber$1(bytes, options2 = {}) {
-  const { size: size2 } = options2;
+function toNumber$1(bytes, options = {}) {
+  const { size: size2 } = options;
   if (typeof size2 !== "undefined")
     assertSize$1(bytes, size2);
-  const hex = fromBytes$1(bytes, options2);
-  return toNumber(hex, options2);
+  const hex = fromBytes$1(bytes, options);
+  return toNumber(hex, options);
 }
-function toString$1(bytes, options2 = {}) {
-  const { size: size2 } = options2;
+function toString$1(bytes, options = {}) {
+  const { size: size2 } = options;
   let bytes_ = bytes;
   if (typeof size2 !== "undefined") {
     assertSize$1(bytes_, size2);
@@ -18984,8 +18983,8 @@ let SizeExceedsPaddingSizeError$1 = class SizeExceedsPaddingSizeError2 extends B
 };
 const encoder = /* @__PURE__ */ new TextEncoder();
 const hexes = /* @__PURE__ */ Array.from({ length: 256 }, (_v, i) => i.toString(16).padStart(2, "0"));
-function assert$4(value, options2 = {}) {
-  const { strict = false } = options2;
+function assert$4(value, options = {}) {
+  const { strict = false } = options;
   if (!value)
     throw new InvalidHexTypeError(value);
   if (typeof value !== "string")
@@ -19007,27 +19006,27 @@ function from$7(value) {
     return fromBytes$1(new Uint8Array(value));
   return value;
 }
-function fromBoolean(value, options2 = {}) {
+function fromBoolean(value, options = {}) {
   const hex = `0x${Number(value)}`;
-  if (typeof options2.size === "number") {
-    assertSize(hex, options2.size);
-    return padLeft(hex, options2.size);
+  if (typeof options.size === "number") {
+    assertSize(hex, options.size);
+    return padLeft(hex, options.size);
   }
   return hex;
 }
-function fromBytes$1(value, options2 = {}) {
+function fromBytes$1(value, options = {}) {
   let string = "";
   for (let i = 0; i < value.length; i++)
     string += hexes[value[i]];
   const hex = `0x${string}`;
-  if (typeof options2.size === "number") {
-    assertSize(hex, options2.size);
-    return padRight(hex, options2.size);
+  if (typeof options.size === "number") {
+    assertSize(hex, options.size);
+    return padRight(hex, options.size);
   }
   return hex;
 }
-function fromNumber(value, options2 = {}) {
-  const { signed, size: size2 } = options2;
+function fromNumber(value, options = {}) {
+  const { signed, size: size2 } = options;
   const value_ = BigInt(value);
   let maxValue;
   if (size2) {
@@ -19055,8 +19054,8 @@ function fromNumber(value, options2 = {}) {
     return padLeft(hex, size2);
   return hex;
 }
-function fromString(value, options2 = {}) {
-  return fromBytes$1(encoder.encode(value), options2);
+function fromString(value, options = {}) {
+  return fromBytes$1(encoder.encode(value), options);
 }
 function padLeft(value, size2) {
   return pad(value, { dir: "left", size: size2 });
@@ -19064,8 +19063,8 @@ function padLeft(value, size2) {
 function padRight(value, size2) {
   return pad(value, { dir: "right", size: size2 });
 }
-function slice(value, start, end, options2 = {}) {
-  const { strict } = options2;
+function slice(value, start, end, options = {}) {
+  const { strict } = options;
   assertStartOffset(value, start);
   const value_ = `0x${value.replace("0x", "").slice((start ?? 0) * 2, (end ?? value.length) * 2)}`;
   if (strict)
@@ -19075,10 +19074,10 @@ function slice(value, start, end, options2 = {}) {
 function size$1(value) {
   return Math.ceil((value.length - 2) / 2);
 }
-function toBigInt(hex, options2 = {}) {
-  const { signed } = options2;
-  if (options2.size)
-    assertSize(hex, options2.size);
+function toBigInt(hex, options = {}) {
+  const { signed } = options;
+  if (options.size)
+    assertSize(hex, options.size);
   const value = BigInt(hex);
   if (!signed)
     return value;
@@ -19089,14 +19088,14 @@ function toBigInt(hex, options2 = {}) {
     return value;
   return value - max_unsigned - 1n;
 }
-function toNumber(hex, options2 = {}) {
-  const { signed, size: size2 } = options2;
+function toNumber(hex, options = {}) {
+  const { signed, size: size2 } = options;
   if (!signed && !size2)
     return Number(hex);
-  return Number(toBigInt(hex, options2));
+  return Number(toBigInt(hex, options));
 }
-function validate$4(value, options2 = {}) {
-  const { strict = false } = options2;
+function validate$4(value, options = {}) {
+  const { strict = false } = options;
   try {
     assert$4(value, { strict });
     return true;
@@ -19772,7 +19771,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-DtvBmMav.js"));
+    const { offchainLookup, offchainLookupSignature } = await import("./ccip-DwmWuHXn.mjs");
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -20339,12 +20338,12 @@ function createClient(parameters) {
   const pollingInterval = parameters.pollingInterval ?? defaultPollingInterval;
   const cacheTime = parameters.cacheTime ?? pollingInterval;
   const account = parameters.account ? parseAccount(parameters.account) : void 0;
-  const { config: config2, request, value } = parameters.transport({
+  const { config, request, value } = parameters.transport({
     account,
     chain,
     pollingInterval
   });
-  const transport = { ...config2, ...value };
+  const transport = { ...config, ...value };
   const client = {
     account,
     batch,
@@ -21252,10 +21251,10 @@ function withDedupe(fn, { enabled = true, id }) {
   promiseCache.set(id, promise);
   return promise;
 }
-function buildRequest(request, options2 = {}) {
+function buildRequest(request, options = {}) {
   return async (args, overrideOptions = {}) => {
     const { dedupe = false, methods, retryDelay = 150, retryCount = 3, uid: uid2 } = {
-      ...options2,
+      ...options,
       ...overrideOptions
     };
     const { method } = args;
@@ -21464,13 +21463,13 @@ function createIdStore() {
   };
 }
 const idCache = /* @__PURE__ */ createIdStore();
-function getHttpRpcClient(url_, options2 = {}) {
+function getHttpRpcClient(url_, options = {}) {
   const { url, headers: headers_url } = parseUrl(url_);
   return {
     async request(params) {
-      const { body, fetchFn = options2.fetchFn ?? fetch, onRequest = options2.onRequest, onResponse = options2.onResponse, timeout = options2.timeout ?? 1e4 } = params;
+      const { body, fetchFn = options.fetchFn ?? fetch, onRequest = options.onRequest, onResponse = options.onResponse, timeout = options.timeout ?? 1e4 } = params;
       const fetchOptions = {
-        ...options2.fetchOptions ?? {},
+        ...options.fetchOptions ?? {},
         ...params.fetchOptions ?? {}
       };
       const { headers, method, signal: signal_ } = fetchOptions;
@@ -21873,16 +21872,16 @@ class HMAC extends Hash {
 }
 const hmac$3 = (hash2, key, message) => new HMAC(hash2, key).update(message).digest();
 hmac$3.create = (hash2, key) => new HMAC(hash2, key);
-function keccak256(value, options2 = {}) {
-  const { as: as2 = typeof value === "string" ? "Hex" : "Bytes" } = options2;
+function keccak256(value, options = {}) {
+  const { as: as2 = typeof value === "string" ? "Hex" : "Bytes" } = options;
   const bytes = keccak_256(from$8(value));
   if (as2 === "Bytes")
     return bytes;
   return fromBytes$1(bytes);
 }
 const addressRegex = /^0x[a-fA-F0-9]{40}$/;
-function assert$3(value, options2 = {}) {
-  const { strict = true } = options2;
+function assert$3(value, options = {}) {
+  const { strict = true } = options;
   if (!addressRegex.test(value))
     throw new InvalidAddressError2({
       address: value,
@@ -21917,8 +21916,8 @@ function checksum$1(address) {
   checksum$2.set(address, result);
   return result;
 }
-function validate$3(address, options2 = {}) {
-  const { strict = true } = options2 ?? {};
+function validate$3(address, options = {}) {
+  const { strict = true } = options ?? {};
   try {
     assert$3(address, { strict });
     return true;
@@ -21965,8 +21964,8 @@ const arrayRegex = /^(.*)\[([0-9]*)\]$/;
 const bytesRegex = /^bytes([1-9]|1[0-9]|2[0-9]|3[0-2])?$/;
 const integerRegex = /^(u?int)(8|16|24|32|40|48|56|64|72|80|88|96|104|112|120|128|136|144|152|160|168|176|184|192|200|208|216|224|232|240|248|256)?$/;
 const maxUint256 = 2n ** 256n - 1n;
-function decodeParameter(cursor, param, options2) {
-  const { checksumAddress: checksumAddress2, staticPosition } = options2;
+function decodeParameter(cursor, param, options) {
+  const { checksumAddress: checksumAddress2, staticPosition } = options;
   const arrayComponents = getArrayComponents(param.type);
   if (arrayComponents) {
     const [length2, type2] = arrayComponents;
@@ -21991,14 +21990,14 @@ function decodeParameter(cursor, param, options2) {
 }
 const sizeOfLength = 32;
 const sizeOfOffset = 32;
-function decodeAddress(cursor, options2 = {}) {
-  const { checksum: checksum2 = false } = options2;
+function decodeAddress(cursor, options = {}) {
+  const { checksum: checksum2 = false } = options;
   const value = cursor.readBytes(32);
   const wrap2 = (address) => checksum2 ? checksum$1(address) : address;
   return [wrap2(fromBytes$1(slice$1(value, -20))), 32];
 }
-function decodeArray(cursor, param, options2) {
-  const { checksumAddress: checksumAddress2, length: length2, staticPosition } = options2;
+function decodeArray(cursor, param, options) {
+  const { checksumAddress: checksumAddress2, length: length2, staticPosition } = options;
   if (!length2) {
     const offset2 = toNumber$1(cursor.readBytes(sizeOfOffset));
     const start = staticPosition + offset2;
@@ -22076,8 +22075,8 @@ function decodeNumber(cursor, param) {
     32
   ];
 }
-function decodeTuple(cursor, param, options2) {
-  const { checksumAddress: checksumAddress2, staticPosition } = options2;
+function decodeTuple(cursor, param, options) {
+  const { checksumAddress: checksumAddress2, staticPosition } = options;
   const hasUnnamedChild = param.components.length === 0 || param.components.some(({ name }) => !name);
   const value = hasUnnamedChild ? [] : {};
   let consumed = 0;
@@ -22201,16 +22200,16 @@ function encode$2(preparedParameters) {
   }
   return concat(...staticParameters, ...dynamicParameters);
 }
-function encodeAddress(value, options2) {
-  const { checksum: checksum2 = false } = options2;
+function encodeAddress(value, options) {
+  const { checksum: checksum2 = false } = options;
   assert$3(value, { strict: checksum2 });
   return {
     dynamic: false,
     encoded: padLeft(value.toLowerCase())
   };
 }
-function encodeArray(value, options2) {
-  const { checksumAddress: checksumAddress2, length: length2, parameter } = options2;
+function encodeArray(value, options) {
+  const { checksumAddress: checksumAddress2, length: length2, parameter } = options;
   const dynamic = length2 === null;
   if (!Array.isArray(value))
     throw new InvalidArrayError2(value);
@@ -22306,8 +22305,8 @@ function encodeString(value) {
     encoded: concat(padRight(fromNumber(size$1(hexValue), { size: 32 })), ...parts)
   };
 }
-function encodeTuple(value, options2) {
-  const { checksumAddress: checksumAddress2, parameter } = options2;
+function encodeTuple(value, options) {
+  const { checksumAddress: checksumAddress2, parameter } = options;
   let dynamic = false;
   const preparedParameters = [];
   for (let i = 0; i < parameter.components.length; i++) {
@@ -22552,8 +22551,8 @@ class RecursiveReadLimitExceededError2 extends BaseError3 {
     });
   }
 }
-function decode(parameters, data, options2 = {}) {
-  const { as: as2 = "Array", checksumAddress: checksumAddress2 = false } = options2;
+function decode(parameters, data, options = {}) {
+  const { as: as2 = "Array", checksumAddress: checksumAddress2 = false } = options;
   const bytes = typeof data === "string" ? fromHex$1(data) : data;
   const cursor = create(bytes);
   if (size$2(bytes) === 0 && parameters.length > 0)
@@ -22581,7 +22580,7 @@ function decode(parameters, data, options2 = {}) {
   }
   return values;
 }
-function encode$1(parameters, values, options2) {
+function encode$1(parameters, values, options) {
   const { checksumAddress: checksumAddress2 = false } = {};
   if (parameters.length !== values.length)
     throw new LengthMismatchError({
@@ -24218,8 +24217,8 @@ const secp256k1$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
   __proto__: null,
   secp256k1
 }, Symbol.toStringTag, { value: "Module" }));
-function assert$2(signature, options2 = {}) {
-  const { recovered } = options2;
+function assert$2(signature, options = {}) {
+  const { recovered } = options;
   if (typeof signature.r === "undefined")
     throw new MissingPropertiesError({ signature });
   if (typeof signature.s === "undefined")
@@ -24391,10 +24390,10 @@ class InvalidVError extends BaseError3 {
     });
   }
 }
-function from$4(authorization, options2 = {}) {
+function from$4(authorization, options = {}) {
   if (typeof authorization.chainId === "string")
     return fromRpc(authorization);
-  return { ...authorization, ...options2.signature };
+  return { ...authorization, ...options.signature };
 }
 function fromRpc(authorization) {
   const { address, chainId, nonce } = authorization;
@@ -24853,8 +24852,8 @@ function getAmbiguousTypes(sourceParameters, targetParameters, args) {
   }
   return;
 }
-function from$3(abiItem, options2 = {}) {
-  const { prepare = true } = options2;
+function from$3(abiItem, options = {}) {
+  const { prepare = true } = options;
   const item = (() => {
     if (Array.isArray(abiItem))
       return parseAbiItem(abiItem);
@@ -24867,8 +24866,8 @@ function from$3(abiItem, options2 = {}) {
     ...prepare ? { hash: getSignatureHash(item) } : {}
   };
 }
-function fromAbi$2(abi2, name, options2) {
-  const { args = [], prepare = true } = options2 ?? {};
+function fromAbi$2(abi2, name, options) {
+  const { args = [], prepare = true } = options ?? {};
   const isSelector = validate$4(name, { strict: false });
   const abiItems = abi2.filter((abiItem2) => {
     if (isSelector) {
@@ -25015,14 +25014,14 @@ class NotFoundError extends BaseError3 {
   }
 }
 function encode(...parameters) {
-  const [abiConstructor, options2] = (() => {
+  const [abiConstructor, options] = (() => {
     if (Array.isArray(parameters[0])) {
-      const [abi2, options3] = parameters;
-      return [fromAbi$1(abi2), options3];
+      const [abi2, options2] = parameters;
+      return [fromAbi$1(abi2), options2];
     }
     return parameters;
   })();
-  const { bytecode, args } = options2;
+  const { bytecode, args } = options;
   return concat(bytecode, abiConstructor.inputs?.length && args?.length ? encode$1(abiConstructor.inputs, args) : "0x");
 }
 function from$2(abiConstructor) {
@@ -25051,11 +25050,11 @@ function encodeData(...parameters) {
   const data = args.length > 0 ? encode$1(item.inputs, args) : void 0;
   return data ? concat(selector, data) : selector;
 }
-function from$1(abiFunction, options2 = {}) {
-  return from$3(abiFunction, options2);
+function from$1(abiFunction, options = {}) {
+  return from$3(abiFunction, options);
 }
-function fromAbi(abi2, name, options2) {
-  const item = fromAbi$2(abi2, name, options2);
+function fromAbi(abi2, name, options) {
+  const item = fromAbi$2(abi2, name, options);
   if (item.type !== "function")
     throw new NotFoundError({ name, type: "function" });
   return item;
@@ -26242,12 +26241,12 @@ class UrlRequiredError extends BaseError$1 {
     });
   }
 }
-function http(url, config2 = {}) {
-  const { batch, fetchFn, fetchOptions, key = "http", methods, name = "HTTP JSON-RPC", onFetchRequest, onFetchResponse, retryDelay, raw } = config2;
+function http(url, config = {}) {
+  const { batch, fetchFn, fetchOptions, key = "http", methods, name = "HTTP JSON-RPC", onFetchRequest, onFetchResponse, retryDelay, raw } = config;
   return ({ chain, retryCount: retryCount_, timeout: timeout_ }) => {
     const { batchSize = 1e3, wait: wait2 = 0 } = typeof batch === "object" ? batch : {};
-    const retryCount = config2.retryCount ?? retryCount_;
-    const timeout = timeout_ ?? config2.timeout ?? 1e4;
+    const retryCount = config.retryCount ?? retryCount_;
+    const timeout = timeout_ ?? config.timeout ?? 1e4;
     const url_ = url || chain?.rpcUrls.default.http[0];
     if (!url_)
       throw new UrlRequiredError();
@@ -26904,7 +26903,7 @@ function leadingWhitespace(str) {
   }
   return i;
 }
-function printBlockString(value, options2) {
+function printBlockString(value, options) {
   const escapedValue = value.replace(/"""/g, '\\"""');
   const lines2 = escapedValue.split(/\r\n|[\n\r]/g);
   const isSingleLine = lines2.length === 1;
@@ -27626,8 +27625,8 @@ class Source {
 function isSource(source) {
   return instanceOf(source, Source);
 }
-function parse$3(source, options2) {
-  const parser = new Parser(source, options2);
+function parse$3(source, options) {
+  const parser = new Parser(source, options);
   const document2 = parser.parseDocument();
   Object.defineProperty(document2, "tokenCount", {
     enumerable: false,
@@ -27636,10 +27635,10 @@ function parse$3(source, options2) {
   return document2;
 }
 class Parser {
-  constructor(source, options2 = {}) {
+  constructor(source, options = {}) {
     const sourceObj = isSource(source) ? source : new Source(source);
     this._lexer = new Lexer(sourceObj);
-    this._options = options2;
+    this._options = options;
     this._tokenCounter = 0;
   }
   get tokenCount() {
@@ -29521,7 +29520,7 @@ const analyzeDocument = (document2, excludeOperationName) => {
 };
 const defaultJsonSerializer = JSON;
 const runRequest = async (input) => {
-  const config2 = {
+  const config = {
     ...input,
     method: input.request._tag === `Single` ? input.request.document.isMutation ? `POST` : uppercase(input.method ?? `post`) : input.request.hasMutations ? `POST` : uppercase(input.method ?? `post`),
     fetchOptions: {
@@ -29529,8 +29528,8 @@ const runRequest = async (input) => {
       errorPolicy: input.fetchOptions.errorPolicy ?? `none`
     }
   };
-  const fetcher = createFetcher(config2.method);
-  const fetchResponse = await fetcher(config2);
+  const fetcher = createFetcher(config.method);
+  const fetchResponse = await fetcher(config);
   let result;
   try {
     result = await parseResultFromResponse(fetchResponse, input.fetchOptions.jsonSerializer ?? defaultJsonSerializer);
@@ -29559,7 +29558,7 @@ const runRequest = async (input) => {
   }
   if (result instanceof Error)
     throw result;
-  if (isRequestResultHaveErrors(result) && config2.fetchOptions.errorPolicy === `none`) {
+  if (isRequestResultHaveErrors(result) && config.fetchOptions.errorPolicy === `none`) {
     const clientResponse = result._tag === `Batch` ? { ...result.executionResults, ...clientResponseBase } : {
       ...result.executionResult,
       ...clientResponseBase
@@ -29573,12 +29572,12 @@ const runRequest = async (input) => {
     case `Single`:
       return {
         ...clientResponseBase,
-        ...executionResultClientResponseFields(config2)(result.executionResult)
+        ...executionResultClientResponseFields(config)(result.executionResult)
       };
     case `Batch`:
       return {
         ...clientResponseBase,
-        data: result.executionResults.map(executionResultClientResponseFields(config2))
+        data: result.executionResults.map(executionResultClientResponseFields(config))
       };
     default:
       casesExhausted(result);
@@ -31071,48 +31070,48 @@ class ZodString extends ZodType {
       ...errorUtil.errToObj(message)
     });
   }
-  jwt(options2) {
-    return this._addCheck({ kind: "jwt", ...errorUtil.errToObj(options2) });
+  jwt(options) {
+    return this._addCheck({ kind: "jwt", ...errorUtil.errToObj(options) });
   }
-  ip(options2) {
-    return this._addCheck({ kind: "ip", ...errorUtil.errToObj(options2) });
+  ip(options) {
+    return this._addCheck({ kind: "ip", ...errorUtil.errToObj(options) });
   }
-  cidr(options2) {
-    return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options2) });
+  cidr(options) {
+    return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options) });
   }
-  datetime(options2) {
-    if (typeof options2 === "string") {
+  datetime(options) {
+    if (typeof options === "string") {
       return this._addCheck({
         kind: "datetime",
         precision: null,
         offset: false,
         local: false,
-        message: options2
+        message: options
       });
     }
     return this._addCheck({
       kind: "datetime",
-      precision: typeof options2?.precision === "undefined" ? null : options2?.precision,
-      offset: options2?.offset ?? false,
-      local: options2?.local ?? false,
-      ...errorUtil.errToObj(options2?.message)
+      precision: typeof options?.precision === "undefined" ? null : options?.precision,
+      offset: options?.offset ?? false,
+      local: options?.local ?? false,
+      ...errorUtil.errToObj(options?.message)
     });
   }
   date(message) {
     return this._addCheck({ kind: "date", message });
   }
-  time(options2) {
-    if (typeof options2 === "string") {
+  time(options) {
+    if (typeof options === "string") {
       return this._addCheck({
         kind: "time",
         precision: null,
-        message: options2
+        message: options
       });
     }
     return this._addCheck({
       kind: "time",
-      precision: typeof options2?.precision === "undefined" ? null : options2?.precision,
-      ...errorUtil.errToObj(options2?.message)
+      precision: typeof options?.precision === "undefined" ? null : options?.precision,
+      ...errorUtil.errToObj(options?.message)
     });
   }
   duration(message) {
@@ -31125,12 +31124,12 @@ class ZodString extends ZodType {
       ...errorUtil.errToObj(message)
     });
   }
-  includes(value, options2) {
+  includes(value, options) {
     return this._addCheck({
       kind: "includes",
       value,
-      position: options2?.position,
-      ...errorUtil.errToObj(options2?.message)
+      position: options?.position,
+      ...errorUtil.errToObj(options?.message)
     });
   }
   startsWith(value, message) {
@@ -32414,7 +32413,7 @@ ZodObject.lazycreate = (shape, params) => {
 class ZodUnion extends ZodType {
   _parse(input) {
     const { ctx } = this._processInputParams(input);
-    const options2 = this._def.options;
+    const options = this._def.options;
     function handleResults(results) {
       for (const result of results) {
         if (result.result.status === "valid") {
@@ -32435,7 +32434,7 @@ class ZodUnion extends ZodType {
       return INVALID;
     }
     if (ctx.common.async) {
-      return Promise.all(options2.map(async (option) => {
+      return Promise.all(options.map(async (option) => {
         const childCtx = {
           ...ctx,
           common: {
@@ -32456,7 +32455,7 @@ class ZodUnion extends ZodType {
     } else {
       let dirty = void 0;
       const issues = [];
-      for (const option of options2) {
+      for (const option of options) {
         const childCtx = {
           ...ctx,
           common: {
@@ -33549,7 +33548,7 @@ const createClusterId = (ownerAddress, operatorIds) => {
   }
   return `${ownerAddress.toLowerCase()}-${operatorIds.join("-")}`;
 };
-const toSolidityCluster$1 = (cluster) => {
+const toSolidityCluster = (cluster) => {
   return {
     active: cluster.active,
     balance: BigInt(cluster.balance),
@@ -35995,9 +35994,9 @@ var Validator = (
     };
     Validator2.prototype.validateSync = function(objectOrSchemaName, objectOrValidationOptions, maybeValidatorOptions) {
       var object = typeof objectOrSchemaName === "string" ? objectOrValidationOptions : objectOrSchemaName;
-      var options2 = typeof objectOrSchemaName === "string" ? maybeValidatorOptions : objectOrValidationOptions;
+      var options = typeof objectOrSchemaName === "string" ? maybeValidatorOptions : objectOrValidationOptions;
       var schema = typeof objectOrSchemaName === "string" ? objectOrSchemaName : void 0;
-      var executor = new ValidationExecutor(this, options2);
+      var executor = new ValidationExecutor(this, options);
       executor.ignoreAsyncValidations = true;
       var validationErrors = [];
       executor.execute(object, schema, validationErrors);
@@ -36005,9 +36004,9 @@ var Validator = (
     };
     Validator2.prototype.coreValidate = function(objectOrSchemaName, objectOrValidationOptions, maybeValidatorOptions) {
       var object = typeof objectOrSchemaName === "string" ? objectOrValidationOptions : objectOrSchemaName;
-      var options2 = typeof objectOrSchemaName === "string" ? maybeValidatorOptions : objectOrValidationOptions;
+      var options = typeof objectOrSchemaName === "string" ? maybeValidatorOptions : objectOrValidationOptions;
       var schema = typeof objectOrSchemaName === "string" ? objectOrSchemaName : void 0;
-      var executor = new ValidationExecutor(this, options2);
+      var executor = new ValidationExecutor(this, options);
       var validationErrors = [];
       executor.execute(object, schema, validationErrors);
       return Promise.all(executor.awaitingPromises).then(function() {
@@ -36064,16 +36063,16 @@ var ConstraintMetadata = (
     return ConstraintMetadata2;
   }()
 );
-function registerDecorator(options2) {
+function registerDecorator(options) {
   var constraintCls;
-  if (options2.validator instanceof Function) {
-    constraintCls = options2.validator;
-    var constraintClasses = getFromContainer(MetadataStorage).getTargetValidatorConstraints(options2.validator);
+  if (options.validator instanceof Function) {
+    constraintCls = options.validator;
+    var constraintClasses = getFromContainer(MetadataStorage).getTargetValidatorConstraints(options.validator);
     if (constraintClasses.length > 1) {
-      throw "More than one implementation of ValidatorConstraintInterface found for validator on: ".concat(options2.target.name, ":").concat(options2.propertyName);
+      throw "More than one implementation of ValidatorConstraintInterface found for validator on: ".concat(options.target.name, ":").concat(options.propertyName);
     }
   } else {
-    var validator_1 = options2.validator;
+    var validator_1 = options.validator;
     constraintCls = /** @class */
     function() {
       function CustomConstraint() {
@@ -36089,16 +36088,16 @@ function registerDecorator(options2) {
       };
       return CustomConstraint;
     }();
-    getMetadataStorage().addConstraintMetadata(new ConstraintMetadata(constraintCls, options2.name, options2.async));
+    getMetadataStorage().addConstraintMetadata(new ConstraintMetadata(constraintCls, options.name, options.async));
   }
   var validationMetadataArgs = {
-    type: options2.name && ValidationTypes.isValid(options2.name) ? options2.name : ValidationTypes.CUSTOM_VALIDATION,
-    name: options2.name,
-    target: options2.target,
-    propertyName: options2.propertyName,
-    validationOptions: options2.options,
+    type: options.name && ValidationTypes.isValid(options.name) ? options.name : ValidationTypes.CUSTOM_VALIDATION,
+    name: options.name,
+    target: options.target,
+    propertyName: options.propertyName,
+    validationOptions: options.options,
     constraintCls,
-    constraints: options2.constraints
+    constraints: options.constraints
   };
   getMetadataStorage().addValidationMetadata(new ValidationMetadata(validationMetadataArgs));
 }
@@ -36108,15 +36107,15 @@ function buildMessage(impl, validationOptions) {
     return impl(eachPrefix, validationArguments);
   };
 }
-function ValidateBy(options2, validationOptions) {
+function ValidateBy(options, validationOptions) {
   return function(object, propertyName) {
     registerDecorator({
-      name: options2.name,
+      name: options.name,
       target: object.constructor,
       propertyName,
       options: validationOptions,
-      constraints: options2.constraints,
-      validator: options2.validator
+      constraints: options.constraints,
+      validator: options.validator
     });
   };
 }
@@ -36155,10 +36154,10 @@ function IsOptional(validationOptions) {
     getMetadataStorage().addValidationMetadata(new ValidationMetadata(args));
   };
 }
-function ValidatorConstraint(options2) {
+function ValidatorConstraint(options) {
   return function(target) {
-    var isAsync2 = options2 && options2.async;
-    var name = options2 && options2.name ? options2.name : "";
+    var isAsync2 = options && options.async;
+    var name = options && options.name ? options.name : "";
     if (!name) {
       name = target.name;
       if (!name)
@@ -36253,13 +36252,13 @@ function requireIsLength() {
         return o2 && "function" == typeof Symbol && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
       }, _typeof(o);
     }
-    function isLength2(str, options2) {
+    function isLength2(str, options) {
       (0, _assertString.default)(str);
       var min2;
       var max2;
-      if (_typeof(options2) === "object") {
-        min2 = options2.min || 0;
-        max2 = options2.max;
+      if (_typeof(options) === "object") {
+        min2 = options.min || 0;
+        max2 = options.max;
       } else {
         min2 = arguments[1] || 0;
         max2 = arguments[2];
@@ -36268,8 +36267,8 @@ function requireIsLength() {
       var surrogatePairs = str.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g) || [];
       var len = str.length - presentationSequences.length - surrogatePairs.length;
       var isInsideRange = len >= min2 && (typeof max2 === "undefined" || len <= max2);
-      if (isInsideRange && Array.isArray(options2 === null || options2 === void 0 ? void 0 : options2.discreteLengths)) {
-        return options2.discreteLengths.some(function(discreteLen) {
+      if (isInsideRange && Array.isArray(options === null || options === void 0 ? void 0 : options.discreteLengths)) {
+        return options.discreteLengths.some(function(discreteLen) {
           return discreteLen === len;
         });
       }
@@ -36308,37 +36307,37 @@ function Length(min2, max2, validationOptions) {
   }, validationOptions);
 }
 var IS_NUMBER = "isNumber";
-function isNumber$1(value, options2) {
-  if (options2 === void 0) {
-    options2 = {};
+function isNumber$1(value, options) {
+  if (options === void 0) {
+    options = {};
   }
   if (typeof value !== "number") {
     return false;
   }
   if (value === Infinity || value === -Infinity) {
-    return !!options2.allowInfinity;
+    return !!options.allowInfinity;
   }
   if (Number.isNaN(value)) {
-    return !!options2.allowNaN;
+    return !!options.allowNaN;
   }
-  if (options2.maxDecimalPlaces !== void 0) {
+  if (options.maxDecimalPlaces !== void 0) {
     var decimalPlaces = 0;
     if (value % 1 !== 0) {
       decimalPlaces = value.toString().split(".")[1].length;
     }
-    if (decimalPlaces > options2.maxDecimalPlaces) {
+    if (decimalPlaces > options.maxDecimalPlaces) {
       return false;
     }
   }
   return Number.isFinite(value);
 }
-function IsNumber(options2, validationOptions) {
-  if (options2 === void 0) {
-    options2 = {};
+function IsNumber(options, validationOptions) {
+  if (options === void 0) {
+    options = {};
   }
   return ValidateBy({
     name: IS_NUMBER,
-    constraints: [options2],
+    constraints: [options],
     validator: {
       validate: function(value, args) {
         return isNumber$1(value, args === null || args === void 0 ? void 0 : args.constraints[0]);
@@ -36389,10 +36388,6 @@ function validateSync(schemaNameOrObject, objectOrValidationOptions, maybeValida
   } else {
     return getFromContainer(Validator).validateSync(schemaNameOrObject, objectOrValidationOptions);
   }
-}
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-function getDefaultExportFromCjs(x) {
-  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
 (async () => {
   await bls.init(bls.BLS12_381);
@@ -36451,6 +36446,10 @@ class OwnerNonceFormatError extends SSVKeysException {
     super(message);
     this.data = data;
   }
+}
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+function getDefaultExportFromCjs(x) {
+  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
 var forge$C = {
   // default options
@@ -36889,10 +36888,10 @@ util$1.ByteStringBuffer.prototype.toHex = function() {
 util$1.ByteStringBuffer.prototype.toString = function() {
   return util$1.decodeUtf8(this.bytes());
 };
-function DataBuffer(b, options2) {
-  options2 = options2 || {};
-  this.read = options2.readOffset || 0;
-  this.growSize = options2.growSize || 1024;
+function DataBuffer(b, options) {
+  options = options || {};
+  this.read = options.readOffset || 0;
+  this.growSize = options.growSize || 1024;
   var isArrayBuffer = util$1.isArrayBuffer(b);
   var isArrayBufferView = util$1.isArrayBufferView(b);
   if (isArrayBuffer || isArrayBufferView) {
@@ -36901,7 +36900,7 @@ function DataBuffer(b, options2) {
     } else {
       this.data = new DataView(b.buffer, b.byteOffset, b.byteLength);
     }
-    this.write = "writeOffset" in options2 ? options2.writeOffset : this.data.byteLength;
+    this.write = "writeOffset" in options ? options.writeOffset : this.data.byteLength;
     return;
   }
   this.data = new DataView(new ArrayBuffer(0));
@@ -36909,8 +36908,8 @@ function DataBuffer(b, options2) {
   if (b !== null && b !== void 0) {
     this.putBytes(b);
   }
-  if ("writeOffset" in options2) {
-    this.write = options2.writeOffset;
+  if ("writeOffset" in options) {
+    this.write = options.writeOffset;
   }
 }
 util$1.DataBuffer = DataBuffer;
@@ -37852,13 +37851,13 @@ util$1.bytesToIPv6 = function(bytes) {
   }
   return ip.join(":");
 };
-util$1.estimateCores = function(options2, callback) {
-  if (typeof options2 === "function") {
-    callback = options2;
-    options2 = {};
+util$1.estimateCores = function(options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
   }
-  options2 = options2 || {};
-  if ("cores" in util$1 && !options2.update) {
+  options = options || {};
+  if ("cores" in util$1 && !options.update) {
     return callback(null, util$1.cores);
   }
   if (typeof navigator !== "undefined" && "hardwareConcurrency" in navigator && navigator.hardwareConcurrency > 0) {
@@ -37987,27 +37986,27 @@ forge$A.cipher.getAlgorithm = function(name) {
   }
   return null;
 };
-var BlockCipher = forge$A.cipher.BlockCipher = function(options2) {
-  this.algorithm = options2.algorithm;
+var BlockCipher = forge$A.cipher.BlockCipher = function(options) {
+  this.algorithm = options.algorithm;
   this.mode = this.algorithm.mode;
   this.blockSize = this.mode.blockSize;
   this._finish = false;
   this._input = null;
   this.output = null;
-  this._op = options2.decrypt ? this.mode.decrypt : this.mode.encrypt;
-  this._decrypt = options2.decrypt;
-  this.algorithm.initialize(options2);
+  this._op = options.decrypt ? this.mode.decrypt : this.mode.encrypt;
+  this._decrypt = options.decrypt;
+  this.algorithm.initialize(options);
 };
-BlockCipher.prototype.start = function(options2) {
-  options2 = options2 || {};
+BlockCipher.prototype.start = function(options) {
+  options = options || {};
   var opts = {};
-  for (var key in options2) {
-    opts[key] = options2[key];
+  for (var key in options) {
+    opts[key] = options[key];
   }
   opts.decrypt = this._decrypt;
   this._finish = false;
   this._input = forge$A.util.createBuffer();
-  this.output = options2.output || forge$A.util.createBuffer();
+  this.output = options.output || forge$A.util.createBuffer();
   this.mode.start(opts);
 };
 BlockCipher.prototype.update = function(input) {
@@ -38027,23 +38026,23 @@ BlockCipher.prototype.finish = function(pad2) {
       return pad2(this.blockSize, output, true);
     };
   }
-  var options2 = {};
-  options2.decrypt = this._decrypt;
-  options2.overflow = this._input.length() % this.blockSize;
+  var options = {};
+  options.decrypt = this._decrypt;
+  options.overflow = this._input.length() % this.blockSize;
   if (!this._decrypt && this.mode.pad) {
-    if (!this.mode.pad(this._input, options2)) {
+    if (!this.mode.pad(this._input, options)) {
       return false;
     }
   }
   this._finish = true;
   this.update();
   if (this._decrypt && this.mode.unpad) {
-    if (!this.mode.unpad(this.output, options2)) {
+    if (!this.mode.unpad(this.output, options)) {
       return false;
     }
   }
   if (this.mode.afterFinish) {
-    if (!this.mode.afterFinish(this.output, options2)) {
+    if (!this.mode.afterFinish(this.output, options)) {
       return false;
     }
   }
@@ -38052,16 +38051,16 @@ BlockCipher.prototype.finish = function(pad2) {
 var forge$z = forge$C;
 forge$z.cipher = forge$z.cipher || {};
 var modes = forge$z.cipher.modes = forge$z.cipher.modes || {};
-modes.ecb = function(options2) {
-  options2 = options2 || {};
+modes.ecb = function(options) {
+  options = options || {};
   this.name = "ECB";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = new Array(this._ints);
   this._outBlock = new Array(this._ints);
 };
-modes.ecb.prototype.start = function(options2) {
+modes.ecb.prototype.start = function(options) {
 };
 modes.ecb.prototype.encrypt = function(input, output, finish) {
   if (input.length() < this.blockSize && !(finish && input.length() > 0)) {
@@ -38087,13 +38086,13 @@ modes.ecb.prototype.decrypt = function(input, output, finish) {
     output.putInt32(this._outBlock[i]);
   }
 };
-modes.ecb.prototype.pad = function(input, options2) {
+modes.ecb.prototype.pad = function(input, options) {
   var padding = input.length() === this.blockSize ? this.blockSize : this.blockSize - input.length();
   input.fillWithByte(padding, padding);
   return true;
 };
-modes.ecb.prototype.unpad = function(output, options2) {
-  if (options2.overflow > 0) {
+modes.ecb.prototype.unpad = function(output, options) {
+  if (options.overflow > 0) {
     return false;
   }
   var len = output.length();
@@ -38104,25 +38103,25 @@ modes.ecb.prototype.unpad = function(output, options2) {
   output.truncate(count);
   return true;
 };
-modes.cbc = function(options2) {
-  options2 = options2 || {};
+modes.cbc = function(options) {
+  options = options || {};
   this.name = "CBC";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = new Array(this._ints);
   this._outBlock = new Array(this._ints);
 };
-modes.cbc.prototype.start = function(options2) {
-  if (options2.iv === null) {
+modes.cbc.prototype.start = function(options) {
+  if (options.iv === null) {
     if (!this._prev) {
       throw new Error("Invalid IV parameter.");
     }
     this._iv = this._prev.slice(0);
-  } else if (!("iv" in options2)) {
+  } else if (!("iv" in options)) {
     throw new Error("Invalid IV parameter.");
   } else {
-    this._iv = transformIV(options2.iv, this.blockSize);
+    this._iv = transformIV(options.iv, this.blockSize);
     this._prev = this._iv.slice(0);
   }
 };
@@ -38152,13 +38151,13 @@ modes.cbc.prototype.decrypt = function(input, output, finish) {
   }
   this._prev = this._inBlock.slice(0);
 };
-modes.cbc.prototype.pad = function(input, options2) {
+modes.cbc.prototype.pad = function(input, options) {
   var padding = input.length() === this.blockSize ? this.blockSize : this.blockSize - input.length();
   input.fillWithByte(padding, padding);
   return true;
 };
-modes.cbc.prototype.unpad = function(output, options2) {
-  if (options2.overflow > 0) {
+modes.cbc.prototype.unpad = function(output, options) {
+  if (options.overflow > 0) {
     return false;
   }
   var len = output.length();
@@ -38169,11 +38168,11 @@ modes.cbc.prototype.unpad = function(output, options2) {
   output.truncate(count);
   return true;
 };
-modes.cfb = function(options2) {
-  options2 = options2 || {};
+modes.cfb = function(options) {
+  options = options || {};
   this.name = "CFB";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = null;
   this._outBlock = new Array(this._ints);
@@ -38181,11 +38180,11 @@ modes.cfb = function(options2) {
   this._partialOutput = forge$z.util.createBuffer();
   this._partialBytes = 0;
 };
-modes.cfb.prototype.start = function(options2) {
-  if (!("iv" in options2)) {
+modes.cfb.prototype.start = function(options) {
+  if (!("iv" in options)) {
     throw new Error("Invalid IV parameter.");
   }
-  this._iv = transformIV(options2.iv, this.blockSize);
+  this._iv = transformIV(options.iv, this.blockSize);
   this._inBlock = this._iv.slice(0);
   this._partialBytes = 0;
 };
@@ -38277,22 +38276,22 @@ modes.cfb.prototype.decrypt = function(input, output, finish) {
   ));
   this._partialBytes = 0;
 };
-modes.ofb = function(options2) {
-  options2 = options2 || {};
+modes.ofb = function(options) {
+  options = options || {};
   this.name = "OFB";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = null;
   this._outBlock = new Array(this._ints);
   this._partialOutput = forge$z.util.createBuffer();
   this._partialBytes = 0;
 };
-modes.ofb.prototype.start = function(options2) {
-  if (!("iv" in options2)) {
+modes.ofb.prototype.start = function(options) {
+  if (!("iv" in options)) {
     throw new Error("Invalid IV parameter.");
   }
-  this._iv = transformIV(options2.iv, this.blockSize);
+  this._iv = transformIV(options.iv, this.blockSize);
   this._inBlock = this._iv.slice(0);
   this._partialBytes = 0;
 };
@@ -38340,22 +38339,22 @@ modes.ofb.prototype.encrypt = function(input, output, finish) {
   this._partialBytes = 0;
 };
 modes.ofb.prototype.decrypt = modes.ofb.prototype.encrypt;
-modes.ctr = function(options2) {
-  options2 = options2 || {};
+modes.ctr = function(options) {
+  options = options || {};
   this.name = "CTR";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = null;
   this._outBlock = new Array(this._ints);
   this._partialOutput = forge$z.util.createBuffer();
   this._partialBytes = 0;
 };
-modes.ctr.prototype.start = function(options2) {
-  if (!("iv" in options2)) {
+modes.ctr.prototype.start = function(options) {
+  if (!("iv" in options)) {
     throw new Error("Invalid IV parameter.");
   }
-  this._iv = transformIV(options2.iv, this.blockSize);
+  this._iv = transformIV(options.iv, this.blockSize);
   this._inBlock = this._iv.slice(0);
   this._partialBytes = 0;
 };
@@ -38399,11 +38398,11 @@ modes.ctr.prototype.encrypt = function(input, output, finish) {
   inc32(this._inBlock);
 };
 modes.ctr.prototype.decrypt = modes.ctr.prototype.encrypt;
-modes.gcm = function(options2) {
-  options2 = options2 || {};
+modes.gcm = function(options) {
+  options = options || {};
   this.name = "GCM";
-  this.cipher = options2.cipher;
-  this.blockSize = options2.blockSize || 16;
+  this.cipher = options.cipher;
+  this.blockSize = options.blockSize || 16;
   this._ints = this.blockSize / 4;
   this._inBlock = new Array(this._ints);
   this._outBlock = new Array(this._ints);
@@ -38411,26 +38410,26 @@ modes.gcm = function(options2) {
   this._partialBytes = 0;
   this._R = 3774873600;
 };
-modes.gcm.prototype.start = function(options2) {
-  if (!("iv" in options2)) {
+modes.gcm.prototype.start = function(options) {
+  if (!("iv" in options)) {
     throw new Error("Invalid IV parameter.");
   }
-  var iv = forge$z.util.createBuffer(options2.iv);
+  var iv = forge$z.util.createBuffer(options.iv);
   this._cipherLength = 0;
   var additionalData;
-  if ("additionalData" in options2) {
-    additionalData = forge$z.util.createBuffer(options2.additionalData);
+  if ("additionalData" in options) {
+    additionalData = forge$z.util.createBuffer(options.additionalData);
   } else {
     additionalData = forge$z.util.createBuffer();
   }
-  if ("tagLength" in options2) {
-    this._tagLength = options2.tagLength;
+  if ("tagLength" in options) {
+    this._tagLength = options.tagLength;
   } else {
     this._tagLength = 128;
   }
   this._tag = null;
-  if (options2.decrypt) {
-    this._tag = forge$z.util.createBuffer(options2.tag).getBytes();
+  if (options.decrypt) {
+    this._tag = forge$z.util.createBuffer(options.tag).getBytes();
     if (this._tag.length !== this._tagLength / 8) {
       throw new Error("Authentication tag does not match tag length.");
     }
@@ -38551,10 +38550,10 @@ modes.gcm.prototype.decrypt = function(input, output, finish) {
     this._cipherLength += this.blockSize;
   }
 };
-modes.gcm.prototype.afterFinish = function(output, options2) {
+modes.gcm.prototype.afterFinish = function(output, options) {
   var rval = true;
-  if (options2.decrypt && options2.overflow) {
-    output.truncate(this.blockSize - options2.overflow);
+  if (options.decrypt && options.overflow) {
+    output.truncate(this.blockSize - options.overflow);
   }
   this.tag = forge$z.util.createBuffer();
   var lengths = this._aDataLength.concat(from64To32(this._cipherLength * 8));
@@ -38565,7 +38564,7 @@ modes.gcm.prototype.afterFinish = function(output, options2) {
     this.tag.putInt32(this._s[i] ^ tag[i]);
   }
   this.tag.truncate(this.tag.length() % (this._tagLength / 8));
-  if (options2.decrypt && this.tag.bytes() !== this._tag) {
+  if (options.decrypt && this.tag.bytes() !== this._tag) {
     rval = false;
   }
   return rval;
@@ -38749,11 +38748,11 @@ forge$y.aes.Algorithm = function(name, mode) {
   });
   self2._init = false;
 };
-forge$y.aes.Algorithm.prototype.initialize = function(options2) {
+forge$y.aes.Algorithm.prototype.initialize = function(options) {
   if (this._init) {
     return;
   }
-  var key = options2.key;
+  var key = options.key;
   var tmp;
   if (typeof key === "string" && (key.length === 16 || key.length === 24 || key.length === 32)) {
     key = forge$y.util.createBuffer(key);
@@ -38780,14 +38779,14 @@ forge$y.aes.Algorithm.prototype.initialize = function(options2) {
   }
   var mode = this.mode.name;
   var encryptOp = ["CFB", "OFB", "CTR", "GCM"].indexOf(mode) !== -1;
-  this._w = _expandKey(key, options2.decrypt && !encryptOp);
+  this._w = _expandKey(key, options.decrypt && !encryptOp);
   this._init = true;
 };
-forge$y.aes._expandKey = function(key, decrypt2) {
+forge$y.aes._expandKey = function(key, decrypt) {
   if (!init) {
     initialize();
   }
-  return _expandKey(key, decrypt2);
+  return _expandKey(key, decrypt);
 };
 forge$y.aes._updateBlock = _updateBlock$1;
 registerAlgorithm$1("AES-ECB", forge$y.cipher.modes.ecb);
@@ -38857,7 +38856,7 @@ function initialize() {
     }
   }
 }
-function _expandKey(key, decrypt2) {
+function _expandKey(key, decrypt) {
   var w = key.slice(0);
   var temp, iNk = 1;
   var Nk = w.length;
@@ -38873,7 +38872,7 @@ function _expandKey(key, decrypt2) {
     }
     w[i] = w[i - Nk] ^ temp;
   }
-  if (decrypt2) {
+  if (decrypt) {
     var tmp;
     var m0 = imix[0];
     var m1 = imix[1];
@@ -38898,10 +38897,10 @@ function _expandKey(key, decrypt2) {
   }
   return w;
 }
-function _updateBlock$1(w, input, output, decrypt2) {
+function _updateBlock$1(w, input, output, decrypt) {
   var Nr = w.length / 4 - 1;
   var m0, m1, m2, m3, sub2;
-  if (decrypt2) {
+  if (decrypt) {
     m0 = imix[0];
     m1 = imix[1];
     m2 = imix[2];
@@ -38916,9 +38915,9 @@ function _updateBlock$1(w, input, output, decrypt2) {
   }
   var a, b, c, d, a2, b2, c2;
   a = input[0] ^ w[0];
-  b = input[decrypt2 ? 3 : 1] ^ w[1];
+  b = input[decrypt ? 3 : 1] ^ w[1];
   c = input[2] ^ w[2];
-  d = input[decrypt2 ? 1 : 3] ^ w[3];
+  d = input[decrypt ? 1 : 3] ^ w[3];
   var i = 3;
   for (var round2 = 1; round2 < Nr; ++round2) {
     a2 = m0[a >>> 24] ^ m1[b >>> 16 & 255] ^ m2[c >>> 8 & 255] ^ m3[d & 255] ^ w[++i];
@@ -38930,31 +38929,31 @@ function _updateBlock$1(w, input, output, decrypt2) {
     c = c2;
   }
   output[0] = sub2[a >>> 24] << 24 ^ sub2[b >>> 16 & 255] << 16 ^ sub2[c >>> 8 & 255] << 8 ^ sub2[d & 255] ^ w[++i];
-  output[decrypt2 ? 3 : 1] = sub2[b >>> 24] << 24 ^ sub2[c >>> 16 & 255] << 16 ^ sub2[d >>> 8 & 255] << 8 ^ sub2[a & 255] ^ w[++i];
+  output[decrypt ? 3 : 1] = sub2[b >>> 24] << 24 ^ sub2[c >>> 16 & 255] << 16 ^ sub2[d >>> 8 & 255] << 8 ^ sub2[a & 255] ^ w[++i];
   output[2] = sub2[c >>> 24] << 24 ^ sub2[d >>> 16 & 255] << 16 ^ sub2[a >>> 8 & 255] << 8 ^ sub2[b & 255] ^ w[++i];
-  output[decrypt2 ? 1 : 3] = sub2[d >>> 24] << 24 ^ sub2[a >>> 16 & 255] << 16 ^ sub2[b >>> 8 & 255] << 8 ^ sub2[c & 255] ^ w[++i];
+  output[decrypt ? 1 : 3] = sub2[d >>> 24] << 24 ^ sub2[a >>> 16 & 255] << 16 ^ sub2[b >>> 8 & 255] << 8 ^ sub2[c & 255] ^ w[++i];
 }
-function _createCipher$1(options2) {
-  options2 = options2 || {};
-  var mode = (options2.mode || "CBC").toUpperCase();
+function _createCipher$1(options) {
+  options = options || {};
+  var mode = (options.mode || "CBC").toUpperCase();
   var algorithm = "AES-" + mode;
   var cipher2;
-  if (options2.decrypt) {
-    cipher2 = forge$y.cipher.createDecipher(algorithm, options2.key);
+  if (options.decrypt) {
+    cipher2 = forge$y.cipher.createDecipher(algorithm, options.key);
   } else {
-    cipher2 = forge$y.cipher.createCipher(algorithm, options2.key);
+    cipher2 = forge$y.cipher.createCipher(algorithm, options.key);
   }
   var start = cipher2.start;
-  cipher2.start = function(iv, options22) {
+  cipher2.start = function(iv, options2) {
     var output = null;
-    if (options22 instanceof forge$y.util.ByteBuffer) {
-      output = options22;
-      options22 = {};
+    if (options2 instanceof forge$y.util.ByteBuffer) {
+      output = options2;
+      options2 = {};
     }
-    options22 = options22 || {};
-    options22.output = output;
-    options22.iv = iv;
-    start.call(cipher2, options22);
+    options2 = options2 || {};
+    options2.output = output;
+    options2.iv = iv;
+    start.call(cipher2, options2);
   };
   return cipher2;
 }
@@ -39128,7 +39127,7 @@ asn1$8.Type = {
   BMPSTRING: 30
 };
 asn1$8.maxDepth = 256;
-asn1$8.create = function(tagClass, type2, constructed, value, options2) {
+asn1$8.create = function(tagClass, type2, constructed, value, options) {
   if (forge$w.util.isArray(value)) {
     var tmp = [];
     for (var i = 0; i < value.length; ++i) {
@@ -39145,18 +39144,18 @@ asn1$8.create = function(tagClass, type2, constructed, value, options2) {
     composed: constructed || forge$w.util.isArray(value),
     value
   };
-  if (options2 && "bitStringContents" in options2) {
-    obj.bitStringContents = options2.bitStringContents;
+  if (options && "bitStringContents" in options) {
+    obj.bitStringContents = options.bitStringContents;
     obj.original = asn1$8.copy(obj);
   }
   return obj;
 };
-asn1$8.copy = function(obj, options2) {
+asn1$8.copy = function(obj, options) {
   var copy;
   if (forge$w.util.isArray(obj)) {
     copy = [];
     for (var i = 0; i < obj.length; ++i) {
-      copy.push(asn1$8.copy(obj[i], options2));
+      copy.push(asn1$8.copy(obj[i], options));
     }
     return copy;
   }
@@ -39168,14 +39167,14 @@ asn1$8.copy = function(obj, options2) {
     type: obj.type,
     constructed: obj.constructed,
     composed: obj.composed,
-    value: asn1$8.copy(obj.value, options2)
+    value: asn1$8.copy(obj.value, options)
   };
-  if (options2 && !options2.excludeBitStringContents) {
+  if (options && !options.excludeBitStringContents) {
     copy.bitStringContents = obj.bitStringContents;
   }
   return copy;
 };
-asn1$8.equals = function(obj1, obj2, options2) {
+asn1$8.equals = function(obj1, obj2, options) {
   if (forge$w.util.isArray(obj1)) {
     if (!forge$w.util.isArray(obj2)) {
       return false;
@@ -39197,7 +39196,7 @@ asn1$8.equals = function(obj1, obj2, options2) {
     return obj1 === obj2;
   }
   var equal = obj1.tagClass === obj2.tagClass && obj1.type === obj2.type && obj1.constructed === obj2.constructed && obj1.composed === obj2.composed && asn1$8.equals(obj1.value, obj2.value);
-  if (options2 && options2.includeBitStringContents) {
+  if (options && options.includeBitStringContents) {
     equal = equal && obj1.bitStringContents === obj2.bitStringContents;
   }
   return equal;
@@ -39245,39 +39244,39 @@ var _getValueLength = function(bytes, remaining) {
   }
   return length2;
 };
-asn1$8.fromDer = function(bytes, options2) {
-  if (options2 === void 0) {
-    options2 = {
+asn1$8.fromDer = function(bytes, options) {
+  if (options === void 0) {
+    options = {
       strict: true,
       parseAllBytes: true,
       decodeBitStrings: true
     };
   }
-  if (typeof options2 === "boolean") {
-    options2 = {
-      strict: options2,
+  if (typeof options === "boolean") {
+    options = {
+      strict: options,
       parseAllBytes: true,
       decodeBitStrings: true
     };
   }
-  if (!("strict" in options2)) {
-    options2.strict = true;
+  if (!("strict" in options)) {
+    options.strict = true;
   }
-  if (!("parseAllBytes" in options2)) {
-    options2.parseAllBytes = true;
+  if (!("parseAllBytes" in options)) {
+    options.parseAllBytes = true;
   }
-  if (!("decodeBitStrings" in options2)) {
-    options2.decodeBitStrings = true;
+  if (!("decodeBitStrings" in options)) {
+    options.decodeBitStrings = true;
   }
-  if (!("maxDepth" in options2)) {
-    options2.maxDepth = asn1$8.maxDepth;
+  if (!("maxDepth" in options)) {
+    options.maxDepth = asn1$8.maxDepth;
   }
   if (typeof bytes === "string") {
     bytes = forge$w.util.createBuffer(bytes);
   }
   var byteCount = bytes.length();
-  var value = _fromDer(bytes, bytes.length(), 0, options2);
-  if (options2.parseAllBytes && bytes.length() !== 0) {
+  var value = _fromDer(bytes, bytes.length(), 0, options);
+  if (options.parseAllBytes && bytes.length() !== 0) {
     var error = new Error("Unparsed DER bytes remain after ASN.1 parsing.");
     error.byteCount = byteCount;
     error.remaining = bytes.length();
@@ -39285,8 +39284,8 @@ asn1$8.fromDer = function(bytes, options2) {
   }
   return value;
 };
-function _fromDer(bytes, remaining, depth, options2) {
-  if (depth >= options2.maxDepth) {
+function _fromDer(bytes, remaining, depth, options) {
+  if (depth >= options.maxDepth) {
     throw new Error("ASN.1 parsing error: Max depth exceeded.");
   }
   var start;
@@ -39299,7 +39298,7 @@ function _fromDer(bytes, remaining, depth, options2) {
   var length2 = _getValueLength(bytes, remaining);
   remaining -= start - bytes.length();
   if (length2 !== void 0 && length2 > remaining) {
-    if (options2.strict) {
+    if (options.strict) {
       var error = new Error("Too few bytes to read ASN.1 value.");
       error.available = bytes.length();
       error.remaining = remaining;
@@ -39322,13 +39321,13 @@ function _fromDer(bytes, remaining, depth, options2) {
           break;
         }
         start = bytes.length();
-        value.push(_fromDer(bytes, remaining, depth + 1, options2));
+        value.push(_fromDer(bytes, remaining, depth + 1, options));
         remaining -= start - bytes.length();
       }
     } else {
       while (length2 > 0) {
         start = bytes.length();
-        value.push(_fromDer(bytes, length2, depth + 1, options2));
+        value.push(_fromDer(bytes, length2, depth + 1, options));
         remaining -= start - bytes.length();
         length2 -= start - bytes.length();
       }
@@ -39337,7 +39336,7 @@ function _fromDer(bytes, remaining, depth, options2) {
   if (value === void 0 && tagClass === asn1$8.Class.UNIVERSAL && type2 === asn1$8.Type.BITSTRING) {
     bitStringContents = bytes.bytes(length2);
   }
-  if (value === void 0 && options2.decodeBitStrings && tagClass === asn1$8.Class.UNIVERSAL && // FIXME: OCTET STRINGs not yet supported here
+  if (value === void 0 && options.decodeBitStrings && tagClass === asn1$8.Class.UNIVERSAL && // FIXME: OCTET STRINGs not yet supported here
   // .. other parts of forge expect to decode OCTET STRINGs manually
   type2 === asn1$8.Type.BITSTRING && length2 > 1) {
     var savedRead = bytes.read;
@@ -39376,7 +39375,7 @@ function _fromDer(bytes, remaining, depth, options2) {
   }
   if (value === void 0) {
     if (length2 === void 0) {
-      if (options2.strict) {
+      if (options.strict) {
         throw new Error("Non-constructed ASN.1 object of indefinite length.");
       }
       length2 = remaining;
@@ -40269,8 +40268,8 @@ function _update$3(s2, w, bytes) {
 }
 var forge$s = forge$C;
 var pem$1 = forge$s.pem = forge$s.pem || {};
-pem$1.encode = function(msg, options2) {
-  options2 = options2 || {};
+pem$1.encode = function(msg, options) {
+  options = options || {};
   var rval = "-----BEGIN " + msg.type + "-----\r\n";
   var header;
   if (msg.procType) {
@@ -40299,7 +40298,7 @@ pem$1.encode = function(msg, options2) {
   if (msg.procType) {
     rval += "\r\n";
   }
-  rval += forge$s.util.encode64(msg.body, options2.maxline || 64) + "\r\n";
+  rval += forge$s.util.encode64(msg.body, options.maxline || 64) + "\r\n";
   rval += "-----END " + msg.type + "-----\r\n";
   return rval;
 };
@@ -40465,11 +40464,11 @@ forge$r.des.Algorithm = function(name, mode) {
   });
   self2._init = false;
 };
-forge$r.des.Algorithm.prototype.initialize = function(options2) {
+forge$r.des.Algorithm.prototype.initialize = function(options) {
   if (this._init) {
     return;
   }
-  var key = forge$r.util.createBuffer(options2.key);
+  var key = forge$r.util.createBuffer(options.key);
   if (this.name.indexOf("3DES") === 0) {
     if (key.length() !== 24) {
       throw new Error("Invalid Triple-DES key size: " + key.length() * 8);
@@ -40554,13 +40553,13 @@ function _createKeys(key) {
   }
   return keys2;
 }
-function _updateBlock(keys2, input, output, decrypt2) {
+function _updateBlock(keys2, input, output, decrypt) {
   var iterations = keys2.length === 32 ? 3 : 9;
   var looping;
   if (iterations === 3) {
-    looping = decrypt2 ? [30, -2, -2] : [0, 32, 2];
+    looping = decrypt ? [30, -2, -2] : [0, 32, 2];
   } else {
-    looping = decrypt2 ? [94, 62, -2, 32, 64, 2, 30, -2, -2] : [0, 32, 2, 62, 30, -2, 64, 96, 2];
+    looping = decrypt ? [94, 62, -2, 32, 64, 2, 30, -2, -2] : [0, 32, 2, 62, 30, -2, 64, 96, 2];
   }
   var tmp;
   var left = input[0];
@@ -40616,62 +40615,62 @@ function _updateBlock(keys2, input, output, decrypt2) {
   output[0] = left;
   output[1] = right;
 }
-function _createCipher(options2) {
-  options2 = options2 || {};
-  var mode = (options2.mode || "CBC").toUpperCase();
+function _createCipher(options) {
+  options = options || {};
+  var mode = (options.mode || "CBC").toUpperCase();
   var algorithm = "DES-" + mode;
   var cipher2;
-  if (options2.decrypt) {
-    cipher2 = forge$r.cipher.createDecipher(algorithm, options2.key);
+  if (options.decrypt) {
+    cipher2 = forge$r.cipher.createDecipher(algorithm, options.key);
   } else {
-    cipher2 = forge$r.cipher.createCipher(algorithm, options2.key);
+    cipher2 = forge$r.cipher.createCipher(algorithm, options.key);
   }
   var start = cipher2.start;
-  cipher2.start = function(iv, options22) {
+  cipher2.start = function(iv, options2) {
     var output = null;
-    if (options22 instanceof forge$r.util.ByteBuffer) {
-      output = options22;
-      options22 = {};
+    if (options2 instanceof forge$r.util.ByteBuffer) {
+      output = options2;
+      options2 = {};
     }
-    options22 = options22 || {};
-    options22.output = output;
-    options22.iv = iv;
-    start.call(cipher2, options22);
+    options2 = options2 || {};
+    options2.output = output;
+    options2.iv = iv;
+    start.call(cipher2, options2);
   };
   return cipher2;
 }
 var forge$q = forge$C;
 var pkcs5 = forge$q.pkcs5 = forge$q.pkcs5 || {};
-var crypto$3;
+var crypto$2;
 if (forge$q.util.isNodejs && true) {
-  crypto$3 = crypto$1$1;
+  crypto$2 = crypto$1$1;
 }
 forge$q.pbkdf2 = pkcs5.pbkdf2 = function(p, s2, c, dkLen, md2, callback) {
   if (typeof md2 === "function") {
     callback = md2;
     md2 = null;
   }
-  if (forge$q.util.isNodejs && true && crypto$3.pbkdf2 && (md2 === null || typeof md2 !== "object") && (crypto$3.pbkdf2Sync.length > 4 || (!md2 || md2 === "sha1"))) {
+  if (forge$q.util.isNodejs && true && crypto$2.pbkdf2 && (md2 === null || typeof md2 !== "object") && (crypto$2.pbkdf2Sync.length > 4 || (!md2 || md2 === "sha1"))) {
     if (typeof md2 !== "string") {
       md2 = "sha1";
     }
     p = Buffer.from(p, "binary");
     s2 = Buffer.from(s2, "binary");
     if (!callback) {
-      if (crypto$3.pbkdf2Sync.length === 4) {
-        return crypto$3.pbkdf2Sync(p, s2, c, dkLen).toString("binary");
+      if (crypto$2.pbkdf2Sync.length === 4) {
+        return crypto$2.pbkdf2Sync(p, s2, c, dkLen).toString("binary");
       }
-      return crypto$3.pbkdf2Sync(p, s2, c, dkLen, md2).toString("binary");
+      return crypto$2.pbkdf2Sync(p, s2, c, dkLen, md2).toString("binary");
     }
-    if (crypto$3.pbkdf2Sync.length === 4) {
-      return crypto$3.pbkdf2(p, s2, c, dkLen, function(err2, key) {
+    if (crypto$2.pbkdf2Sync.length === 4) {
+      return crypto$2.pbkdf2(p, s2, c, dkLen, function(err2, key) {
         if (err2) {
           return callback(err2);
         }
         callback(null, key.toString("binary"));
       });
     }
-    return crypto$3.pbkdf2(p, s2, c, dkLen, md2, function(err2, key) {
+    return crypto$2.pbkdf2(p, s2, c, dkLen, md2, function(err2, key) {
       if (err2) {
         return callback(err2);
       }
@@ -43112,21 +43111,21 @@ function _update$1(s2, w, bytes) {
 }
 var forge$j = forge$C;
 var pkcs1$1 = forge$j.pkcs1 = forge$j.pkcs1 || {};
-pkcs1$1.encode_rsa_oaep = function(key, message, options2) {
+pkcs1$1.encode_rsa_oaep = function(key, message, options) {
   var label;
   var seed;
   var md2;
   var mgf1Md;
-  if (typeof options2 === "string") {
-    label = options2;
+  if (typeof options === "string") {
+    label = options;
     seed = arguments[3] || void 0;
     md2 = arguments[4] || void 0;
-  } else if (options2) {
-    label = options2.label || void 0;
-    seed = options2.seed || void 0;
-    md2 = options2.md || void 0;
-    if (options2.mgf1 && options2.mgf1.md) {
-      mgf1Md = options2.mgf1.md;
+  } else if (options) {
+    label = options.label || void 0;
+    seed = options.seed || void 0;
+    md2 = options.md || void 0;
+    if (options.mgf1 && options.mgf1.md) {
+      mgf1Md = options.mgf1.md;
     }
   }
   if (!md2) {
@@ -43170,18 +43169,18 @@ pkcs1$1.encode_rsa_oaep = function(key, message, options2) {
   var maskedSeed = forge$j.util.xorBytes(seed, seedMask, seed.length);
   return "\0" + maskedSeed + maskedDB;
 };
-pkcs1$1.decode_rsa_oaep = function(key, em, options2) {
+pkcs1$1.decode_rsa_oaep = function(key, em, options) {
   var label;
   var md2;
   var mgf1Md;
-  if (typeof options2 === "string") {
-    label = options2;
+  if (typeof options === "string") {
+    label = options;
     md2 = arguments[3] || void 0;
-  } else if (options2) {
-    label = options2.label || void 0;
-    md2 = options2.md || void 0;
-    if (options2.mgf1 && options2.mgf1.md) {
-      mgf1Md = options2.mgf1.md;
+  } else if (options) {
+    label = options.label || void 0;
+    md2 = options.md || void 0;
+    if (options.mgf1 && options.mgf1.md) {
+      mgf1Md = options.mgf1.md;
     }
   }
   var keyLength = Math.ceil(key.n.bitLength() / 8);
@@ -43266,18 +43265,18 @@ var forge$i = forge$C;
   var op_or2 = function(x, y) {
     return x | y;
   };
-  prime2.generateProbablePrime = function(bits, options2, callback) {
-    if (typeof options2 === "function") {
-      callback = options2;
-      options2 = {};
+  prime2.generateProbablePrime = function(bits, options, callback) {
+    if (typeof options === "function") {
+      callback = options;
+      options = {};
     }
-    options2 = options2 || {};
-    var algorithm = options2.algorithm || "PRIMEINC";
+    options = options || {};
+    var algorithm = options.algorithm || "PRIMEINC";
     if (typeof algorithm === "string") {
       algorithm = { name: algorithm };
     }
     algorithm.options = algorithm.options || {};
-    var prng2 = options2.prng || forge$i.random;
+    var prng2 = options.prng || forge$i.random;
     var rng2 = {
       // x is an array to fill with bytes
       nextBytes: function(x) {
@@ -43292,22 +43291,22 @@ var forge$i = forge$C;
     }
     throw new Error("Invalid prime generation algorithm: " + algorithm.name);
   };
-  function primeincFindPrime(bits, rng2, options2, callback) {
-    if ("workers" in options2) {
-      return primeincFindPrimeWithWorkers(bits, rng2, options2, callback);
+  function primeincFindPrime(bits, rng2, options, callback) {
+    if ("workers" in options) {
+      return primeincFindPrimeWithWorkers(bits, rng2, options, callback);
     }
-    return primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback);
+    return primeincFindPrimeWithoutWorkers(bits, rng2, options, callback);
   }
-  function primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback) {
+  function primeincFindPrimeWithoutWorkers(bits, rng2, options, callback) {
     var num = generateRandom(bits, rng2);
     var deltaIdx = 0;
     var mrTests = getMillerRabinTests(num.bitLength());
-    if ("millerRabinTests" in options2) {
-      mrTests = options2.millerRabinTests;
+    if ("millerRabinTests" in options) {
+      mrTests = options.millerRabinTests;
     }
     var maxBlockTime = 10;
-    if ("maxBlockTime" in options2) {
-      maxBlockTime = options2.maxBlockTime;
+    if ("maxBlockTime" in options) {
+      maxBlockTime = options.maxBlockTime;
     }
     _primeinc(num, bits, rng2, deltaIdx, mrTests, maxBlockTime, callback);
   }
@@ -43326,15 +43325,15 @@ var forge$i = forge$C;
       _primeinc(num, bits, rng2, deltaIdx, mrTests, maxBlockTime, callback);
     });
   }
-  function primeincFindPrimeWithWorkers(bits, rng2, options2, callback) {
+  function primeincFindPrimeWithWorkers(bits, rng2, options, callback) {
     if (typeof Worker === "undefined") {
-      return primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback);
+      return primeincFindPrimeWithoutWorkers(bits, rng2, options, callback);
     }
     var num = generateRandom(bits, rng2);
-    var numWorkers = options2.workers;
-    var workLoad = options2.workLoad || 100;
+    var numWorkers = options.workers;
+    var workLoad = options.workLoad || 100;
     var range2 = workLoad * 30 / 8;
-    var workerScript = options2.workerScript || "forge/prime.worker.js";
+    var workerScript = options.workerScript || "forge/prime.worker.js";
     if (numWorkers === -1) {
       return forge$i.util.estimateCores(function(err, cores) {
         if (err) {
@@ -43738,13 +43737,13 @@ pki$4.rsa.decrypt = function(ed, key, pub, ml) {
   }
   return eb.getBytes();
 };
-pki$4.rsa.createKeyPairGenerationState = function(bits, e, options2) {
+pki$4.rsa.createKeyPairGenerationState = function(bits, e, options) {
   if (typeof bits === "string") {
     bits = parseInt(bits, 10);
   }
   bits = bits || 2048;
-  options2 = options2 || {};
-  var prng2 = options2.prng || forge$h.random;
+  options = options || {};
+  var prng2 = options.prng || forge$h.random;
   var rng2 = {
     // x is an array to fill with bytes
     nextBytes: function(x) {
@@ -43754,7 +43753,7 @@ pki$4.rsa.createKeyPairGenerationState = function(bits, e, options2) {
       }
     }
   };
-  var algorithm = options2.algorithm || "PRIMEINC";
+  var algorithm = options.algorithm || "PRIMEINC";
   var rval;
   if (algorithm === "PRIMEINC") {
     rval = {
@@ -43881,10 +43880,10 @@ pki$4.rsa.stepKeyPairGenerationState = function(state, n) {
   }
   return state.keys !== null;
 };
-pki$4.rsa.generateKeyPair = function(bits, e, options2, callback) {
+pki$4.rsa.generateKeyPair = function(bits, e, options, callback) {
   if (arguments.length === 1) {
     if (typeof bits === "object") {
-      options2 = bits;
+      options = bits;
       bits = void 0;
     } else if (typeof bits === "function") {
       callback = bits;
@@ -43896,35 +43895,35 @@ pki$4.rsa.generateKeyPair = function(bits, e, options2, callback) {
         callback = e;
         e = void 0;
       } else if (typeof e !== "number") {
-        options2 = e;
+        options = e;
         e = void 0;
       }
     } else {
-      options2 = bits;
+      options = bits;
       callback = e;
       bits = void 0;
       e = void 0;
     }
   } else if (arguments.length === 3) {
     if (typeof e === "number") {
-      if (typeof options2 === "function") {
-        callback = options2;
-        options2 = void 0;
+      if (typeof options === "function") {
+        callback = options;
+        options = void 0;
       }
     } else {
-      callback = options2;
-      options2 = e;
+      callback = options;
+      options = e;
       e = void 0;
     }
   }
-  options2 = options2 || {};
+  options = options || {};
   if (bits === void 0) {
-    bits = options2.bits || 2048;
+    bits = options.bits || 2048;
   }
   if (e === void 0) {
-    e = options2.e || 65537;
+    e = options.e || 65537;
   }
-  if (!options2.prng && bits >= 256 && bits <= 16384 && (e === 65537 || e === 3)) {
+  if (!options.prng && bits >= 256 && bits <= 16384 && (e === 65537 || e === 3)) {
     if (callback) {
       if (_detectNodeCrypto("generateKeyPair")) {
         return _crypto.generateKeyPair("rsa", {
@@ -44026,12 +44025,12 @@ pki$4.rsa.generateKeyPair = function(bits, e, options2, callback) {
       }
     }
   }
-  var state = pki$4.rsa.createKeyPairGenerationState(bits, e, options2);
+  var state = pki$4.rsa.createKeyPairGenerationState(bits, e, options);
   if (!callback) {
     pki$4.rsa.stepKeyPairGenerationState(state, 0);
     return state.keys;
   }
-  _generateKeyPair(state, options2, callback);
+  _generateKeyPair(state, options, callback);
 };
 pki$4.setRsaPublicKey = pki$4.rsa.setPublicKey = function(n, e) {
   var key = {
@@ -44066,26 +44065,26 @@ pki$4.setRsaPublicKey = pki$4.rsa.setPublicKey = function(n, e) {
     var e2 = scheme.encode(data, key, true);
     return pki$4.rsa.encrypt(e2, key, true);
   };
-  key.verify = function(digest, signature, scheme, options2) {
+  key.verify = function(digest, signature, scheme, options) {
     if (typeof scheme === "string") {
       scheme = scheme.toUpperCase();
     } else if (scheme === void 0) {
       scheme = "RSASSA-PKCS1-V1_5";
     }
-    if (options2 === void 0) {
-      options2 = {
+    if (options === void 0) {
+      options = {
         _parseAllDigestBytes: true
       };
     }
-    if (!("_parseAllDigestBytes" in options2)) {
-      options2._parseAllDigestBytes = true;
+    if (!("_parseAllDigestBytes" in options)) {
+      options._parseAllDigestBytes = true;
     }
     if (scheme === "RSASSA-PKCS1-V1_5") {
       scheme = {
         verify: function(digest2, d2) {
           d2 = _decodePkcs1_v1_5(d2, key, true);
           var obj = asn1$7.fromDer(d2, {
-            parseAllBytes: options2._parseAllDigestBytes
+            parseAllBytes: options._parseAllDigestBytes
           });
           var capture = {};
           var errors2 = [];
@@ -44450,24 +44449,24 @@ function _decodePkcs1_v1_5(em, key, pub, ml) {
   }
   return eb.getBytes();
 }
-function _generateKeyPair(state, options2, callback) {
-  if (typeof options2 === "function") {
-    callback = options2;
-    options2 = {};
+function _generateKeyPair(state, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
   }
-  options2 = options2 || {};
+  options = options || {};
   var opts = {
     algorithm: {
-      name: options2.algorithm || "PRIMEINC",
+      name: options.algorithm || "PRIMEINC",
       options: {
-        workers: options2.workers || 2,
-        workLoad: options2.workLoad || 100,
-        workerScript: options2.workerScript
+        workers: options.workers || 2,
+        workLoad: options.workLoad || 100,
+        workerScript: options.workerScript
       }
     }
   };
-  if ("prng" in options2) {
-    opts.prng = options2.prng;
+  if ("prng" in options) {
+    opts.prng = options.prng;
   }
   generate();
   function generate() {
@@ -44715,21 +44714,21 @@ var pkcs12PbeParamsValidator = {
     capture: "iterations"
   }]
 };
-pki$3.encryptPrivateKeyInfo = function(obj, password2, options2) {
-  options2 = options2 || {};
-  options2.saltSize = options2.saltSize || 8;
-  options2.count = options2.count || 2048;
-  options2.algorithm = options2.algorithm || "aes128";
-  options2.prfAlgorithm = options2.prfAlgorithm || "sha1";
-  var salt = forge$g.random.getBytesSync(options2.saltSize);
-  var count = options2.count;
+pki$3.encryptPrivateKeyInfo = function(obj, password2, options) {
+  options = options || {};
+  options.saltSize = options.saltSize || 8;
+  options.count = options.count || 2048;
+  options.algorithm = options.algorithm || "aes128";
+  options.prfAlgorithm = options.prfAlgorithm || "sha1";
+  var salt = forge$g.random.getBytesSync(options.saltSize);
+  var count = options.count;
   var countBytes = asn1$6.integerToDer(count);
   var dkLen;
   var encryptionAlgorithm;
   var encryptedData;
-  if (options2.algorithm.indexOf("aes") === 0 || options2.algorithm === "des") {
+  if (options.algorithm.indexOf("aes") === 0 || options.algorithm === "des") {
     var ivLen, encOid, cipherFn;
-    switch (options2.algorithm) {
+    switch (options.algorithm) {
       case "aes128":
         dkLen = 16;
         ivLen = 16;
@@ -44756,10 +44755,10 @@ pki$3.encryptPrivateKeyInfo = function(obj, password2, options2) {
         break;
       default:
         var error = new Error("Cannot encrypt private key. Unknown encryption algorithm.");
-        error.algorithm = options2.algorithm;
+        error.algorithm = options.algorithm;
         throw error;
     }
-    var prfAlgorithm = "hmacWith" + options2.prfAlgorithm.toUpperCase();
+    var prfAlgorithm = "hmacWith" + options.prfAlgorithm.toUpperCase();
     var md2 = prfAlgorithmToMessageDigest(prfAlgorithm);
     var dk = forge$g.pkcs5.pbkdf2(password2, salt, count, dkLen, md2);
     var iv = forge$g.random.getBytesSync(ivLen);
@@ -44811,7 +44810,7 @@ pki$3.encryptPrivateKeyInfo = function(obj, password2, options2) {
         ])
       ]
     );
-  } else if (options2.algorithm === "3des") {
+  } else if (options.algorithm === "3des") {
     dkLen = 24;
     var saltBytes = new forge$g.util.ByteBuffer(salt);
     var dk = pki$3.pbe.generatePkcs12Key(password2, saltBytes, 1, count, dkLen);
@@ -44848,7 +44847,7 @@ pki$3.encryptPrivateKeyInfo = function(obj, password2, options2) {
     );
   } else {
     var error = new Error("Cannot encrypt private key. Unknown encryption algorithm.");
-    error.algorithm = options2.algorithm;
+    error.algorithm = options.algorithm;
     throw error;
   }
   var rval = asn1$6.create(asn1$6.Class.UNIVERSAL, asn1$6.Type.SEQUENCE, true, [
@@ -44901,18 +44900,18 @@ pki$3.encryptedPrivateKeyFromPem = function(pem2) {
   }
   return asn1$6.fromDer(msg.body);
 };
-pki$3.encryptRsaPrivateKey = function(rsaKey, password2, options2) {
-  options2 = options2 || {};
-  if (!options2.legacy) {
+pki$3.encryptRsaPrivateKey = function(rsaKey, password2, options) {
+  options = options || {};
+  if (!options.legacy) {
     var rval = pki$3.wrapRsaPrivateKey(pki$3.privateKeyToAsn1(rsaKey));
-    rval = pki$3.encryptPrivateKeyInfo(rval, password2, options2);
+    rval = pki$3.encryptPrivateKeyInfo(rval, password2, options);
     return pki$3.encryptedPrivateKeyToPem(rval);
   }
   var algorithm;
   var iv;
   var dkLen;
   var cipherFn;
-  switch (options2.algorithm) {
+  switch (options.algorithm) {
     case "aes128":
       algorithm = "AES-128-CBC";
       dkLen = 16;
@@ -44944,8 +44943,8 @@ pki$3.encryptRsaPrivateKey = function(rsaKey, password2, options2) {
       cipherFn = forge$g.des.createEncryptionCipher;
       break;
     default:
-      var error = new Error('Could not encrypt RSA private key; unsupported encryption algorithm "' + options2.algorithm + '".');
-      error.algorithm = options2.algorithm;
+      var error = new Error('Could not encrypt RSA private key; unsupported encryption algorithm "' + options.algorithm + '".');
+      error.algorithm = options.algorithm;
       throw error;
   }
   var dk = forge$g.pbe.opensslDeriveBytes(password2, iv.substr(0, 8), dkLen);
@@ -45665,24 +45664,24 @@ forge$d.mgf = forge$d.mgf || {};
 forge$d.mgf.mgf1 = forge$d.mgf1;
 var forge$c = forge$C;
 var pss$1 = forge$c.pss = forge$c.pss || {};
-pss$1.create = function(options2) {
+pss$1.create = function(options) {
   if (arguments.length === 3) {
-    options2 = {
+    options = {
       md: arguments[0],
       mgf: arguments[1],
       saltLength: arguments[2]
     };
   }
-  var hash2 = options2.md;
-  var mgf2 = options2.mgf;
+  var hash2 = options.md;
+  var mgf2 = options.mgf;
   var hLen = hash2.digestLength;
-  var salt_ = options2.salt || null;
+  var salt_ = options.salt || null;
   if (typeof salt_ === "string") {
     salt_ = forge$c.util.createBuffer(salt_);
   }
   var sLen;
-  if ("saltLength" in options2) {
-    sLen = options2.saltLength;
+  if ("saltLength" in options) {
+    sLen = options.saltLength;
   } else if (salt_ !== null) {
     sLen = salt_.length();
   } else {
@@ -45691,7 +45690,7 @@ pss$1.create = function(options2) {
   if (salt_ !== null && salt_.length() !== sLen) {
     throw new Error("Given salt length does not match length of given salt.");
   }
-  var prng2 = options2.prng || forge$c.random;
+  var prng2 = options.prng || forge$c.random;
   var pssobj = {};
   pssobj.encode = function(md2, modBits) {
     var i;
@@ -46201,19 +46200,19 @@ pki$2.CRIAttributesAsArray = function(attributes) {
   }
   return rval;
 };
-function _getAttribute(obj, options2) {
-  if (typeof options2 === "string") {
-    options2 = { shortName: options2 };
+function _getAttribute(obj, options) {
+  if (typeof options === "string") {
+    options = { shortName: options };
   }
   var rval = null;
   var attr;
   for (var i = 0; rval === null && i < obj.attributes.length; ++i) {
     attr = obj.attributes[i];
-    if (options2.type && options2.type === attr.type) {
+    if (options.type && options.type === attr.type) {
       rval = attr;
-    } else if (options2.name && options2.name === attr.name) {
+    } else if (options.name && options.name === attr.name) {
       rval = attr;
-    } else if (options2.shortName && options2.shortName === attr.shortName) {
+    } else if (options.shortName && options.shortName === attr.shortName) {
       rval = attr;
     }
   }
@@ -46260,8 +46259,8 @@ var _readSignatureParameters = function(oid, obj, fillDefaults) {
   }
   return params;
 };
-var _createSignatureDigest = function(options2) {
-  switch (oids$3[options2.signatureOid]) {
+var _createSignatureDigest = function(options) {
+  switch (oids$3[options.signatureOid]) {
     case "sha1WithRSAEncryption":
     // deprecated alias
     case "sha1WithRSASignature":
@@ -46278,14 +46277,14 @@ var _createSignatureDigest = function(options2) {
       return forge$b.md.sha256.create();
     default:
       var error = new Error(
-        "Could not compute " + options2.type + " digest. Unknown signature OID."
+        "Could not compute " + options.type + " digest. Unknown signature OID."
       );
-      error.signatureOid = options2.signatureOid;
+      error.signatureOid = options.signatureOid;
       throw error;
   }
 };
-var _verifySignature = function(options2) {
-  var cert = options2.certificate;
+var _verifySignature = function(options) {
+  var cert = options.certificate;
   var scheme;
   switch (cert.signatureOid) {
     case oids$3.sha1WithRSAEncryption:
@@ -46324,8 +46323,8 @@ var _verifySignature = function(options2) {
       break;
   }
   return cert.publicKey.verify(
-    options2.md.digest().getBytes(),
-    options2.signature,
+    options.md.digest().getBytes(),
+    options.signature,
     scheme
   );
 };
@@ -46380,10 +46379,10 @@ pki$2.publicKeyToRSAPublicKeyPem = function(key, maxline) {
   };
   return forge$b.pem.encode(msg, { maxline });
 };
-pki$2.getPublicKeyFingerprint = function(key, options2) {
-  options2 = options2 || {};
-  var md2 = options2.md || forge$b.md.sha1.create();
-  var type2 = options2.type || "RSAPublicKey";
+pki$2.getPublicKeyFingerprint = function(key, options) {
+  options = options || {};
+  var md2 = options.md || forge$b.md.sha1.create();
+  var type2 = options.type || "RSAPublicKey";
   var bytes;
   switch (type2) {
     case "RSAPublicKey":
@@ -46393,21 +46392,21 @@ pki$2.getPublicKeyFingerprint = function(key, options2) {
       bytes = asn1$4.toDer(pki$2.publicKeyToAsn1(key)).getBytes();
       break;
     default:
-      throw new Error('Unknown fingerprint type "' + options2.type + '".');
+      throw new Error('Unknown fingerprint type "' + options.type + '".');
   }
   md2.start();
   md2.update(bytes);
   var digest = md2.digest();
-  if (options2.encoding === "hex") {
+  if (options.encoding === "hex") {
     var hex = digest.toHex();
-    if (options2.delimiter) {
-      return hex.match(/.{2}/g).join(options2.delimiter);
+    if (options.delimiter) {
+      return hex.match(/.{2}/g).join(options.delimiter);
     }
     return hex;
-  } else if (options2.encoding === "binary") {
+  } else if (options.encoding === "binary") {
     return digest.getBytes();
-  } else if (options2.encoding) {
-    throw new Error('Unknown encoding "' + options2.encoding + '".');
+  } else if (options.encoding) {
+    throw new Error('Unknown encoding "' + options.encoding + '".');
   }
   return digest;
 };
@@ -46489,17 +46488,17 @@ pki$2.createCertificate = function() {
     }
     cert.extensions = exts;
   };
-  cert.getExtension = function(options2) {
-    if (typeof options2 === "string") {
-      options2 = { name: options2 };
+  cert.getExtension = function(options) {
+    if (typeof options === "string") {
+      options = { name: options };
     }
     var rval = null;
     var ext;
     for (var i = 0; rval === null && i < cert.extensions.length; ++i) {
       ext = cert.extensions[i];
-      if (options2.id && ext.id === options2.id) {
+      if (options.id && ext.id === options.id) {
         rval = ext;
-      } else if (options2.name && ext.name === options2.name) {
+      } else if (options.name && ext.name === options.name) {
         rval = ext;
       }
     }
@@ -47019,8 +47018,8 @@ function _fillMissingFields(attrs) {
     }
   }
 }
-function _fillMissingExtensionFields(e, options2) {
-  options2 = options2 || {};
+function _fillMissingExtensionFields(e, options) {
+  options = options || {};
   if (typeof e.name === "undefined") {
     if (e.id && e.id in pki$2.oids) {
       e.name = pki$2.oids[e.id];
@@ -47215,7 +47214,7 @@ function _fillMissingExtensionFields(e, options2) {
         value
       ));
     }
-  } else if (e.name === "nsComment" && options2.cert) {
+  } else if (e.name === "nsComment" && options.cert) {
     if (!/^[\x00-\x7F]*$/.test(e.comment) || e.comment.length < 1 || e.comment.length > 128) {
       throw new Error('Invalid "nsComment" content.');
     }
@@ -47225,8 +47224,8 @@ function _fillMissingExtensionFields(e, options2) {
       false,
       e.comment
     );
-  } else if (e.name === "subjectKeyIdentifier" && options2.cert) {
-    var ski = options2.cert.generateSubjectKeyIdentifier();
+  } else if (e.name === "subjectKeyIdentifier" && options.cert) {
+    var ski = options.cert.generateSubjectKeyIdentifier();
     e.subjectKeyIdentifier = ski.toHex();
     e.value = asn1$4.create(
       asn1$4.Class.UNIVERSAL,
@@ -47234,11 +47233,11 @@ function _fillMissingExtensionFields(e, options2) {
       false,
       ski.getBytes()
     );
-  } else if (e.name === "authorityKeyIdentifier" && options2.cert) {
+  } else if (e.name === "authorityKeyIdentifier" && options.cert) {
     e.value = asn1$4.create(asn1$4.Class.UNIVERSAL, asn1$4.Type.SEQUENCE, true, []);
     var seq = e.value.value;
     if (e.keyIdentifier) {
-      var keyIdentifier = e.keyIdentifier === true ? options2.cert.generateSubjectKeyIdentifier().getBytes() : e.keyIdentifier;
+      var keyIdentifier = e.keyIdentifier === true ? options.cert.generateSubjectKeyIdentifier().getBytes() : e.keyIdentifier;
       seq.push(
         asn1$4.create(asn1$4.Class.CONTEXT_SPECIFIC, 0, false, keyIdentifier)
       );
@@ -47246,7 +47245,7 @@ function _fillMissingExtensionFields(e, options2) {
     if (e.authorityCertIssuer) {
       var authorityCertIssuer = [
         asn1$4.create(asn1$4.Class.CONTEXT_SPECIFIC, 4, true, [
-          _dnToAsn1(e.authorityCertIssuer === true ? options2.cert.issuer : e.authorityCertIssuer)
+          _dnToAsn1(e.authorityCertIssuer === true ? options.cert.issuer : e.authorityCertIssuer)
         ])
       ];
       seq.push(
@@ -47254,7 +47253,7 @@ function _fillMissingExtensionFields(e, options2) {
       );
     }
     if (e.serialNumber) {
-      var serialNumber = forge$b.util.hexToBytes(e.serialNumber === true ? options2.cert.serialNumber : e.serialNumber);
+      var serialNumber = forge$b.util.hexToBytes(e.serialNumber === true ? options.cert.serialNumber : e.serialNumber);
       seq.push(
         asn1$4.create(asn1$4.Class.CONTEXT_SPECIFIC, 2, false, serialNumber)
       );
@@ -47737,14 +47736,14 @@ pki$2.certificateError = {
   certificate_unknown: "forge.pki.CertificateUnknown",
   unknown_ca: "forge.pki.UnknownCertificateAuthority"
 };
-pki$2.verifyCertificateChain = function(caStore, chain, options2) {
-  if (typeof options2 === "function") {
-    options2 = { verify: options2 };
+pki$2.verifyCertificateChain = function(caStore, chain, options) {
+  if (typeof options === "function") {
+    options = { verify: options };
   }
-  options2 = options2 || {};
+  options = options || {};
   chain = chain.slice(0);
   var certs = chain.slice(0);
-  var validityCheckDate = options2.validityCheckDate;
+  var validityCheckDate = options.validityCheckDate;
   if (typeof validityCheckDate === "undefined") {
     validityCheckDate = /* @__PURE__ */ new Date();
   }
@@ -47852,7 +47851,7 @@ pki$2.verifyCertificateChain = function(caStore, chain, options2) {
       }
     }
     var vfd = error === null ? true : error.error;
-    var ret = options2.verify ? options2.verify(vfd, depth, certs) : vfd;
+    var ret = options.verify ? options.verify(vfd, depth, certs) : vfd;
     if (ret === true) {
       error = null;
     } else {
@@ -48412,25 +48411,25 @@ function _decodeBagAttributes(attributes) {
   }
   return decodedAttrs;
 }
-p12.toPkcs12Asn1 = function(key, cert, password2, options2) {
-  options2 = options2 || {};
-  options2.saltSize = options2.saltSize || 8;
-  options2.count = options2.count || 2048;
-  options2.algorithm = options2.algorithm || options2.encAlgorithm || "aes128";
-  if (!("useMac" in options2)) {
-    options2.useMac = true;
+p12.toPkcs12Asn1 = function(key, cert, password2, options) {
+  options = options || {};
+  options.saltSize = options.saltSize || 8;
+  options.count = options.count || 2048;
+  options.algorithm = options.algorithm || options.encAlgorithm || "aes128";
+  if (!("useMac" in options)) {
+    options.useMac = true;
   }
-  if (!("localKeyId" in options2)) {
-    options2.localKeyId = null;
+  if (!("localKeyId" in options)) {
+    options.localKeyId = null;
   }
-  if (!("generateLocalKeyId" in options2)) {
-    options2.generateLocalKeyId = true;
+  if (!("generateLocalKeyId" in options)) {
+    options.generateLocalKeyId = true;
   }
-  var localKeyId = options2.localKeyId;
+  var localKeyId = options.localKeyId;
   var bagAttrs;
   if (localKeyId !== null) {
     localKeyId = forge$a.util.hexToBytes(localKeyId);
-  } else if (options2.generateLocalKeyId) {
+  } else if (options.generateLocalKeyId) {
     if (cert) {
       var pairedCert = forge$a.util.isArray(cert) ? cert[0] : cert;
       if (typeof pairedCert === "string") {
@@ -48467,7 +48466,7 @@ p12.toPkcs12Asn1 = function(key, cert, password2, options2) {
       ])
     );
   }
-  if ("friendlyName" in options2) {
+  if ("friendlyName" in options) {
     attrs.push(
       // friendlyName
       asn1$3.create(asn1$3.Class.UNIVERSAL, asn1$3.Type.SEQUENCE, true, [
@@ -48484,7 +48483,7 @@ p12.toPkcs12Asn1 = function(key, cert, password2, options2) {
             asn1$3.Class.UNIVERSAL,
             asn1$3.Type.BMPSTRING,
             false,
-            options2.friendlyName
+            options.friendlyName
           )
         ])
       ])
@@ -48608,7 +48607,7 @@ p12.toPkcs12Asn1 = function(key, cert, password2, options2) {
         // bagValue
         asn1$3.create(asn1$3.Class.CONTEXT_SPECIFIC, 0, true, [
           // EncryptedPrivateKeyInfo
-          pki$1.encryptPrivateKeyInfo(pkAsn1, password2, options2)
+          pki$1.encryptPrivateKeyInfo(pkAsn1, password2, options)
         ]),
         // bagAttributes (OPTIONAL)
         bagAttrs
@@ -48646,12 +48645,12 @@ p12.toPkcs12Asn1 = function(key, cert, password2, options2) {
     contents
   );
   var macData;
-  if (options2.useMac) {
+  if (options.useMac) {
     var sha12 = forge$a.md.sha1.create();
     var macSalt = new forge$a.util.ByteBuffer(
-      forge$a.random.getBytes(options2.saltSize)
+      forge$a.random.getBytes(options.saltSize)
     );
-    var count = options2.count;
+    var count = options.count;
     var key = p12.generateKey(password2, macSalt, 3, count, 20);
     var mac = forge$a.hmac.create();
     mac.start(sha12, key);
@@ -49994,18 +49993,18 @@ tls$1.createRandom = function() {
   rval.putBytes(forge$8.random.getBytes(28));
   return rval;
 };
-tls$1.createRecord = function(c, options2) {
-  if (!options2.data) {
+tls$1.createRecord = function(c, options) {
+  if (!options.data) {
     return null;
   }
   var record = {
-    type: options2.type,
+    type: options.type,
     version: {
       major: c.version.major,
       minor: c.version.minor
     },
-    length: options2.data.length(),
-    fragment: options2.data
+    length: options.data.length(),
+    fragment: options.data
   };
   return record;
 };
@@ -50377,11 +50376,11 @@ var _alertDescToCertError = function(desc) {
 };
 tls$1.verifyCertificateChain = function(c, chain) {
   try {
-    var options2 = {};
+    var options = {};
     for (var key in c.verifyOptions) {
-      options2[key] = c.verifyOptions[key];
+      options[key] = c.verifyOptions[key];
     }
-    options2.verify = function(vfd, depth, chain2) {
+    options.verify = function(vfd, depth, chain2) {
       var desc = _certErrorToAlertDesc(vfd);
       var ret = c.verify(c, vfd, depth, chain2);
       if (ret !== true) {
@@ -50406,7 +50405,7 @@ tls$1.verifyCertificateChain = function(c, chain) {
       }
       return ret;
     };
-    forge$8.pki.verifyCertificateChain(c.caStore, chain, options2);
+    forge$8.pki.verifyCertificateChain(c.caStore, chain, options);
   } catch (ex) {
     var err = ex;
     if (typeof err !== "object" || forge$8.util.isArray(err)) {
@@ -50479,50 +50478,50 @@ tls$1.createSessionCache = function(cache, capacity) {
   }
   return rval;
 };
-tls$1.createConnection = function(options2) {
+tls$1.createConnection = function(options) {
   var caStore = null;
-  if (options2.caStore) {
-    if (forge$8.util.isArray(options2.caStore)) {
-      caStore = forge$8.pki.createCaStore(options2.caStore);
+  if (options.caStore) {
+    if (forge$8.util.isArray(options.caStore)) {
+      caStore = forge$8.pki.createCaStore(options.caStore);
     } else {
-      caStore = options2.caStore;
+      caStore = options.caStore;
     }
   } else {
     caStore = forge$8.pki.createCaStore();
   }
-  var cipherSuites = options2.cipherSuites || null;
+  var cipherSuites = options.cipherSuites || null;
   if (cipherSuites === null) {
     cipherSuites = [];
     for (var key in tls$1.CipherSuites) {
       cipherSuites.push(tls$1.CipherSuites[key]);
     }
   }
-  var entity = options2.server || false ? tls$1.ConnectionEnd.server : tls$1.ConnectionEnd.client;
-  var sessionCache = options2.sessionCache ? tls$1.createSessionCache(options2.sessionCache) : null;
+  var entity = options.server || false ? tls$1.ConnectionEnd.server : tls$1.ConnectionEnd.client;
+  var sessionCache = options.sessionCache ? tls$1.createSessionCache(options.sessionCache) : null;
   var c = {
     version: { major: tls$1.Version.major, minor: tls$1.Version.minor },
     entity,
-    sessionId: options2.sessionId,
+    sessionId: options.sessionId,
     caStore,
     sessionCache,
     cipherSuites,
-    connected: options2.connected,
-    virtualHost: options2.virtualHost || null,
-    verifyClient: options2.verifyClient || false,
-    verify: options2.verify || function(cn, vfd, dpth, cts) {
+    connected: options.connected,
+    virtualHost: options.virtualHost || null,
+    verifyClient: options.verifyClient || false,
+    verify: options.verify || function(cn, vfd, dpth, cts) {
       return vfd;
     },
-    verifyOptions: options2.verifyOptions || {},
-    getCertificate: options2.getCertificate || null,
-    getPrivateKey: options2.getPrivateKey || null,
-    getSignature: options2.getSignature || null,
+    verifyOptions: options.verifyOptions || {},
+    getCertificate: options.getCertificate || null,
+    getPrivateKey: options.getPrivateKey || null,
+    getSignature: options.getSignature || null,
     input: forge$8.util.createBuffer(),
     tlsData: forge$8.util.createBuffer(),
     data: forge$8.util.createBuffer(),
-    tlsDataReady: options2.tlsDataReady,
-    dataReady: options2.dataReady,
-    heartbeatReceived: options2.heartbeatReceived,
-    closed: options2.closed,
+    tlsDataReady: options.tlsDataReady,
+    dataReady: options.dataReady,
+    heartbeatReceived: options.heartbeatReceived,
+    closed: options.closed,
     error: function(c2, ex) {
       ex.origin = ex.origin || (c2.entity === tls$1.ConnectionEnd.client ? "client" : "server");
       if (ex.send) {
@@ -50533,13 +50532,13 @@ tls$1.createConnection = function(options2) {
       if (fatal) {
         c2.fail = true;
       }
-      options2.error(c2, ex);
+      options.error(c2, ex);
       if (fatal) {
         c2.close(false);
       }
     },
-    deflate: options2.deflate || null,
-    inflate: options2.inflate || null
+    deflate: options.deflate || null,
+    inflate: options.inflate || null
   };
   c.reset = function(clearFail) {
     c.version = { major: tls$1.Version.major, minor: tls$1.Version.minor };
@@ -50854,16 +50853,16 @@ function encrypt_aes_cbc_sha1(record, s2) {
   }
   return rval;
 }
-function encrypt_aes_cbc_sha1_padding(blockSize, input, decrypt2) {
-  if (!decrypt2) {
+function encrypt_aes_cbc_sha1_padding(blockSize, input, decrypt) {
+  if (!decrypt) {
     var padding = blockSize - input.length() % blockSize;
     input.fillWithByte(padding - 1, padding);
   }
   return true;
 }
-function decrypt_aes_cbc_sha1_padding(blockSize, output, decrypt2) {
+function decrypt_aes_cbc_sha1_padding(blockSize, output, decrypt) {
   var rval = true;
-  if (decrypt2) {
+  if (decrypt) {
     var len = output.length();
     var paddingLength = output.last();
     for (var i = len - 1 - paddingLength; i < len - 1; ++i) {
@@ -51418,9 +51417,9 @@ ed25519.constants.PRIVATE_KEY_BYTE_LENGTH = 64;
 ed25519.constants.SEED_BYTE_LENGTH = 32;
 ed25519.constants.SIGN_BYTE_LENGTH = 64;
 ed25519.constants.HASH_BYTE_LENGTH = 64;
-ed25519.generateKeyPair = function(options2) {
-  options2 = options2 || {};
-  var seed = options2.seed;
+ed25519.generateKeyPair = function(options) {
+  options = options || {};
+  var seed = options.seed;
   if (seed === void 0) {
     seed = forge$4.random.getBytesSync(ed25519.constants.SEED_BYTE_LENGTH);
   } else if (typeof seed === "string") {
@@ -51487,10 +51486,10 @@ ed25519.publicKeyFromAsn1 = function(obj) {
     encoding: "binary"
   });
 };
-ed25519.publicKeyFromPrivateKey = function(options2) {
-  options2 = options2 || {};
+ed25519.publicKeyFromPrivateKey = function(options) {
+  options = options || {};
   var privateKey = messageToNativeBuffer({
-    message: options2.privateKey,
+    message: options.privateKey,
     encoding: "binary"
   });
   if (privateKey.length !== ed25519.constants.PRIVATE_KEY_BYTE_LENGTH) {
@@ -51504,11 +51503,11 @@ ed25519.publicKeyFromPrivateKey = function(options2) {
   }
   return pk;
 };
-ed25519.sign = function(options2) {
-  options2 = options2 || {};
-  var msg = messageToNativeBuffer(options2);
+ed25519.sign = function(options) {
+  options = options || {};
+  var msg = messageToNativeBuffer(options);
   var privateKey = messageToNativeBuffer({
-    message: options2.privateKey,
+    message: options.privateKey,
     encoding: "binary"
   });
   if (privateKey.length === ed25519.constants.SEED_BYTE_LENGTH) {
@@ -51529,16 +51528,16 @@ ed25519.sign = function(options2) {
   }
   return sig;
 };
-ed25519.verify = function(options2) {
-  options2 = options2 || {};
-  var msg = messageToNativeBuffer(options2);
-  if (options2.signature === void 0) {
+ed25519.verify = function(options) {
+  options = options || {};
+  var msg = messageToNativeBuffer(options);
+  if (options.signature === void 0) {
     throw new TypeError(
       '"options.signature" must be a node.js Buffer, a Uint8Array, a forge ByteBuffer, or a binary string.'
     );
   }
   var sig = messageToNativeBuffer({
-    message: options2.signature,
+    message: options.signature,
     encoding: "binary"
   });
   if (sig.length !== ed25519.constants.SIGN_BYTE_LENGTH) {
@@ -51547,7 +51546,7 @@ ed25519.verify = function(options2) {
     );
   }
   var publicKey = messageToNativeBuffer({
-    message: options2.publicKey,
+    message: options.publicKey,
     encoding: "binary"
   });
   if (publicKey.length !== ed25519.constants.PUBLIC_KEY_BYTE_LENGTH) {
@@ -51566,15 +51565,15 @@ ed25519.verify = function(options2) {
   }
   return crypto_sign_open(m, sm, sm.length, publicKey) >= 0;
 };
-function messageToNativeBuffer(options2) {
-  var message = options2.message;
+function messageToNativeBuffer(options) {
+  var message = options.message;
   if (message instanceof Uint8Array || message instanceof NativeBuffer) {
     return message;
   }
-  var encoding = options2.encoding;
+  var encoding = options.encoding;
   if (message === void 0) {
-    if (options2.md) {
-      message = options2.md.digest().getBytes();
+    if (options.md) {
+      message = options.md.digest().getBytes();
       encoding = "binary";
     } else {
       throw new TypeError('"options.message" or "options.md" not specified.');
@@ -52491,9 +52490,9 @@ var forge$3 = forge$C;
 forge$3.kem = forge$3.kem || {};
 var BigInteger = forge$3.jsbn.BigInteger;
 forge$3.kem.rsa = {};
-forge$3.kem.rsa.create = function(kdf2, options2) {
-  options2 = options2 || {};
-  var prng2 = options2.prng || forge$3.random;
+forge$3.kem.rsa.create = function(kdf2, options) {
+  options = options || {};
+  var prng2 = options.prng || forge$3.random;
   var kem2 = {};
   kem2.encrypt = function(publicKey, keyLength) {
     var byteLength = Math.ceil(publicKey.n.bitLength() / 8);
@@ -52956,8 +52955,8 @@ p7.createSignedData = function() {
      * @param options Options to apply when signing:
      *    [detached] boolean. If signing should be done in detached mode. Defaults to false.
      */
-    sign: function(options2) {
-      options2 = options2 || {};
+    sign: function(options) {
+      options = options || {};
       if (typeof msg.content !== "object" || msg.contentInfo === null) {
         msg.contentInfo = asn1$9.create(
           asn1$9.Class.UNIVERSAL,
@@ -52980,7 +52979,7 @@ p7.createSignedData = function() {
           } else if (typeof msg.content === "string") {
             content = forge$1.util.encodeUtf8(msg.content);
           }
-          if (options2.detached) {
+          if (options.detached) {
             msg.detachedContent = asn1$9.create(asn1$9.Class.UNIVERSAL, asn1$9.Type.OCTETSTRING, false, content);
           } else {
             msg.contentInfo.value.push(
@@ -53755,9 +53754,9 @@ ssh$1.privateKeyToOpenSSH = function(privateKey, passphrase) {
     { legacy: true, algorithm: "aes128" }
   );
 };
-ssh$1.getPublicKeyFingerprint = function(key, options2) {
-  options2 = options2 || {};
-  var md2 = options2.md || forge$D.md.md5.create();
+ssh$1.getPublicKeyFingerprint = function(key, options) {
+  options = options || {};
+  var md2 = options.md || forge$D.md.md5.create();
   var type2 = "ssh-rsa";
   var buffer2 = forge$D.util.createBuffer();
   _addStringToBuffer(buffer2, type2);
@@ -53766,16 +53765,16 @@ ssh$1.getPublicKeyFingerprint = function(key, options2) {
   md2.start();
   md2.update(buffer2.getBytes());
   var digest = md2.digest();
-  if (options2.encoding === "hex") {
+  if (options.encoding === "hex") {
     var hex = digest.toHex();
-    if (options2.delimiter) {
-      return hex.match(/.{2}/g).join(options2.delimiter);
+    if (options.delimiter) {
+      return hex.match(/.{2}/g).join(options.delimiter);
     }
     return hex;
-  } else if (options2.encoding === "binary") {
+  } else if (options.encoding === "binary") {
     return digest.getBytes();
-  } else if (options2.encoding) {
-    throw new Error('Unknown encoding "' + options2.encoding + '".');
+  } else if (options.encoding) {
+    throw new Error('Unknown encoding "' + options.encoding + '".');
   }
   return digest;
 };
@@ -55591,14 +55590,14 @@ var re$1 = { exports: {} };
 var reExports = re$1.exports;
 const looseOption = Object.freeze({ loose: true });
 const emptyOpts = Object.freeze({});
-const parseOptions$1 = (options2) => {
-  if (!options2) {
+const parseOptions$1 = (options) => {
+  if (!options) {
     return emptyOpts;
   }
-  if (typeof options2 !== "object") {
+  if (typeof options !== "object") {
     return looseOption;
   }
-  return options2;
+  return options;
 };
 var parseOptions_1 = parseOptions$1;
 const numeric = /^[0-9]+$/;
@@ -55616,14 +55615,14 @@ var identifiers = {
 };
 const debug = debug_1;
 const { MAX_LENGTH, MAX_SAFE_INTEGER } = constants;
-const { safeRe: re$2, t } = reExports;
+const { safeRe: re, t } = reExports;
 const parseOptions = parseOptions_1;
 const { compareIdentifiers } = identifiers;
 let SemVer$2 = class SemVer {
-  constructor(version2, options2) {
-    options2 = parseOptions(options2);
+  constructor(version2, options) {
+    options = parseOptions(options);
     if (version2 instanceof SemVer) {
-      if (version2.loose === !!options2.loose && version2.includePrerelease === !!options2.includePrerelease) {
+      if (version2.loose === !!options.loose && version2.includePrerelease === !!options.includePrerelease) {
         return version2;
       } else {
         version2 = version2.version;
@@ -55636,11 +55635,11 @@ let SemVer$2 = class SemVer {
         `version is longer than ${MAX_LENGTH} characters`
       );
     }
-    debug("SemVer", version2, options2);
-    this.options = options2;
-    this.loose = !!options2.loose;
-    this.includePrerelease = !!options2.includePrerelease;
-    const m = version2.trim().match(options2.loose ? re$2[t.LOOSE] : re$2[t.FULL]);
+    debug("SemVer", version2, options);
+    this.options = options;
+    this.loose = !!options.loose;
+    this.includePrerelease = !!options.includePrerelease;
+    const m = version2.trim().match(options.loose ? re[t.LOOSE] : re[t.FULL]);
     if (!m) {
       throw new TypeError(`Invalid Version: ${version2}`);
     }
@@ -55761,7 +55760,7 @@ let SemVer$2 = class SemVer {
         throw new Error("invalid increment argument: identifier is empty");
       }
       if (identifier) {
-        const match = `-${identifier}`.match(this.options.loose ? re$2[t.PRERELEASELOOSE] : re$2[t.PRERELEASE]);
+        const match = `-${identifier}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE]);
         if (!match || match[1] !== identifier) {
           throw new Error(`invalid identifier: ${identifier}`);
         }
@@ -55876,12 +55875,12 @@ const eq = (a, b, loose) => compare(a, b, loose) === 0;
 var eq_1 = eq;
 const equalVersion = /* @__PURE__ */ getDefaultExportFromCjs(eq_1);
 const SemVer2 = semver;
-const parse$1$1 = (version2, options2, throwErrors = false) => {
+const parse$1 = (version2, options, throwErrors = false) => {
   if (version2 instanceof SemVer2) {
     return version2;
   }
   try {
-    return new SemVer2(version2, options2);
+    return new SemVer2(version2, options);
   } catch (er) {
     if (!throwErrors) {
       return null;
@@ -55889,10 +55888,10 @@ const parse$1$1 = (version2, options2, throwErrors = false) => {
     throw er;
   }
 };
-var parse_1 = parse$1$1;
+var parse_1 = parse$1;
 const parse$2 = parse_1;
-const valid = (version2, options2) => {
-  const v = parse$2(version2, options2);
+const valid = (version2, options) => {
+  const v = parse$2(version2, options);
   return v ? v.version : null;
 };
 var valid_1 = valid;
@@ -55978,385 +55977,153 @@ __decorateClass([
   ValidateNested({ each: true })
 ], _KeyShares.prototype, "shares");
 let KeyShares = _KeyShares;
-var main$1 = { exports: {} };
-const version$1 = "16.6.1";
-const require$$4 = {
-  version: version$1
-};
-const fs$1 = fs$2;
-const path = path$1;
-const os = require$$0;
-const crypto$2 = crypto$1$1;
-const packageJson = require$$4;
-const version$2 = packageJson.version;
-const LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
-function parse$1(src2) {
-  const obj = {};
-  let lines2 = src2.toString();
-  lines2 = lines2.replace(/\r\n?/mg, "\n");
-  let match;
-  while ((match = LINE.exec(lines2)) != null) {
-    const key = match[1];
-    let value = match[2] || "";
-    value = value.trim();
-    const maybeQuote = value[0];
-    value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
-    if (maybeQuote === '"') {
-      value = value.replace(/\\n/g, "\n");
-      value = value.replace(/\\r/g, "\r");
-    }
-    obj[key] = value;
-  }
-  return obj;
-}
-function _parseVault(options2) {
-  options2 = options2 || {};
-  const vaultPath = _vaultPath(options2);
-  options2.path = vaultPath;
-  const result = DotenvModule.configDotenv(options2);
-  if (!result.parsed) {
-    const err = new Error(`MISSING_DATA: Cannot parse ${vaultPath} for an unknown reason`);
-    err.code = "MISSING_DATA";
-    throw err;
-  }
-  const keys2 = _dotenvKey(options2).split(",");
-  const length2 = keys2.length;
-  let decrypted;
-  for (let i = 0; i < length2; i++) {
-    try {
-      const key = keys2[i].trim();
-      const attrs = _instructions(result, key);
-      decrypted = DotenvModule.decrypt(attrs.ciphertext, attrs.key);
-      break;
-    } catch (error) {
-      if (i + 1 >= length2) {
-        throw error;
-      }
-    }
-  }
-  return DotenvModule.parse(decrypted);
-}
-function _warn(message) {
-  console.log(`[dotenv@${version$2}][WARN] ${message}`);
-}
-function _debug(message) {
-  console.log(`[dotenv@${version$2}][DEBUG] ${message}`);
-}
-function _log(message) {
-  console.log(`[dotenv@${version$2}] ${message}`);
-}
-function _dotenvKey(options2) {
-  if (options2 && options2.DOTENV_KEY && options2.DOTENV_KEY.length > 0) {
-    return options2.DOTENV_KEY;
-  }
-  if (process.env.DOTENV_KEY && process.env.DOTENV_KEY.length > 0) {
-    return process.env.DOTENV_KEY;
-  }
-  return "";
-}
-function _instructions(result, dotenvKey) {
-  let uri2;
-  try {
-    uri2 = new URL(dotenvKey);
-  } catch (error) {
-    if (error.code === "ERR_INVALID_URL") {
-      const err = new Error("INVALID_DOTENV_KEY: Wrong format. Must be in valid uri format like dotenv://:key_1234@dotenvx.com/vault/.env.vault?environment=development");
-      err.code = "INVALID_DOTENV_KEY";
-      throw err;
-    }
-    throw error;
-  }
-  const key = uri2.password;
-  if (!key) {
-    const err = new Error("INVALID_DOTENV_KEY: Missing key part");
-    err.code = "INVALID_DOTENV_KEY";
-    throw err;
-  }
-  const environment = uri2.searchParams.get("environment");
-  if (!environment) {
-    const err = new Error("INVALID_DOTENV_KEY: Missing environment part");
-    err.code = "INVALID_DOTENV_KEY";
-    throw err;
-  }
-  const environmentKey = `DOTENV_VAULT_${environment.toUpperCase()}`;
-  const ciphertext = result.parsed[environmentKey];
-  if (!ciphertext) {
-    const err = new Error(`NOT_FOUND_DOTENV_ENVIRONMENT: Cannot locate environment ${environmentKey} in your .env.vault file.`);
-    err.code = "NOT_FOUND_DOTENV_ENVIRONMENT";
-    throw err;
-  }
-  return { ciphertext, key };
-}
-function _vaultPath(options2) {
-  let possibleVaultPath = null;
-  if (options2 && options2.path && options2.path.length > 0) {
-    if (Array.isArray(options2.path)) {
-      for (const filepath of options2.path) {
-        if (fs$1.existsSync(filepath)) {
-          possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
-        }
-      }
-    } else {
-      possibleVaultPath = options2.path.endsWith(".vault") ? options2.path : `${options2.path}.vault`;
-    }
-  } else {
-    possibleVaultPath = path.resolve(process.cwd(), ".env.vault");
-  }
-  if (fs$1.existsSync(possibleVaultPath)) {
-    return possibleVaultPath;
-  }
-  return null;
-}
-function _resolveHome(envPath) {
-  return envPath[0] === "~" ? path.join(os.homedir(), envPath.slice(1)) : envPath;
-}
-function _configVault(options2) {
-  const debug2 = Boolean(options2 && options2.debug);
-  const quiet = options2 && "quiet" in options2 ? options2.quiet : true;
-  if (debug2 || !quiet) {
-    _log("Loading env from encrypted .env.vault");
-  }
-  const parsed = DotenvModule._parseVault(options2);
-  let processEnv = process.env;
-  if (options2 && options2.processEnv != null) {
-    processEnv = options2.processEnv;
-  }
-  DotenvModule.populate(processEnv, parsed, options2);
-  return { parsed };
-}
-function configDotenv(options2) {
-  const dotenvPath = path.resolve(process.cwd(), ".env");
-  let encoding = "utf8";
-  const debug2 = Boolean(options2 && options2.debug);
-  const quiet = options2 && "quiet" in options2 ? options2.quiet : true;
-  if (options2 && options2.encoding) {
-    encoding = options2.encoding;
-  } else {
-    if (debug2) {
-      _debug("No encoding is specified. UTF-8 is used by default");
-    }
-  }
-  let optionPaths = [dotenvPath];
-  if (options2 && options2.path) {
-    if (!Array.isArray(options2.path)) {
-      optionPaths = [_resolveHome(options2.path)];
-    } else {
-      optionPaths = [];
-      for (const filepath of options2.path) {
-        optionPaths.push(_resolveHome(filepath));
-      }
-    }
-  }
-  let lastError;
-  const parsedAll = {};
-  for (const path2 of optionPaths) {
-    try {
-      const parsed = DotenvModule.parse(fs$1.readFileSync(path2, { encoding }));
-      DotenvModule.populate(parsedAll, parsed, options2);
-    } catch (e) {
-      if (debug2) {
-        _debug(`Failed to load ${path2} ${e.message}`);
-      }
-      lastError = e;
-    }
-  }
-  let processEnv = process.env;
-  if (options2 && options2.processEnv != null) {
-    processEnv = options2.processEnv;
-  }
-  DotenvModule.populate(processEnv, parsedAll, options2);
-  if (debug2 || !quiet) {
-    const keysCount = Object.keys(parsedAll).length;
-    const shortPaths = [];
-    for (const filePath of optionPaths) {
-      try {
-        const relative = path.relative(process.cwd(), filePath);
-        shortPaths.push(relative);
-      } catch (e) {
-        if (debug2) {
-          _debug(`Failed to load ${filePath} ${e.message}`);
-        }
-        lastError = e;
-      }
-    }
-    _log(`injecting env (${keysCount}) from ${shortPaths.join(",")}`);
-  }
-  if (lastError) {
-    return { parsed: parsedAll, error: lastError };
-  } else {
-    return { parsed: parsedAll };
-  }
-}
-function config(options2) {
-  if (_dotenvKey(options2).length === 0) {
-    return DotenvModule.configDotenv(options2);
-  }
-  const vaultPath = _vaultPath(options2);
-  if (!vaultPath) {
-    _warn(`You set DOTENV_KEY but you are missing a .env.vault file at ${vaultPath}. Did you forget to build it?`);
-    return DotenvModule.configDotenv(options2);
-  }
-  return DotenvModule._configVault(options2);
-}
-function decrypt(encrypted, keyStr) {
-  const key = Buffer.from(keyStr.slice(-64), "hex");
-  let ciphertext = Buffer.from(encrypted, "base64");
-  const nonce = ciphertext.subarray(0, 12);
-  const authTag = ciphertext.subarray(-16);
-  ciphertext = ciphertext.subarray(12, -16);
-  try {
-    const aesgcm = crypto$2.createDecipheriv("aes-256-gcm", key, nonce);
-    aesgcm.setAuthTag(authTag);
-    return `${aesgcm.update(ciphertext)}${aesgcm.final()}`;
-  } catch (error) {
-    const isRange = error instanceof RangeError;
-    const invalidKeyLength = error.message === "Invalid key length";
-    const decryptionFailed = error.message === "Unsupported state or unable to authenticate data";
-    if (isRange || invalidKeyLength) {
-      const err = new Error("INVALID_DOTENV_KEY: It must be 64 characters long (or more)");
-      err.code = "INVALID_DOTENV_KEY";
-      throw err;
-    } else if (decryptionFailed) {
-      const err = new Error("DECRYPTION_FAILED: Please check your DOTENV_KEY");
-      err.code = "DECRYPTION_FAILED";
-      throw err;
-    } else {
-      throw error;
-    }
-  }
-}
-function populate(processEnv, parsed, options2 = {}) {
-  const debug2 = Boolean(options2 && options2.debug);
-  const override = Boolean(options2 && options2.override);
-  if (typeof parsed !== "object") {
-    const err = new Error("OBJECT_REQUIRED: Please check the processEnv argument being passed to populate");
-    err.code = "OBJECT_REQUIRED";
-    throw err;
-  }
-  for (const key of Object.keys(parsed)) {
-    if (Object.prototype.hasOwnProperty.call(processEnv, key)) {
-      if (override === true) {
-        processEnv[key] = parsed[key];
-      }
-      if (debug2) {
-        if (override === true) {
-          _debug(`"${key}" is already defined and WAS overwritten`);
-        } else {
-          _debug(`"${key}" is already defined and was NOT overwritten`);
-        }
-      }
-    } else {
-      processEnv[key] = parsed[key];
-    }
-  }
-}
-const DotenvModule = {
-  configDotenv,
-  _configVault,
-  _parseVault,
-  config,
-  decrypt,
-  parse: parse$1,
-  populate
-};
-main$1.exports.configDotenv = DotenvModule.configDotenv;
-main$1.exports._configVault = DotenvModule._configVault;
-main$1.exports._parseVault = DotenvModule._parseVault;
-main$1.exports.config = DotenvModule.config;
-main$1.exports.decrypt = DotenvModule.decrypt;
-main$1.exports.parse = DotenvModule.parse;
-main$1.exports.populate = DotenvModule.populate;
-main$1.exports = DotenvModule;
-var mainExports = main$1.exports;
-const options = {};
-if (process.env.DOTENV_CONFIG_ENCODING != null) {
-  options.encoding = process.env.DOTENV_CONFIG_ENCODING;
-}
-if (process.env.DOTENV_CONFIG_PATH != null) {
-  options.path = process.env.DOTENV_CONFIG_PATH;
-}
-if (process.env.DOTENV_CONFIG_QUIET != null) {
-  options.quiet = process.env.DOTENV_CONFIG_QUIET;
-}
-if (process.env.DOTENV_CONFIG_DEBUG != null) {
-  options.debug = process.env.DOTENV_CONFIG_DEBUG;
-}
-if (process.env.DOTENV_CONFIG_OVERRIDE != null) {
-  options.override = process.env.DOTENV_CONFIG_OVERRIDE;
-}
-if (process.env.DOTENV_CONFIG_DOTENV_KEY != null) {
-  options.DOTENV_KEY = process.env.DOTENV_CONFIG_DOTENV_KEY;
-}
-var envOptions = options;
-const re = /^dotenv_config_(encoding|path|quiet|debug|override|DOTENV_KEY)=(.+)$/;
-var cliOptions = function optionMatcher(args) {
-  const options2 = args.reduce(function(acc, cur) {
-    const matches = cur.match(re);
-    if (matches) {
-      acc[matches[1]] = matches[2];
-    }
-    return acc;
-  }, {});
-  if (!("quiet" in options2)) {
-    options2.quiet = "true";
-  }
-  return options2;
-};
-(function() {
-  mainExports.config(
-    Object.assign(
-      {},
-      envOptions,
-      cliOptions(process.argv)
-    )
-  );
-})();
 var ClusterFeeAssetTypes = /* @__PURE__ */ ((ClusterFeeAssetTypes2) => {
   ClusterFeeAssetTypes2["ETH"] = "ETH";
   ClusterFeeAssetTypes2["SSV"] = "SSV";
   return ClusterFeeAssetTypes2;
 })(ClusterFeeAssetTypes || {});
-const GetClusterSnapshotDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClusterSnapshot" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "cluster" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
-const GetClusterDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetCluster" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "cluster" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "owner" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeAsset" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "operatorIds" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
-const GetClustersDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClusters" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clusters" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "owner" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeAsset" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "operatorIds" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
-const GetOwnerNonceDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOwnerNonce" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "account" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "nonce" } }] } }] } }] };
+const GetClusterSnapshotDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClusterSnapshot" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "cluster" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
+const GetClusterDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetCluster" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "cluster" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "owner" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeAsset" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "operatorIds" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
+const GetClustersDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClusters" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "clusters" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "owner" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeAsset" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "operatorIds" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
+const GetOwnerNonceDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOwnerNonce" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "account" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "nonce" } }] } }] } }] };
 const GetOwnerNonceByBlockDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOwnerNonceByBlock" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "block" } }, "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "account" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "owner" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "block" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "number" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "block" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "nonce" } }] } }] } }] };
-const GetOperatorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOperator" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "operator" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "publicKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isPrivate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelistedContract" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelisted" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] } }] };
-const GetOperatorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOperators" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "operators" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "id_in" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "publicKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isPrivate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelistedContract" } }, { "kind": "Field", "name": { "kind": "Name", "value": "fee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelisted" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] } }] };
-const GetValidatorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetValidators" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "ids" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Bytes" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "validators" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "id_in" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "ids" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] };
-const GetValidatorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetValidator" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "validator" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] };
+const GetOperatorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOperator" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "operator" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "publicKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isPrivate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelistedContract" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelisted" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] } }] };
+const GetOperatorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetOperators" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "operators" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "id_in" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "publicKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isPrivate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelistedContract" } }, { "kind": "Field", "name": { "kind": "Name", "value": "fee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "whitelisted" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] } }] };
+const GetValidatorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetValidators" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "ids" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Bytes" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "validators" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "id_in" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "ids" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] };
+const GetValidatorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetValidator" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "validator" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }] } }] } }] };
 const GetClusterBalanceDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClusterBalance" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clusterId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "daovalues" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "networkFee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumberSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThreshold" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThresholdSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateral" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateralSSV" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "operators" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "where" }, "value": { "kind": "ObjectValue", "fields": [{ "kind": "ObjectField", "name": { "kind": "Name", "value": "id_in" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "operatorIds" } } }] } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "fee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeIndexBlockNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeIndexSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "feeIndexBlockNumberSSV" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "cluster" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clusterId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "feeAsset" } }, { "kind": "Field", "name": { "kind": "Name", "value": "validatorCount" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "index" } }, { "kind": "Field", "name": { "kind": "Name", "value": "balance" } }, { "kind": "Field", "name": { "kind": "Name", "value": "effectiveBalance" } }] } }] } }] };
-const GetDaoValuesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDaoValues" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "daovalues" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "networkFee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumberSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThreshold" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThresholdSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateral" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateralSSV" } }] } }] } }] };
-const getOwnerNonce = (client, args) => {
-  const document2 = typeof args.block === "number" ? GetOwnerNonceByBlockDocument : GetOwnerNonceDocument;
-  return client.request(document2, args).then((r) => r.account?.nonce || "0").catch(() => "0");
+const GetDaoValuesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDaoValues" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ID" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "_meta" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "block" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "number" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "daovalues" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "daoAddress" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "networkFee" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndex" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "networkFeeIndexBlockNumberSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThreshold" } }, { "kind": "Field", "name": { "kind": "Name", "value": "liquidationThresholdSSV" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateral" } }, { "kind": "Field", "name": { "kind": "Name", "value": "minimumLiquidationCollateralSSV" } }] } }] } }] };
+const requireSafeNumber = (rawValue, fieldName) => {
+  if (rawValue === null || typeof rawValue === "undefined") {
+    throw new Error(`Could not resolve ${fieldName}`);
+  }
+  const value = BigInt(rawValue);
+  if (value > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new Error(`${fieldName} exceeds MAX_SAFE_INTEGER`);
+  }
+  return Number(value);
 };
-const toSolidityCluster = (client, args) => client.request(GetClusterSnapshotDocument, args).then((res) => res.cluster);
-const getClusterSnapshot = (client, args) => toSolidityCluster(client, args);
-const getCluster = (client, args) => client.request(GetClusterDocument, args).then((res) => res.cluster);
-const getClusters = (client, args) => client.request(GetClustersDocument, args).then((res) => res.clusters);
-const getOperator = (client, args) => client.request(GetOperatorDocument, args).then((res) => {
-  if (!res.operator) return null;
-  return {
-    ...res.operator,
-    publicKey: decodeOperatorPublicKey(res.operator.publicKey),
-    whitelisted: res.operator.whitelisted.map((v) => v.id)
-  };
+const getSnapshotBlockNumber = (response) => {
+  if (response._meta?.block.number === null || typeof response._meta?.block.number === "undefined") {
+    throw new Error(
+      "Subgraph endpoint must support _meta.block.number for snapshot-aware SDK reads."
+    );
+  }
+  return requireSafeNumber(response._meta.block.number, "snapshot block number");
+};
+const mapOperator = (operator) => ({
+  ...operator,
+  publicKey: decodeOperatorPublicKey(operator.publicKey),
+  whitelisted: operator.whitelisted.map((v) => v.id)
 });
-const getOperators = (client, args) => client.request(GetOperatorsDocument, args).then(
-  (res) => res.operators.map((o) => ({
-    ...o,
-    publicKey: decodeOperatorPublicKey(o.publicKey),
-    whitelisted: o.whitelisted.map((v) => v.id)
-  }))
-);
-const getValidators = (client, args) => client.request(GetValidatorsDocument, args).then((res) => res.validators);
-const getValidator = (client, args) => client.request(GetValidatorDocument, args).then((res) => res.validator);
-const getClusterBalance$1 = (client, args) => client.request(GetClusterBalanceDocument, args);
-const getDaoValues = (client, args) => client.request(GetDaoValuesDocument, args).then((res) => res.daovalues);
+const withSnapshotBlock = (response, payload) => ({
+  blockNumber: getSnapshotBlockNumber(response),
+  ...payload
+});
+const getOwnerNonce = async (client, args) => {
+  if (typeof args.block === "number") {
+    const response2 = await client.request(
+      GetOwnerNonceByBlockDocument,
+      args
+    );
+    return {
+      blockNumber: requireSafeNumber(args.block, "snapshot block number"),
+      nonce: requireSafeNumber(response2.account?.nonce ?? "0", "owner nonce")
+    };
+  }
+  const response = await client.request(
+    GetOwnerNonceDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    nonce: requireSafeNumber(response.account?.nonce ?? "0", "owner nonce")
+  });
+};
+const getClusterSnapshot = async (client, args) => {
+  const response = await client.request(
+    GetClusterSnapshotDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    cluster: response.cluster
+  });
+};
+const getCluster = async (client, args) => {
+  const response = await client.request(
+    GetClusterDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    cluster: response.cluster
+  });
+};
+const getClusters = async (client, args) => {
+  const response = await client.request(
+    GetClustersDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    clusters: response.clusters
+  });
+};
+const getOperator = async (client, args) => {
+  const response = await client.request(
+    GetOperatorDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    operator: response.operator ? mapOperator(response.operator) : null
+  });
+};
+const getOperators = async (client, args) => {
+  const response = await client.request(
+    GetOperatorsDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    operators: response.operators.map(mapOperator)
+  });
+};
+const getValidators = async (client, args) => {
+  const response = await client.request(
+    GetValidatorsDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    validators: response.validators
+  });
+};
+const getValidator = async (client, args) => {
+  const response = await client.request(
+    GetValidatorDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    validator: response.validator
+  });
+};
+const getClusterBalance$1 = async (client, args) => {
+  const response = await client.request(
+    GetClusterBalanceDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    cluster: response.cluster,
+    daovalues: response.daovalues,
+    operators: response.operators
+  });
+};
+const getDaoValues = async (client, args) => {
+  const response = await client.request(
+    GetDaoValuesDocument,
+    args
+  );
+  return withSnapshotBlock(response, {
+    daovalues: response.daovalues
+  });
+};
 const getQueries = (client) => ({
   getOwnerNonce: getOwnerNonce.bind(null, client),
-  toSolidityCluster: toSolidityCluster.bind(null, client),
   getClusterSnapshot: getClusterSnapshot.bind(null, client),
   getCluster: getCluster.bind(null, client),
   getClusters: getClusters.bind(null, client),
@@ -61896,23 +61663,41 @@ const TokenABI = [
     type: "function"
   }
 ];
+class MissingAbiParameterError extends Error {
+  code = "MISSING_ABI_PARAMETER";
+  functionName;
+  parameterName;
+  parameterIndex;
+  constructor({
+    functionName,
+    parameterName,
+    parameterIndex
+  }) {
+    super(
+      `Missing required ABI parameter "${parameterName}" for function "${functionName}" at index ${parameterIndex}.`
+    );
+    this.name = "MissingAbiParameterError";
+    this.functionName = functionName;
+    this.parameterName = parameterName;
+    this.parameterIndex = parameterIndex;
+  }
+}
 const paramsToArray = ({
   params,
   abiFunction
 }) => {
-  return stringifyBigints(
-    abiFunction.inputs.reduce(
-      (acc, param) => {
-        if (param.name && !isUndefined$1(params[param.name])) {
-          return [...acc, params[param.name]];
-        } else {
-          console.error(`Missing argument for ${param}`);
-        }
-        return acc;
-      },
-      []
-    )
-  );
+  const args = abiFunction.inputs.map((param, parameterIndex) => {
+    const parameterName = param.name;
+    if (!parameterName || isUndefined$1(params[parameterName])) {
+      throw new MissingAbiParameterError({
+        functionName: abiFunction.name,
+        parameterName: parameterName || `<unnamed_${parameterIndex}>`,
+        parameterIndex
+      });
+    }
+    return params[parameterName];
+  });
+  return stringifyBigints(args);
 };
 function normalize(strArray) {
   const resultArray = [];
@@ -61976,7 +61761,6 @@ function urlJoin(...args) {
   const parts = Array.from(Array.isArray(args[0]) ? args[0] : args);
   return normalize(parts);
 }
-const ABIS = [TokenABI, MainnetV4SetterABI];
 const ensureWritableWallet = (walletClient, functionName) => {
   if (!walletClient) {
     throw new Error(
@@ -61994,21 +61778,31 @@ const createWriter = ({
   abi: abi2,
   publicClient,
   walletClient,
-  contractAddress
+  contractAddress,
+  eventSources = [{ abi: abi2, address: contractAddress }]
 }) => {
   const writeFnsMainnet = abi2.filter(
     (item) => item.type === "function" && (item.stateMutability === "nonpayable" || item.stateMutability === "payable")
   );
   return Object.fromEntries(
     writeFnsMainnet.map((fn) => {
-      const simulate = async (options2) => {
+      const getWriteArgs = (params) => {
+        if (fn.inputs.length === 0) {
+          return void 0;
+        }
+        return paramsToArray({
+          params: params ?? {},
+          abiFunction: fn
+        });
+      };
+      const simulate = async (options = {}) => {
         const writableWallet = ensureWritableWallet(walletClient, fn.name);
         return publicClient.simulateContract({
-          ...options2,
+          ...options,
           address: contractAddress,
           abi: abi2,
           functionName: fn.name,
-          args: paramsToArray({ params: options2.args, abiFunction: fn }),
+          args: getWriteArgs(options.args),
           account: writableWallet.account
         });
       };
@@ -62016,12 +61810,12 @@ const createWriter = ({
         return encodeFunctionData({
           abi: abi2,
           functionName: fn.name,
-          args: paramsToArray({ params, abiFunction: fn })
+          args: getWriteArgs(params)
         });
       };
-      const func = async (options2) => {
+      const func = async (options = {}) => {
         const writableWallet = ensureWritableWallet(walletClient, fn.name);
-        const { request } = await simulate(options2);
+        const { request } = await simulate(options);
         const hash2 = await writableWallet.writeContract(
           request
         );
@@ -62031,23 +61825,20 @@ const createWriter = ({
             ...receipt,
             events: receipt.logs.reduce(
               (acc, log2) => {
-                try {
-                  const event = decodeEventLog({
-                    abi: abi2,
-                    data: log2.data,
-                    topics: log2.topics
-                  });
-                  acc.push(event);
-                } catch {
-                  for (const eventAbi of ABIS) {
-                    tryCatch(() => {
-                      const event = decodeEventLog({
-                        abi: eventAbi,
-                        data: log2.data,
-                        topics: log2.topics
-                      });
-                      acc.push(event);
-                    });
+                for (const eventSource of eventSources) {
+                  if (!isAddressEqual(log2.address, eventSource.address)) {
+                    continue;
+                  }
+                  const [event] = tryCatch(
+                    () => decodeEventLog({
+                      abi: eventSource.abi,
+                      data: log2.data,
+                      topics: log2.topics
+                    })
+                  );
+                  if (event) {
+                    acc.push(event);
+                    break;
                   }
                 }
                 return acc;
@@ -62123,7 +61914,17 @@ const createContractInteractions = ({
         abi: MainnetV4SetterABI,
         walletClient,
         publicClient,
-        contractAddress: addresses.setter
+        contractAddress: addresses.setter,
+        eventSources: [
+          {
+            abi: MainnetV4SetterABI,
+            address: addresses.setter
+          },
+          {
+            abi: TokenABI,
+            address: addresses.token
+          }
+        ]
       }),
       read: createReader({
         abi: MainnetV4GetterABI,
@@ -62141,7 +61942,13 @@ const createContractInteractions = ({
         abi: TokenABI,
         walletClient,
         publicClient,
-        contractAddress: addresses.token
+        contractAddress: addresses.token,
+        eventSources: [
+          {
+            abi: TokenABI,
+            address: addresses.token
+          }
+        ]
       })
     }
   };
@@ -62190,13 +61997,13 @@ const createConfig = (props) => {
     contract
   };
 };
-const deposit = async (config2, { args: { id, amount }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const deposit = async (config, { args: { id, amount }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  const snapshot = toSolidityCluster$1(cluster);
-  return config2.contract.ssv.write.deposit({
+  const snapshot = toSolidityCluster(cluster);
+  return config.contract.ssv.write.deposit({
     value: amount,
     args: {
       cluster: snapshot,
@@ -62206,9 +62013,9 @@ const deposit = async (config2, { args: { id, amount }, ...writeOptions }) => {
     ...writeOptions
   });
 };
-const exitValidators = async (config2, { args: { publicKeys, operatorIds }, ...writeOptions }) => {
+const exitValidators = async (config, { args: { publicKeys, operatorIds }, ...writeOptions }) => {
   if (publicKeys.length === 1) {
-    return config2.contract.ssv.write.exitValidator({
+    return config.contract.ssv.write.exitValidator({
       args: {
         publicKey: publicKeys[0],
         operatorIds: [operatorIds[0]]
@@ -62216,7 +62023,7 @@ const exitValidators = async (config2, { args: { publicKeys, operatorIds }, ...w
       ...writeOptions
     });
   }
-  return config2.contract.ssv.write.bulkExitValidator({
+  return config.contract.ssv.write.bulkExitValidator({
     args: {
       publicKeys,
       operatorIds
@@ -62224,63 +62031,63 @@ const exitValidators = async (config2, { args: { publicKeys, operatorIds }, ...w
     ...writeOptions
   });
 };
-const liquidateCluster = async (config2, { args: { id }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const liquidateCluster = async (config, { args: { id }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  return config2.contract.ssv.write.liquidate({
+  return config.contract.ssv.write.liquidate({
     args: {
-      cluster: toSolidityCluster$1(cluster),
+      cluster: toSolidityCluster(cluster),
       clusterOwner: cluster.owner.id,
       operatorIds: cluster.operatorIds.map(BigInt)
     },
     ...writeOptions
   });
 };
-const liquidateSSV = async (config2, { args: { id }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const liquidateSSV = async (config, { args: { id }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  return config2.contract.ssv.write.liquidateSSV({
+  return config.contract.ssv.write.liquidateSSV({
     args: {
       clusterOwner: cluster.owner.id,
       operatorIds: cluster.operatorIds.map(BigInt),
-      cluster: toSolidityCluster$1(cluster)
+      cluster: toSolidityCluster(cluster)
     },
     ...writeOptions
   });
 };
-const migrateClusterToETH = async (config2, { args: { id, amount }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const migrateClusterToETH = async (config, { args: { id, amount }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  return config2.contract.ssv.write.migrateClusterToETH({
+  return config.contract.ssv.write.migrateClusterToETH({
     value: amount,
     args: {
       operatorIds: cluster.operatorIds.map(BigInt),
-      cluster: toSolidityCluster$1(cluster)
+      cluster: toSolidityCluster(cluster)
     },
     ...writeOptions
   });
 };
-const reactivateCluster = async (config2, { args: { id, amount }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const reactivateCluster = async (config, { args: { id, amount }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  return config2.contract.ssv.write.reactivate({
+  return config.contract.ssv.write.reactivate({
     value: amount,
     args: {
-      cluster: toSolidityCluster$1(cluster),
+      cluster: toSolidityCluster(cluster),
       operatorIds: cluster.operatorIds.map(BigInt)
     },
     ...writeOptions
   });
 };
-const registerValidators = async (config2, {
+const registerValidators = async (config, {
   args: { keyshares, depositAmount = 0n },
   ...writeOptions
 }) => {
@@ -62300,19 +62107,19 @@ const registerValidators = async (config2, {
       `You can't register more than ${limit} validators in a single transaction`
     );
   }
-  const ownerAddress = config2.walletClient?.account?.address;
+  const ownerAddress = config.walletClient?.account?.address;
   if (!ownerAddress) {
     throw new Error(
       "walletClient with account is required for write operations"
     );
   }
   const clusterId = createClusterId(ownerAddress, operatorIds);
-  const cluster = await config2.api.getCluster({
+  const { cluster } = await config.api.getCluster({
     id: clusterId
   });
-  const snapshot = cluster ? toSolidityCluster$1(cluster) : createEmptyCluster();
+  const snapshot = cluster ? toSolidityCluster(cluster) : createEmptyCluster();
   if (shares.length === 1) {
-    return config2.contract.ssv.write.registerValidator({
+    return config.contract.ssv.write.registerValidator({
       value: depositAmount,
       args: {
         cluster: snapshot,
@@ -62323,7 +62130,7 @@ const registerValidators = async (config2, {
       ...writeOptions
     });
   }
-  return config2.contract.ssv.write.bulkRegisterValidator({
+  return config.contract.ssv.write.bulkRegisterValidator({
     value: depositAmount,
     args: {
       cluster: snapshot,
@@ -62334,7 +62141,7 @@ const registerValidators = async (config2, {
     ...writeOptions
   });
 };
-const registerValidatorsRawData = async (config2, { args: { keyshares, ownerAddress } }) => {
+const registerValidatorsRawData = async (config, { args: { keyshares, ownerAddress } }) => {
   const shares = keyshares.map((share) => {
     return isKeySharesItem(share) ? share.payload : share;
   });
@@ -62351,26 +62158,26 @@ const registerValidatorsRawData = async (config2, { args: { keyshares, ownerAddr
       `You can't register more than ${limit} validators in a single transaction`
     );
   }
-  const resolvedOwnerAddress = ownerAddress ?? config2.walletClient?.account?.address;
+  const resolvedOwnerAddress = ownerAddress ?? config.walletClient?.account?.address;
   if (!resolvedOwnerAddress) {
     throw new Error(
       "ownerAddress is required when walletClient.account.address is not available"
     );
   }
   const clusterId = createClusterId(resolvedOwnerAddress, operatorIds);
-  const cluster = await config2.api.getCluster({
+  const { cluster } = await config.api.getCluster({
     id: clusterId
   });
-  const snapshot = cluster ? toSolidityCluster$1(cluster) : createEmptyCluster();
+  const snapshot = cluster ? toSolidityCluster(cluster) : createEmptyCluster();
   if (shares.length === 1) {
-    return config2.contract.ssv.write.registerValidator.getTransactionData({
+    return config.contract.ssv.write.registerValidator.getTransactionData({
       cluster: snapshot,
       operatorIds: operatorIds.map(BigInt),
       publicKey: shares[0].publicKey,
       sharesData: shares[0].sharesData
     });
   }
-  return config2.contract.ssv.write.bulkRegisterValidator.getTransactionData({
+  return config.contract.ssv.write.bulkRegisterValidator.getTransactionData({
     cluster: snapshot,
     operatorIds: operatorIds.map(BigInt),
     publicKeys: shares.map((share) => share.publicKey),
@@ -62378,26 +62185,27 @@ const registerValidatorsRawData = async (config2, { args: { keyshares, ownerAddr
   });
 };
 const ssvKeys$1 = new SSVKeys();
-const validateSharesPostRegistration = async (config2, args) => {
-  const ownerAddress = args.ownerAddress ?? config2.walletClient?.account?.address;
+const validateSharesPostRegistration = async (config, args) => {
+  const ownerAddress = args.ownerAddress ?? config.walletClient?.account?.address;
   if (!ownerAddress) {
     throw new Error(
       "ownerAddress is required when walletClient.account.address is not available"
     );
   }
-  const receipt = await config2.publicClient.waitForTransactionReceipt({
+  const receipt = await config.publicClient.waitForTransactionReceipt({
     hash: args.txHash
   });
-  const ownerNonce = await config2.api.getOwnerNonce({
+  const ownerNonceResponse = await config.api.getOwnerNonce({
     owner: ownerAddress,
     block: Number(receipt.blockNumber) - 1
   });
+  const ownerNonce = ownerNonceResponse?.nonce;
   if (isUndefined$1(ownerNonce)) {
     throw new Error("Could not fetch owner nonce");
   }
-  const validatorAddedEvents = await config2.publicClient.getContractEvents({
+  const validatorAddedEvents = await config.publicClient.getContractEvents({
     abi: MainnetV4SetterABI,
-    address: config2.contractAddresses.setter,
+    address: config.contractAddresses.setter,
     eventName: "ValidatorAdded",
     args: {
       owner: ownerAddress
@@ -62417,7 +62225,7 @@ const validateSharesPostRegistration = async (config2, args) => {
         operatorsCount: e.args.operatorIds.length,
         isAccountExists: false,
         ownerAddress,
-        ownerNonce: Number(ownerNonce) + index2,
+        ownerNonce: ownerNonce + index2,
         shares: e.args.shares,
         validatorPublicKey: e.args.publicKey
       })
@@ -62429,81 +62237,81 @@ const validateSharesPostRegistration = async (config2, args) => {
     isValid: isValid2,
     validations,
     invalids,
-    ownerNonceAtBlock: Number(ownerNonce),
+    ownerNonceAtBlock: ownerNonce,
     block: Number(receipt.blockNumber)
   };
 };
-const removeValidators = async (config2, { args: { id, publicKeys }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const removeValidators = async (config, { args: { id, publicKeys }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
   if (publicKeys.length === 1) {
-    return config2.contract.ssv.write.removeValidator({
+    return config.contract.ssv.write.removeValidator({
       args: {
-        cluster: toSolidityCluster$1(cluster),
+        cluster: toSolidityCluster(cluster),
         publicKey: publicKeys[0],
         operatorIds: cluster.operatorIds.map(BigInt)
       },
       ...writeOptions
     });
   }
-  return config2.contract.ssv.write.bulkRemoveValidator({
+  return config.contract.ssv.write.bulkRemoveValidator({
     args: {
-      cluster: toSolidityCluster$1(cluster),
+      cluster: toSolidityCluster(cluster),
       publicKeys,
       operatorIds: cluster.operatorIds.map(BigInt)
     },
     ...writeOptions
   });
 };
-const setFeeRecipient = async (config2, { args: { recipient }, ...writeOptions }) => {
-  return config2.contract.ssv.write.setFeeRecipientAddress({
+const setFeeRecipient = async (config, { args: { recipient }, ...writeOptions }) => {
+  return config.contract.ssv.write.setFeeRecipientAddress({
     args: {
       recipientAddress: recipient
     },
     ...writeOptions
   });
 };
-const withdraw$1 = async (config2, { args: { id, amount }, ...writeOptions }) => {
-  const cluster = await config2.api.getCluster({ id });
+const withdraw$1 = async (config, { args: { id, amount }, ...writeOptions }) => {
+  const { cluster } = await config.api.getCluster({ id });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  return config2.contract.ssv.write.withdraw({
+  return config.contract.ssv.write.withdraw({
     args: {
       amount,
-      cluster: toSolidityCluster$1(cluster),
+      cluster: toSolidityCluster(cluster),
       operatorIds: cluster.operatorIds.map(BigInt)
     },
     ...writeOptions
   });
 };
-const createClusterManager = (config2) => ({
-  deposit: deposit.bind(null, config2),
-  withdraw: withdraw$1.bind(null, config2),
-  liquidate: liquidateCluster.bind(null, config2),
-  liquidateSSV: liquidateSSV.bind(null, config2),
-  reactivate: reactivateCluster.bind(null, config2),
+const createClusterManager = (config) => ({
+  deposit: deposit.bind(null, config),
+  withdraw: withdraw$1.bind(null, config),
+  liquidate: liquidateCluster.bind(null, config),
+  liquidateSSV: liquidateSSV.bind(null, config),
+  reactivate: reactivateCluster.bind(null, config),
   migrateClusterToETH: migrateClusterToETH.bind(
     null,
-    config2
+    config
   ),
-  removeValidators: removeValidators.bind(null, config2),
-  setFeeRecipient: setFeeRecipient.bind(null, config2),
-  exitValidators: exitValidators.bind(null, config2),
-  registerValidators: registerValidators.bind(null, config2),
+  removeValidators: removeValidators.bind(null, config),
+  setFeeRecipient: setFeeRecipient.bind(null, config),
+  exitValidators: exitValidators.bind(null, config),
+  registerValidators: registerValidators.bind(null, config),
   registerValidatorsRawData: registerValidatorsRawData.bind(
     null,
-    config2
+    config
   ),
   validateSharesPostRegistration: validateSharesPostRegistration.bind(
     null,
-    config2
+    config
   )
 });
-const commitRoot = async (config2, { args: { merkleRoot, blockNum }, ...writeOptions }) => {
-  return config2.contract.ssv.write.commitRoot({
+const commitRoot = async (config, { args: { merkleRoot, blockNum }, ...writeOptions }) => {
+  return config.contract.ssv.write.commitRoot({
     args: {
       merkleRoot,
       blockNum
@@ -62511,47 +62319,47 @@ const commitRoot = async (config2, { args: { merkleRoot, blockNum }, ...writeOpt
     ...writeOptions
   });
 };
-const updateNetworkFeeSSV = async (config2, { args: { fee }, ...writeOptions }) => {
-  return config2.contract.ssv.write.updateNetworkFeeSSV({
+const updateNetworkFeeSSV = async (config, { args: { fee }, ...writeOptions }) => {
+  return config.contract.ssv.write.updateNetworkFeeSSV({
     args: {
       fee
     },
     ...writeOptions
   });
 };
-const withdrawNetworkSSVEarnings = async (config2, { args: { amount }, ...writeOptions }) => {
-  return config2.contract.ssv.write.withdrawNetworkSSVEarnings({
+const withdrawNetworkSSVEarnings = async (config, { args: { amount }, ...writeOptions }) => {
+  return config.contract.ssv.write.withdrawNetworkSSVEarnings({
     args: {
       amount
     },
     ...writeOptions
   });
 };
-const createDaoManager = (config2) => ({
-  commitRoot: commitRoot.bind(null, config2),
+const createDaoManager = (config) => ({
+  commitRoot: commitRoot.bind(null, config),
   updateNetworkFeeSSV: updateNetworkFeeSSV.bind(
     null,
-    config2
+    config
   ),
   withdrawNetworkSSVEarnings: withdrawNetworkSSVEarnings.bind(
     null,
-    config2
+    config
   )
 });
-const withdraw = async (config2, { args: { operatorId, amount }, ...writeOptions }) => {
-  const balance = await config2.contract.ssv.read.getOperatorEarnings({
+const withdraw = async (config, { args: { operatorId, amount }, ...writeOptions }) => {
+  const balance = await config.contract.ssv.read.getOperatorEarnings({
     id: BigInt(operatorId)
   });
   const isWithdrawingAll = amount >= balance;
   if (isWithdrawingAll) {
-    return config2.contract.ssv.write.withdrawAllOperatorEarnings({
+    return config.contract.ssv.write.withdrawAllOperatorEarnings({
       args: {
         operatorId: BigInt(operatorId)
       },
       ...writeOptions
     });
   }
-  return config2.contract.ssv.write.withdrawOperatorEarnings({
+  return config.contract.ssv.write.withdrawOperatorEarnings({
     args: {
       operatorId: BigInt(operatorId),
       amount
@@ -62559,23 +62367,23 @@ const withdraw = async (config2, { args: { operatorId, amount }, ...writeOptions
     ...writeOptions
   });
 };
-const withdrawOperatorEarningsSSV = async (config2, {
+const withdrawOperatorEarningsSSV = async (config, {
   args: { operatorId, amount },
   ...writeOptions
 }) => {
-  const balance = await config2.contract.ssv.read.getOperatorEarningsSSV({
+  const balance = await config.contract.ssv.read.getOperatorEarningsSSV({
     id: BigInt(operatorId)
   });
   const isWithdrawingAll = amount >= balance;
   if (isWithdrawingAll) {
-    return config2.contract.ssv.write.withdrawAllOperatorEarningsSSV({
+    return config.contract.ssv.write.withdrawAllOperatorEarningsSSV({
       args: {
         operatorId: BigInt(operatorId)
       },
       ...writeOptions
     });
   }
-  return config2.contract.ssv.write.withdrawOperatorEarningsSSV({
+  return config.contract.ssv.write.withdrawOperatorEarningsSSV({
     args: {
       operatorId: BigInt(operatorId),
       amount
@@ -62583,30 +62391,30 @@ const withdrawOperatorEarningsSSV = async (config2, {
     ...writeOptions
   });
 };
-const withdrawAllOperatorEarningsSSV = async (config2, { args: { operatorId }, ...writeOptions }) => {
-  return config2.contract.ssv.write.withdrawAllOperatorEarningsSSV({
+const withdrawAllOperatorEarningsSSV = async (config, { args: { operatorId }, ...writeOptions }) => {
+  return config.contract.ssv.write.withdrawAllOperatorEarningsSSV({
     args: {
       operatorId: BigInt(operatorId)
     },
     ...writeOptions
   });
 };
-const withdrawAllVersionOperatorEarnings = async (config2, {
+const withdrawAllVersionOperatorEarnings = async (config, {
   args: { operatorId },
   ...writeOptions
 }) => {
-  return config2.contract.ssv.write.withdrawAllVersionOperatorEarnings({
+  return config.contract.ssv.write.withdrawAllVersionOperatorEarnings({
     args: {
       operatorId: BigInt(operatorId)
     },
     ...writeOptions
   });
 };
-const registerOperator = async (config2, {
+const registerOperator = async (config, {
   args: { isPrivate, yearlyFee, publicKey },
   ...writeOptions
 }) => {
-  return config2.contract.ssv.write.registerOperator({
+  return config.contract.ssv.write.registerOperator({
     args: {
       publicKey: encodeAbiParameters(parseAbiParameters("string"), [publicKey]),
       fee: roundOperatorFee(
@@ -62618,17 +62426,17 @@ const registerOperator = async (config2, {
     ...writeOptions
   });
 };
-const setOperatorWhitelists = async (config2, {
+const setOperatorWhitelists = async (config, {
   args: { operatorIds, contractAddress },
   ...writeOptions
 }) => {
-  const isWhitelistingContract = await config2.contract.ssv.read.isWhitelistingContract({
+  const isWhitelistingContract = await config.contract.ssv.read.isWhitelistingContract({
     contractAddress
   });
   if (!isWhitelistingContract) {
     throw new Error("The provided contract is not whitelisting contract");
   }
-  return config2.contract.ssv.write.setOperatorsWhitelists({
+  return config.contract.ssv.write.setOperatorsWhitelists({
     args: {
       operatorIds: operatorIds.map(BigInt),
       whitelistAddresses: [contractAddress]
@@ -62636,7 +62444,7 @@ const setOperatorWhitelists = async (config2, {
     ...writeOptions
   });
 };
-const canAccountUseOperator = async (config2, operator, account) => {
+const canAccountUseOperator = async (config, operator, account) => {
   if (!operator) return false;
   if (!operator.isPrivate) return true;
   const isWhitelisted = operator.whitelisted.some(
@@ -62647,55 +62455,55 @@ const canAccountUseOperator = async (config2, operator, account) => {
     operator.whitelistedContract && operator.whitelistedContract !== zeroAddress
   );
   if (!hasExternalContract) return false;
-  return config2.contract.ssv.read.isAddressWhitelistedInWhitelistingContract({
+  return config.contract.ssv.read.isAddressWhitelistedInWhitelistingContract({
     addressToCheck: account,
     operatorId: BigInt(operator.id),
     whitelistingContract: operator.whitelistedContract
   });
 };
-const createOperatorManager = (config2) => ({
-  registerOperator: registerOperator.bind(null, config2),
-  removeOperator: config2.contract.ssv.write.removeOperator,
-  withdraw: withdraw.bind(null, config2),
+const createOperatorManager = (config) => ({
+  registerOperator: registerOperator.bind(null, config),
+  removeOperator: config.contract.ssv.write.removeOperator,
+  withdraw: withdraw.bind(null, config),
   withdrawOperatorEarningsSSV: withdrawOperatorEarningsSSV.bind(
     null,
-    config2
+    config
   ),
   withdrawAllOperatorEarningsSSV: withdrawAllOperatorEarningsSSV.bind(
     null,
-    config2
+    config
   ),
   withdrawAllVersionOperatorEarnings: withdrawAllVersionOperatorEarnings.bind(
     null,
-    config2
+    config
   ),
-  setOperatorWhitelists: config2.contract.ssv.write.setOperatorsWhitelists,
-  removeOperatorWhitelists: config2.contract.ssv.write.removeOperatorsWhitelists,
-  setOperatorsPrivate: config2.contract.ssv.write.setOperatorsPrivateUnchecked,
-  setOperatorsPublic: config2.contract.ssv.write.setOperatorsPublicUnchecked,
+  setOperatorWhitelists: config.contract.ssv.write.setOperatorsWhitelists,
+  removeOperatorWhitelists: config.contract.ssv.write.removeOperatorsWhitelists,
+  setOperatorsPrivate: config.contract.ssv.write.setOperatorsPrivateUnchecked,
+  setOperatorsPublic: config.contract.ssv.write.setOperatorsPublicUnchecked,
   setOperatorWhitelistingContract: setOperatorWhitelists.bind(
     null,
-    config2
+    config
   ),
-  removeOperatorWhitelistingContract: config2.contract.ssv.write.removeOperatorsWhitelists,
-  declareOperatorFee: config2.contract.ssv.write.declareOperatorFee,
-  executeOperatorFee: config2.contract.ssv.write.executeOperatorFee,
-  cancelDeclaredOperatorFee: config2.contract.ssv.write.cancelDeclaredOperatorFee,
-  reduceOperatorFee: config2.contract.ssv.write.reduceOperatorFee
+  removeOperatorWhitelistingContract: config.contract.ssv.write.removeOperatorsWhitelists,
+  declareOperatorFee: config.contract.ssv.write.declareOperatorFee,
+  executeOperatorFee: config.contract.ssv.write.executeOperatorFee,
+  cancelDeclaredOperatorFee: config.contract.ssv.write.cancelDeclaredOperatorFee,
+  reduceOperatorFee: config.contract.ssv.write.reduceOperatorFee
 });
-const getClusterBalance = async (config2, { operatorIds, ownerAddress }) => {
-  const resolvedOwnerAddress = ownerAddress ?? config2.walletClient?.account?.address;
+const getClusterBalance = async (config, { operatorIds, ownerAddress }) => {
+  const resolvedOwnerAddress = ownerAddress ?? config.walletClient?.account?.address;
   if (!resolvedOwnerAddress) {
     throw new Error(
       "ownerAddress is required when walletClient.account.address is not available"
     );
   }
-  const query = await config2.api.getClusterBalance({
-    daoAddress: config2.contractAddresses.setter,
+  const query = await config.api.getClusterBalance({
+    daoAddress: config.contractAddresses.setter,
     operatorIds: operatorIds.map(String),
     clusterId: createClusterId(resolvedOwnerAddress, operatorIds)
   });
-  if (!query.cluster || !query.daovalues || !query._meta) {
+  if (!query.cluster || !query.daovalues) {
     throw new Error("Could not fetch cluster balance");
   }
   const isSsvCluster = query.cluster.feeAsset === ClusterFeeAssetTypes.SSV;
@@ -62715,13 +62523,13 @@ const getClusterBalance = async (config2, { operatorIds, ownerAddress }) => {
     isSsvCluster ? query.daovalues.liquidationThresholdSSV : query.daovalues.liquidationThreshold
   );
   const scallingCoefficient = isSsvCluster ? globals.SSV_DEDUCTED_DIGITS : globals.ETH_DEDUCTED_DIGITS;
-  const cumulativeNetworkFee = networkFeeIndex + (BigInt(query._meta.block.number) - networkFeeIndexBlockNumber) * networkFee - BigInt(query.cluster.networkFeeIndex) * scallingCoefficient;
+  const cumulativeNetworkFee = networkFeeIndex + (BigInt(query.blockNumber) - networkFeeIndexBlockNumber) * networkFee - BigInt(query.cluster.networkFeeIndex) * scallingCoefficient;
   const cumulativeOperatorFee = query.operators.reduce(
     (acc, operator) => {
       const fee = isSsvCluster ? operator.feeSSV : operator.fee;
       const feeIndex = isSsvCluster ? operator.feeIndexSSV : operator.feeIndex;
       const feeIndexBlockNumber = isSsvCluster ? operator.feeIndexBlockNumberSSV : operator.feeIndexBlockNumber;
-      return acc + BigInt(feeIndex) + (BigInt(query._meta.block.number) - BigInt(feeIndexBlockNumber)) * BigInt(fee);
+      return acc + BigInt(feeIndex) + (BigInt(query.blockNumber) - BigInt(feeIndexBlockNumber)) * BigInt(fee);
     },
     -BigInt(query.cluster.index) * scallingCoefficient
   );
@@ -62740,6 +62548,7 @@ const getClusterBalance = async (config2, { operatorIds, ownerAddress }) => {
   const runway = calculatedClusterBalance - LC;
   const operationalRunway = runway / burnRate / globals.BLOCKS_PER_DAY;
   return {
+    blockNumber: query.blockNumber,
     balance: calculatedClusterBalance,
     operationalRunway
   };
@@ -62759,14 +62568,14 @@ const buildKeysharesFromPayloads = (payloads) => {
   ensureValidatorsUniqueness(shares);
   return shares;
 };
-const validateSharesPreRegistration = async (config2, { keyshares, operatorIds, ownerAddress }) => {
-  const account = ownerAddress ?? config2.walletClient?.account?.address;
+const validateSharesPreRegistration = async (config, { keyshares, operatorIds, ownerAddress }) => {
+  const account = ownerAddress ?? config.walletClient?.account?.address;
   if (!account) {
     throw new Error(
       "ownerAddress is required when walletClient.account.address is not available"
     );
   }
-  const operators = await config2.api.getOperators({ operatorIds });
+  const { operators } = await config.api.getOperators({ operatorIds });
   if (operators.length !== operatorIds.length) {
     throw new KeysharesValidationError(
       KeysharesValidationErrors.OperatorDoesNotExist
@@ -62791,7 +62600,9 @@ const validateSharesPreRegistration = async (config2, { keyshares, operatorIds, 
   }
   const statuses = await Promise.all(
     shares.map((share) => {
-      return config2.api.getValidator({ id: share.data.publicKey }).then((res) => [share, Boolean(res)]).catch(() => [share, false]);
+      return config.api.getValidator({ id: share.data.publicKey }).then(
+        ({ validator }) => [share, Boolean(validator)]
+      );
     })
   );
   if (statuses.every(([, isRegistered]) => isRegistered)) {
@@ -62800,9 +62611,11 @@ const validateSharesPreRegistration = async (config2, { keyshares, operatorIds, 
   const shouldValidateNonce = shares.every(
     (share) => typeof share.data.ownerNonce === "number"
   );
-  const nonce = shouldValidateNonce ? await config2.api.getOwnerNonce({ owner: account }).then((nonce2) => {
-    if (!nonce2) throw new Error("Failed to get owner nonce");
-    return Number(nonce2);
+  const nonce = shouldValidateNonce ? await config.api.getOwnerNonce({ owner: account }).then(({ nonce: nonce2 }) => {
+    if (typeof nonce2 !== "number") {
+      throw new Error("Failed to get owner nonce");
+    }
+    return nonce2;
   }) : null;
   let i = 0;
   const sharesWithStatuses = statuses.reduce(
@@ -62831,9 +62644,9 @@ const validateSharesPreRegistration = async (config2, { keyshares, operatorIds, 
       `No available keyshares to register. ${sharesWithStatuses.incorrect.length} keyshares have incorrect nonce and ${sharesWithStatuses.registered.length} are already registered`
     );
   }
-  const limit = await config2.contract.ssv.read.getValidatorsPerOperatorLimit();
+  const limit = await config.contract.ssv.read.getValidatorsPerOperatorLimit();
   for (const operator of operators) {
-    if (!await canAccountUseOperator(config2, operator, account)) {
+    if (!await canAccountUseOperator(config, operator, account)) {
       throw new Error(
         `Operator ${operator.id} is private and the account is not whitelisted`
       );
@@ -62920,34 +62733,154 @@ const generateKeyShares = async (args) => {
   }
   return shares;
 };
-const getOperatorCapacity = async (config2, operatorId) => {
+const getOperatorCapacity = async (config, operatorId) => {
   const [operator, limit] = await Promise.all([
-    config2.api.getOperator({
+    config.api.getOperator({
       id: operatorId
     }),
-    config2.contract.ssv.read.getValidatorsPerOperatorLimit()
+    config.contract.ssv.read.getValidatorsPerOperatorLimit()
   ]);
-  if (!operator) return 0;
-  return limit - Number(operator.validatorCount);
+  if (!operator?.operator) return 0;
+  return limit - Number(operator.operator.validatorCount);
+};
+const isKeySharesFileShare = (share) => {
+  return !!share && typeof share === "object" && "data" in share && "payload" in share;
+};
+const isPayloadOnlyShare = (share) => {
+  return !!share && typeof share === "object" && "sharesData" in share && "publicKey" in share && "operatorIds" in share && !("data" in share) && !("payload" in share);
+};
+const toWebappOperatorKey = (operatorKey) => {
+  if (operatorKey.startsWith("LS0tLS1CRUdJTi")) {
+    return operatorKey;
+  }
+  return Buffer.from(operatorKey, "utf-8").toString("base64");
+};
+const buildOperatorMap = async (config, shares, providedOperators) => {
+  if (providedOperators) {
+    return new Map(
+      providedOperators.map((operator) => [
+        operator.id,
+        {
+          ...operator,
+          operatorKey: toWebappOperatorKey(operator.operatorKey)
+        }
+      ])
+    );
+  }
+  const payloadShares = shares.filter(isPayloadOnlyShare);
+  if (!payloadShares.length) {
+    return /* @__PURE__ */ new Map();
+  }
+  const uniqueOperatorIds = [
+    ...new Set(payloadShares.flatMap((share) => share.operatorIds))
+  ];
+  const { operators } = await config.api.getOperators({
+    operatorIds: uniqueOperatorIds.map(String)
+  });
+  if (operators.length !== uniqueOperatorIds.length) {
+    throw new Error(
+      "writeKeysharesFile could not fetch all operators required to build the webapp keyshares format."
+    );
+  }
+  return new Map(
+    operators.map((operator) => [
+      Number(operator.id),
+      {
+        id: Number(operator.id),
+        operatorKey: toWebappOperatorKey(operator.publicKey)
+      }
+    ])
+  );
+};
+const normalizeKeySharesItem = async (share, index2, args, operatorMap) => {
+  if (isKeySharesItem(share)) {
+    return JSON.parse(share.toJson());
+  }
+  if (isKeySharesFileShare(share)) {
+    return share;
+  }
+  if (!isPayloadOnlyShare(share)) {
+    throw new Error(
+      "writeKeysharesFile received an unsupported keyshares shape."
+    );
+  }
+  if (!args.ownerAddress || typeof args.nonce !== "number") {
+    throw new Error(
+      "writeKeysharesFile requires ownerAddress and nonce when shares contain payload-only keyshares."
+    );
+  }
+  const operators = share.operatorIds.map((operatorId) => {
+    const operator = operatorMap.get(operatorId);
+    if (!operator) {
+      throw new Error(
+        `writeKeysharesFile could not resolve operator ${operatorId} for the webapp keyshares format.`
+      );
+    }
+    return operator;
+  });
+  return {
+    data: {
+      ownerAddress: args.ownerAddress,
+      ownerNonce: args.nonce + index2,
+      publicKey: share.publicKey,
+      operators
+    },
+    payload: share
+  };
+};
+const getParentDirectory = (filePath) => {
+  const normalizedPath = filePath.replace(/\\/g, "/");
+  const lastSeparatorIndex = normalizedPath.lastIndexOf("/");
+  if (lastSeparatorIndex === -1) {
+    return ".";
+  }
+  if (lastSeparatorIndex === 0) {
+    return normalizedPath[0];
+  }
+  return normalizedPath.slice(0, lastSeparatorIndex);
+};
+const writeKeysharesFile = async (config, args) => {
+  const { path: path2, shares } = args;
+  if (!shares.length) {
+    throw new Error(
+      "writeKeysharesFile requires at least one keyshares item to write a file."
+    );
+  }
+  const operatorMap = await buildOperatorMap(config, shares, args.operators);
+  const normalizedShares = await Promise.all(
+    shares.map(
+      (share, index2) => normalizeKeySharesItem(share, index2, args, operatorMap)
+    )
+  );
+  const keySharesFile = {
+    version: "v1.1.0",
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    shares: normalizedShares
+  };
+  const { mkdir, writeFile } = await import("node:fs/promises");
+  await mkdir(getParentDirectory(path2), { recursive: true });
+  await writeFile(path2, JSON.stringify(keySharesFile, null, 2), {
+    encoding: "utf-8"
+  });
 };
 const computeDailyAmount = (value, days2) => {
   const scale = 10 ** 6;
   const scaledDays = BigInt(days2 * scale);
   return value * scaledDays * BigInt(globals.BLOCKS_PER_DAY) / BigInt(scale);
 };
-const calcDepositFromRunway = async (config2, { clusterId, runway }) => {
-  const cluster = await config2.api.getCluster({ id: clusterId });
+const calcDepositFromRunway = async (config, { clusterId, runway }) => {
+  const { cluster } = await config.api.getCluster({ id: clusterId });
   if (!cluster) {
     throw new Error("Cluster not found");
   }
-  const operators = await config2.api.getOperators({
+  const { operators } = await config.api.getOperators({
     operatorIds: cluster.operatorIds
   });
   if (!operators) {
     throw new Error("Operators not found");
   }
-  const daoValues = await config2.api.getDaoValues({
-    daoAddress: config2.contractAddresses.setter
+  const { daovalues: daoValues } = await config.api.getDaoValues({
+    daoAddress: config.contractAddresses.setter
   });
   if (!daoValues) {
     throw new Error("DAO values not found");
@@ -62976,21 +62909,25 @@ const calcDepositFromRunway = async (config2, { clusterId, runway }) => {
   const residualBalance = computeDailyAmount(burnRate, runway);
   return residualBalance + liquidationCollateral;
 };
-const createUtils = (config2) => ({
+const createUtils = (config) => ({
   generateKeyShares,
+  writeKeysharesFile: writeKeysharesFile.bind(
+    null,
+    config
+  ),
   validateKeysharesJSON,
   validateSharesPreRegistration: validateSharesPreRegistration.bind(
     null,
-    config2
+    config
   ),
   getOperatorCapacity: getOperatorCapacity.bind(
     null,
-    config2
+    config
   ),
-  getClusterBalance: getClusterBalance.bind(null, config2),
+  getClusterBalance: getClusterBalance.bind(null, config),
   calcDepositFromRunway: calcDepositFromRunway.bind(
     null,
-    config2
+    config
   )
 });
 class SSVSDK {
@@ -63043,7 +62980,7 @@ class BaseAction {
 }
 const fileExistsValidator = (filePath, message = "") => {
   filePath = sanitizePath(String(filePath).trim());
-  const exists = fs$2.existsSync(filePath);
+  const exists = fs$1.existsSync(filePath);
   return exists || message || "Could not locate the keystores file path. Please provide a valid path.";
 };
 const sanitizePath = (inputPath) => {
@@ -63230,9 +63167,9 @@ function copyConfig(to2, from2) {
   }
   return to2;
 }
-function Moment(config2) {
-  copyConfig(this, config2);
-  this._d = new Date(config2._d != null ? config2._d.getTime() : NaN);
+function Moment(config) {
+  copyConfig(this, config);
+  this._d = new Date(config._d != null ? config._d.getTime() : NaN);
   if (!this.isValid()) {
     this._d = /* @__PURE__ */ new Date(NaN);
   }
@@ -63296,11 +63233,11 @@ hooks.deprecationHandler = null;
 function isFunction(input) {
   return typeof Function !== "undefined" && input instanceof Function || Object.prototype.toString.call(input) === "[object Function]";
 }
-function set(config2) {
+function set(config) {
   var prop, i;
-  for (i in config2) {
-    if (hasOwnProp(config2, i)) {
-      prop = config2[i];
+  for (i in config) {
+    if (hasOwnProp(config, i)) {
+      prop = config[i];
       if (isFunction(prop)) {
         this[i] = prop;
       } else {
@@ -63308,7 +63245,7 @@ function set(config2) {
       }
     }
   }
-  this._config = config2;
+  this._config = config;
   this._dayOfMonthOrdinalParseLenient = new RegExp(
     (this._dayOfMonthOrdinalParse.source || this._ordinalParse.source) + "|" + /\d{1,2}/.source
   );
@@ -63335,9 +63272,9 @@ function mergeConfigs(parentConfig, childConfig) {
   }
   return res;
 }
-function Locale(config2) {
-  if (config2 != null) {
-    this.set(config2);
+function Locale(config) {
+  if (config != null) {
+    this.set(config);
   }
 }
 var keys;
@@ -63599,11 +63536,11 @@ function addRegexToken(token2, regex2, strictRegex) {
     return isStrict && strictRegex ? strictRegex : regex2;
   };
 }
-function getParseRegexForToken(token2, config2) {
+function getParseRegexForToken(token2, config) {
   if (!hasOwnProp(regexes, token2)) {
     return new RegExp(unescapeFormat(token2));
   }
-  return regexes[token2](config2._strict, config2._locale);
+  return regexes[token2](config._strict, config._locale);
 }
 function unescapeFormat(s2) {
   return regexEscape(
@@ -63649,14 +63586,14 @@ function addParseToken(token2, callback) {
   }
 }
 function addWeekParseToken(token2, callback) {
-  addParseToken(token2, function(input, array, config2, token3) {
-    config2._w = config2._w || {};
-    callback(input, config2._w, config2, token3);
+  addParseToken(token2, function(input, array, config, token3) {
+    config._w = config._w || {};
+    callback(input, config._w, config, token3);
   });
 }
-function addTimeToArrayFromToken(token2, input, config2) {
+function addTimeToArrayFromToken(token2, input, config) {
   if (input != null && hasOwnProp(tokens, token2)) {
-    tokens[token2](input, config2._a, config2, token2);
+    tokens[token2](input, config._a, config, token2);
   }
 }
 function isLeapYear(year2) {
@@ -63836,12 +63773,12 @@ addRegexToken("MMMM", function(isStrict, locale2) {
 addParseToken(["M", "MM"], function(input, array) {
   array[MONTH] = toInt(input) - 1;
 });
-addParseToken(["MMM", "MMMM"], function(input, array, config2, token2) {
-  var month2 = config2._locale.monthsParse(input, token2, config2._strict);
+addParseToken(["MMM", "MMMM"], function(input, array, config, token2) {
+  var month2 = config._locale.monthsParse(input, token2, config._strict);
   if (month2 != null) {
     array[MONTH] = month2;
   } else {
-    getParsingFlags(config2).invalidMonth = input;
+    getParsingFlags(config).invalidMonth = input;
   }
 });
 var defaultLocaleMonths = "January_February_March_April_May_June_July_August_September_October_November_December".split(
@@ -64104,7 +64041,7 @@ addRegexToken("W", match1to2, match1to2NoLeadingZero);
 addRegexToken("WW", match1to2, match2);
 addWeekParseToken(
   ["w", "ww", "W", "WW"],
-  function(input, week, config2, token2) {
+  function(input, week, config, token2) {
     week[token2.substr(0, 1)] = toInt(input);
   }
 );
@@ -64155,15 +64092,15 @@ addRegexToken("ddd", function(isStrict, locale2) {
 addRegexToken("dddd", function(isStrict, locale2) {
   return locale2.weekdaysRegex(isStrict);
 });
-addWeekParseToken(["dd", "ddd", "dddd"], function(input, week, config2, token2) {
-  var weekday = config2._locale.weekdaysParse(input, token2, config2._strict);
+addWeekParseToken(["dd", "ddd", "dddd"], function(input, week, config, token2) {
+  var weekday = config._locale.weekdaysParse(input, token2, config._strict);
   if (weekday != null) {
     week.d = weekday;
   } else {
-    getParsingFlags(config2).invalidWeekday = input;
+    getParsingFlags(config).invalidWeekday = input;
   }
 });
-addWeekParseToken(["d", "e", "E"], function(input, week, config2, token2) {
+addWeekParseToken(["d", "e", "E"], function(input, week, config, token2) {
   week[token2] = toInt(input);
 });
 function parseWeekday(input, locale2) {
@@ -64474,37 +64411,37 @@ addRegexToken("hmmss", match5to6);
 addRegexToken("Hmm", match3to4);
 addRegexToken("Hmmss", match5to6);
 addParseToken(["H", "HH"], HOUR);
-addParseToken(["k", "kk"], function(input, array, config2) {
+addParseToken(["k", "kk"], function(input, array, config) {
   var kInput = toInt(input);
   array[HOUR] = kInput === 24 ? 0 : kInput;
 });
-addParseToken(["a", "A"], function(input, array, config2) {
-  config2._isPm = config2._locale.isPM(input);
-  config2._meridiem = input;
+addParseToken(["a", "A"], function(input, array, config) {
+  config._isPm = config._locale.isPM(input);
+  config._meridiem = input;
 });
-addParseToken(["h", "hh"], function(input, array, config2) {
+addParseToken(["h", "hh"], function(input, array, config) {
   array[HOUR] = toInt(input);
-  getParsingFlags(config2).bigHour = true;
+  getParsingFlags(config).bigHour = true;
 });
-addParseToken("hmm", function(input, array, config2) {
+addParseToken("hmm", function(input, array, config) {
   var pos = input.length - 2;
   array[HOUR] = toInt(input.substr(0, pos));
   array[MINUTE] = toInt(input.substr(pos));
-  getParsingFlags(config2).bigHour = true;
+  getParsingFlags(config).bigHour = true;
 });
-addParseToken("hmmss", function(input, array, config2) {
+addParseToken("hmmss", function(input, array, config) {
   var pos1 = input.length - 4, pos2 = input.length - 2;
   array[HOUR] = toInt(input.substr(0, pos1));
   array[MINUTE] = toInt(input.substr(pos1, 2));
   array[SECOND] = toInt(input.substr(pos2));
-  getParsingFlags(config2).bigHour = true;
+  getParsingFlags(config).bigHour = true;
 });
-addParseToken("Hmm", function(input, array, config2) {
+addParseToken("Hmm", function(input, array, config) {
   var pos = input.length - 2;
   array[HOUR] = toInt(input.substr(0, pos));
   array[MINUTE] = toInt(input.substr(pos));
 });
-addParseToken("Hmmss", function(input, array, config2) {
+addParseToken("Hmmss", function(input, array, config) {
   var pos1 = input.length - 4, pos2 = input.length - 2;
   array[HOUR] = toInt(input.substr(0, pos1));
   array[MINUTE] = toInt(input.substr(pos1, 2));
@@ -64607,36 +64544,36 @@ function getSetGlobalLocale(key, values) {
   }
   return globalLocale._abbr;
 }
-function defineLocale(name, config2) {
-  if (config2 !== null) {
+function defineLocale(name, config) {
+  if (config !== null) {
     var locale2, parentConfig = baseConfig;
-    config2.abbr = name;
+    config.abbr = name;
     if (locales[name] != null) {
       deprecateSimple(
         "defineLocaleOverride",
         "use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info."
       );
       parentConfig = locales[name]._config;
-    } else if (config2.parentLocale != null) {
-      if (locales[config2.parentLocale] != null) {
-        parentConfig = locales[config2.parentLocale]._config;
+    } else if (config.parentLocale != null) {
+      if (locales[config.parentLocale] != null) {
+        parentConfig = locales[config.parentLocale]._config;
       } else {
-        locale2 = loadLocale(config2.parentLocale);
+        locale2 = loadLocale(config.parentLocale);
         if (locale2 != null) {
           parentConfig = locale2._config;
         } else {
-          if (!localeFamilies[config2.parentLocale]) {
-            localeFamilies[config2.parentLocale] = [];
+          if (!localeFamilies[config.parentLocale]) {
+            localeFamilies[config.parentLocale] = [];
           }
-          localeFamilies[config2.parentLocale].push({
+          localeFamilies[config.parentLocale].push({
             name,
-            config: config2
+            config
           });
           return null;
         }
       }
     }
-    locales[name] = new Locale(mergeConfigs(parentConfig, config2));
+    locales[name] = new Locale(mergeConfigs(parentConfig, config));
     if (localeFamilies[name]) {
       localeFamilies[name].forEach(function(x) {
         defineLocale(x.name, x.config);
@@ -64649,21 +64586,21 @@ function defineLocale(name, config2) {
     return null;
   }
 }
-function updateLocale(name, config2) {
-  if (config2 != null) {
+function updateLocale(name, config) {
+  if (config != null) {
     var locale2, tmpLocale, parentConfig = baseConfig;
     if (locales[name] != null && locales[name].parentLocale != null) {
-      locales[name].set(mergeConfigs(locales[name]._config, config2));
+      locales[name].set(mergeConfigs(locales[name]._config, config));
     } else {
       tmpLocale = loadLocale(name);
       if (tmpLocale != null) {
         parentConfig = tmpLocale._config;
       }
-      config2 = mergeConfigs(parentConfig, config2);
+      config = mergeConfigs(parentConfig, config);
       if (tmpLocale == null) {
-        config2.abbr = name;
+        config.abbr = name;
       }
-      locale2 = new Locale(config2);
+      locale2 = new Locale(config);
       locale2.parentLocale = locales[name];
       locales[name] = locale2;
     }
@@ -64755,10 +64692,10 @@ var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\
   PDT: -7 * 60,
   PST: -8 * 60
 };
-function configFromISO(config2) {
-  var i, l, string = config2._i, match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string), allowTime, dateFormat, timeFormat, tzFormat, isoDatesLen = isoDates.length, isoTimesLen = isoTimes.length;
+function configFromISO(config) {
+  var i, l, string = config._i, match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string), allowTime, dateFormat, timeFormat, tzFormat, isoDatesLen = isoDates.length, isoTimesLen = isoTimes.length;
   if (match) {
-    getParsingFlags(config2).iso = true;
+    getParsingFlags(config).iso = true;
     for (i = 0, l = isoDatesLen; i < l; i++) {
       if (isoDates[i][1].exec(match[1])) {
         dateFormat = isoDates[i][0];
@@ -64767,7 +64704,7 @@ function configFromISO(config2) {
       }
     }
     if (dateFormat == null) {
-      config2._isValid = false;
+      config._isValid = false;
       return;
     }
     if (match[3]) {
@@ -64778,26 +64715,26 @@ function configFromISO(config2) {
         }
       }
       if (timeFormat == null) {
-        config2._isValid = false;
+        config._isValid = false;
         return;
       }
     }
     if (!allowTime && timeFormat != null) {
-      config2._isValid = false;
+      config._isValid = false;
       return;
     }
     if (match[4]) {
       if (tzRegex.exec(match[4])) {
         tzFormat = "Z";
       } else {
-        config2._isValid = false;
+        config._isValid = false;
         return;
       }
     }
-    config2._f = dateFormat + (timeFormat || "") + (tzFormat || "");
-    configFromStringAndFormat(config2);
+    config._f = dateFormat + (timeFormat || "") + (tzFormat || "");
+    configFromStringAndFormat(config);
   } else {
-    config2._isValid = false;
+    config._isValid = false;
   }
 }
 function extractFromRFC2822Strings(yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
@@ -64825,7 +64762,7 @@ function untruncateYear(yearStr) {
 function preprocessRFC2822(s2) {
   return s2.replace(/\([^()]*\)|[\n\t]/g, " ").replace(/(\s\s+)/g, " ").replace(/^\s\s*/, "").replace(/\s\s*$/, "");
 }
-function checkWeekday(weekdayStr, parsedInput, config2) {
+function checkWeekday(weekdayStr, parsedInput, config) {
   if (weekdayStr) {
     var weekdayProvided = defaultLocaleWeekdaysShort.indexOf(weekdayStr), weekdayActual = new Date(
       parsedInput[0],
@@ -64833,8 +64770,8 @@ function checkWeekday(weekdayStr, parsedInput, config2) {
       parsedInput[2]
     ).getDay();
     if (weekdayProvided !== weekdayActual) {
-      getParsingFlags(config2).weekdayMismatch = true;
-      config2._isValid = false;
+      getParsingFlags(config).weekdayMismatch = true;
+      config._isValid = false;
       return false;
     }
   }
@@ -64850,8 +64787,8 @@ function calculateOffset(obsOffset, militaryOffset, numOffset) {
     return h * 60 + m;
   }
 }
-function configFromRFC2822(config2) {
-  var match = rfc2822.exec(preprocessRFC2822(config2._i)), parsedArray;
+function configFromRFC2822(config) {
+  var match = rfc2822.exec(preprocessRFC2822(config._i)), parsedArray;
   if (match) {
     parsedArray = extractFromRFC2822Strings(
       match[4],
@@ -64861,46 +64798,46 @@ function configFromRFC2822(config2) {
       match[6],
       match[7]
     );
-    if (!checkWeekday(match[1], parsedArray, config2)) {
+    if (!checkWeekday(match[1], parsedArray, config)) {
       return;
     }
-    config2._a = parsedArray;
-    config2._tzm = calculateOffset(match[8], match[9], match[10]);
-    config2._d = createUTCDate.apply(null, config2._a);
-    config2._d.setUTCMinutes(config2._d.getUTCMinutes() - config2._tzm);
-    getParsingFlags(config2).rfc2822 = true;
+    config._a = parsedArray;
+    config._tzm = calculateOffset(match[8], match[9], match[10]);
+    config._d = createUTCDate.apply(null, config._a);
+    config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+    getParsingFlags(config).rfc2822 = true;
   } else {
-    config2._isValid = false;
+    config._isValid = false;
   }
 }
-function configFromString(config2) {
-  var matched = aspNetJsonRegex.exec(config2._i);
+function configFromString(config) {
+  var matched = aspNetJsonRegex.exec(config._i);
   if (matched !== null) {
-    config2._d = /* @__PURE__ */ new Date(+matched[1]);
+    config._d = /* @__PURE__ */ new Date(+matched[1]);
     return;
   }
-  configFromISO(config2);
-  if (config2._isValid === false) {
-    delete config2._isValid;
+  configFromISO(config);
+  if (config._isValid === false) {
+    delete config._isValid;
   } else {
     return;
   }
-  configFromRFC2822(config2);
-  if (config2._isValid === false) {
-    delete config2._isValid;
+  configFromRFC2822(config);
+  if (config._isValid === false) {
+    delete config._isValid;
   } else {
     return;
   }
-  if (config2._strict) {
-    config2._isValid = false;
+  if (config._strict) {
+    config._isValid = false;
   } else {
-    hooks.createFromInputFallback(config2);
+    hooks.createFromInputFallback(config);
   }
 }
 hooks.createFromInputFallback = deprecate(
   "value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are discouraged. Please refer to http://momentjs.com/guides/#/warnings/js-date/ for more info.",
-  function(config2) {
-    config2._d = /* @__PURE__ */ new Date(config2._i + (config2._useUTC ? " UTC" : ""));
+  function(config) {
+    config._d = /* @__PURE__ */ new Date(config._i + (config._useUTC ? " UTC" : ""));
   }
 );
 function defaults(a, b, c) {
@@ -64912,9 +64849,9 @@ function defaults(a, b, c) {
   }
   return c;
 }
-function currentDateArray(config2) {
+function currentDateArray(config) {
   var nowValue = new Date(hooks.now());
-  if (config2._useUTC) {
+  if (config._useUTC) {
     return [
       nowValue.getUTCFullYear(),
       nowValue.getUTCMonth(),
@@ -64923,58 +64860,58 @@ function currentDateArray(config2) {
   }
   return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
 }
-function configFromArray(config2) {
+function configFromArray(config) {
   var i, date2, input = [], currentDate, expectedWeekday, yearToUse;
-  if (config2._d) {
+  if (config._d) {
     return;
   }
-  currentDate = currentDateArray(config2);
-  if (config2._w && config2._a[DATE] == null && config2._a[MONTH] == null) {
-    dayOfYearFromWeekInfo(config2);
+  currentDate = currentDateArray(config);
+  if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+    dayOfYearFromWeekInfo(config);
   }
-  if (config2._dayOfYear != null) {
-    yearToUse = defaults(config2._a[YEAR], currentDate[YEAR]);
-    if (config2._dayOfYear > daysInYear(yearToUse) || config2._dayOfYear === 0) {
-      getParsingFlags(config2)._overflowDayOfYear = true;
+  if (config._dayOfYear != null) {
+    yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+    if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
+      getParsingFlags(config)._overflowDayOfYear = true;
     }
-    date2 = createUTCDate(yearToUse, 0, config2._dayOfYear);
-    config2._a[MONTH] = date2.getUTCMonth();
-    config2._a[DATE] = date2.getUTCDate();
+    date2 = createUTCDate(yearToUse, 0, config._dayOfYear);
+    config._a[MONTH] = date2.getUTCMonth();
+    config._a[DATE] = date2.getUTCDate();
   }
-  for (i = 0; i < 3 && config2._a[i] == null; ++i) {
-    config2._a[i] = input[i] = currentDate[i];
+  for (i = 0; i < 3 && config._a[i] == null; ++i) {
+    config._a[i] = input[i] = currentDate[i];
   }
   for (; i < 7; i++) {
-    config2._a[i] = input[i] = config2._a[i] == null ? i === 2 ? 1 : 0 : config2._a[i];
+    config._a[i] = input[i] = config._a[i] == null ? i === 2 ? 1 : 0 : config._a[i];
   }
-  if (config2._a[HOUR] === 24 && config2._a[MINUTE] === 0 && config2._a[SECOND] === 0 && config2._a[MILLISECOND] === 0) {
-    config2._nextDay = true;
-    config2._a[HOUR] = 0;
+  if (config._a[HOUR] === 24 && config._a[MINUTE] === 0 && config._a[SECOND] === 0 && config._a[MILLISECOND] === 0) {
+    config._nextDay = true;
+    config._a[HOUR] = 0;
   }
-  config2._d = (config2._useUTC ? createUTCDate : createDate).apply(
+  config._d = (config._useUTC ? createUTCDate : createDate).apply(
     null,
     input
   );
-  expectedWeekday = config2._useUTC ? config2._d.getUTCDay() : config2._d.getDay();
-  if (config2._tzm != null) {
-    config2._d.setUTCMinutes(config2._d.getUTCMinutes() - config2._tzm);
+  expectedWeekday = config._useUTC ? config._d.getUTCDay() : config._d.getDay();
+  if (config._tzm != null) {
+    config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
   }
-  if (config2._nextDay) {
-    config2._a[HOUR] = 24;
+  if (config._nextDay) {
+    config._a[HOUR] = 24;
   }
-  if (config2._w && typeof config2._w.d !== "undefined" && config2._w.d !== expectedWeekday) {
-    getParsingFlags(config2).weekdayMismatch = true;
+  if (config._w && typeof config._w.d !== "undefined" && config._w.d !== expectedWeekday) {
+    getParsingFlags(config).weekdayMismatch = true;
   }
 }
-function dayOfYearFromWeekInfo(config2) {
+function dayOfYearFromWeekInfo(config) {
   var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow, curWeek;
-  w = config2._w;
+  w = config._w;
   if (w.GG != null || w.W != null || w.E != null) {
     dow = 1;
     doy = 4;
     weekYear = defaults(
       w.GG,
-      config2._a[YEAR],
+      config._a[YEAR],
       weekOfYear(createLocal(), 1, 4).year
     );
     week = defaults(w.W, 1);
@@ -64983,10 +64920,10 @@ function dayOfYearFromWeekInfo(config2) {
       weekdayOverflow = true;
     }
   } else {
-    dow = config2._locale._week.dow;
-    doy = config2._locale._week.doy;
+    dow = config._locale._week.dow;
+    doy = config._locale._week.doy;
     curWeek = weekOfYear(createLocal(), dow, doy);
-    weekYear = defaults(w.gg, config2._a[YEAR], curWeek.year);
+    weekYear = defaults(w.gg, config._a[YEAR], curWeek.year);
     week = defaults(w.w, curWeek.week);
     if (w.d != null) {
       weekday = w.d;
@@ -65003,40 +64940,40 @@ function dayOfYearFromWeekInfo(config2) {
     }
   }
   if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
-    getParsingFlags(config2)._overflowWeeks = true;
+    getParsingFlags(config)._overflowWeeks = true;
   } else if (weekdayOverflow != null) {
-    getParsingFlags(config2)._overflowWeekday = true;
+    getParsingFlags(config)._overflowWeekday = true;
   } else {
     temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
-    config2._a[YEAR] = temp.year;
-    config2._dayOfYear = temp.dayOfYear;
+    config._a[YEAR] = temp.year;
+    config._dayOfYear = temp.dayOfYear;
   }
 }
 hooks.ISO_8601 = function() {
 };
 hooks.RFC_2822 = function() {
 };
-function configFromStringAndFormat(config2) {
-  if (config2._f === hooks.ISO_8601) {
-    configFromISO(config2);
+function configFromStringAndFormat(config) {
+  if (config._f === hooks.ISO_8601) {
+    configFromISO(config);
     return;
   }
-  if (config2._f === hooks.RFC_2822) {
-    configFromRFC2822(config2);
+  if (config._f === hooks.RFC_2822) {
+    configFromRFC2822(config);
     return;
   }
-  config2._a = [];
-  getParsingFlags(config2).empty = true;
-  var string = "" + config2._i, i, parsedInput, tokens2, token2, skipped, stringLength = string.length, totalParsedInputLength = 0, era, tokenLen;
-  tokens2 = expandFormat(config2._f, config2._locale).match(formattingTokens) || [];
+  config._a = [];
+  getParsingFlags(config).empty = true;
+  var string = "" + config._i, i, parsedInput, tokens2, token2, skipped, stringLength = string.length, totalParsedInputLength = 0, era, tokenLen;
+  tokens2 = expandFormat(config._f, config._locale).match(formattingTokens) || [];
   tokenLen = tokens2.length;
   for (i = 0; i < tokenLen; i++) {
     token2 = tokens2[i];
-    parsedInput = (string.match(getParseRegexForToken(token2, config2)) || [])[0];
+    parsedInput = (string.match(getParseRegexForToken(token2, config)) || [])[0];
     if (parsedInput) {
       skipped = string.substr(0, string.indexOf(parsedInput));
       if (skipped.length > 0) {
-        getParsingFlags(config2).unusedInput.push(skipped);
+        getParsingFlags(config).unusedInput.push(skipped);
       }
       string = string.slice(
         string.indexOf(parsedInput) + parsedInput.length
@@ -65045,35 +64982,35 @@ function configFromStringAndFormat(config2) {
     }
     if (formatTokenFunctions[token2]) {
       if (parsedInput) {
-        getParsingFlags(config2).empty = false;
+        getParsingFlags(config).empty = false;
       } else {
-        getParsingFlags(config2).unusedTokens.push(token2);
+        getParsingFlags(config).unusedTokens.push(token2);
       }
-      addTimeToArrayFromToken(token2, parsedInput, config2);
-    } else if (config2._strict && !parsedInput) {
-      getParsingFlags(config2).unusedTokens.push(token2);
+      addTimeToArrayFromToken(token2, parsedInput, config);
+    } else if (config._strict && !parsedInput) {
+      getParsingFlags(config).unusedTokens.push(token2);
     }
   }
-  getParsingFlags(config2).charsLeftOver = stringLength - totalParsedInputLength;
+  getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
   if (string.length > 0) {
-    getParsingFlags(config2).unusedInput.push(string);
+    getParsingFlags(config).unusedInput.push(string);
   }
-  if (config2._a[HOUR] <= 12 && getParsingFlags(config2).bigHour === true && config2._a[HOUR] > 0) {
-    getParsingFlags(config2).bigHour = void 0;
+  if (config._a[HOUR] <= 12 && getParsingFlags(config).bigHour === true && config._a[HOUR] > 0) {
+    getParsingFlags(config).bigHour = void 0;
   }
-  getParsingFlags(config2).parsedDateParts = config2._a.slice(0);
-  getParsingFlags(config2).meridiem = config2._meridiem;
-  config2._a[HOUR] = meridiemFixWrap(
-    config2._locale,
-    config2._a[HOUR],
-    config2._meridiem
+  getParsingFlags(config).parsedDateParts = config._a.slice(0);
+  getParsingFlags(config).meridiem = config._meridiem;
+  config._a[HOUR] = meridiemFixWrap(
+    config._locale,
+    config._a[HOUR],
+    config._meridiem
   );
-  era = getParsingFlags(config2).era;
+  era = getParsingFlags(config).era;
   if (era !== null) {
-    config2._a[YEAR] = config2._locale.erasConvertYear(era, config2._a[YEAR]);
+    config._a[YEAR] = config._locale.erasConvertYear(era, config._a[YEAR]);
   }
-  configFromArray(config2);
-  checkOverflow(config2);
+  configFromArray(config);
+  checkOverflow(config);
 }
 function meridiemFixWrap(locale2, hour, meridiem2) {
   var isPm;
@@ -65095,21 +65032,21 @@ function meridiemFixWrap(locale2, hour, meridiem2) {
     return hour;
   }
 }
-function configFromStringAndArray(config2) {
-  var tempConfig, bestMoment, scoreToBeat, i, currentScore, validFormatFound, bestFormatIsValid = false, configfLen = config2._f.length;
+function configFromStringAndArray(config) {
+  var tempConfig, bestMoment, scoreToBeat, i, currentScore, validFormatFound, bestFormatIsValid = false, configfLen = config._f.length;
   if (configfLen === 0) {
-    getParsingFlags(config2).invalidFormat = true;
-    config2._d = /* @__PURE__ */ new Date(NaN);
+    getParsingFlags(config).invalidFormat = true;
+    config._d = /* @__PURE__ */ new Date(NaN);
     return;
   }
   for (i = 0; i < configfLen; i++) {
     currentScore = 0;
     validFormatFound = false;
-    tempConfig = copyConfig({}, config2);
-    if (config2._useUTC != null) {
-      tempConfig._useUTC = config2._useUTC;
+    tempConfig = copyConfig({}, config);
+    if (config._useUTC != null) {
+      tempConfig._useUTC = config._useUTC;
     }
-    tempConfig._f = config2._f[i];
+    tempConfig._f = config._f[i];
     configFromStringAndFormat(tempConfig);
     if (isValid(tempConfig)) {
       validFormatFound = true;
@@ -65132,73 +65069,73 @@ function configFromStringAndArray(config2) {
       }
     }
   }
-  extend(config2, bestMoment || tempConfig);
+  extend(config, bestMoment || tempConfig);
 }
-function configFromObject(config2) {
-  if (config2._d) {
+function configFromObject(config) {
+  if (config._d) {
     return;
   }
-  var i = normalizeObjectUnits(config2._i), dayOrDate = i.day === void 0 ? i.date : i.day;
-  config2._a = map(
+  var i = normalizeObjectUnits(config._i), dayOrDate = i.day === void 0 ? i.date : i.day;
+  config._a = map(
     [i.year, i.month, dayOrDate, i.hour, i.minute, i.second, i.millisecond],
     function(obj) {
       return obj && parseInt(obj, 10);
     }
   );
-  configFromArray(config2);
+  configFromArray(config);
 }
-function createFromConfig(config2) {
-  var res = new Moment(checkOverflow(prepareConfig(config2)));
+function createFromConfig(config) {
+  var res = new Moment(checkOverflow(prepareConfig(config)));
   if (res._nextDay) {
     res.add(1, "d");
     res._nextDay = void 0;
   }
   return res;
 }
-function prepareConfig(config2) {
-  var input = config2._i, format2 = config2._f;
-  config2._locale = config2._locale || getLocale(config2._l);
+function prepareConfig(config) {
+  var input = config._i, format2 = config._f;
+  config._locale = config._locale || getLocale(config._l);
   if (input === null || format2 === void 0 && input === "") {
     return createInvalid({ nullInput: true });
   }
   if (typeof input === "string") {
-    config2._i = input = config2._locale.preparse(input);
+    config._i = input = config._locale.preparse(input);
   }
   if (isMoment(input)) {
     return new Moment(checkOverflow(input));
   } else if (isDate(input)) {
-    config2._d = input;
+    config._d = input;
   } else if (isArray(format2)) {
-    configFromStringAndArray(config2);
+    configFromStringAndArray(config);
   } else if (format2) {
-    configFromStringAndFormat(config2);
+    configFromStringAndFormat(config);
   } else {
-    configFromInput(config2);
+    configFromInput(config);
   }
-  if (!isValid(config2)) {
-    config2._d = null;
+  if (!isValid(config)) {
+    config._d = null;
   }
-  return config2;
+  return config;
 }
-function configFromInput(config2) {
-  var input = config2._i;
+function configFromInput(config) {
+  var input = config._i;
   if (isUndefined(input)) {
-    config2._d = new Date(hooks.now());
+    config._d = new Date(hooks.now());
   } else if (isDate(input)) {
-    config2._d = new Date(input.valueOf());
+    config._d = new Date(input.valueOf());
   } else if (typeof input === "string") {
-    configFromString(config2);
+    configFromString(config);
   } else if (isArray(input)) {
-    config2._a = map(input.slice(0), function(obj) {
+    config._a = map(input.slice(0), function(obj) {
       return parseInt(obj, 10);
     });
-    configFromArray(config2);
+    configFromArray(config);
   } else if (isObject(input)) {
-    configFromObject(config2);
+    configFromObject(config);
   } else if (isNumber(input)) {
-    config2._d = new Date(input);
+    config._d = new Date(input);
   } else {
-    hooks.createFromInputFallback(config2);
+    hooks.createFromInputFallback(config);
   }
 }
 function createLocalOrUTC(input, format2, locale2, strict, isUTC) {
@@ -65354,9 +65291,9 @@ offset("Z", ":");
 offset("ZZ", "");
 addRegexToken("Z", matchShortOffset);
 addRegexToken("ZZ", matchShortOffset);
-addParseToken(["Z", "ZZ"], function(input, array, config2) {
-  config2._useUTC = true;
-  config2._tzm = offsetFromString(matchShortOffset, input);
+addParseToken(["Z", "ZZ"], function(input, array, config) {
+  config._useUTC = true;
+  config._tzm = offsetFromString(matchShortOffset, input);
 });
 var chunkOffset = /([\+\-]|\d\d)/gi;
 function offsetFromString(matcher, string) {
@@ -66123,12 +66060,12 @@ addRegexToken("NNNN", matchEraName);
 addRegexToken("NNNNN", matchEraNarrow);
 addParseToken(
   ["N", "NN", "NNN", "NNNN", "NNNNN"],
-  function(input, array, config2, token2) {
-    var era = config2._locale.erasParse(input, token2, config2._strict);
+  function(input, array, config, token2) {
+    var era = config._locale.erasParse(input, token2, config._strict);
     if (era) {
-      getParsingFlags(config2).era = era;
+      getParsingFlags(config).era = era;
     } else {
-      getParsingFlags(config2).invalidEra = input;
+      getParsingFlags(config).invalidEra = input;
     }
   }
 );
@@ -66138,13 +66075,13 @@ addRegexToken("yyy", matchUnsigned);
 addRegexToken("yyyy", matchUnsigned);
 addRegexToken("yo", matchEraYearOrdinal);
 addParseToken(["y", "yy", "yyy", "yyyy"], YEAR);
-addParseToken(["yo"], function(input, array, config2, token2) {
+addParseToken(["yo"], function(input, array, config, token2) {
   var match;
-  if (config2._locale._eraYearOrdinalRegex) {
-    match = input.match(config2._locale._eraYearOrdinalRegex);
+  if (config._locale._eraYearOrdinalRegex) {
+    match = input.match(config._locale._eraYearOrdinalRegex);
   }
-  if (config2._locale.eraYearOrdinalParse) {
-    array[YEAR] = config2._locale.eraYearOrdinalParse(input, match);
+  if (config._locale.eraYearOrdinalParse) {
+    array[YEAR] = config._locale.eraYearOrdinalParse(input, match);
   } else {
     array[YEAR] = parseInt(input, 10);
   }
@@ -66334,11 +66271,11 @@ addRegexToken("GGGGG", match1to6, match6);
 addRegexToken("ggggg", match1to6, match6);
 addWeekParseToken(
   ["gggg", "ggggg", "GGGG", "GGGGG"],
-  function(input, week, config2, token2) {
+  function(input, week, config, token2) {
     week[token2.substr(0, 2)] = toInt(input);
   }
 );
-addWeekParseToken(["gg", "GG"], function(input, week, config2, token2) {
+addWeekParseToken(["gg", "GG"], function(input, week, config, token2) {
   week[token2] = hooks.parseTwoDigitYear(input);
 });
 function getSetWeekYear(input) {
@@ -66416,8 +66353,8 @@ var getSetDayOfMonth = makeGetSet("Date", true);
 addFormatToken("DDD", ["DDDD", 3], "DDDo", "dayOfYear");
 addRegexToken("DDD", match1to3);
 addRegexToken("DDDD", match3);
-addParseToken(["DDD", "DDDD"], function(input, array, config2) {
-  config2._dayOfYear = toInt(input);
+addParseToken(["DDD", "DDDD"], function(input, array, config) {
+  config._dayOfYear = toInt(input);
 });
 function getSetDayOfYear(input) {
   var dayOfYear = Math.round(
@@ -66989,11 +66926,11 @@ addFormatToken("X", 0, 0, "unix");
 addFormatToken("x", 0, 0, "valueOf");
 addRegexToken("x", matchSigned);
 addRegexToken("X", matchTimestamp);
-addParseToken("X", function(input, array, config2) {
-  config2._d = new Date(parseFloat(input) * 1e3);
+addParseToken("X", function(input, array, config) {
+  config._d = new Date(parseFloat(input) * 1e3);
 });
-addParseToken("x", function(input, array, config2) {
-  config2._d = new Date(toInt(input));
+addParseToken("x", function(input, array, config) {
+  config._d = new Date(toInt(input));
 });
 //! moment.js
 hooks.version = "2.30.1";
@@ -67046,20 +66983,17 @@ hooks.HTML5_FMT = {
   // <input type="month" />
 };
 async function readFile(filePath, json = true) {
-  const data = await fs$2.promises.readFile(filePath, { encoding: "utf-8" });
+  const data = await promises.readFile(filePath, { encoding: "utf-8" });
   return json ? JSON.parse(data) : data;
 }
-const writeFile = async (filePath, data) => {
-  return fs$2.promises.writeFile(filePath, data, { encoding: "utf-8" });
-};
 const createSSVDir = async (outputFolder) => {
-  await fs$2.promises.mkdir(outputFolder, { recursive: true });
+  await promises.mkdir(outputFolder, { recursive: true });
 };
 const getSSVDir = async (outputFolder) => {
-  if (!fs$2.existsSync(outputFolder)) {
+  if (!fs$1.existsSync(outputFolder)) {
     await createSSVDir(outputFolder);
   }
-  return outputFolder.endsWith(path$1.sep) ? outputFolder : `${outputFolder}${path$1.sep}`;
+  return outputFolder.endsWith(path.sep) ? outputFolder : `${outputFolder}${path.sep}`;
 };
 const getFilePath = async (name, outputFolder, withTime = true) => {
   return `${await getSSVDir(outputFolder)}${name}${withTime ? `-${hooks().unix()}` : ""}.json`;
@@ -67068,11 +67002,11 @@ const getKeyStoreFiles = async (keystorePath) => {
   let isFolder = false;
   let files;
   try {
-    const dir = await fs$2.promises.opendir(keystorePath);
+    const dir = await promises.opendir(keystorePath);
     isFolder = true;
     files = [];
     for await (const dirent of dir) {
-      files.push(path$1.join(keystorePath, dirent.name));
+      files.push(path.join(keystorePath, dirent.name));
     }
     if (files.length === 0) {
       throw new SSVKeysException("No keystore files detected. Please provide a folder with correct keystore files and try again.");
@@ -67207,14 +67141,14 @@ function requireV1() {
   let _clockseq;
   let _lastMSecs = 0;
   let _lastNSecs = 0;
-  function v1$1(options2, buf, offset2) {
+  function v1$1(options, buf, offset2) {
     let i = buf && offset2 || 0;
     const b = buf || new Array(16);
-    options2 = options2 || {};
-    let node = options2.node || _nodeId;
-    let clockseq = options2.clockseq !== void 0 ? options2.clockseq : _clockseq;
+    options = options || {};
+    let node = options.node || _nodeId;
+    let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
     if (node == null || clockseq == null) {
-      const seedBytes = options2.random || (options2.rng || _rng.default)();
+      const seedBytes = options.random || (options.rng || _rng.default)();
       if (node == null) {
         node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
       }
@@ -67222,13 +67156,13 @@ function requireV1() {
         clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
       }
     }
-    let msecs = options2.msecs !== void 0 ? options2.msecs : Date.now();
-    let nsecs = options2.nsecs !== void 0 ? options2.nsecs : _lastNSecs + 1;
+    let msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+    let nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
     const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
-    if (dt < 0 && options2.clockseq === void 0) {
+    if (dt < 0 && options.clockseq === void 0) {
       clockseq = clockseq + 1 & 16383;
     }
-    if ((dt < 0 || msecs > _lastMSecs) && options2.nsecs === void 0) {
+    if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
       nsecs = 0;
     }
     if (nsecs >= 1e4) {
@@ -67568,12 +67502,12 @@ function requireV4() {
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
   }
-  function v4$1(options2, buf, offset2) {
-    if (_native.default.randomUUID && !buf && !options2) {
+  function v4$1(options, buf, offset2) {
+    if (_native.default.randomUUID && !buf && !options) {
       return _native.default.randomUUID();
     }
-    options2 = options2 || {};
-    const rnds = options2.random || (options2.rng || _rng.default)();
+    options = options || {};
+    const rnds = options.random || (options.rng || _rng.default)();
     rnds[6] = rnds[6] & 15 | 64;
     rnds[8] = rnds[8] & 63 | 128;
     if (buf) {
@@ -69550,7 +69484,7 @@ function requireAes$1() {
   hasRequiredAes$1 = 1;
   Object.defineProperty(aes$1, "__esModule", { value: true });
   aes$1.encrypt = encrypt;
-  aes$1.decrypt = decrypt2;
+  aes$1.decrypt = decrypt;
   const crypto_1 = /* @__PURE__ */ requireCrypto();
   const utils_js_1 = /* @__PURE__ */ requireUtils();
   const crypto2 = { web: crypto_1.crypto };
@@ -69608,7 +69542,7 @@ function requireAes$1() {
     const res = await encrypt(lastBlock, key, iv, mode);
     return res.slice(0, 16);
   }
-  async function decrypt2(cypherText, key, iv, mode = "aes-128-ctr", pkcs7PaddingEnabled = true) {
+  async function decrypt(cypherText, key, iv, mode = "aes-128-ctr", pkcs7PaddingEnabled = true) {
     validateOpt(key, iv, mode);
     if (crypto2.web) {
       const [wKey, wOpt] = await getBrowserKey(mode, key, iv);
@@ -69885,7 +69819,7 @@ function requireFunctional() {
       });
     }
     exports2.verifyPassword = verifyPassword;
-    function decrypt2(keystore, password2) {
+    function decrypt(keystore, password2) {
       return __awaiter2(this, void 0, void 0, function* () {
         const decryptionKey = yield (0, kdf_1.kdf)(keystore.crypto.kdf, (0, password_1.normalizePassword)(password2));
         const ciphertext = (0, utils_1.hexToBytes)(keystore.crypto.cipher.message);
@@ -69895,7 +69829,7 @@ function requireFunctional() {
         return (0, cipher_1.cipherDecrypt)(keystore.crypto.cipher, decryptionKey.slice(0, 16));
       });
     }
-    exports2.decrypt = decrypt2;
+    exports2.decrypt = decrypt;
   })(functional);
   return functional;
 }
@@ -71700,10 +71634,10 @@ function requireUtil() {
   util$12.ByteStringBuffer.prototype.toString = function() {
     return util$12.decodeUtf8(this.bytes());
   };
-  function DataBuffer2(b, options2) {
-    options2 = options2 || {};
-    this.read = options2.readOffset || 0;
-    this.growSize = options2.growSize || 1024;
+  function DataBuffer2(b, options) {
+    options = options || {};
+    this.read = options.readOffset || 0;
+    this.growSize = options.growSize || 1024;
     var isArrayBuffer = util$12.isArrayBuffer(b);
     var isArrayBufferView = util$12.isArrayBufferView(b);
     if (isArrayBuffer || isArrayBufferView) {
@@ -71712,7 +71646,7 @@ function requireUtil() {
       } else {
         this.data = new DataView(b.buffer, b.byteOffset, b.byteLength);
       }
-      this.write = "writeOffset" in options2 ? options2.writeOffset : this.data.byteLength;
+      this.write = "writeOffset" in options ? options.writeOffset : this.data.byteLength;
       return;
     }
     this.data = new DataView(new ArrayBuffer(0));
@@ -71720,8 +71654,8 @@ function requireUtil() {
     if (b !== null && b !== void 0) {
       this.putBytes(b);
     }
-    if ("writeOffset" in options2) {
-      this.write = options2.writeOffset;
+    if ("writeOffset" in options) {
+      this.write = options.writeOffset;
     }
   }
   util$12.DataBuffer = DataBuffer2;
@@ -72663,13 +72597,13 @@ function requireUtil() {
     }
     return ip.join(":");
   };
-  util$12.estimateCores = function(options2, callback) {
-    if (typeof options2 === "function") {
-      callback = options2;
-      options2 = {};
+  util$12.estimateCores = function(options, callback) {
+    if (typeof options === "function") {
+      callback = options;
+      options = {};
     }
-    options2 = options2 || {};
-    if ("cores" in util$12 && !options2.update) {
+    options = options || {};
+    if ("cores" in util$12 && !options.update) {
       return callback(null, util$12.cores);
     }
     if (typeof navigator !== "undefined" && "hardwareConcurrency" in navigator && navigator.hardwareConcurrency > 0) {
@@ -72806,27 +72740,27 @@ function requireCipher() {
     }
     return null;
   };
-  var BlockCipher2 = forge2.cipher.BlockCipher = function(options2) {
-    this.algorithm = options2.algorithm;
+  var BlockCipher2 = forge2.cipher.BlockCipher = function(options) {
+    this.algorithm = options.algorithm;
     this.mode = this.algorithm.mode;
     this.blockSize = this.mode.blockSize;
     this._finish = false;
     this._input = null;
     this.output = null;
-    this._op = options2.decrypt ? this.mode.decrypt : this.mode.encrypt;
-    this._decrypt = options2.decrypt;
-    this.algorithm.initialize(options2);
+    this._op = options.decrypt ? this.mode.decrypt : this.mode.encrypt;
+    this._decrypt = options.decrypt;
+    this.algorithm.initialize(options);
   };
-  BlockCipher2.prototype.start = function(options2) {
-    options2 = options2 || {};
+  BlockCipher2.prototype.start = function(options) {
+    options = options || {};
     var opts = {};
-    for (var key in options2) {
-      opts[key] = options2[key];
+    for (var key in options) {
+      opts[key] = options[key];
     }
     opts.decrypt = this._decrypt;
     this._finish = false;
     this._input = forge2.util.createBuffer();
-    this.output = options2.output || forge2.util.createBuffer();
+    this.output = options.output || forge2.util.createBuffer();
     this.mode.start(opts);
   };
   BlockCipher2.prototype.update = function(input) {
@@ -72846,23 +72780,23 @@ function requireCipher() {
         return pad2(this.blockSize, output, true);
       };
     }
-    var options2 = {};
-    options2.decrypt = this._decrypt;
-    options2.overflow = this._input.length() % this.blockSize;
+    var options = {};
+    options.decrypt = this._decrypt;
+    options.overflow = this._input.length() % this.blockSize;
     if (!this._decrypt && this.mode.pad) {
-      if (!this.mode.pad(this._input, options2)) {
+      if (!this.mode.pad(this._input, options)) {
         return false;
       }
     }
     this._finish = true;
     this.update();
     if (this._decrypt && this.mode.unpad) {
-      if (!this.mode.unpad(this.output, options2)) {
+      if (!this.mode.unpad(this.output, options)) {
         return false;
       }
     }
     if (this.mode.afterFinish) {
-      if (!this.mode.afterFinish(this.output, options2)) {
+      if (!this.mode.afterFinish(this.output, options)) {
         return false;
       }
     }
@@ -72879,16 +72813,16 @@ function requireCipherModes() {
   requireUtil();
   forge2.cipher = forge2.cipher || {};
   var modes2 = cipherModes.exports = forge2.cipher.modes = forge2.cipher.modes || {};
-  modes2.ecb = function(options2) {
-    options2 = options2 || {};
+  modes2.ecb = function(options) {
+    options = options || {};
     this.name = "ECB";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = new Array(this._ints);
     this._outBlock = new Array(this._ints);
   };
-  modes2.ecb.prototype.start = function(options2) {
+  modes2.ecb.prototype.start = function(options) {
   };
   modes2.ecb.prototype.encrypt = function(input, output, finish) {
     if (input.length() < this.blockSize && !(finish && input.length() > 0)) {
@@ -72914,13 +72848,13 @@ function requireCipherModes() {
       output.putInt32(this._outBlock[i]);
     }
   };
-  modes2.ecb.prototype.pad = function(input, options2) {
+  modes2.ecb.prototype.pad = function(input, options) {
     var padding = input.length() === this.blockSize ? this.blockSize : this.blockSize - input.length();
     input.fillWithByte(padding, padding);
     return true;
   };
-  modes2.ecb.prototype.unpad = function(output, options2) {
-    if (options2.overflow > 0) {
+  modes2.ecb.prototype.unpad = function(output, options) {
+    if (options.overflow > 0) {
       return false;
     }
     var len = output.length();
@@ -72931,25 +72865,25 @@ function requireCipherModes() {
     output.truncate(count);
     return true;
   };
-  modes2.cbc = function(options2) {
-    options2 = options2 || {};
+  modes2.cbc = function(options) {
+    options = options || {};
     this.name = "CBC";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = new Array(this._ints);
     this._outBlock = new Array(this._ints);
   };
-  modes2.cbc.prototype.start = function(options2) {
-    if (options2.iv === null) {
+  modes2.cbc.prototype.start = function(options) {
+    if (options.iv === null) {
       if (!this._prev) {
         throw new Error("Invalid IV parameter.");
       }
       this._iv = this._prev.slice(0);
-    } else if (!("iv" in options2)) {
+    } else if (!("iv" in options)) {
       throw new Error("Invalid IV parameter.");
     } else {
-      this._iv = transformIV2(options2.iv, this.blockSize);
+      this._iv = transformIV2(options.iv, this.blockSize);
       this._prev = this._iv.slice(0);
     }
   };
@@ -72979,13 +72913,13 @@ function requireCipherModes() {
     }
     this._prev = this._inBlock.slice(0);
   };
-  modes2.cbc.prototype.pad = function(input, options2) {
+  modes2.cbc.prototype.pad = function(input, options) {
     var padding = input.length() === this.blockSize ? this.blockSize : this.blockSize - input.length();
     input.fillWithByte(padding, padding);
     return true;
   };
-  modes2.cbc.prototype.unpad = function(output, options2) {
-    if (options2.overflow > 0) {
+  modes2.cbc.prototype.unpad = function(output, options) {
+    if (options.overflow > 0) {
       return false;
     }
     var len = output.length();
@@ -72996,11 +72930,11 @@ function requireCipherModes() {
     output.truncate(count);
     return true;
   };
-  modes2.cfb = function(options2) {
-    options2 = options2 || {};
+  modes2.cfb = function(options) {
+    options = options || {};
     this.name = "CFB";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = null;
     this._outBlock = new Array(this._ints);
@@ -73008,11 +72942,11 @@ function requireCipherModes() {
     this._partialOutput = forge2.util.createBuffer();
     this._partialBytes = 0;
   };
-  modes2.cfb.prototype.start = function(options2) {
-    if (!("iv" in options2)) {
+  modes2.cfb.prototype.start = function(options) {
+    if (!("iv" in options)) {
       throw new Error("Invalid IV parameter.");
     }
-    this._iv = transformIV2(options2.iv, this.blockSize);
+    this._iv = transformIV2(options.iv, this.blockSize);
     this._inBlock = this._iv.slice(0);
     this._partialBytes = 0;
   };
@@ -73104,22 +73038,22 @@ function requireCipherModes() {
     ));
     this._partialBytes = 0;
   };
-  modes2.ofb = function(options2) {
-    options2 = options2 || {};
+  modes2.ofb = function(options) {
+    options = options || {};
     this.name = "OFB";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = null;
     this._outBlock = new Array(this._ints);
     this._partialOutput = forge2.util.createBuffer();
     this._partialBytes = 0;
   };
-  modes2.ofb.prototype.start = function(options2) {
-    if (!("iv" in options2)) {
+  modes2.ofb.prototype.start = function(options) {
+    if (!("iv" in options)) {
       throw new Error("Invalid IV parameter.");
     }
-    this._iv = transformIV2(options2.iv, this.blockSize);
+    this._iv = transformIV2(options.iv, this.blockSize);
     this._inBlock = this._iv.slice(0);
     this._partialBytes = 0;
   };
@@ -73167,22 +73101,22 @@ function requireCipherModes() {
     this._partialBytes = 0;
   };
   modes2.ofb.prototype.decrypt = modes2.ofb.prototype.encrypt;
-  modes2.ctr = function(options2) {
-    options2 = options2 || {};
+  modes2.ctr = function(options) {
+    options = options || {};
     this.name = "CTR";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = null;
     this._outBlock = new Array(this._ints);
     this._partialOutput = forge2.util.createBuffer();
     this._partialBytes = 0;
   };
-  modes2.ctr.prototype.start = function(options2) {
-    if (!("iv" in options2)) {
+  modes2.ctr.prototype.start = function(options) {
+    if (!("iv" in options)) {
       throw new Error("Invalid IV parameter.");
     }
-    this._iv = transformIV2(options2.iv, this.blockSize);
+    this._iv = transformIV2(options.iv, this.blockSize);
     this._inBlock = this._iv.slice(0);
     this._partialBytes = 0;
   };
@@ -73226,11 +73160,11 @@ function requireCipherModes() {
     inc322(this._inBlock);
   };
   modes2.ctr.prototype.decrypt = modes2.ctr.prototype.encrypt;
-  modes2.gcm = function(options2) {
-    options2 = options2 || {};
+  modes2.gcm = function(options) {
+    options = options || {};
     this.name = "GCM";
-    this.cipher = options2.cipher;
-    this.blockSize = options2.blockSize || 16;
+    this.cipher = options.cipher;
+    this.blockSize = options.blockSize || 16;
     this._ints = this.blockSize / 4;
     this._inBlock = new Array(this._ints);
     this._outBlock = new Array(this._ints);
@@ -73238,26 +73172,26 @@ function requireCipherModes() {
     this._partialBytes = 0;
     this._R = 3774873600;
   };
-  modes2.gcm.prototype.start = function(options2) {
-    if (!("iv" in options2)) {
+  modes2.gcm.prototype.start = function(options) {
+    if (!("iv" in options)) {
       throw new Error("Invalid IV parameter.");
     }
-    var iv = forge2.util.createBuffer(options2.iv);
+    var iv = forge2.util.createBuffer(options.iv);
     this._cipherLength = 0;
     var additionalData;
-    if ("additionalData" in options2) {
-      additionalData = forge2.util.createBuffer(options2.additionalData);
+    if ("additionalData" in options) {
+      additionalData = forge2.util.createBuffer(options.additionalData);
     } else {
       additionalData = forge2.util.createBuffer();
     }
-    if ("tagLength" in options2) {
-      this._tagLength = options2.tagLength;
+    if ("tagLength" in options) {
+      this._tagLength = options.tagLength;
     } else {
       this._tagLength = 128;
     }
     this._tag = null;
-    if (options2.decrypt) {
-      this._tag = forge2.util.createBuffer(options2.tag).getBytes();
+    if (options.decrypt) {
+      this._tag = forge2.util.createBuffer(options.tag).getBytes();
       if (this._tag.length !== this._tagLength / 8) {
         throw new Error("Authentication tag does not match tag length.");
       }
@@ -73378,10 +73312,10 @@ function requireCipherModes() {
       this._cipherLength += this.blockSize;
     }
   };
-  modes2.gcm.prototype.afterFinish = function(output, options2) {
+  modes2.gcm.prototype.afterFinish = function(output, options) {
     var rval = true;
-    if (options2.decrypt && options2.overflow) {
-      output.truncate(this.blockSize - options2.overflow);
+    if (options.decrypt && options.overflow) {
+      output.truncate(this.blockSize - options.overflow);
     }
     this.tag = forge2.util.createBuffer();
     var lengths = this._aDataLength.concat(from64To322(this._cipherLength * 8));
@@ -73392,7 +73326,7 @@ function requireCipherModes() {
       this.tag.putInt32(this._s[i] ^ tag[i]);
     }
     this.tag.truncate(this.tag.length() % (this._tagLength / 8));
-    if (options2.decrypt && this.tag.bytes() !== this._tag) {
+    if (options.decrypt && this.tag.bytes() !== this._tag) {
       rval = false;
     }
     return rval;
@@ -73586,11 +73520,11 @@ function requireAes() {
     });
     self2._init = false;
   };
-  forge2.aes.Algorithm.prototype.initialize = function(options2) {
+  forge2.aes.Algorithm.prototype.initialize = function(options) {
     if (this._init) {
       return;
     }
-    var key = options2.key;
+    var key = options.key;
     var tmp;
     if (typeof key === "string" && (key.length === 16 || key.length === 24 || key.length === 32)) {
       key = forge2.util.createBuffer(key);
@@ -73617,14 +73551,14 @@ function requireAes() {
     }
     var mode = this.mode.name;
     var encryptOp = ["CFB", "OFB", "CTR", "GCM"].indexOf(mode) !== -1;
-    this._w = _expandKey2(key, options2.decrypt && !encryptOp);
+    this._w = _expandKey2(key, options.decrypt && !encryptOp);
     this._init = true;
   };
-  forge2.aes._expandKey = function(key, decrypt2) {
+  forge2.aes._expandKey = function(key, decrypt) {
     if (!init2) {
       initialize2();
     }
-    return _expandKey2(key, decrypt2);
+    return _expandKey2(key, decrypt);
   };
   forge2.aes._updateBlock = _updateBlock2;
   registerAlgorithm2("AES-ECB", forge2.cipher.modes.ecb);
@@ -73694,7 +73628,7 @@ function requireAes() {
       }
     }
   }
-  function _expandKey2(key, decrypt2) {
+  function _expandKey2(key, decrypt) {
     var w = key.slice(0);
     var temp, iNk = 1;
     var Nk = w.length;
@@ -73710,7 +73644,7 @@ function requireAes() {
       }
       w[i] = w[i - Nk] ^ temp;
     }
-    if (decrypt2) {
+    if (decrypt) {
       var tmp;
       var m0 = imix2[0];
       var m1 = imix2[1];
@@ -73735,10 +73669,10 @@ function requireAes() {
     }
     return w;
   }
-  function _updateBlock2(w, input, output, decrypt2) {
+  function _updateBlock2(w, input, output, decrypt) {
     var Nr = w.length / 4 - 1;
     var m0, m1, m2, m3, sub2;
-    if (decrypt2) {
+    if (decrypt) {
       m0 = imix2[0];
       m1 = imix2[1];
       m2 = imix2[2];
@@ -73753,9 +73687,9 @@ function requireAes() {
     }
     var a, b, c, d, a2, b2, c2;
     a = input[0] ^ w[0];
-    b = input[decrypt2 ? 3 : 1] ^ w[1];
+    b = input[decrypt ? 3 : 1] ^ w[1];
     c = input[2] ^ w[2];
-    d = input[decrypt2 ? 1 : 3] ^ w[3];
+    d = input[decrypt ? 1 : 3] ^ w[3];
     var i = 3;
     for (var round2 = 1; round2 < Nr; ++round2) {
       a2 = m0[a >>> 24] ^ m1[b >>> 16 & 255] ^ m2[c >>> 8 & 255] ^ m3[d & 255] ^ w[++i];
@@ -73767,31 +73701,31 @@ function requireAes() {
       c = c2;
     }
     output[0] = sub2[a >>> 24] << 24 ^ sub2[b >>> 16 & 255] << 16 ^ sub2[c >>> 8 & 255] << 8 ^ sub2[d & 255] ^ w[++i];
-    output[decrypt2 ? 3 : 1] = sub2[b >>> 24] << 24 ^ sub2[c >>> 16 & 255] << 16 ^ sub2[d >>> 8 & 255] << 8 ^ sub2[a & 255] ^ w[++i];
+    output[decrypt ? 3 : 1] = sub2[b >>> 24] << 24 ^ sub2[c >>> 16 & 255] << 16 ^ sub2[d >>> 8 & 255] << 8 ^ sub2[a & 255] ^ w[++i];
     output[2] = sub2[c >>> 24] << 24 ^ sub2[d >>> 16 & 255] << 16 ^ sub2[a >>> 8 & 255] << 8 ^ sub2[b & 255] ^ w[++i];
-    output[decrypt2 ? 1 : 3] = sub2[d >>> 24] << 24 ^ sub2[a >>> 16 & 255] << 16 ^ sub2[b >>> 8 & 255] << 8 ^ sub2[c & 255] ^ w[++i];
+    output[decrypt ? 1 : 3] = sub2[d >>> 24] << 24 ^ sub2[a >>> 16 & 255] << 16 ^ sub2[b >>> 8 & 255] << 8 ^ sub2[c & 255] ^ w[++i];
   }
-  function _createCipher2(options2) {
-    options2 = options2 || {};
-    var mode = (options2.mode || "CBC").toUpperCase();
+  function _createCipher2(options) {
+    options = options || {};
+    var mode = (options.mode || "CBC").toUpperCase();
     var algorithm = "AES-" + mode;
     var cipher2;
-    if (options2.decrypt) {
-      cipher2 = forge2.cipher.createDecipher(algorithm, options2.key);
+    if (options.decrypt) {
+      cipher2 = forge2.cipher.createDecipher(algorithm, options.key);
     } else {
-      cipher2 = forge2.cipher.createCipher(algorithm, options2.key);
+      cipher2 = forge2.cipher.createCipher(algorithm, options.key);
     }
     var start = cipher2.start;
-    cipher2.start = function(iv, options3) {
+    cipher2.start = function(iv, options2) {
       var output = null;
-      if (options3 instanceof forge2.util.ByteBuffer) {
-        output = options3;
-        options3 = {};
+      if (options2 instanceof forge2.util.ByteBuffer) {
+        output = options2;
+        options2 = {};
       }
-      options3 = options3 || {};
-      options3.output = output;
-      options3.iv = iv;
-      start.call(cipher2, options3);
+      options2 = options2 || {};
+      options2.output = output;
+      options2.iv = iv;
+      start.call(cipher2, options2);
     };
     return cipher2;
   }
@@ -73981,7 +73915,7 @@ function requireAsn1() {
     GENERALIZEDTIME: 24,
     BMPSTRING: 30
   };
-  asn1$12.create = function(tagClass, type2, constructed, value, options2) {
+  asn1$12.create = function(tagClass, type2, constructed, value, options) {
     if (forge2.util.isArray(value)) {
       var tmp = [];
       for (var i = 0; i < value.length; ++i) {
@@ -73998,18 +73932,18 @@ function requireAsn1() {
       composed: constructed || forge2.util.isArray(value),
       value
     };
-    if (options2 && "bitStringContents" in options2) {
-      obj.bitStringContents = options2.bitStringContents;
+    if (options && "bitStringContents" in options) {
+      obj.bitStringContents = options.bitStringContents;
       obj.original = asn1$12.copy(obj);
     }
     return obj;
   };
-  asn1$12.copy = function(obj, options2) {
+  asn1$12.copy = function(obj, options) {
     var copy;
     if (forge2.util.isArray(obj)) {
       copy = [];
       for (var i = 0; i < obj.length; ++i) {
-        copy.push(asn1$12.copy(obj[i], options2));
+        copy.push(asn1$12.copy(obj[i], options));
       }
       return copy;
     }
@@ -74021,14 +73955,14 @@ function requireAsn1() {
       type: obj.type,
       constructed: obj.constructed,
       composed: obj.composed,
-      value: asn1$12.copy(obj.value, options2)
+      value: asn1$12.copy(obj.value, options)
     };
-    if (options2 && !options2.excludeBitStringContents) {
+    if (options && !options.excludeBitStringContents) {
       copy.bitStringContents = obj.bitStringContents;
     }
     return copy;
   };
-  asn1$12.equals = function(obj1, obj2, options2) {
+  asn1$12.equals = function(obj1, obj2, options) {
     if (forge2.util.isArray(obj1)) {
       if (!forge2.util.isArray(obj2)) {
         return false;
@@ -74050,7 +73984,7 @@ function requireAsn1() {
       return obj1 === obj2;
     }
     var equal = obj1.tagClass === obj2.tagClass && obj1.type === obj2.type && obj1.constructed === obj2.constructed && obj1.composed === obj2.composed && asn1$12.equals(obj1.value, obj2.value);
-    if (options2 && options2.includeBitStringContents) {
+    if (options && options.includeBitStringContents) {
       equal = equal && obj1.bitStringContents === obj2.bitStringContents;
     }
     return equal;
@@ -74098,36 +74032,36 @@ function requireAsn1() {
     }
     return length2;
   };
-  asn1$12.fromDer = function(bytes, options2) {
-    if (options2 === void 0) {
-      options2 = {
+  asn1$12.fromDer = function(bytes, options) {
+    if (options === void 0) {
+      options = {
         strict: true,
         parseAllBytes: true,
         decodeBitStrings: true
       };
     }
-    if (typeof options2 === "boolean") {
-      options2 = {
-        strict: options2,
+    if (typeof options === "boolean") {
+      options = {
+        strict: options,
         parseAllBytes: true,
         decodeBitStrings: true
       };
     }
-    if (!("strict" in options2)) {
-      options2.strict = true;
+    if (!("strict" in options)) {
+      options.strict = true;
     }
-    if (!("parseAllBytes" in options2)) {
-      options2.parseAllBytes = true;
+    if (!("parseAllBytes" in options)) {
+      options.parseAllBytes = true;
     }
-    if (!("decodeBitStrings" in options2)) {
-      options2.decodeBitStrings = true;
+    if (!("decodeBitStrings" in options)) {
+      options.decodeBitStrings = true;
     }
     if (typeof bytes === "string") {
       bytes = forge2.util.createBuffer(bytes);
     }
     var byteCount = bytes.length();
-    var value = _fromDer2(bytes, bytes.length(), 0, options2);
-    if (options2.parseAllBytes && bytes.length() !== 0) {
+    var value = _fromDer2(bytes, bytes.length(), 0, options);
+    if (options.parseAllBytes && bytes.length() !== 0) {
       var error = new Error("Unparsed DER bytes remain after ASN.1 parsing.");
       error.byteCount = byteCount;
       error.remaining = bytes.length();
@@ -74135,7 +74069,7 @@ function requireAsn1() {
     }
     return value;
   };
-  function _fromDer2(bytes, remaining, depth, options2) {
+  function _fromDer2(bytes, remaining, depth, options) {
     var start;
     _checkBufferLength2(bytes, remaining, 2);
     var b1 = bytes.getByte();
@@ -74146,7 +74080,7 @@ function requireAsn1() {
     var length2 = _getValueLength2(bytes, remaining);
     remaining -= start - bytes.length();
     if (length2 !== void 0 && length2 > remaining) {
-      if (options2.strict) {
+      if (options.strict) {
         var error = new Error("Too few bytes to read ASN.1 value.");
         error.available = bytes.length();
         error.remaining = remaining;
@@ -74169,13 +74103,13 @@ function requireAsn1() {
             break;
           }
           start = bytes.length();
-          value.push(_fromDer2(bytes, remaining, depth + 1, options2));
+          value.push(_fromDer2(bytes, remaining, depth + 1, options));
           remaining -= start - bytes.length();
         }
       } else {
         while (length2 > 0) {
           start = bytes.length();
-          value.push(_fromDer2(bytes, length2, depth + 1, options2));
+          value.push(_fromDer2(bytes, length2, depth + 1, options));
           remaining -= start - bytes.length();
           length2 -= start - bytes.length();
         }
@@ -74184,7 +74118,7 @@ function requireAsn1() {
     if (value === void 0 && tagClass === asn1$12.Class.UNIVERSAL && type2 === asn1$12.Type.BITSTRING) {
       bitStringContents = bytes.bytes(length2);
     }
-    if (value === void 0 && options2.decodeBitStrings && tagClass === asn1$12.Class.UNIVERSAL && // FIXME: OCTET STRINGs not yet supported here
+    if (value === void 0 && options.decodeBitStrings && tagClass === asn1$12.Class.UNIVERSAL && // FIXME: OCTET STRINGs not yet supported here
     // .. other parts of forge expect to decode OCTET STRINGs manually
     type2 === asn1$12.Type.BITSTRING && length2 > 1) {
       var savedRead = bytes.read;
@@ -74223,7 +74157,7 @@ function requireAsn1() {
     }
     if (value === void 0) {
       if (length2 === void 0) {
-        if (options2.strict) {
+        if (options.strict) {
           throw new Error("Non-constructed ASN.1 object of indefinite length.");
         }
         length2 = remaining;
@@ -75122,8 +75056,8 @@ function requirePem() {
   var forge2 = requireForge();
   requireUtil();
   var pem$12 = pem.exports = forge2.pem = forge2.pem || {};
-  pem$12.encode = function(msg, options2) {
-    options2 = options2 || {};
+  pem$12.encode = function(msg, options) {
+    options = options || {};
     var rval = "-----BEGIN " + msg.type + "-----\r\n";
     var header;
     if (msg.procType) {
@@ -75152,7 +75086,7 @@ function requirePem() {
     if (msg.procType) {
       rval += "\r\n";
     }
-    rval += forge2.util.encode64(msg.body, options2.maxline || 64) + "\r\n";
+    rval += forge2.util.encode64(msg.body, options.maxline || 64) + "\r\n";
     rval += "-----END " + msg.type + "-----\r\n";
     return rval;
   };
@@ -75329,11 +75263,11 @@ function requireDes() {
     });
     self2._init = false;
   };
-  forge2.des.Algorithm.prototype.initialize = function(options2) {
+  forge2.des.Algorithm.prototype.initialize = function(options) {
     if (this._init) {
       return;
     }
-    var key = forge2.util.createBuffer(options2.key);
+    var key = forge2.util.createBuffer(options.key);
     if (this.name.indexOf("3DES") === 0) {
       if (key.length() !== 24) {
         throw new Error("Invalid Triple-DES key size: " + key.length() * 8);
@@ -75418,13 +75352,13 @@ function requireDes() {
     }
     return keys2;
   }
-  function _updateBlock2(keys2, input, output, decrypt2) {
+  function _updateBlock2(keys2, input, output, decrypt) {
     var iterations = keys2.length === 32 ? 3 : 9;
     var looping;
     if (iterations === 3) {
-      looping = decrypt2 ? [30, -2, -2] : [0, 32, 2];
+      looping = decrypt ? [30, -2, -2] : [0, 32, 2];
     } else {
-      looping = decrypt2 ? [94, 62, -2, 32, 64, 2, 30, -2, -2] : [0, 32, 2, 62, 30, -2, 64, 96, 2];
+      looping = decrypt ? [94, 62, -2, 32, 64, 2, 30, -2, -2] : [0, 32, 2, 62, 30, -2, 64, 96, 2];
     }
     var tmp;
     var left = input[0];
@@ -75480,27 +75414,27 @@ function requireDes() {
     output[0] = left;
     output[1] = right;
   }
-  function _createCipher2(options2) {
-    options2 = options2 || {};
-    var mode = (options2.mode || "CBC").toUpperCase();
+  function _createCipher2(options) {
+    options = options || {};
+    var mode = (options.mode || "CBC").toUpperCase();
     var algorithm = "DES-" + mode;
     var cipher2;
-    if (options2.decrypt) {
-      cipher2 = forge2.cipher.createDecipher(algorithm, options2.key);
+    if (options.decrypt) {
+      cipher2 = forge2.cipher.createDecipher(algorithm, options.key);
     } else {
-      cipher2 = forge2.cipher.createCipher(algorithm, options2.key);
+      cipher2 = forge2.cipher.createCipher(algorithm, options.key);
     }
     var start = cipher2.start;
-    cipher2.start = function(iv, options3) {
+    cipher2.start = function(iv, options2) {
       var output = null;
-      if (options3 instanceof forge2.util.ByteBuffer) {
-        output = options3;
-        options3 = {};
+      if (options2 instanceof forge2.util.ByteBuffer) {
+        output = options2;
+        options2 = {};
       }
-      options3 = options3 || {};
-      options3.output = output;
-      options3.iv = iv;
-      start.call(cipher2, options3);
+      options2 = options2 || {};
+      options2.output = output;
+      options2.iv = iv;
+      start.call(cipher2, options2);
     };
     return cipher2;
   }
@@ -78050,21 +77984,21 @@ function requirePkcs1() {
   requireRandom();
   requireSha1();
   var pkcs1$12 = pkcs1.exports = forge2.pkcs1 = forge2.pkcs1 || {};
-  pkcs1$12.encode_rsa_oaep = function(key, message, options2) {
+  pkcs1$12.encode_rsa_oaep = function(key, message, options) {
     var label;
     var seed;
     var md2;
     var mgf1Md;
-    if (typeof options2 === "string") {
-      label = options2;
+    if (typeof options === "string") {
+      label = options;
       seed = arguments[3] || void 0;
       md2 = arguments[4] || void 0;
-    } else if (options2) {
-      label = options2.label || void 0;
-      seed = options2.seed || void 0;
-      md2 = options2.md || void 0;
-      if (options2.mgf1 && options2.mgf1.md) {
-        mgf1Md = options2.mgf1.md;
+    } else if (options) {
+      label = options.label || void 0;
+      seed = options.seed || void 0;
+      md2 = options.md || void 0;
+      if (options.mgf1 && options.mgf1.md) {
+        mgf1Md = options.mgf1.md;
       }
     }
     if (!md2) {
@@ -78108,18 +78042,18 @@ function requirePkcs1() {
     var maskedSeed = forge2.util.xorBytes(seed, seedMask, seed.length);
     return "\0" + maskedSeed + maskedDB;
   };
-  pkcs1$12.decode_rsa_oaep = function(key, em, options2) {
+  pkcs1$12.decode_rsa_oaep = function(key, em, options) {
     var label;
     var md2;
     var mgf1Md;
-    if (typeof options2 === "string") {
-      label = options2;
+    if (typeof options === "string") {
+      label = options;
       md2 = arguments[3] || void 0;
-    } else if (options2) {
-      label = options2.label || void 0;
-      md2 = options2.md || void 0;
-      if (options2.mgf1 && options2.mgf1.md) {
-        mgf1Md = options2.mgf1.md;
+    } else if (options) {
+      label = options.label || void 0;
+      md2 = options.md || void 0;
+      if (options.mgf1 && options.mgf1.md) {
+        mgf1Md = options.mgf1.md;
       }
     }
     var keyLength = Math.ceil(key.n.bitLength() / 8);
@@ -78215,18 +78149,18 @@ function requirePrime() {
     var op_or2 = function(x, y) {
       return x | y;
     };
-    prime$1.generateProbablePrime = function(bits, options2, callback) {
-      if (typeof options2 === "function") {
-        callback = options2;
-        options2 = {};
+    prime$1.generateProbablePrime = function(bits, options, callback) {
+      if (typeof options === "function") {
+        callback = options;
+        options = {};
       }
-      options2 = options2 || {};
-      var algorithm = options2.algorithm || "PRIMEINC";
+      options = options || {};
+      var algorithm = options.algorithm || "PRIMEINC";
       if (typeof algorithm === "string") {
         algorithm = { name: algorithm };
       }
       algorithm.options = algorithm.options || {};
-      var prng2 = options2.prng || forge2.random;
+      var prng2 = options.prng || forge2.random;
       var rng2 = {
         // x is an array to fill with bytes
         nextBytes: function(x) {
@@ -78241,22 +78175,22 @@ function requirePrime() {
       }
       throw new Error("Invalid prime generation algorithm: " + algorithm.name);
     };
-    function primeincFindPrime(bits, rng2, options2, callback) {
-      if ("workers" in options2) {
-        return primeincFindPrimeWithWorkers(bits, rng2, options2, callback);
+    function primeincFindPrime(bits, rng2, options, callback) {
+      if ("workers" in options) {
+        return primeincFindPrimeWithWorkers(bits, rng2, options, callback);
       }
-      return primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback);
+      return primeincFindPrimeWithoutWorkers(bits, rng2, options, callback);
     }
-    function primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback) {
+    function primeincFindPrimeWithoutWorkers(bits, rng2, options, callback) {
       var num = generateRandom(bits, rng2);
       var deltaIdx = 0;
       var mrTests = getMillerRabinTests(num.bitLength());
-      if ("millerRabinTests" in options2) {
-        mrTests = options2.millerRabinTests;
+      if ("millerRabinTests" in options) {
+        mrTests = options.millerRabinTests;
       }
       var maxBlockTime = 10;
-      if ("maxBlockTime" in options2) {
-        maxBlockTime = options2.maxBlockTime;
+      if ("maxBlockTime" in options) {
+        maxBlockTime = options.maxBlockTime;
       }
       _primeinc(num, bits, rng2, deltaIdx, mrTests, maxBlockTime, callback);
     }
@@ -78275,15 +78209,15 @@ function requirePrime() {
         _primeinc(num, bits, rng2, deltaIdx, mrTests, maxBlockTime, callback);
       });
     }
-    function primeincFindPrimeWithWorkers(bits, rng2, options2, callback) {
+    function primeincFindPrimeWithWorkers(bits, rng2, options, callback) {
       if (typeof Worker === "undefined") {
-        return primeincFindPrimeWithoutWorkers(bits, rng2, options2, callback);
+        return primeincFindPrimeWithoutWorkers(bits, rng2, options, callback);
       }
       var num = generateRandom(bits, rng2);
-      var numWorkers = options2.workers;
-      var workLoad = options2.workLoad || 100;
+      var numWorkers = options.workers;
+      var workLoad = options.workLoad || 100;
       var range2 = workLoad * 30 / 8;
-      var workerScript = options2.workerScript || "forge/prime.worker.js";
+      var workerScript = options.workerScript || "forge/prime.worker.js";
       if (numWorkers === -1) {
         return forge2.util.estimateCores(function(err, cores) {
           if (err) {
@@ -78701,13 +78635,13 @@ function requireRsa() {
     }
     return eb.getBytes();
   };
-  pki2.rsa.createKeyPairGenerationState = function(bits, e, options2) {
+  pki2.rsa.createKeyPairGenerationState = function(bits, e, options) {
     if (typeof bits === "string") {
       bits = parseInt(bits, 10);
     }
     bits = bits || 2048;
-    options2 = options2 || {};
-    var prng2 = options2.prng || forge2.random;
+    options = options || {};
+    var prng2 = options.prng || forge2.random;
     var rng2 = {
       // x is an array to fill with bytes
       nextBytes: function(x) {
@@ -78717,7 +78651,7 @@ function requireRsa() {
         }
       }
     };
-    var algorithm = options2.algorithm || "PRIMEINC";
+    var algorithm = options.algorithm || "PRIMEINC";
     var rval;
     if (algorithm === "PRIMEINC") {
       rval = {
@@ -78844,10 +78778,10 @@ function requireRsa() {
     }
     return state.keys !== null;
   };
-  pki2.rsa.generateKeyPair = function(bits, e, options2, callback) {
+  pki2.rsa.generateKeyPair = function(bits, e, options, callback) {
     if (arguments.length === 1) {
       if (typeof bits === "object") {
-        options2 = bits;
+        options = bits;
         bits = void 0;
       } else if (typeof bits === "function") {
         callback = bits;
@@ -78859,35 +78793,35 @@ function requireRsa() {
           callback = e;
           e = void 0;
         } else if (typeof e !== "number") {
-          options2 = e;
+          options = e;
           e = void 0;
         }
       } else {
-        options2 = bits;
+        options = bits;
         callback = e;
         bits = void 0;
         e = void 0;
       }
     } else if (arguments.length === 3) {
       if (typeof e === "number") {
-        if (typeof options2 === "function") {
-          callback = options2;
-          options2 = void 0;
+        if (typeof options === "function") {
+          callback = options;
+          options = void 0;
         }
       } else {
-        callback = options2;
-        options2 = e;
+        callback = options;
+        options = e;
         e = void 0;
       }
     }
-    options2 = options2 || {};
+    options = options || {};
     if (bits === void 0) {
-      bits = options2.bits || 2048;
+      bits = options.bits || 2048;
     }
     if (e === void 0) {
-      e = options2.e || 65537;
+      e = options.e || 65537;
     }
-    if (!forge2.options.usePureJavaScript && !options2.prng && bits >= 256 && bits <= 16384 && (e === 65537 || e === 3)) {
+    if (!forge2.options.usePureJavaScript && !options.prng && bits >= 256 && bits <= 16384 && (e === 65537 || e === 3)) {
       if (callback) {
         if (_detectNodeCrypto2("generateKeyPair")) {
           return _crypto2.generateKeyPair("rsa", {
@@ -78989,12 +78923,12 @@ function requireRsa() {
         }
       }
     }
-    var state = pki2.rsa.createKeyPairGenerationState(bits, e, options2);
+    var state = pki2.rsa.createKeyPairGenerationState(bits, e, options);
     if (!callback) {
       pki2.rsa.stepKeyPairGenerationState(state, 0);
       return state.keys;
     }
-    _generateKeyPair2(state, options2, callback);
+    _generateKeyPair2(state, options, callback);
   };
   pki2.setRsaPublicKey = pki2.rsa.setPublicKey = function(n, e) {
     var key = {
@@ -79029,26 +78963,26 @@ function requireRsa() {
       var e2 = scheme.encode(data, key, true);
       return pki2.rsa.encrypt(e2, key, true);
     };
-    key.verify = function(digest, signature, scheme, options2) {
+    key.verify = function(digest, signature, scheme, options) {
       if (typeof scheme === "string") {
         scheme = scheme.toUpperCase();
       } else if (scheme === void 0) {
         scheme = "RSASSA-PKCS1-V1_5";
       }
-      if (options2 === void 0) {
-        options2 = {
+      if (options === void 0) {
+        options = {
           _parseAllDigestBytes: true
         };
       }
-      if (!("_parseAllDigestBytes" in options2)) {
-        options2._parseAllDigestBytes = true;
+      if (!("_parseAllDigestBytes" in options)) {
+        options._parseAllDigestBytes = true;
       }
       if (scheme === "RSASSA-PKCS1-V1_5") {
         scheme = {
           verify: function(digest2, d2) {
             d2 = _decodePkcs1_v1_52(d2, key, true);
             var obj = asn12.fromDer(d2, {
-              parseAllBytes: options2._parseAllDigestBytes
+              parseAllBytes: options._parseAllDigestBytes
             });
             var capture = {};
             var errors2 = [];
@@ -79413,24 +79347,24 @@ function requireRsa() {
     }
     return eb.getBytes();
   }
-  function _generateKeyPair2(state, options2, callback) {
-    if (typeof options2 === "function") {
-      callback = options2;
-      options2 = {};
+  function _generateKeyPair2(state, options, callback) {
+    if (typeof options === "function") {
+      callback = options;
+      options = {};
     }
-    options2 = options2 || {};
+    options = options || {};
     var opts = {
       algorithm: {
-        name: options2.algorithm || "PRIMEINC",
+        name: options.algorithm || "PRIMEINC",
         options: {
-          workers: options2.workers || 2,
-          workLoad: options2.workLoad || 100,
-          workerScript: options2.workerScript
+          workers: options.workers || 2,
+          workLoad: options.workLoad || 100,
+          workerScript: options.workerScript
         }
       }
     };
-    if ("prng" in options2) {
-      opts.prng = options2.prng;
+    if ("prng" in options) {
+      opts.prng = options.prng;
     }
     generate();
     function generate() {
@@ -79696,21 +79630,21 @@ function requirePbe() {
       capture: "iterations"
     }]
   };
-  pki2.encryptPrivateKeyInfo = function(obj, password2, options2) {
-    options2 = options2 || {};
-    options2.saltSize = options2.saltSize || 8;
-    options2.count = options2.count || 2048;
-    options2.algorithm = options2.algorithm || "aes128";
-    options2.prfAlgorithm = options2.prfAlgorithm || "sha1";
-    var salt = forge2.random.getBytesSync(options2.saltSize);
-    var count = options2.count;
+  pki2.encryptPrivateKeyInfo = function(obj, password2, options) {
+    options = options || {};
+    options.saltSize = options.saltSize || 8;
+    options.count = options.count || 2048;
+    options.algorithm = options.algorithm || "aes128";
+    options.prfAlgorithm = options.prfAlgorithm || "sha1";
+    var salt = forge2.random.getBytesSync(options.saltSize);
+    var count = options.count;
     var countBytes = asn12.integerToDer(count);
     var dkLen;
     var encryptionAlgorithm;
     var encryptedData;
-    if (options2.algorithm.indexOf("aes") === 0 || options2.algorithm === "des") {
+    if (options.algorithm.indexOf("aes") === 0 || options.algorithm === "des") {
       var ivLen, encOid, cipherFn;
-      switch (options2.algorithm) {
+      switch (options.algorithm) {
         case "aes128":
           dkLen = 16;
           ivLen = 16;
@@ -79737,10 +79671,10 @@ function requirePbe() {
           break;
         default:
           var error = new Error("Cannot encrypt private key. Unknown encryption algorithm.");
-          error.algorithm = options2.algorithm;
+          error.algorithm = options.algorithm;
           throw error;
       }
-      var prfAlgorithm = "hmacWith" + options2.prfAlgorithm.toUpperCase();
+      var prfAlgorithm = "hmacWith" + options.prfAlgorithm.toUpperCase();
       var md2 = prfAlgorithmToMessageDigest2(prfAlgorithm);
       var dk = forge2.pkcs5.pbkdf2(password2, salt, count, dkLen, md2);
       var iv = forge2.random.getBytesSync(ivLen);
@@ -79792,7 +79726,7 @@ function requirePbe() {
           ])
         ]
       );
-    } else if (options2.algorithm === "3des") {
+    } else if (options.algorithm === "3des") {
       dkLen = 24;
       var saltBytes = new forge2.util.ByteBuffer(salt);
       var dk = pki2.pbe.generatePkcs12Key(password2, saltBytes, 1, count, dkLen);
@@ -79829,7 +79763,7 @@ function requirePbe() {
       );
     } else {
       var error = new Error("Cannot encrypt private key. Unknown encryption algorithm.");
-      error.algorithm = options2.algorithm;
+      error.algorithm = options.algorithm;
       throw error;
     }
     var rval = asn12.create(asn12.Class.UNIVERSAL, asn12.Type.SEQUENCE, true, [
@@ -79882,18 +79816,18 @@ function requirePbe() {
     }
     return asn12.fromDer(msg.body);
   };
-  pki2.encryptRsaPrivateKey = function(rsaKey, password2, options2) {
-    options2 = options2 || {};
-    if (!options2.legacy) {
+  pki2.encryptRsaPrivateKey = function(rsaKey, password2, options) {
+    options = options || {};
+    if (!options.legacy) {
       var rval = pki2.wrapRsaPrivateKey(pki2.privateKeyToAsn1(rsaKey));
-      rval = pki2.encryptPrivateKeyInfo(rval, password2, options2);
+      rval = pki2.encryptPrivateKeyInfo(rval, password2, options);
       return pki2.encryptedPrivateKeyToPem(rval);
     }
     var algorithm;
     var iv;
     var dkLen;
     var cipherFn;
-    switch (options2.algorithm) {
+    switch (options.algorithm) {
       case "aes128":
         algorithm = "AES-128-CBC";
         dkLen = 16;
@@ -79925,8 +79859,8 @@ function requirePbe() {
         cipherFn = forge2.des.createEncryptionCipher;
         break;
       default:
-        var error = new Error('Could not encrypt RSA private key; unsupported encryption algorithm "' + options2.algorithm + '".');
-        error.algorithm = options2.algorithm;
+        var error = new Error('Could not encrypt RSA private key; unsupported encryption algorithm "' + options.algorithm + '".');
+        error.algorithm = options.algorithm;
         throw error;
     }
     var dk = forge2.pbe.opensslDeriveBytes(password2, iv.substr(0, 8), dkLen);
@@ -80682,24 +80616,24 @@ function requirePss() {
   requireRandom();
   requireUtil();
   var pss$12 = pss.exports = forge2.pss = forge2.pss || {};
-  pss$12.create = function(options2) {
+  pss$12.create = function(options) {
     if (arguments.length === 3) {
-      options2 = {
+      options = {
         md: arguments[0],
         mgf: arguments[1],
         saltLength: arguments[2]
       };
     }
-    var hash2 = options2.md;
-    var mgf2 = options2.mgf;
+    var hash2 = options.md;
+    var mgf2 = options.mgf;
     var hLen = hash2.digestLength;
-    var salt_ = options2.salt || null;
+    var salt_ = options.salt || null;
     if (typeof salt_ === "string") {
       salt_ = forge2.util.createBuffer(salt_);
     }
     var sLen;
-    if ("saltLength" in options2) {
-      sLen = options2.saltLength;
+    if ("saltLength" in options) {
+      sLen = options.saltLength;
     } else if (salt_ !== null) {
       sLen = salt_.length();
     } else {
@@ -80708,7 +80642,7 @@ function requirePss() {
     if (salt_ !== null && salt_.length() !== sLen) {
       throw new Error("Given salt length does not match length of given salt.");
     }
-    var prng2 = options2.prng || forge2.random;
+    var prng2 = options.prng || forge2.random;
     var pssobj = {};
     pssobj.encode = function(md2, modBits) {
       var i;
@@ -81234,19 +81168,19 @@ function requireX509() {
     }
     return rval;
   };
-  function _getAttribute2(obj, options2) {
-    if (typeof options2 === "string") {
-      options2 = { shortName: options2 };
+  function _getAttribute2(obj, options) {
+    if (typeof options === "string") {
+      options = { shortName: options };
     }
     var rval = null;
     var attr;
     for (var i = 0; rval === null && i < obj.attributes.length; ++i) {
       attr = obj.attributes[i];
-      if (options2.type && options2.type === attr.type) {
+      if (options.type && options.type === attr.type) {
         rval = attr;
-      } else if (options2.name && options2.name === attr.name) {
+      } else if (options.name && options.name === attr.name) {
         rval = attr;
-      } else if (options2.shortName && options2.shortName === attr.shortName) {
+      } else if (options.shortName && options.shortName === attr.shortName) {
         rval = attr;
       }
     }
@@ -81293,8 +81227,8 @@ function requireX509() {
     }
     return params;
   };
-  var _createSignatureDigest2 = function(options2) {
-    switch (oids2[options2.signatureOid]) {
+  var _createSignatureDigest2 = function(options) {
+    switch (oids2[options.signatureOid]) {
       case "sha1WithRSAEncryption":
       // deprecated alias
       case "sha1WithRSASignature":
@@ -81311,14 +81245,14 @@ function requireX509() {
         return forge2.md.sha256.create();
       default:
         var error = new Error(
-          "Could not compute " + options2.type + " digest. Unknown signature OID."
+          "Could not compute " + options.type + " digest. Unknown signature OID."
         );
-        error.signatureOid = options2.signatureOid;
+        error.signatureOid = options.signatureOid;
         throw error;
     }
   };
-  var _verifySignature2 = function(options2) {
-    var cert = options2.certificate;
+  var _verifySignature2 = function(options) {
+    var cert = options.certificate;
     var scheme;
     switch (cert.signatureOid) {
       case oids2.sha1WithRSAEncryption:
@@ -81357,8 +81291,8 @@ function requireX509() {
         break;
     }
     return cert.publicKey.verify(
-      options2.md.digest().getBytes(),
-      options2.signature,
+      options.md.digest().getBytes(),
+      options.signature,
       scheme
     );
   };
@@ -81413,10 +81347,10 @@ function requireX509() {
     };
     return forge2.pem.encode(msg, { maxline });
   };
-  pki2.getPublicKeyFingerprint = function(key, options2) {
-    options2 = options2 || {};
-    var md2 = options2.md || forge2.md.sha1.create();
-    var type2 = options2.type || "RSAPublicKey";
+  pki2.getPublicKeyFingerprint = function(key, options) {
+    options = options || {};
+    var md2 = options.md || forge2.md.sha1.create();
+    var type2 = options.type || "RSAPublicKey";
     var bytes;
     switch (type2) {
       case "RSAPublicKey":
@@ -81426,21 +81360,21 @@ function requireX509() {
         bytes = asn12.toDer(pki2.publicKeyToAsn1(key)).getBytes();
         break;
       default:
-        throw new Error('Unknown fingerprint type "' + options2.type + '".');
+        throw new Error('Unknown fingerprint type "' + options.type + '".');
     }
     md2.start();
     md2.update(bytes);
     var digest = md2.digest();
-    if (options2.encoding === "hex") {
+    if (options.encoding === "hex") {
       var hex = digest.toHex();
-      if (options2.delimiter) {
-        return hex.match(/.{2}/g).join(options2.delimiter);
+      if (options.delimiter) {
+        return hex.match(/.{2}/g).join(options.delimiter);
       }
       return hex;
-    } else if (options2.encoding === "binary") {
+    } else if (options.encoding === "binary") {
       return digest.getBytes();
-    } else if (options2.encoding) {
-      throw new Error('Unknown encoding "' + options2.encoding + '".');
+    } else if (options.encoding) {
+      throw new Error('Unknown encoding "' + options.encoding + '".');
     }
     return digest;
   };
@@ -81522,17 +81456,17 @@ function requireX509() {
       }
       cert.extensions = exts;
     };
-    cert.getExtension = function(options2) {
-      if (typeof options2 === "string") {
-        options2 = { name: options2 };
+    cert.getExtension = function(options) {
+      if (typeof options === "string") {
+        options = { name: options };
       }
       var rval = null;
       var ext;
       for (var i = 0; rval === null && i < cert.extensions.length; ++i) {
         ext = cert.extensions[i];
-        if (options2.id && ext.id === options2.id) {
+        if (options.id && ext.id === options.id) {
           rval = ext;
-        } else if (options2.name && ext.name === options2.name) {
+        } else if (options.name && ext.name === options.name) {
           rval = ext;
         }
       }
@@ -82052,8 +81986,8 @@ function requireX509() {
       }
     }
   }
-  function _fillMissingExtensionFields2(e, options2) {
-    options2 = options2 || {};
+  function _fillMissingExtensionFields2(e, options) {
+    options = options || {};
     if (typeof e.name === "undefined") {
       if (e.id && e.id in pki2.oids) {
         e.name = pki2.oids[e.id];
@@ -82248,7 +82182,7 @@ function requireX509() {
           value
         ));
       }
-    } else if (e.name === "nsComment" && options2.cert) {
+    } else if (e.name === "nsComment" && options.cert) {
       if (!/^[\x00-\x7F]*$/.test(e.comment) || e.comment.length < 1 || e.comment.length > 128) {
         throw new Error('Invalid "nsComment" content.');
       }
@@ -82258,8 +82192,8 @@ function requireX509() {
         false,
         e.comment
       );
-    } else if (e.name === "subjectKeyIdentifier" && options2.cert) {
-      var ski = options2.cert.generateSubjectKeyIdentifier();
+    } else if (e.name === "subjectKeyIdentifier" && options.cert) {
+      var ski = options.cert.generateSubjectKeyIdentifier();
       e.subjectKeyIdentifier = ski.toHex();
       e.value = asn12.create(
         asn12.Class.UNIVERSAL,
@@ -82267,11 +82201,11 @@ function requireX509() {
         false,
         ski.getBytes()
       );
-    } else if (e.name === "authorityKeyIdentifier" && options2.cert) {
+    } else if (e.name === "authorityKeyIdentifier" && options.cert) {
       e.value = asn12.create(asn12.Class.UNIVERSAL, asn12.Type.SEQUENCE, true, []);
       var seq = e.value.value;
       if (e.keyIdentifier) {
-        var keyIdentifier = e.keyIdentifier === true ? options2.cert.generateSubjectKeyIdentifier().getBytes() : e.keyIdentifier;
+        var keyIdentifier = e.keyIdentifier === true ? options.cert.generateSubjectKeyIdentifier().getBytes() : e.keyIdentifier;
         seq.push(
           asn12.create(asn12.Class.CONTEXT_SPECIFIC, 0, false, keyIdentifier)
         );
@@ -82279,7 +82213,7 @@ function requireX509() {
       if (e.authorityCertIssuer) {
         var authorityCertIssuer = [
           asn12.create(asn12.Class.CONTEXT_SPECIFIC, 4, true, [
-            _dnToAsn12(e.authorityCertIssuer === true ? options2.cert.issuer : e.authorityCertIssuer)
+            _dnToAsn12(e.authorityCertIssuer === true ? options.cert.issuer : e.authorityCertIssuer)
           ])
         ];
         seq.push(
@@ -82287,7 +82221,7 @@ function requireX509() {
         );
       }
       if (e.serialNumber) {
-        var serialNumber = forge2.util.hexToBytes(e.serialNumber === true ? options2.cert.serialNumber : e.serialNumber);
+        var serialNumber = forge2.util.hexToBytes(e.serialNumber === true ? options.cert.serialNumber : e.serialNumber);
         seq.push(
           asn12.create(asn12.Class.CONTEXT_SPECIFIC, 2, false, serialNumber)
         );
@@ -82770,14 +82704,14 @@ function requireX509() {
     certificate_unknown: "forge.pki.CertificateUnknown",
     unknown_ca: "forge.pki.UnknownCertificateAuthority"
   };
-  pki2.verifyCertificateChain = function(caStore, chain, options2) {
-    if (typeof options2 === "function") {
-      options2 = { verify: options2 };
+  pki2.verifyCertificateChain = function(caStore, chain, options) {
+    if (typeof options === "function") {
+      options = { verify: options };
     }
-    options2 = options2 || {};
+    options = options || {};
     chain = chain.slice(0);
     var certs = chain.slice(0);
-    var validityCheckDate = options2.validityCheckDate;
+    var validityCheckDate = options.validityCheckDate;
     if (typeof validityCheckDate === "undefined") {
       validityCheckDate = /* @__PURE__ */ new Date();
     }
@@ -82885,7 +82819,7 @@ function requireX509() {
         }
       }
       var vfd = error === null ? true : error.error;
-      var ret = options2.verify ? options2.verify(vfd, depth, certs) : vfd;
+      var ret = options.verify ? options.verify(vfd, depth, certs) : vfd;
       if (ret === true) {
         error = null;
       } else {
@@ -83458,25 +83392,25 @@ function requirePkcs12() {
     }
     return decodedAttrs;
   }
-  p122.toPkcs12Asn1 = function(key, cert, password2, options2) {
-    options2 = options2 || {};
-    options2.saltSize = options2.saltSize || 8;
-    options2.count = options2.count || 2048;
-    options2.algorithm = options2.algorithm || options2.encAlgorithm || "aes128";
-    if (!("useMac" in options2)) {
-      options2.useMac = true;
+  p122.toPkcs12Asn1 = function(key, cert, password2, options) {
+    options = options || {};
+    options.saltSize = options.saltSize || 8;
+    options.count = options.count || 2048;
+    options.algorithm = options.algorithm || options.encAlgorithm || "aes128";
+    if (!("useMac" in options)) {
+      options.useMac = true;
     }
-    if (!("localKeyId" in options2)) {
-      options2.localKeyId = null;
+    if (!("localKeyId" in options)) {
+      options.localKeyId = null;
     }
-    if (!("generateLocalKeyId" in options2)) {
-      options2.generateLocalKeyId = true;
+    if (!("generateLocalKeyId" in options)) {
+      options.generateLocalKeyId = true;
     }
-    var localKeyId = options2.localKeyId;
+    var localKeyId = options.localKeyId;
     var bagAttrs;
     if (localKeyId !== null) {
       localKeyId = forge2.util.hexToBytes(localKeyId);
-    } else if (options2.generateLocalKeyId) {
+    } else if (options.generateLocalKeyId) {
       if (cert) {
         var pairedCert = forge2.util.isArray(cert) ? cert[0] : cert;
         if (typeof pairedCert === "string") {
@@ -83513,7 +83447,7 @@ function requirePkcs12() {
         ])
       );
     }
-    if ("friendlyName" in options2) {
+    if ("friendlyName" in options) {
       attrs.push(
         // friendlyName
         asn12.create(asn12.Class.UNIVERSAL, asn12.Type.SEQUENCE, true, [
@@ -83530,7 +83464,7 @@ function requirePkcs12() {
               asn12.Class.UNIVERSAL,
               asn12.Type.BMPSTRING,
               false,
-              options2.friendlyName
+              options.friendlyName
             )
           ])
         ])
@@ -83654,7 +83588,7 @@ function requirePkcs12() {
           // bagValue
           asn12.create(asn12.Class.CONTEXT_SPECIFIC, 0, true, [
             // EncryptedPrivateKeyInfo
-            pki2.encryptPrivateKeyInfo(pkAsn1, password2, options2)
+            pki2.encryptPrivateKeyInfo(pkAsn1, password2, options)
           ]),
           // bagAttributes (OPTIONAL)
           bagAttrs
@@ -83692,12 +83626,12 @@ function requirePkcs12() {
       contents
     );
     var macData;
-    if (options2.useMac) {
+    if (options.useMac) {
       var sha12 = forge2.md.sha1.create();
       var macSalt = new forge2.util.ByteBuffer(
-        forge2.random.getBytes(options2.saltSize)
+        forge2.random.getBytes(options.saltSize)
       );
-      var count = options2.count;
+      var count = options.count;
       var key = p122.generateKey(password2, macSalt, 3, count, 20);
       var mac = forge2.hmac.create();
       mac.start(sha12, key);
@@ -85071,18 +85005,18 @@ function requireTls() {
     rval.putBytes(forge2.random.getBytes(28));
     return rval;
   };
-  tls2.createRecord = function(c, options2) {
-    if (!options2.data) {
+  tls2.createRecord = function(c, options) {
+    if (!options.data) {
       return null;
     }
     var record = {
-      type: options2.type,
+      type: options.type,
       version: {
         major: c.version.major,
         minor: c.version.minor
       },
-      length: options2.data.length(),
-      fragment: options2.data
+      length: options.data.length(),
+      fragment: options.data
     };
     return record;
   };
@@ -85454,11 +85388,11 @@ function requireTls() {
   };
   tls2.verifyCertificateChain = function(c, chain) {
     try {
-      var options2 = {};
+      var options = {};
       for (var key2 in c.verifyOptions) {
-        options2[key2] = c.verifyOptions[key2];
+        options[key2] = c.verifyOptions[key2];
       }
-      options2.verify = function(vfd, depth, chain2) {
+      options.verify = function(vfd, depth, chain2) {
         var desc = _certErrorToAlertDesc2(vfd);
         var ret = c.verify(c, vfd, depth, chain2);
         if (ret !== true) {
@@ -85483,7 +85417,7 @@ function requireTls() {
         }
         return ret;
       };
-      forge2.pki.verifyCertificateChain(c.caStore, chain, options2);
+      forge2.pki.verifyCertificateChain(c.caStore, chain, options);
     } catch (ex) {
       var err = ex;
       if (typeof err !== "object" || forge2.util.isArray(err)) {
@@ -85556,50 +85490,50 @@ function requireTls() {
     }
     return rval;
   };
-  tls2.createConnection = function(options2) {
+  tls2.createConnection = function(options) {
     var caStore = null;
-    if (options2.caStore) {
-      if (forge2.util.isArray(options2.caStore)) {
-        caStore = forge2.pki.createCaStore(options2.caStore);
+    if (options.caStore) {
+      if (forge2.util.isArray(options.caStore)) {
+        caStore = forge2.pki.createCaStore(options.caStore);
       } else {
-        caStore = options2.caStore;
+        caStore = options.caStore;
       }
     } else {
       caStore = forge2.pki.createCaStore();
     }
-    var cipherSuites = options2.cipherSuites || null;
+    var cipherSuites = options.cipherSuites || null;
     if (cipherSuites === null) {
       cipherSuites = [];
       for (var key2 in tls2.CipherSuites) {
         cipherSuites.push(tls2.CipherSuites[key2]);
       }
     }
-    var entity = options2.server || false ? tls2.ConnectionEnd.server : tls2.ConnectionEnd.client;
-    var sessionCache = options2.sessionCache ? tls2.createSessionCache(options2.sessionCache) : null;
+    var entity = options.server || false ? tls2.ConnectionEnd.server : tls2.ConnectionEnd.client;
+    var sessionCache = options.sessionCache ? tls2.createSessionCache(options.sessionCache) : null;
     var c = {
       version: { major: tls2.Version.major, minor: tls2.Version.minor },
       entity,
-      sessionId: options2.sessionId,
+      sessionId: options.sessionId,
       caStore,
       sessionCache,
       cipherSuites,
-      connected: options2.connected,
-      virtualHost: options2.virtualHost || null,
-      verifyClient: options2.verifyClient || false,
-      verify: options2.verify || function(cn, vfd, dpth, cts) {
+      connected: options.connected,
+      virtualHost: options.virtualHost || null,
+      verifyClient: options.verifyClient || false,
+      verify: options.verify || function(cn, vfd, dpth, cts) {
         return vfd;
       },
-      verifyOptions: options2.verifyOptions || {},
-      getCertificate: options2.getCertificate || null,
-      getPrivateKey: options2.getPrivateKey || null,
-      getSignature: options2.getSignature || null,
+      verifyOptions: options.verifyOptions || {},
+      getCertificate: options.getCertificate || null,
+      getPrivateKey: options.getPrivateKey || null,
+      getSignature: options.getSignature || null,
       input: forge2.util.createBuffer(),
       tlsData: forge2.util.createBuffer(),
       data: forge2.util.createBuffer(),
-      tlsDataReady: options2.tlsDataReady,
-      dataReady: options2.dataReady,
-      heartbeatReceived: options2.heartbeatReceived,
-      closed: options2.closed,
+      tlsDataReady: options.tlsDataReady,
+      dataReady: options.dataReady,
+      heartbeatReceived: options.heartbeatReceived,
+      closed: options.closed,
       error: function(c2, ex) {
         ex.origin = ex.origin || (c2.entity === tls2.ConnectionEnd.client ? "client" : "server");
         if (ex.send) {
@@ -85610,13 +85544,13 @@ function requireTls() {
         if (fatal) {
           c2.fail = true;
         }
-        options2.error(c2, ex);
+        options.error(c2, ex);
         if (fatal) {
           c2.close(false);
         }
       },
-      deflate: options2.deflate || null,
-      inflate: options2.inflate || null
+      deflate: options.deflate || null,
+      inflate: options.inflate || null
     };
     c.reset = function(clearFail) {
       c.version = { major: tls2.Version.major, minor: tls2.Version.minor };
@@ -85939,16 +85873,16 @@ function requireAesCipherSuites() {
     }
     return rval;
   }
-  function encrypt_aes_cbc_sha1_padding2(blockSize, input, decrypt2) {
-    if (!decrypt2) {
+  function encrypt_aes_cbc_sha1_padding2(blockSize, input, decrypt) {
+    if (!decrypt) {
       var padding = blockSize - input.length() % blockSize;
       input.fillWithByte(padding - 1, padding);
     }
     return true;
   }
-  function decrypt_aes_cbc_sha1_padding2(blockSize, output, decrypt2) {
+  function decrypt_aes_cbc_sha1_padding2(blockSize, output, decrypt) {
     var rval = true;
-    if (decrypt2) {
+    if (decrypt) {
       var len = output.length();
       var paddingLength = output.last();
       for (var i = len - 1 - paddingLength; i < len - 1; ++i) {
@@ -86530,9 +86464,9 @@ function requireEd25519() {
   ed255192.constants.SEED_BYTE_LENGTH = 32;
   ed255192.constants.SIGN_BYTE_LENGTH = 64;
   ed255192.constants.HASH_BYTE_LENGTH = 64;
-  ed255192.generateKeyPair = function(options2) {
-    options2 = options2 || {};
-    var seed = options2.seed;
+  ed255192.generateKeyPair = function(options) {
+    options = options || {};
+    var seed = options.seed;
     if (seed === void 0) {
       seed = forge2.random.getBytesSync(ed255192.constants.SEED_BYTE_LENGTH);
     } else if (typeof seed === "string") {
@@ -86599,10 +86533,10 @@ function requireEd25519() {
       encoding: "binary"
     });
   };
-  ed255192.publicKeyFromPrivateKey = function(options2) {
-    options2 = options2 || {};
+  ed255192.publicKeyFromPrivateKey = function(options) {
+    options = options || {};
     var privateKey = messageToNativeBuffer2({
-      message: options2.privateKey,
+      message: options.privateKey,
       encoding: "binary"
     });
     if (privateKey.length !== ed255192.constants.PRIVATE_KEY_BYTE_LENGTH) {
@@ -86616,11 +86550,11 @@ function requireEd25519() {
     }
     return pk;
   };
-  ed255192.sign = function(options2) {
-    options2 = options2 || {};
-    var msg = messageToNativeBuffer2(options2);
+  ed255192.sign = function(options) {
+    options = options || {};
+    var msg = messageToNativeBuffer2(options);
     var privateKey = messageToNativeBuffer2({
-      message: options2.privateKey,
+      message: options.privateKey,
       encoding: "binary"
     });
     if (privateKey.length === ed255192.constants.SEED_BYTE_LENGTH) {
@@ -86641,16 +86575,16 @@ function requireEd25519() {
     }
     return sig;
   };
-  ed255192.verify = function(options2) {
-    options2 = options2 || {};
-    var msg = messageToNativeBuffer2(options2);
-    if (options2.signature === void 0) {
+  ed255192.verify = function(options) {
+    options = options || {};
+    var msg = messageToNativeBuffer2(options);
+    if (options.signature === void 0) {
       throw new TypeError(
         '"options.signature" must be a node.js Buffer, a Uint8Array, a forge ByteBuffer, or a binary string.'
       );
     }
     var sig = messageToNativeBuffer2({
-      message: options2.signature,
+      message: options.signature,
       encoding: "binary"
     });
     if (sig.length !== ed255192.constants.SIGN_BYTE_LENGTH) {
@@ -86659,7 +86593,7 @@ function requireEd25519() {
       );
     }
     var publicKey = messageToNativeBuffer2({
-      message: options2.publicKey,
+      message: options.publicKey,
       encoding: "binary"
     });
     if (publicKey.length !== ed255192.constants.PUBLIC_KEY_BYTE_LENGTH) {
@@ -86678,15 +86612,15 @@ function requireEd25519() {
     }
     return crypto_sign_open2(m, sm, sm.length, publicKey) >= 0;
   };
-  function messageToNativeBuffer2(options2) {
-    var message = options2.message;
+  function messageToNativeBuffer2(options) {
+    var message = options.message;
     if (message instanceof Uint8Array || message instanceof NativeBuffer2) {
       return message;
     }
-    var encoding = options2.encoding;
+    var encoding = options.encoding;
     if (message === void 0) {
-      if (options2.md) {
-        message = options2.md.digest().getBytes();
+      if (options.md) {
+        message = options.md.digest().getBytes();
         encoding = "binary";
       } else {
         throw new TypeError('"options.message" or "options.md" not specified.');
@@ -87613,9 +87547,9 @@ function requireKem() {
   kem = forge2.kem = forge2.kem || {};
   var BigInteger2 = forge2.jsbn.BigInteger;
   forge2.kem.rsa = {};
-  forge2.kem.rsa.create = function(kdf2, options2) {
-    options2 = options2 || {};
-    var prng2 = options2.prng || forge2.random;
+  forge2.kem.rsa.create = function(kdf2, options) {
+    options = options || {};
+    var prng2 = options.prng || forge2.random;
     var kem2 = {};
     kem2.encrypt = function(publicKey, keyLength) {
       var byteLength = Math.ceil(publicKey.n.bitLength() / 8);
@@ -88114,8 +88048,8 @@ function requirePkcs7() {
        * @param options Options to apply when signing:
        *    [detached] boolean. If signing should be done in detached mode. Defaults to false.
        */
-      sign: function(options2) {
-        options2 = options2 || {};
+      sign: function(options) {
+        options = options || {};
         if (typeof msg.content !== "object" || msg.contentInfo === null) {
           msg.contentInfo = asn12.create(
             asn12.Class.UNIVERSAL,
@@ -88138,7 +88072,7 @@ function requirePkcs7() {
             } else if (typeof msg.content === "string") {
               content = forge2.util.encodeUtf8(msg.content);
             }
-            if (options2.detached) {
+            if (options.detached) {
               msg.detachedContent = asn12.create(asn12.Class.UNIVERSAL, asn12.Type.OCTETSTRING, false, content);
             } else {
               msg.contentInfo.value.push(
@@ -88925,9 +88859,9 @@ function requireSsh() {
       { legacy: true, algorithm: "aes128" }
     );
   };
-  ssh$12.getPublicKeyFingerprint = function(key, options2) {
-    options2 = options2 || {};
-    var md2 = options2.md || forge2.md.md5.create();
+  ssh$12.getPublicKeyFingerprint = function(key, options) {
+    options = options || {};
+    var md2 = options.md || forge2.md.md5.create();
     var type2 = "ssh-rsa";
     var buffer2 = forge2.util.createBuffer();
     _addStringToBuffer2(buffer2, type2);
@@ -88936,16 +88870,16 @@ function requireSsh() {
     md2.start();
     md2.update(buffer2.getBytes());
     var digest = md2.digest();
-    if (options2.encoding === "hex") {
+    if (options.encoding === "hex") {
       var hex = digest.toHex();
-      if (options2.delimiter) {
-        return hex.match(/.{2}/g).join(options2.delimiter);
+      if (options.delimiter) {
+        return hex.match(/.{2}/g).join(options.delimiter);
       }
       return hex;
-    } else if (options2.encoding === "binary") {
+    } else if (options.encoding === "binary") {
       return digest.getBytes();
-    } else if (options2.encoding) {
-      throw new Error('Unknown encoding "' + options2.encoding + '".');
+    } else if (options.encoding) {
+      throw new Error('Unknown encoding "' + options.encoding + '".');
     }
     return digest;
   };
@@ -89159,7 +89093,7 @@ const keystorePasswordArgument = {
     }
   }
 };
-const defaultTargetPath = `${path$1.join(require$$0.homedir(), "ssv-keys")}${path$1.sep}`;
+const defaultTargetPath = `${path.join(require$$0.homedir(), "ssv-keys")}${path.sep}`;
 const outputFolderArgument = {
   arg1: "-of",
   arg2: "--output-folder",
@@ -89332,6 +89266,9 @@ const scannerOperatorIdsArgument = {
     }
   }
 };
+const NO_VALID_KEYSTORES_ERROR = "Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.";
+const GENERATING_KEYSHARES_MESSAGE = "\n\nGenerating Keyshares file, this might take a few minutes do not close terminal.";
+const offlineSdkUtils = createUtils({});
 class KeySharesAction extends BaseAction {
   static get options() {
     return {
@@ -89358,39 +89295,21 @@ class KeySharesAction extends BaseAction {
     };
   }
   async execute() {
-    this.validateKeystoreArguments();
-    const keySharesList = await this.processKeystorePath();
-    const keySharesFilePath = await this.saveKeyShares(
-      keySharesList,
-      this.args.output_folder
-    );
-    return keySharesFilePath;
+    this.validateArguments();
+    return this.executeOffline();
   }
-  validateKeystoreArguments() {
+  validateArguments() {
     const hasKeystore = !!this.args.keystore;
     if (!hasKeystore) {
       throw new SSVKeysException(
         "Please provide a path to the validator keystore file or to the folder containing multiple validator keystore files."
       );
     }
-  }
-  async processKeystorePath() {
-    const keystorePath = sanitizePath(String(this.args.keystore).trim());
-    const { files } = await getKeyStoreFiles(keystorePath);
-    const validatedFiles = await this.validateKeystoreFiles(files);
-    const operators = this.getOperators();
-    const singleKeySharesList = await Promise.all(
-      validatedFiles.map(
-        (file, index2) => this.processFile(
-          file,
-          this.args.password,
-          operators,
-          this.args.owner_address,
-          this.args.owner_nonce + index2
-        )
-      )
-    );
-    return singleKeySharesList;
+    if (!this.hasOperatorKeys()) {
+      throw new SSVKeysException(
+        "Operator keys are required to generate shares in offline mode."
+      );
+    }
   }
   async validateKeystoreFiles(files) {
     const validatedFiles = [];
@@ -89408,7 +89327,7 @@ class KeySharesAction extends BaseAction {
         failedValidation++;
         status = "❌";
       }
-      const fileName = path$1.basename(file);
+      const fileName = path.basename(file);
       process.stdout.write(
         `\r
 ${index2 + 1}/${files.length} ${status} ${fileName}`
@@ -89422,8 +89341,14 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
     process.stdout.write("\n");
     return validatedFiles;
   }
-  getOperators() {
-    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
+  hasOperatorKeys() {
+    return typeof this.args.operator_keys === "string" && this.args.operator_keys.trim().length > 0;
+  }
+  getOperatorIds() {
+    return parseOperatorIdsCsv(this.args.operator_ids);
+  }
+  getOperatorsFromArgs() {
+    const operatorIds = this.getOperatorIds();
     const operatorKeys = String(this.args.operator_keys).split(",").map((operatorKey) => operatorKey.trim());
     if (operatorIds.length !== operatorKeys.length) {
       throw new OperatorsCountsMismatchError(
@@ -89445,45 +89370,42 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
       return { id, operatorKey };
     });
   }
-  async processFile(keystoreFilePath, password2, operators, ownerAddress, ownerNonce) {
-    const keystoreData = await readFile(keystoreFilePath, false);
-    const ssvKeys2 = new SSVKeys();
-    const { privateKey, publicKey } = await ssvKeys2.extractKeys(
-      keystoreData,
-      password2
-    );
-    const encryptedShares = await ssvKeys2.buildShares(privateKey, operators);
-    const keySharesItem = new KeySharesItem();
-    await keySharesItem.update({
-      ownerAddress,
-      ownerNonce,
-      operators,
-      publicKey
-    });
-    await keySharesItem.buildPayload(
-      { publicKey, operators, encryptedShares },
-      { ownerAddress, ownerNonce, privateKey }
-    );
-    return keySharesItem;
+  async getValidatedKeystoreFiles() {
+    const keystorePath = sanitizePath(String(this.args.keystore).trim());
+    const { files } = await getKeyStoreFiles(keystorePath);
+    return this.validateKeystoreFiles(files);
   }
-  async saveKeyShares(keySharesItems, outputFolder) {
-    if (keySharesItems.length === 0) {
-      throw new SSVKeysException(
-        "Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct."
-      );
+  async readValidatedKeystoreData() {
+    const validatedFiles = await this.getValidatedKeystoreFiles();
+    return Promise.all(validatedFiles.map((file) => readFile(file, false)));
+  }
+  async executeOffline() {
+    const operatorIds = this.getOperatorIds();
+    const operators = this.getOperatorsFromArgs();
+    const keystores = await this.readValidatedKeystoreData();
+    if (keystores.length === 0) {
+      throw new SSVKeysException(NO_VALID_KEYSTORES_ERROR);
     }
-    process.stdout.write(
-      `
-
-Generating Keyshares file, this might take a few minutes do not close terminal.`
-    );
-    const keyShares = new KeyShares();
-    keySharesItems.forEach((keySharesItem) => keyShares.add(keySharesItem));
+    process.stdout.write(GENERATING_KEYSHARES_MESSAGE);
+    const shares = await offlineSdkUtils.generateKeyShares({
+      keystore: keystores,
+      keystorePassword: this.args.password,
+      operatorKeys: operators.map((operator) => operator.operatorKey),
+      operatorIds,
+      ownerAddress: this.args.owner_address,
+      nonce: this.args.owner_nonce
+    });
     const keySharesFilePath = await getFilePath(
       "keyshares",
-      outputFolder.trim()
+      this.args.output_folder.trim()
     );
-    await writeFile(keySharesFilePath, keyShares.toJson());
+    await offlineSdkUtils.writeKeysharesFile({
+      path: keySharesFilePath,
+      shares,
+      ownerAddress: this.args.owner_address,
+      nonce: this.args.owner_nonce,
+      operators
+    });
     return keySharesFilePath;
   }
 }
@@ -89598,15 +89520,15 @@ class ClusterScanner extends BaseScanner {
       console.log("");
       this.logScanContext(sdk, [`Operator IDs: ${operatorIds.join(",")}`]);
     }
-    const [latestBlockNumber, clusterData] = await Promise.all([
-      this.getLatestBlockNumber(sdk),
-      this.queryClusterSnapshot(sdk, operatorIds)
-    ]);
+    const { blockNumber, clusterData } = await this.queryClusterSnapshot(
+      sdk,
+      operatorIds
+    );
     return {
       payload: {
         Owner: this.params.ownerAddress,
         Operators: operatorIds.join(","),
-        Block: latestBlockNumber,
+        Block: blockNumber,
         Data: [
           clusterData.validatorCount,
           clusterData.networkFeeIndex,
@@ -89626,22 +89548,23 @@ class ClusterScanner extends BaseScanner {
   }
   async queryClusterSnapshot(sdk, operatorIds) {
     const clusterId = createClusterId(this.params.ownerAddress, operatorIds);
-    const clusterSnapshot = await sdk.api.toSolidityCluster({ id: clusterId });
-    if (!clusterSnapshot) {
-      return DEFAULT_CLUSTER_SNAPSHOT;
+    const { blockNumber, cluster } = await sdk.api.getClusterSnapshot({
+      id: clusterId
+    });
+    if (!cluster) {
+      return { blockNumber, clusterData: DEFAULT_CLUSTER_SNAPSHOT };
     }
-    const { validatorCount, networkFeeIndex, index: index2, active, balance } = clusterSnapshot;
+    const { validatorCount, networkFeeIndex, index: index2, active, balance } = cluster;
     return {
-      validatorCount,
-      networkFeeIndex,
-      index: index2,
-      active,
-      balance
+      blockNumber,
+      clusterData: {
+        validatorCount,
+        networkFeeIndex,
+        index: index2,
+        active,
+        balance
+      }
     };
-  }
-  async getLatestBlockNumber(sdk) {
-    const latestBlockNumber = await sdk.config.publicClient.getBlockNumber();
-    return this.toSafeNumber(latestBlockNumber, "Latest block number");
   }
 }
 class NonceScanner extends BaseScanner {
@@ -89651,11 +89574,10 @@ class NonceScanner extends BaseScanner {
       console.log("\nScanning blockchain...");
       this.logScanContext(sdk);
     }
-    const ownerNonce = await sdk.api.getOwnerNonce({
+    const { nonce } = await sdk.api.getOwnerNonce({
       owner: this.params.ownerAddress
     });
-    const parsedNonce = BigInt(ownerNonce);
-    return this.toSafeNumber(parsedNonce, "Owner nonce");
+    return nonce;
   }
 }
 class OperatorScanner extends BaseScanner {
@@ -89672,7 +89594,7 @@ class OperatorScanner extends BaseScanner {
     return this.writeOperatorsFile(entries, outputPath);
   }
   async getOwnerOperators(sdk) {
-    const clusters = await sdk.api.getClusters({
+    const { clusters } = await sdk.api.getClusters({
       owner: this.params.ownerAddress.toLowerCase()
     });
     const operatorIdSet = /* @__PURE__ */ new Set();
@@ -89687,7 +89609,7 @@ class OperatorScanner extends BaseScanner {
     if (uniqueOperatorIds.length === 0) {
       return [];
     }
-    const operators = await sdk.api.getOperators({
+    const { operators } = await sdk.api.getOperators({
       operatorIds: uniqueOperatorIds
     });
     const operatorEntries = operators.map((operator) => ({
@@ -89697,15 +89619,16 @@ class OperatorScanner extends BaseScanner {
     return operatorEntries.sort((a, b) => a.id - b.id);
   }
   writeOperatorsFile(entries, outputPath) {
-    const dirPath = outputPath ? outputPath : path$1.join(process.cwd(), "data");
-    if (!fs$2.existsSync(dirPath)) {
-      fs$2.mkdirSync(dirPath, { recursive: true });
+    const dirPath = outputPath ? outputPath : path.join(process.cwd(), "data");
+    if (!fs$1.existsSync(dirPath)) {
+      fs$1.mkdirSync(dirPath, { recursive: true });
     }
-    const filePath = path$1.join(
+    const normalizedOwnerAddress = this.params.ownerAddress.toLowerCase();
+    const filePath = path.join(
       dirPath,
-      `operator-pubkeys-${this.params.network}.json`
+      `operator-pubkeys-${this.params.network}-${normalizedOwnerAddress}.json`
     );
-    fs$2.writeFileSync(filePath, JSON.stringify(entries, null, 2));
+    fs$1.writeFileSync(filePath, JSON.stringify(entries, null, 2));
     return filePath;
   }
 }
@@ -89814,8 +89737,8 @@ class SSVKeysCommand extends BaseCommand {
   /**
    * Add more specific help.
    */
-  constructor(interactive = false, options2 = void 0) {
-    super(interactive, options2);
+  constructor(interactive = false, options = void 0) {
+    super(interactive, options);
     this.actions = [KeySharesAction, NonceAction, ClusterAction, OperatorAction];
     this.subParserOptions.help += 'Example: "pnpm cli shares --help"';
   }
@@ -89859,16 +89782,18 @@ async function main(interactive) {
     console.trace(`${colors.red("Error:")} ${colors.bold(errorMessage)}`);
   }
 }
-exports.BaseError = BaseError$1;
-exports.HttpRequestError = HttpRequestError;
-exports.call = call;
-exports.concat = concat$1;
-exports.decodeErrorResult = decodeErrorResult;
-exports.encodeAbiParameters = encodeAbiParameters;
-exports.getUrl = getUrl;
-exports.isAddressEqual = isAddressEqual;
-exports.isHex = isHex;
-exports.localBatchGatewayRequest = localBatchGatewayRequest;
-exports.localBatchGatewayUrl = localBatchGatewayUrl;
-exports.main = main;
-exports.stringify = stringify$2;
+export {
+  BaseError$1 as B,
+  HttpRequestError as H,
+  localBatchGatewayRequest as a,
+  concat$1 as b,
+  call as c,
+  decodeErrorResult as d,
+  encodeAbiParameters as e,
+  isHex as f,
+  getUrl as g,
+  isAddressEqual as i,
+  localBatchGatewayUrl as l,
+  main as m,
+  stringify$2 as s
+};

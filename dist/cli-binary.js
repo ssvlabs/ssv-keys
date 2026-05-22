@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 "use strict";
-const cliShared = require("./cli-shared-SExoLWkg.js");
+const cliShared = require("./cli-shared-Bq7PK0F5.js");
 const COMMAND_NAMES = ["shares", "nonce", "cluster", "operator"];
 const HELP_FLAGS = /* @__PURE__ */ new Set(["-h", "--help"]);
 const LEGACY_SHARES_FLAGS = /* @__PURE__ */ new Set([

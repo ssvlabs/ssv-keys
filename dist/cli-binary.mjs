@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { m as main } from "./cli-shared-Bt1UsokZ.mjs";
+import { m as main } from "./cli-shared-Cb8Mpr6D.mjs";
 const COMMAND_NAMES = ["shares", "nonce", "cluster", "operator"];
 const HELP_FLAGS = /* @__PURE__ */ new Set(["-h", "--help"]);
 const LEGACY_SHARES_FLAGS = /* @__PURE__ */ new Set([

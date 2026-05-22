@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const cliShared = require("./cli-shared-SExoLWkg.js");
+const cliShared = require("./cli-shared-Bq7PK0F5.js");
 class OffchainLookupError extends cliShared.BaseError {
   constructor({ callbackSelector, cause, data, extraData, sender, urls }) {
     super(cause.shortMessage || "An error occurred while fetching for an offchain result.", {
