@@ -32,11 +32,6 @@
       "node_modules/lodash-es/**/*.js"
     ]
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@ssv-labs/ssv-sdk"
-    ]
-  },
   "scripts": {
     "dev:cli": "npx tsx src/cli.ts",
     "dev:icli": "npx tsx src/cli-interactive.ts",

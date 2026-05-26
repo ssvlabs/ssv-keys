@@ -1,0 +1,3 @@
+onlyBuiltDependencies:
+  - '@ssv-labs/ssv-sdk'
+  - 'esbuild'
