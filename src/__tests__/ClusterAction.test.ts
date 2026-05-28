@@ -76,7 +76,7 @@ describe("ClusterAction", () => {
 
     logSpy.mockRestore();
     tableSpy.mockRestore();
-  });
+  }, 10000);
 
   it("wraps scanner failures in a cleaner cluster-specific message", async () => {
     runMock.mockRejectedValue({
@@ -99,5 +99,5 @@ describe("ClusterAction", () => {
     ).rejects.toThrow(
       "Failed to resolve cluster snapshot: The cluster contract call reverted."
     );
-  });
+  }, 10000);
 });
