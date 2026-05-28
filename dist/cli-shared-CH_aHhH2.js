@@ -19794,7 +19794,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-fQC7HEX5.js"));
+    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-CmSQN4P4.js"));
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -88977,8 +88977,7 @@ const operatorPublicKeyValidator = (publicKey) => {
       }
       try {
         decodedPublicKey = libExports.util.decode64(publicKey).trim();
-      } catch (error) {
-        console.log("error:", error);
+      } catch {
         throw new Error(
           "Failed to decode the operator public key. Ensure it's correctly base64 encoded."
         );
@@ -89228,6 +89227,7 @@ const outputPathArgument = {
 };
 const MIN_OPERATORS_COUNT = 4;
 const MAX_OPERATORS_COUNT = 13;
+const VALID_OPERATOR_COUNTS = [4, 7, 10, 13];
 const hasValidOperatorCount = (length2) => !(length2 < MIN_OPERATORS_COUNT || length2 > MAX_OPERATORS_COUNT || length2 % 3 !== 1);
 const validateOperatorIds = (operatorIds) => {
   if (!Array.isArray(operatorIds)) {
@@ -89241,7 +89241,7 @@ const validateOperatorIds = (operatorIds) => {
   }
   if (!hasValidOperatorCount(operatorIds.length)) {
     throw new Error(
-      "Comma-separated list of operator IDs. The amount must be 3f+1 compatible."
+      `Comma-separated list of operator IDs. Accepted counts: ${VALID_OPERATOR_COUNTS.join(", ")}.`
     );
   }
 };
@@ -89477,14 +89477,14 @@ class BaseScanner {
     if (!scannerParams.ownerAddress) {
       throw Error("Cluster owner address is required");
     }
-    if (scannerParams.ownerAddress.length !== 42) {
-      throw Error("Invalid owner address length.");
-    }
-    if (!scannerParams.ownerAddress.startsWith("0x")) {
+    try {
+      this.params = {
+        ...scannerParams,
+        ownerAddress: getAddress(scannerParams.ownerAddress)
+      };
+    } catch {
       throw Error("Invalid owner address.");
     }
-    this.params = scannerParams;
-    this.params.ownerAddress = getAddress(this.params.ownerAddress);
   }
   createSdk() {
     const network = this.getSupportedNetworkOrThrow();
@@ -89655,6 +89655,22 @@ class OperatorScanner extends BaseScanner {
     return filePath;
   }
 }
+function getScannerErrorMessage$2(error) {
+  if (error && typeof error === "object") {
+    const shortMessage = Reflect.get(error, "shortMessage");
+    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
+      return shortMessage.trim();
+    }
+    const details = Reflect.get(error, "details");
+    if (typeof details === "string" && details.trim().length > 0) {
+      return details.trim().split("\n")[0] ?? details.trim();
+    }
+  }
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.trim().split("\n")[0] ?? error.message.trim();
+  }
+  return "Unknown scanner error.";
+}
 class NonceAction extends BaseAction {
   static get options() {
     return {
@@ -89669,14 +89685,36 @@ class NonceAction extends BaseAction {
     };
   }
   async execute() {
-    const nonceScanner = new NonceScanner({
-      network: this.args.network,
-      nodeUrl: this.args.node_url,
-      ownerAddress: this.args.owner_address
-    });
-    const result = await nonceScanner.run(true);
-    console.log("Next Nonce:", result);
+    try {
+      const nonceScanner = new NonceScanner({
+        network: this.args.network,
+        nodeUrl: this.args.node_url,
+        ownerAddress: this.args.owner_address
+      });
+      const result = await nonceScanner.run(true);
+      console.log("Next Nonce:", result);
+    } catch (error) {
+      throw new Error(
+        `Failed to resolve owner nonce: ${getScannerErrorMessage$2(error)}`
+      );
+    }
   }
+}
+function getScannerErrorMessage$1(error) {
+  if (error && typeof error === "object") {
+    const shortMessage = Reflect.get(error, "shortMessage");
+    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
+      return shortMessage.trim();
+    }
+    const details = Reflect.get(error, "details");
+    if (typeof details === "string" && details.trim().length > 0) {
+      return details.trim().split("\n")[0] ?? details.trim();
+    }
+  }
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.trim().split("\n")[0] ?? error.message.trim();
+  }
+  return "Unknown scanner error.";
 }
 class ClusterAction extends BaseAction {
   static get options() {
@@ -89698,28 +89736,50 @@ class ClusterAction extends BaseAction {
     };
   }
   async execute() {
-    const clusterScanner = new ClusterScanner({
-      network: this.args.network,
-      nodeUrl: this.args.node_url,
-      ownerAddress: this.args.owner_address
-    });
-    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
-    const result = await clusterScanner.run(operatorIds, true);
-    console.table(result.payload);
-    console.log("Cluster snapshot:");
-    console.table(result.cluster);
-    console.log(
-      JSON.stringify(
-        {
-          block: result.payload.Block,
-          "cluster snapshot": result.cluster,
-          cluster: Object.values(result.cluster)
-        },
-        (_, value) => typeof value === "bigint" ? value.toString() : value,
-        "  "
-      )
-    );
+    try {
+      const clusterScanner = new ClusterScanner({
+        network: this.args.network,
+        nodeUrl: this.args.node_url,
+        ownerAddress: this.args.owner_address
+      });
+      const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
+      const result = await clusterScanner.run(operatorIds, true);
+      console.table(result.payload);
+      console.log("Cluster snapshot:");
+      console.table(result.cluster);
+      console.log(
+        JSON.stringify(
+          {
+            block: result.payload.Block,
+            "cluster snapshot": result.cluster,
+            cluster: result.cluster
+          },
+          (_, value) => typeof value === "bigint" ? value.toString() : value,
+          "  "
+        )
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to resolve cluster snapshot: ${getScannerErrorMessage$1(error)}`
+      );
+    }
   }
+}
+function getScannerErrorMessage(error) {
+  if (error && typeof error === "object") {
+    const shortMessage = Reflect.get(error, "shortMessage");
+    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
+      return shortMessage.trim();
+    }
+    const details = Reflect.get(error, "details");
+    if (typeof details === "string" && details.trim().length > 0) {
+      return details.trim().split("\n")[0] ?? details.trim();
+    }
+  }
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.trim().split("\n")[0] ?? error.message.trim();
+  }
+  return "Unknown scanner error.";
 }
 class OperatorAction extends BaseAction {
   static get options() {
@@ -89741,19 +89801,25 @@ class OperatorAction extends BaseAction {
     };
   }
   async execute() {
-    const operatorScanner = new OperatorScanner({
-      network: this.args.network,
-      nodeUrl: this.args.node_url,
-      ownerAddress: this.args.owner_address
-    });
-    const result = await operatorScanner.run(this.args.output_path, true);
-    if (result) {
-      console.log(`
+    try {
+      const operatorScanner = new OperatorScanner({
+        network: this.args.network,
+        nodeUrl: this.args.node_url,
+        ownerAddress: this.args.owner_address
+      });
+      const result = await operatorScanner.run(this.args.output_path, true);
+      if (result) {
+        console.log(`
 Operator data has been saved to:
  ${result}`);
-      return;
+        return;
+      }
+      console.log("\nNo operator data found for this owner. No output file was created.");
+    } catch (error) {
+      throw new Error(
+        `Failed to resolve owner operator data: ${getScannerErrorMessage(error)}`
+      );
     }
-    console.log("\nNo operator data found for this owner. No output file was created.");
   }
 }
 class SSVKeysCommand extends BaseCommand {

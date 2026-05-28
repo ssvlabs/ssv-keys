@@ -1,7 +1,15 @@
 #!/usr/bin/env node
-import { m as main } from "./cli-shared-Cb8Mpr6D.mjs";
+import { m as main } from "./cli-shared-C-MDutmb.mjs";
 const COMMAND_NAMES = ["shares", "nonce", "cluster", "operator"];
 const HELP_FLAGS = /* @__PURE__ */ new Set(["-h", "--help"]);
+const INTERACTIVE_SCANNER_FLAGS = /* @__PURE__ */ new Set([
+  "-nw",
+  "--network",
+  "-n",
+  "--node-url",
+  "-oa",
+  "--owner-address"
+]);
 const LEGACY_SHARES_FLAGS = /* @__PURE__ */ new Set([
   "-ks",
   "--keystore",
@@ -15,6 +23,7 @@ const LEGACY_SHARES_FLAGS = /* @__PURE__ */ new Set([
   "--output-folder"
 ]);
 const normalizeToken = (token) => token.split("=")[0];
+const isFlagLike = (token) => !!token?.startsWith("-");
 const isKnownCommand = (token) => !!token && COMMAND_NAMES.includes(token);
 const hasLegacySharesFlags = (userArgs) => {
   return userArgs.some((arg) => LEGACY_SHARES_FLAGS.has(normalizeToken(arg)));
@@ -36,6 +45,9 @@ const resolveBinaryMode = (argv) => {
       interactive: false,
       injectedAction: "shares"
     };
+  }
+  if (isFlagLike(firstToken) && !INTERACTIVE_SCANNER_FLAGS.has(normalizeToken(firstToken))) {
+    return { interactive: false };
   }
   return { interactive: true };
 };
