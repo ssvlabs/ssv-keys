@@ -13,7 +13,7 @@ describe("operator ids helpers", () => {
 
   it("rejects invalid operator count", () => {
     expect(() => validateOperatorIds([5, 6, 7])).toThrow(
-      "amount must be 3f+1 compatible"
+      "Comma-separated list of operator IDs. Accepted counts: 4, 7, 10, 13."
     );
   });
 
@@ -21,4 +21,3 @@ describe("operator ids helpers", () => {
     expect(normalizeOperatorIds([8, 6, 5, 7])).toEqual([5, 6, 7, 8]);
   });
 });
-

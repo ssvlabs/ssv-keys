@@ -18,8 +18,7 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
 
       try {
         decodedPublicKey = util.decode64(publicKey).trim();
-      } catch (error) {
-        console.log("error:", error);
+      } catch {
         throw new Error(
           "Failed to decode the operator public key. Ensure it's correctly base64 encoded."
         );

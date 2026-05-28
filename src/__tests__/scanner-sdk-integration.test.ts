@@ -1,13 +1,13 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { SSVSDK } from "@ssv-labs/ssv-sdk";
 
 import { ClusterScanner } from "../scanner/ClusterScanner";
 import { NonceScanner } from "../scanner/NonceScanner";
 import { OperatorScanner } from "../scanner/OperatorScanner";
-import { ScannerParams } from "../scanner/BaseScanner";
+import { BaseScanner, ScannerParams } from "../scanner/BaseScanner";
 
 const scannerParams: ScannerParams = {
   network: "hoodi",
@@ -45,7 +45,36 @@ class TestOperatorScanner extends OperatorScanner {
   }
 }
 
+class TestBaseScanner extends BaseScanner {
+  getOwnerAddress(): string {
+    return this.params.ownerAddress;
+  }
+}
+
 describe("scanner SDK adapters", () => {
+  it("normalizes owner addresses through canonical parsing", () => {
+    const scanner = new TestBaseScanner({
+      ...scannerParams,
+      ownerAddress: "0x0c7c715f6e2dcee6eac0af01ee23661e67885339",
+    });
+
+    expect(scanner.getOwnerAddress()).toBe(scannerParams.ownerAddress);
+  });
+
+  it.each([
+    "0x1234",
+    "0c7C715F6E2dCEE6EAC0Af01EE23661e67885339",
+    "not-an-address",
+  ])("rejects invalid owner addresses at scanner construction: %s", (ownerAddress) => {
+    expect(
+      () =>
+        new TestBaseScanner({
+          ...scannerParams,
+          ownerAddress,
+        })
+    ).toThrowError("Invalid owner address.");
+  });
+
   it("uses the SDK snapshot block number for cluster payloads", async () => {
     const scanner = new TestClusterScanner({
       api: {
@@ -79,6 +108,33 @@ describe("scanner SDK adapters", () => {
     });
   });
 
+  it("falls back to the default cluster snapshot when the SDK returns no cluster", async () => {
+    const scanner = new TestClusterScanner({
+      api: {
+        getClusterSnapshot: async () => ({
+          blockNumber: 123456,
+          cluster: null,
+        }),
+      },
+    } as SSVSDK);
+
+    await expect(scanner.run([301, 170, 108, 131])).resolves.toEqual({
+      payload: {
+        Owner: scannerParams.ownerAddress,
+        Operators: "108,131,170,301",
+        Block: 123456,
+        Data: "0,0,0,true,0",
+      },
+      cluster: {
+        validatorCount: 0,
+        networkFeeIndex: "0",
+        index: "0",
+        active: true,
+        balance: "0",
+      },
+    });
+  });
+
   it("returns the numeric nonce provided by the SDK", async () => {
     const scanner = new TestNonceScanner({
       api: {
@@ -92,17 +148,21 @@ describe("scanner SDK adapters", () => {
     await expect(scanner.run()).resolves.toBe(7);
   });
 
-  it("unwraps cluster and operator collections from the SDK response", async () => {
+  it("writes deduplicated sorted operator entries from the SDK response", async () => {
+    const getClusters = vi.fn(async () => ({
+      blockNumber: 123456,
+      clusters: [
+        {
+          operatorIds: ["301", "170", "108", "131"],
+        },
+        {
+          operatorIds: ["131", "301"],
+        },
+      ],
+    }));
     const sdk = {
       api: {
-        getClusters: async () => ({
-          blockNumber: 123456,
-          clusters: [
-            {
-              operatorIds: ["301", "170", "108", "131"],
-            },
-          ],
-        }),
+        getClusters,
         getOperators: async () => ({
           blockNumber: 123456,
           operators: [
@@ -115,8 +175,17 @@ describe("scanner SDK adapters", () => {
       },
     } as SSVSDK;
     const scanner = new TestOperatorScanner(sdk);
+    const outputDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "ssv-keys-operators-")
+    );
 
-    await expect(scanner.getOwnerOperators(sdk)).resolves.toEqual([
+    const filePath = await scanner.run(outputDir);
+
+    expect(getClusters).toHaveBeenCalledWith({
+      owner: scannerParams.ownerAddress.toLowerCase(),
+    });
+    expect(filePath).toBeTruthy();
+    expect(JSON.parse(fs.readFileSync(filePath!, "utf8"))).toEqual([
       { id: 108, pubkey: "pk-108" },
       { id: 131, pubkey: "pk-131" },
       { id: 170, pubkey: "pk-170" },

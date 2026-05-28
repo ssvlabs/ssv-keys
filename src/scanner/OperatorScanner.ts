@@ -26,7 +26,7 @@ export class OperatorScanner extends BaseScanner {
     return this.writeOperatorsFile(entries, outputPath);
   }
 
-  async getOwnerOperators(sdk: SSVSDK): Promise<OperatorEntry[]> {
+  private async getOwnerOperators(sdk: SSVSDK): Promise<OperatorEntry[]> {
     const { clusters } = await sdk.api.getClusters({
       owner: this.params.ownerAddress.toLowerCase(),
     });

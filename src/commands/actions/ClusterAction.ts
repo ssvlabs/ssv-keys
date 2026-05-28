@@ -9,6 +9,26 @@ import {
 import { ClusterScanner } from "../../scanner";
 import { parseOperatorIdsCsv } from "../../shared/operator-ids";
 
+function getScannerErrorMessage(error: unknown): string {
+  if (error && typeof error === "object") {
+    const shortMessage = Reflect.get(error, "shortMessage");
+    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
+      return shortMessage.trim();
+    }
+
+    const details = Reflect.get(error, "details");
+    if (typeof details === "string" && details.trim().length > 0) {
+      return details.trim().split("\n")[0] ?? details.trim();
+    }
+  }
+
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.trim().split("\n")[0] ?? error.message.trim();
+  }
+
+  return "Unknown scanner error.";
+}
+
 export class ClusterAction extends BaseAction {
   static override get options(): ActionOptions {
     return {
@@ -30,28 +50,34 @@ export class ClusterAction extends BaseAction {
   }
 
   override async execute(): Promise<void> {
-    const clusterScanner = new ClusterScanner({
-      network: this.args.network,
-      nodeUrl: this.args.node_url,
-      ownerAddress: this.args.owner_address,
-    });
+    try {
+      const clusterScanner = new ClusterScanner({
+        network: this.args.network,
+        nodeUrl: this.args.node_url,
+        ownerAddress: this.args.owner_address,
+      });
 
-    const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
-    const result = await clusterScanner.run(operatorIds, true);
+      const operatorIds = parseOperatorIdsCsv(this.args.operator_ids);
+      const result = await clusterScanner.run(operatorIds, true);
 
-    console.table(result.payload);
-    console.log("Cluster snapshot:");
-    console.table(result.cluster);
-    console.log(
-      JSON.stringify(
-        {
-          block: result.payload.Block,
-          "cluster snapshot": result.cluster,
-          cluster: Object.values(result.cluster),
-        },
-        (_, value) => (typeof value === "bigint" ? value.toString() : value),
-        "  "
-      )
-    );
+      console.table(result.payload);
+      console.log("Cluster snapshot:");
+      console.table(result.cluster);
+      console.log(
+        JSON.stringify(
+          {
+            block: result.payload.Block,
+            "cluster snapshot": result.cluster,
+            cluster: result.cluster,
+          },
+          (_, value) => (typeof value === "bigint" ? value.toString() : value),
+          "  "
+        )
+      );
+    } catch (error: unknown) {
+      throw new Error(
+        `Failed to resolve cluster snapshot: ${getScannerErrorMessage(error)}`
+      );
+    }
   }
 }

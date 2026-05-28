@@ -27,15 +27,15 @@ export abstract class BaseScanner {
     if (!scannerParams.ownerAddress) {
       throw Error("Cluster owner address is required");
     }
-    if (scannerParams.ownerAddress.length !== 42) {
-      throw Error("Invalid owner address length.");
-    }
-    if (!scannerParams.ownerAddress.startsWith("0x")) {
+
+    try {
+      this.params = {
+        ...scannerParams,
+        ownerAddress: getAddress(scannerParams.ownerAddress),
+      };
+    } catch {
       throw Error("Invalid owner address.");
     }
-
-    this.params = scannerParams;
-    this.params.ownerAddress = getAddress(this.params.ownerAddress);
   }
 
   protected createSdk(): SSVSDK {

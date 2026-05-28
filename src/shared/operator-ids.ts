@@ -1,5 +1,6 @@
 const MIN_OPERATORS_COUNT = 4;
 const MAX_OPERATORS_COUNT = 13;
+const VALID_OPERATOR_COUNTS = [4, 7, 10, 13] as const;
 
 const hasValidOperatorCount = (length: number): boolean =>
   !(length < MIN_OPERATORS_COUNT || length > MAX_OPERATORS_COUNT || length % 3 !== 1);
@@ -19,7 +20,7 @@ export const validateOperatorIds = (operatorIds: number[]): void => {
 
   if (!hasValidOperatorCount(operatorIds.length)) {
     throw new Error(
-      "Comma-separated list of operator IDs. The amount must be 3f+1 compatible."
+      `Comma-separated list of operator IDs. Accepted counts: ${VALID_OPERATOR_COUNTS.join(", ")}.`
     );
   }
 };
@@ -51,4 +52,3 @@ export const parseOperatorIdsCsv = (rawOperatorIds: string): number[] => {
 
 export const normalizeOperatorIds = (operatorIds: number[]): number[] =>
   [...operatorIds].sort((a, b) => a - b);
-

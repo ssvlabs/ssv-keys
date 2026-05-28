@@ -48,5 +48,10 @@ describe("resolveBinaryMode", () => {
       interactive: true,
     });
   });
-});
 
+  it("uses non-interactive mode for unknown top-level flags", () => {
+    expect(resolveBinaryMode(["node", "ssv-keys", "--some-typo"])).toEqual({
+      interactive: false,
+    });
+  });
+});
