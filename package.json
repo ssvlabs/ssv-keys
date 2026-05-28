@@ -47,10 +47,13 @@
     "build-all": "pnpm run clean && pnpm run build",
     "pre-commit": "pnpm run lint && pnpm run build-all",
     "build:ts": "tsc",
-    "package-all": "pnpm run package-linux && pnpm run package-macos && pnpm run package-win",
-    "package-linux": "pnpm run build && pkg dist/cli-binary.js --targets node22-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
-    "package-macos": "pnpm run build && pkg dist/cli-binary.js --targets node22-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
-    "package-win": "pnpm run build && pkg dist/cli-binary.js --targets node22-win-x64 --output bin/win/ssv-keys.exe --compress GZip"
+    "package-all": "pnpm run build && pnpm run package-linux:raw && pnpm run package-macos:raw && pnpm run package-win:raw",
+    "package-linux": "pnpm run build && pnpm run package-linux:raw",
+    "package-linux:raw": "pkg dist/cli-binary.js --targets node22-linux-x64 --output bin/linux/ssv-keys-lin --compress GZip",
+    "package-macos": "pnpm run build && pnpm run package-macos:raw",
+    "package-macos:raw": "pkg dist/cli-binary.js --targets node22-macos-x64 --output bin/macos/ssv-keys-mac --compress GZip",
+    "package-win": "pnpm run build && pnpm run package-win:raw",
+    "package-win:raw": "pkg dist/cli-binary.js --targets node22-win-x64 --output bin/win/ssv-keys.exe --compress GZip"
   },
   "devDependencies": {
     "@types/argparse": "2.0.17",
