@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { m as main } from "./cli-shared-C-MDutmb.mjs";
+import { m as main } from "./cli-shared-CS0ocOPN.mjs";
 const COMMAND_NAMES = ["shares", "nonce", "cluster", "operator"];
 const HELP_FLAGS = /* @__PURE__ */ new Set(["-h", "--help"]);
 const INTERACTIVE_SCANNER_FLAGS = /* @__PURE__ */ new Set([

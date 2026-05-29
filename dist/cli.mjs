@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import { m as main } from "./cli-shared-C-MDutmb.mjs";
+import { m as main } from "./cli-shared-CS0ocOPN.mjs";
 main(false);

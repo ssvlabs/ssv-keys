@@ -19794,7 +19794,7 @@ async function call(client, args) {
     return { data: response };
   } catch (err) {
     const data2 = getRevertErrorData(err);
-    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-CmSQN4P4.js"));
+    const { offchainLookup, offchainLookupSignature } = await Promise.resolve().then(() => require("./ccip-B6NEIIlP.js"));
     if (client.ccipRead !== false && data2?.slice(0, 10) === offchainLookupSignature && to2)
       return { data: await offchainLookup(client, { data: data2, to: to2 }) };
     if (deploylessCall && data2?.slice(0, 10) === "0x101bb98d")
@@ -89432,6 +89432,22 @@ ${files.length - failedValidation} of ${files.length} keystore files successfull
     return keySharesFilePath;
   }
 }
+function getScannerErrorMessage(error) {
+  if (error && typeof error === "object") {
+    const shortMessage = Reflect.get(error, "shortMessage");
+    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
+      return shortMessage.trim();
+    }
+    const details = Reflect.get(error, "details");
+    if (typeof details === "string" && details.trim().length > 0) {
+      return details.trim().split("\n")[0] ?? details.trim();
+    }
+  }
+  if (error instanceof Error && error.message.trim().length > 0) {
+    return error.message.trim().split("\n")[0] ?? error.message.trim();
+  }
+  return "Unknown scanner error.";
+}
 const sdkCache = /* @__PURE__ */ new Map();
 const SUBGRAPH_API_KEY_ENV = "SSV_SUBGRAPH_API_KEY";
 const getSubgraphApiKey = () => {
@@ -89655,22 +89671,6 @@ class OperatorScanner extends BaseScanner {
     return filePath;
   }
 }
-function getScannerErrorMessage$2(error) {
-  if (error && typeof error === "object") {
-    const shortMessage = Reflect.get(error, "shortMessage");
-    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
-      return shortMessage.trim();
-    }
-    const details = Reflect.get(error, "details");
-    if (typeof details === "string" && details.trim().length > 0) {
-      return details.trim().split("\n")[0] ?? details.trim();
-    }
-  }
-  if (error instanceof Error && error.message.trim().length > 0) {
-    return error.message.trim().split("\n")[0] ?? error.message.trim();
-  }
-  return "Unknown scanner error.";
-}
 class NonceAction extends BaseAction {
   static get options() {
     return {
@@ -89695,26 +89695,10 @@ class NonceAction extends BaseAction {
       console.log("Next Nonce:", result);
     } catch (error) {
       throw new Error(
-        `Failed to resolve owner nonce: ${getScannerErrorMessage$2(error)}`
+        `Failed to resolve owner nonce: ${getScannerErrorMessage(error)}`
       );
     }
   }
-}
-function getScannerErrorMessage$1(error) {
-  if (error && typeof error === "object") {
-    const shortMessage = Reflect.get(error, "shortMessage");
-    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
-      return shortMessage.trim();
-    }
-    const details = Reflect.get(error, "details");
-    if (typeof details === "string" && details.trim().length > 0) {
-      return details.trim().split("\n")[0] ?? details.trim();
-    }
-  }
-  if (error instanceof Error && error.message.trim().length > 0) {
-    return error.message.trim().split("\n")[0] ?? error.message.trim();
-  }
-  return "Unknown scanner error.";
 }
 class ClusterAction extends BaseAction {
   static get options() {
@@ -89760,26 +89744,10 @@ class ClusterAction extends BaseAction {
       );
     } catch (error) {
       throw new Error(
-        `Failed to resolve cluster snapshot: ${getScannerErrorMessage$1(error)}`
+        `Failed to resolve cluster snapshot: ${getScannerErrorMessage(error)}`
       );
     }
   }
-}
-function getScannerErrorMessage(error) {
-  if (error && typeof error === "object") {
-    const shortMessage = Reflect.get(error, "shortMessage");
-    if (typeof shortMessage === "string" && shortMessage.trim().length > 0) {
-      return shortMessage.trim();
-    }
-    const details = Reflect.get(error, "details");
-    if (typeof details === "string" && details.trim().length > 0) {
-      return details.trim().split("\n")[0] ?? details.trim();
-    }
-  }
-  if (error instanceof Error && error.message.trim().length > 0) {
-    return error.message.trim().split("\n")[0] ?? error.message.trim();
-  }
-  return "Unknown scanner error.";
 }
 class OperatorAction extends BaseAction {
   static get options() {

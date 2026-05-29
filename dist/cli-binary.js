@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 "use strict";
-const cliShared = require("./cli-shared-CH_aHhH2.js");
+const cliShared = require("./cli-shared-Bd3M9dlh.js");
 const COMMAND_NAMES = ["shares", "nonce", "cluster", "operator"];
 const HELP_FLAGS = /* @__PURE__ */ new Set(["-h", "--help"]);
 const INTERACTIVE_SCANNER_FLAGS = /* @__PURE__ */ new Set([
