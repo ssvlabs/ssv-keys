@@ -1,7 +1,12 @@
 import path from "path";
-import { KeyShares, KeySharesItem, OperatorsCountsMismatchError, SSVKeys, SSVKeysException } from "@ssv-labs/ssv-sdk";
+import {
+  createUtils,
+  OperatorsCountsMismatchError,
+  SSVKeysException,
+} from "@ssv-labs/ssv-sdk";
 
 import { BaseAction } from "./BaseAction";
+import type { ActionOptions } from "../types";
 import { sanitizePath, keystorePasswordValidator } from "./validators";
 import {
   keystoreArgument,
@@ -12,22 +17,38 @@ import {
   outputFolderArgument,
   operatorPublicKeysArgument,
 } from "./arguments";
-import { getFilePath, getKeyStoreFiles, readFile, writeFile } from "../../file.helper";
+import { getFilePath, getKeyStoreFiles, readFile } from "../../file.helper";
+import { parseOperatorIdsCsv } from "../../shared/operator-ids";
 
 type Operator = {
   id: number;
   operatorKey: string;
 };
 
+const NO_VALID_KEYSTORES_ERROR =
+  "Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct.";
+const GENERATING_KEYSHARES_MESSAGE =
+  "\n\nGenerating Keyshares file, this might take a few minutes do not close terminal.";
+const offlineSdkUtils = createUtils({} as never);
+
 /**
  * Command to build keyshares from user input.
  */
 export class KeySharesAction extends BaseAction {
-  static override get options(): any {
+  static override get options(): ActionOptions {
     return {
       action: "shares",
       description:
         "Generate shares for a list of operators from a validator keystore file",
+      example: `Example:
+  ssv-keys shares \\
+    -ks "./validator_keys" \\
+    -ps "KEYSTORE_PASSWORD" \\
+    -oids "5,6,7,8" \\
+    -oks "LS0...,LS0...,LS0...,LS0..." \\
+    -oa "0x1111111111111111111111111111111111111111" \\
+    -on "105" \\
+    -of "./tmp-keyshares-hoodi"`,
       arguments: [
         keystoreArgument,
         keystorePasswordArgument,
@@ -41,43 +62,23 @@ export class KeySharesAction extends BaseAction {
   }
 
   override async execute(): Promise<string> {
-    this.validateKeystoreArguments(); // Validate keystore arguments
-
-    const keySharesList = await this.processKeystorePath();
-    const keySharesFilePath = await this.saveKeyShares(
-      keySharesList,
-      this.args.output_folder
-    );
-    return keySharesFilePath;
+    this.validateArguments();
+    return this.executeOffline();
   }
 
-  private validateKeystoreArguments(): void {
+  private validateArguments(): void {
     const hasKeystore = !!this.args.keystore;
     if (!hasKeystore) {
       throw new SSVKeysException(
         "Please provide a path to the validator keystore file or to the folder containing multiple validator keystore files."
       );
     }
-  }
 
-  private async processKeystorePath(): Promise<KeySharesItem[]> {
-    const keystorePath = sanitizePath(String(this.args.keystore).trim());
-    const { files } = await getKeyStoreFiles(keystorePath);
-    const validatedFiles = await this.validateKeystoreFiles(files);
-
-    const singleKeySharesList = await Promise.all(
-      validatedFiles.map((file, index) =>
-        this.processFile(
-          file,
-          this.args.password,
-          this.getOperators(),
-          this.args.owner_address,
-          this.args.owner_nonce + index
-        )
-      )
-    );
-
-    return singleKeySharesList;
+    if (!this.hasOperatorKeys()) {
+      throw new SSVKeysException(
+        "Operator keys are required to generate shares in offline mode."
+      );
+    }
   }
 
   private async validateKeystoreFiles(files: string[]): Promise<string[]> {
@@ -112,9 +113,22 @@ export class KeySharesAction extends BaseAction {
     return validatedFiles;
   }
 
-  private getOperators(): Operator[] {
-    const operatorIds = this.args.operator_ids.split(",");
-    const operatorKeys = this.args.operator_keys.split(",");
+  private hasOperatorKeys(): boolean {
+    return (
+      typeof this.args.operator_keys === "string" &&
+      this.args.operator_keys.trim().length > 0
+    );
+  }
+
+  private getOperatorIds(): number[] {
+    return parseOperatorIdsCsv(this.args.operator_ids);
+  }
+
+  private getOperatorsFromArgs(): Operator[] {
+    const operatorIds = this.getOperatorIds();
+    const operatorKeys = String(this.args.operator_keys)
+      .split(",")
+      .map((operatorKey) => operatorKey.trim());
 
     if (operatorIds.length !== operatorKeys.length) {
       throw new OperatorsCountsMismatchError(
@@ -124,77 +138,64 @@ export class KeySharesAction extends BaseAction {
       );
     }
 
-    if (operatorIds.includes("") || operatorKeys.includes("")) {
+    if (operatorKeys.includes("")) {
       throw new SSVKeysException(
-        "Operator IDs or keys cannot contain empty strings."
+        "Operator keys cannot contain empty strings."
       );
     }
 
-    return operatorIds.map((idString: string, index: number) => {
-      const id = parseInt(idString, 10);
-      if (isNaN(id)) {
-        throw new SSVKeysException(
-          `Invalid operator ID at position ${index}: ${idString}`
-        );
-      }
+    if (new Set(operatorKeys).size !== operatorKeys.length) {
+      throw new SSVKeysException("Operator keys must be unique.");
+    }
 
+    return operatorIds.map((id: number, index: number) => {
       const operatorKey = operatorKeys[index];
       return { id, operatorKey };
     });
   }
 
-  private async processFile(
-    keystoreFilePath: string,
-    password: string,
-    operators: Operator[],
-    ownerAddress: string,
-    ownerNonce: number
-  ): Promise<KeySharesItem> {
-    const keystoreData = await readFile(keystoreFilePath);
-
-    const ssvKeys = new SSVKeys();
-    const { privateKey, publicKey } = await ssvKeys.extractKeys(
-      keystoreData,
-      password
-    );
-    const encryptedShares = await ssvKeys.buildShares(privateKey, operators);
-
-    const keySharesItem = new KeySharesItem();
-    await keySharesItem.update({
-      ownerAddress,
-      ownerNonce,
-      operators,
-      publicKey,
-    });
-    await keySharesItem.buildPayload(
-      { publicKey, operators, encryptedShares },
-      { ownerAddress, ownerNonce, privateKey }
-    );
-
-    return keySharesItem;
+  private async getValidatedKeystoreFiles(): Promise<string[]> {
+    const keystorePath = sanitizePath(String(this.args.keystore).trim());
+    const { files } = await getKeyStoreFiles(keystorePath);
+    return this.validateKeystoreFiles(files);
   }
 
-  private async saveKeyShares(
-    keySharesItems: KeySharesItem[],
-    outputFolder: string
-  ): Promise<string> {
-    if (keySharesItems.length === 0) {
-      throw new SSVKeysException(
-        "Unable to locate valid keystore files. Please verify that the keystore files are valid and the password is correct."
-      );
-    }
-    process.stdout.write(
-      `\n\nGenerating Keyshares file, this might take a few minutes do not close terminal.`
-    );
+  private async readValidatedKeystoreData(): Promise<string[]> {
+    const validatedFiles = await this.getValidatedKeystoreFiles();
+    return Promise.all(validatedFiles.map((file) => readFile(file, false)));
+  }
 
-    const keyShares = new KeyShares();
-    keySharesItems.forEach((keySharesItem) => keyShares.add(keySharesItem));
+  private async executeOffline(): Promise<string> {
+    const operatorIds = this.getOperatorIds();
+    const operators = this.getOperatorsFromArgs();
+    const keystores = await this.readValidatedKeystoreData();
+
+    if (keystores.length === 0) {
+      throw new SSVKeysException(NO_VALID_KEYSTORES_ERROR);
+    }
+
+    process.stdout.write(GENERATING_KEYSHARES_MESSAGE);
+
+    const shares = await offlineSdkUtils.generateKeyShares({
+      keystore: keystores,
+      keystorePassword: this.args.password,
+      operatorKeys: operators.map((operator) => operator.operatorKey),
+      operatorIds,
+      ownerAddress: this.args.owner_address,
+      nonce: this.args.owner_nonce,
+    });
 
     const keySharesFilePath = await getFilePath(
       "keyshares",
-      outputFolder.trim()
+      this.args.output_folder.trim()
     );
-    await writeFile(keySharesFilePath, keyShares.toJson());
+    await offlineSdkUtils.writeKeysharesFile({
+      path: keySharesFilePath,
+      shares,
+      ownerAddress: this.args.owner_address,
+      nonce: this.args.owner_nonce,
+      operators,
+    });
 
     return keySharesFilePath;
   }

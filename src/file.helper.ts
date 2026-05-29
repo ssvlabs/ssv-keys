@@ -9,10 +9,14 @@ import { SSVKeysException } from "@ssv-labs/ssv-sdk";
  * @param filePath
  * @param json
  */
-export const readFile = async (filePath: string, json=true): Promise<any> => {
-  return fsp.readFile(filePath, { encoding: 'utf-8' }).then((data) => {
-    return json ? JSON.parse(data) : data;
-  });
+export function readFile(filePath: string, json: false): Promise<string>;
+export function readFile<T = unknown>(filePath: string, json?: true): Promise<T>;
+export async function readFile<T = unknown>(
+  filePath: string,
+  json = true
+): Promise<T | string> {
+  const data = await fsp.readFile(filePath, { encoding: "utf-8" });
+  return json ? (JSON.parse(data) as T) : data;
 }
 
 /**
@@ -20,15 +24,15 @@ export const readFile = async (filePath: string, json=true): Promise<any> => {
  * @param filePath
  * @param data
  */
-export const writeFile = async (filePath: string, data: string): Promise<any> => {
-  fsp.writeFile(filePath, data, { encoding: 'utf-8' });
+export const writeFile = async (filePath: string, data: string): Promise<void> => {
+  return fsp.writeFile(filePath, data, { encoding: "utf-8" });
 }
 
 /**
  * Create SSV keys directory to work in scope of in user home directory
  */
-export const createSSVDir = async (outputFolder: string): Promise<any> => {
-  return fsp.mkdir(outputFolder, { recursive: true });
+export const createSSVDir = async (outputFolder: string): Promise<void> => {
+  await fsp.mkdir(outputFolder, { recursive: true });
 }
 
 /**
@@ -53,7 +57,7 @@ export type KeyStoreFilesResult = {
 
 export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFilesResult> => {
   let isFolder = false;
-  let files;
+  let files: string[];
 
   try {
     // Attempt to open the directory to determine if the path is a folder
@@ -68,14 +72,17 @@ export const getKeyStoreFiles = async (keystorePath: string): Promise<KeyStoreFi
     if (files.length === 0) {
       throw new SSVKeysException('No keystore files detected. Please provide a folder with correct keystore files and try again.');
     }
-  } catch (error: any) {
-    if (error.code === 'ENOTDIR') {
+  } catch (error: unknown) {
+    const fsError = error as NodeJS.ErrnoException;
+    if (fsError.code === 'ENOTDIR') {
       // It's not a directory, assume it's a file path
       isFolder = false;
       files = [keystorePath];
     } else {
       // Other errors are re-thrown
-      throw new SSVKeysException(error.message);
+      throw new SSVKeysException(
+        fsError.message || "Failed to resolve keystore path."
+      );
     }
   }
 

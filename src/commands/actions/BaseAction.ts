@@ -1,39 +1,20 @@
 import { SSVKeysException } from "@ssv-labs/ssv-sdk";
 import { Namespace } from "argparse";
+import type { ActionOptions } from "../types";
 
 export class BaseAction {
-  protected args: Namespace = {};
+  protected args = {} as Namespace;
 
-  setArgs(args: Namespace): BaseAction {
+  setArgs(args: Namespace): this {
     this.args = args;
     return this;
   }
 
-  async execute(): Promise<any> {
+  async execute(): Promise<unknown> {
     throw new SSVKeysException('Should implement "execute"');
   }
 
-  static get options(): any {
+  static get options(): ActionOptions {
     throw new SSVKeysException('Should implement static "options"');
-  }
-
-  get options(): any {
-    return BaseAction.options;
-  }
-
-  /**
-   * Pre-execution method which can be run before execution logic.
-   */
-  preExecute(): void {
-    return;
-  }
-
-  /**
-   * Pre-options reading method which can be run before the logic where options read happened.
-   * Should also return options which can be changed.
-   * @param options
-   */
-  async preOptions(options: any): Promise<any> {
-    return options;
   }
 }

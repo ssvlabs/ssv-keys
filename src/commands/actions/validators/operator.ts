@@ -18,8 +18,7 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
 
       try {
         decodedPublicKey = util.decode64(publicKey).trim();
-      } catch (error) {
-        console.log("error:", error);
+      } catch {
         throw new Error(
           "Failed to decode the operator public key. Ensure it's correctly base64 encoded."
         );
@@ -43,13 +42,14 @@ export const operatorPublicKeyValidator = (publicKey: string): boolean => {
         "Invalid operator key format, make sure the operator exists in the network."
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     throw new OperatorPublicKeyError(
       {
         rsa: decodedPublicKey,
         base64: publicKey,
       },
-      error.message
+      errorMessage
     );
   }
   return true;

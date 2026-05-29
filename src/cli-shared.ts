@@ -17,7 +17,7 @@ const BannerMessage = async () => {
   return banner;
 };
 
-export default async function main(interactive: boolean): Promise<any> {
+export default async function main(interactive: boolean): Promise<void> {
   const message = await BannerMessage();
   console.log(
     " ----------------------------------------------------------------------"
@@ -32,12 +32,15 @@ export default async function main(interactive: boolean): Promise<any> {
 
   const command = new SSVKeysCommand(interactive);
   try {
-    const outputFile = await command.execute();
-    console.debug(
-      "\nKey distribution successful! Find your key shares file at:"
-    );
-    console.debug(`${colors.bgYellow(colors.black(outputFile))}`);
-  } catch (error: any) {
-    console.trace(`${colors.red("Error:")} ${colors.bold(error.message)}`);
+    const output = await command.execute();
+    if (typeof output === "string" && output.trim().length > 0) {
+      console.debug(
+        "\nKey distribution successful! Find your key shares file at:"
+      );
+      console.debug(`${colors.bgYellow(colors.black(output))}`);
+    }
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.trace(`${colors.red("Error:")} ${colors.bold(errorMessage)}`);
   }
 }

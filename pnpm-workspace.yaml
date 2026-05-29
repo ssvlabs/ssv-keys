@@ -1,0 +1,3 @@
+allowBuilds:
+  '@ssv-labs/ssv-sdk': true
+  esbuild: true

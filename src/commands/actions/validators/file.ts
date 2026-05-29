@@ -37,7 +37,7 @@ export const sanitizePath = (inputPath: string): string => {
   // Strip quotes from the beginning or end.
   const strippedPath = inputPath.replace(/^["']|["']$/g, "");
 
-  // Remove any characters that are not typically allowed or are problematic in file paths.
+  // Remove characters that are not typically allowed or are problematic in file paths.
   // Here, we're allowing alphanumeric characters, spaces, hyphens, underscores, and periods.
   // You can adjust the regex as needed.
   const sanitizedPath = strippedPath.replace(/\\([^a-zA-Z0-9_])/g, "$1");
