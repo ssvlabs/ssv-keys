@@ -75,6 +75,6 @@
     "moment": "^2.30.1",
     "node-forge": "^1.3.1",
     "prompts": "https://github.com/ssvlabs/prompts.git",
-    "vitest": "^3.2.4"
+    "vitest": "^4.0.0"
   }
 }
