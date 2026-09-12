@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/argparse": "2.0.17",
-    "@types/node": "24.0.12",
+    "@types/node": "24.13.4",
     "@types/prompts": "2.4.9",
     "@typescript-eslint/eslint-plugin": "8.36.0",
     "@typescript-eslint/parser": "8.36.0",
